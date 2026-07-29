@@ -1,0 +1,56 @@
+{
+  "status": "passed",
+  "dataset": "tworoom",
+  "data_file": "/data/sicong/weitao/datasets/lewm/tworoom.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt",
+  "starts_file": "experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/train_global_reference_starts.npy",
+  "sample_size": 1024,
+  "sample_seed": 20260717,
+  "sample_starts_sha256": "4e5a1b02be5a6803c687c279f6332b0de04a71a6b511d17fb613a8b2a2118da2",
+  "batch_size": 128,
+  "workers": 4,
+  "prefetch_factor": 2,
+  "raw_checks": {
+    "starts_exact": true,
+    "pixels_exact": true,
+    "actions_exact": true,
+    "vectorized_actions_exact": true
+  },
+  "comparisons": {
+    "emb": {
+      "shape": [
+        1024,
+        4,
+        192
+      ],
+      "dtype_legacy": "torch.float32",
+      "dtype_dataloader": "torch.float32",
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "exact": true,
+      "allclose": true
+    },
+    "act_emb": {
+      "shape": [
+        1024,
+        4,
+        192
+      ],
+      "dtype_legacy": "torch.float32",
+      "dtype_dataloader": "torch.float32",
+      "max_abs": 0.0,
+      "mean_abs": 0.0,
+      "exact": true,
+      "allclose": true
+    }
+  },
+  "timing_sec": {
+    "legacy": 61.55771496903617,
+    "dataloader": 16.40802358102519,
+    "speedup": 3.7516837213851675
+  },
+  "tolerance": {
+    "atol": 1e-06,
+    "rtol": 1e-06
+  }
+}

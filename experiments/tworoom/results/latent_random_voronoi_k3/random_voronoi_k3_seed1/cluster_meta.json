@@ -1,0 +1,86 @@
+{
+  "version_label": "latent_random_voronoi_v1",
+  "assignment_schema_version": 2,
+  "method": "zscore_l2_random_voronoi",
+  "description": "Random-K capacity control: K train latents are sampled uniformly without optimization and define a cosine Voronoi router.",
+  "seed": 1,
+  "num_clusters": 3,
+  "cluster_counts": {
+    "cluster0": 296859,
+    "cluster1": 304558,
+    "cluster2": 308306
+  },
+  "cluster_fractions": [
+    0.3263180110868913,
+    0.33478102675209925,
+    0.33890096216100946
+  ],
+  "latent_dim": 192,
+  "spherical": true,
+  "classification_rule": "zscore and L2-normalize latent; choose maximum-cosine random training prototype; route to that prototype's cluster id",
+  "prototype_sampling": {
+    "algorithm": "uniform_without_replacement",
+    "optimized": false,
+    "num_restarts": 0,
+    "anchor_rows": [
+      465615,
+      430469,
+      686993
+    ],
+    "anchor_global_idx": [
+      471266,
+      435697,
+      695353
+    ]
+  },
+  "num_routing_prototypes": 3,
+  "route_anchor": "transition_start",
+  "transition_label_offset_steps": 0,
+  "preprocess": "zscore_l2",
+  "zscore_eps": 9.999999974752427e-07,
+  "zscore_source": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_kmeanspp_multirestart_k3/zscore_params.npz",
+  "zscore_source_sha256": "56a2c067215345adea193945641c8dd8cd6fcf7d9818dd951dbdf3d9f10208d3",
+  "full_labels_sha256": "2893ae17b5b849c2023f51a11438fdfa3caab1cba3b62cd83b85aeee708e3156",
+  "output_file_sha256": {
+    "centroids.npy": "4cc29d421256812767e7db9dfa383f946142eb3b400f1aaf0ac20064f6fba246",
+    "routing_prototypes.npy": "a5562e15edae5485943669dd8ced8d13464c4fa9f4d21b9a90c314d1a80e635e",
+    "prototype_cluster_ids.npy": "eed7c944a674e7e9a3f4baf8393c37b9f169123e13a884a08b151a39da2adef5",
+    "cluster_labels.npz": "93cb2c6075cf3567f4a6999a93e7cfa7eda8abb474158bd66d47dc566326b940",
+    "zscore_params.npz": "56a2c067215345adea193945641c8dd8cd6fcf7d9818dd951dbdf3d9f10208d3"
+  },
+  "output_file_size_bytes": {
+    "centroids.npy": 2432,
+    "routing_prototypes.npy": 2432,
+    "prototype_cluster_ids.npy": 152,
+    "cluster_labels.npz": 1712372,
+    "zscore_params.npz": 2045
+  },
+  "train_data_stats": {
+    "embed_dir": "experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors",
+    "cache_regions": [
+      "doorway_corridor",
+      "near_wall",
+      "common",
+      "right_room",
+      "left_room"
+    ],
+    "transition_counts": {
+      "doorway_corridor": 38552,
+      "near_wall": 31533,
+      "common": 297211,
+      "right_room": 324933,
+      "left_room": 330243
+    },
+    "num_expanded_vectors": 4089888,
+    "num_dropped_duplicate_timesteps": 3180165,
+    "num_unique_timesteps": 909723,
+    "frameskip": 5,
+    "latent_dim": 192,
+    "load_and_preprocess_sec": 15.051367706968449,
+    "preprocess_source": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_kmeanspp_multirestart_k3/zscore_params.npz"
+  },
+  "timing_sec": {
+    "assign_and_router_check_sec": 0.0710944680031389
+  },
+  "git_commit": "8edfeb336732b5f3ce7b8b210d0ba370a09e2cac"
+}

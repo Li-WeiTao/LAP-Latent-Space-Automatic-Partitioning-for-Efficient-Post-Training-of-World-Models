@@ -1,0 +1,16 @@
+seed,mode,success_rate,successes,num_eval,out_dir
+0,baseline,50.0,25,50,experiments/real_gauge_drift/results/tworoom_success_rate_baseline_exp6_seed0
+0,rooms3,60.0,30,50,experiments/real_gauge_drift/results/tworoom_success_rate_rooms3_exp6_seed0
+0,priority5,60.0,30,50,experiments/real_gauge_drift/results/tworoom_success_rate_priority5_exp6_seed0
+1,baseline,56.00000000000001,28,50,experiments/real_gauge_drift/results/tworoom_success_rate_baseline_exp6_seed1
+1,rooms3,66.0,33,50,experiments/real_gauge_drift/results/tworoom_success_rate_rooms3_exp6_seed1
+1,priority5,66.0,33,50,experiments/real_gauge_drift/results/tworoom_success_rate_priority5_exp6_seed1
+2,baseline,42.0,21,50,experiments/real_gauge_drift/results/tworoom_success_rate_baseline_exp6_seed2
+2,rooms3,60.0,30,50,experiments/real_gauge_drift/results/tworoom_success_rate_rooms3_exp6_seed2
+2,priority5,57.99999999999999,29,50,experiments/real_gauge_drift/results/tworoom_success_rate_priority5_exp6_seed2
+3,baseline,48.0,24,50,experiments/real_gauge_drift/results/tworoom_success_rate_baseline_exp6_seed3
+3,rooms3,56.00000000000001,28,50,experiments/real_gauge_drift/results/tworoom_success_rate_rooms3_exp6_seed3
+3,priority5,57.99999999999999,29,50,experiments/real_gauge_drift/results/tworoom_success_rate_priority5_exp6_seed3
+4,baseline,50.0,25,50,experiments/real_gauge_drift/results/tworoom_success_rate_baseline_exp6_seed4
+4,rooms3,57.99999999999999,29,50,experiments/real_gauge_drift/results/tworoom_success_rate_rooms3_exp6_seed4
+4,priority5,57.99999999999999,29,50,experiments/real_gauge_drift/results/tworoom_success_rate_priority5_exp6_seed4

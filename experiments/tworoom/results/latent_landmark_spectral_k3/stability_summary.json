@@ -1,0 +1,43 @@
+{
+  "version_label": "latent_landmark_spectral_v1",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "artifacts": [
+    "experiments/real_gauge_drift/results/latent_landmark_spectral_k3/spectral_M20000_k30_P16_seed0",
+    "experiments/real_gauge_drift/results/latent_landmark_spectral_k3/spectral_M20000_k30_P16_seed1",
+    "experiments/real_gauge_drift/results/latent_landmark_spectral_k3/spectral_M20000_k30_P16_seed2"
+  ],
+  "shared_load_preprocess_sec": 14.401841184007935,
+  "pairwise": [
+    {
+      "seed_a": 0,
+      "seed_b": 1,
+      "ari": 0.9613107278800188,
+      "nmi": 0.9342437306696506
+    },
+    {
+      "seed_a": 0,
+      "seed_b": 2,
+      "ari": 0.959982471516418,
+      "nmi": 0.9352156184225935
+    },
+    {
+      "seed_a": 1,
+      "seed_b": 2,
+      "ari": 0.9588702424062943,
+      "nmi": 0.9341269272882607
+    }
+  ],
+  "pairwise_ari_mean": 0.9600544806009103,
+  "pairwise_nmi_mean": 0.9345287587935016,
+  "kmeanspp_R50_reference_pairwise_ari": 0.483,
+  "predeclared_interpretation": {
+    "below_0p433": "materially less stable than K-means++ R50",
+    "at_least_0p50": "at least modest stability improvement",
+    "at_least_0p60": "clear stability improvement"
+  },
+  "peak_process_rss_mb": 7653.0859375
+}

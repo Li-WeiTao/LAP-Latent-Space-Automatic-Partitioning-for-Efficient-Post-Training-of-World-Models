@@ -1,0 +1,14 @@
+{
+  "latent_cluster3_mpc": {
+    "n_seeds": 5,
+    "mean_success_rate": 62.8,
+    "std_success_rate": 3.8987177379235853,
+    "per_seed": [
+      60.0,
+      68.0,
+      66.0,
+      60.0,
+      60.0
+    ]
+  }
+}

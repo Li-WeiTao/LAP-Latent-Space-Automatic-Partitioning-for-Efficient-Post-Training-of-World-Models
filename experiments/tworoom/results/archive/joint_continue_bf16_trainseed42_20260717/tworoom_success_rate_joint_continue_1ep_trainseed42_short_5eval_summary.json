@@ -1,0 +1,14 @@
+{
+  "joint_continue_1ep": {
+    "n_seeds": 5,
+    "mean_success_rate": 88.8,
+    "std_success_rate": 3.63318042491699,
+    "per_seed": [
+      90.0,
+      94.0,
+      84.0,
+      88.0,
+      88.0
+    ]
+  }
+}

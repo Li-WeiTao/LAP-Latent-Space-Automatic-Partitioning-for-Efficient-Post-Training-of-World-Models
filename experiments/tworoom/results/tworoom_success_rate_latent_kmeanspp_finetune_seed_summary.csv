@@ -1,0 +1,2 @@
+method,routing,horizon,train_seed_0_mean,train_seed_42_mean,train_seed_625_mean,fine_tuning_seed_mean,fine_tuning_seed_sample_std,n_fine_tuning_seeds,n_outer_seeds_per_fine_tuning_seed,n_eval_seeds_per_outer,episodes_per_eval_seed
+latent_kmeanspp_cluster_switch_50ep,mpc,long,58.266666666666666,59.6,57.46666666666667,58.44444444444444,1.0777205024873013,3,3,5,50

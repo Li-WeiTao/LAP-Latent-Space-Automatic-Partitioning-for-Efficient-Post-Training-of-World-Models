@@ -1,0 +1,4 @@
+"mode","batch_mean_s","batch_std_s","latency_ms","latency_std_ms","overhead_pct"
+"baseline",44.67,0.71,893.4,14.2,0
+"rooms3",45.8,0.33,916,6.6,2.5
+"priority5",46.26,0.37,925.2,7.4,3.5

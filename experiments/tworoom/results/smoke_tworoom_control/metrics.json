@@ -1,0 +1,85 @@
+{
+  "metadata": {
+    "reference_split": "common",
+    "reference_residual": 0.6436631431125952,
+    "align_dim": 2,
+    "latent_dim": 2,
+    "state_dim": 2,
+    "state_dims_kept": [
+      0,
+      1
+    ],
+    "state_mean": [
+      113.25616803805362,
+      73.90234760809092
+    ],
+    "state_std": [
+      15.531948987142298,
+      16.651303441990763
+    ],
+    "latent_pca_basis_shape": [
+      2,
+      2
+    ],
+    "state_pca_basis_shape": [
+      2,
+      2
+    ]
+  },
+  "metrics": [
+    {
+      "split": "common",
+      "n": 967,
+      "dim": 2,
+      "residual": 0.6436631431125952,
+      "drift": 0.0,
+      "residual_ratio": 0.9999999999984465,
+      "drift_to_residual_ratio": 0.0
+    },
+    {
+      "split": "doorway_corridor",
+      "n": 300,
+      "dim": 2,
+      "residual": 0.6163630457184053,
+      "drift": 0.0006593809974976461,
+      "residual_ratio": 0.9575863591270257,
+      "drift_to_residual_ratio": 0.0006885864561584563
+    },
+    {
+      "split": "goal_other_side",
+      "n": 2110,
+      "dim": 2,
+      "residual": 3.926509948999571,
+      "drift": 8.711894282070836e-05,
+      "residual_ratio": 6.100255997268763,
+      "drift_to_residual_ratio": 1.42811945694901e-05
+    },
+    {
+      "split": "left_room",
+      "n": 990,
+      "dim": 2,
+      "residual": 4.82858390068753,
+      "drift": 0.007011925434994173,
+      "residual_ratio": 7.501725013071582,
+      "drift_to_residual_ratio": 0.0009347084067697925
+    },
+    {
+      "split": "near_wall",
+      "n": 823,
+      "dim": 2,
+      "residual": 8.438289695734277,
+      "drift": 3.1023382940129284e-05,
+      "residual_ratio": 13.109791644921119,
+      "drift_to_residual_ratio": 2.3664283750951697e-06
+    },
+    {
+      "split": "right_room",
+      "n": 1016,
+      "dim": 2,
+      "residual": 4.833867364760322,
+      "drift": 0.006713884718614931,
+      "residual_ratio": 7.509933443411766,
+      "drift_to_residual_ratio": 0.0008940005619495765
+    }
+  ]
+}

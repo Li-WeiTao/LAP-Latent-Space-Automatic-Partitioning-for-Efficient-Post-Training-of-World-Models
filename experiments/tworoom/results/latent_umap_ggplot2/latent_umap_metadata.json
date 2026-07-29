@@ -1,0 +1,18 @@
+{
+  "sample_unit": "unique global timestep latent",
+  "projection_protocol": "fit train episodes, transform held-out test episodes",
+  "sampling": "priority5 class-balanced",
+  "samples_per_class": 2500,
+  "train_samples": 12500,
+  "test_samples": 12500,
+  "seed": 20260711,
+  "preprocessing": "train StandardScaler then train PCA(50)",
+  "pca_explained_variance_50": 0.73227459192276,
+  "umap": {
+    "version": "0.5.12",
+    "n_neighbors": 50,
+    "min_dist": 0.1,
+    "metric": "euclidean"
+  },
+  "output_csv": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_umap_ggplot2/latent_umap_test_coordinates.csv"
+}

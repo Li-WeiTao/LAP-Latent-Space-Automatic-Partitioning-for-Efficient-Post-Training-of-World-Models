@@ -1,0 +1,14 @@
+model,metric,mean,std
+linear_softmax_probe,accuracy,0.998994,0.000120
+linear_softmax_probe,balanced_accuracy,0.997093,0.000444
+linear_softmax_probe,macro_f1,0.996699,0.000401
+linear_softmax_probe,left_room_f1,0.999338,0.000082
+linear_softmax_probe,doorway_corridor_f1,0.991164,0.001079
+linear_softmax_probe,right_room_f1,0.999594,0.000100
+rff_rbf_probe,accuracy,0.999139,0.000080
+rff_rbf_probe,balanced_accuracy,0.995640,0.000569
+rff_rbf_probe,macro_f1,0.997158,0.000278
+rff_rbf_probe,left_room_f1,0.999496,0.000070
+rff_rbf_probe,doorway_corridor_f1,0.992386,0.000752
+rff_rbf_probe,right_room_f1,0.999591,0.000037
+paired_delta,macro_f1_rff_minus_linear,0.000459,0.000157

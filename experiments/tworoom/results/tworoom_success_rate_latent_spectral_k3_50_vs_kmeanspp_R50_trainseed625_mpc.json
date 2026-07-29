@@ -1,0 +1,133 @@
+{
+  "method_name": "spectral_k3_50_trainseed625_mpc",
+  "reference_name": "kmeanspp_R50_k3_50_trainseed625_mpc",
+  "method": {
+    "summary_paths": [
+      "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_latent_spectral_spectral_M20000_k30_P16_seed0_trainseed625_mpc_5seed_summary.csv",
+      "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_latent_spectral_spectral_M20000_k30_P16_seed1_trainseed625_mpc_5seed_summary.csv",
+      "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_latent_spectral_spectral_M20000_k30_P16_seed2_trainseed625_mpc_5seed_summary.csv"
+    ],
+    "num_partition_seeds": 3,
+    "eval_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "episodes_per_eval_seed": 50,
+    "success_rate_matrix_percent": [
+      [
+        54.0,
+        66.0,
+        66.0,
+        62.0,
+        57.99999999999999
+      ],
+      [
+        62.0,
+        72.0,
+        62.0,
+        54.0,
+        60.0
+      ],
+      [
+        60.0,
+        66.0,
+        57.99999999999999,
+        52.0,
+        57.99999999999999
+      ]
+    ],
+    "per_partition_mean_percent": [
+      61.2,
+      62.0,
+      58.8
+    ],
+    "per_partition_eval_seed_sample_sd_percent": [
+      5.21536192416212,
+      6.48074069840786,
+      5.019960159204454
+    ],
+    "grand_mean_percent": 60.666666666666664,
+    "partition_seed_sample_sd_of_means_percent": 1.6653327995729081,
+    "per_eval_seed_partition_mean_percent": [
+      58.666666666666664,
+      68.0,
+      62.0,
+      56.0,
+      58.666666666666664
+    ],
+    "eval_seed_sample_sd_of_partition_means_percent": 4.618802153517007
+  },
+  "reference": {
+    "summary_paths": [
+      "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_latent_kmeanspp_kmeanspp_R50_outer0_trainseed625_5seed_summary.csv",
+      "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_latent_kmeanspp_kmeanspp_R50_outer1_trainseed625_5seed_summary.csv",
+      "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_latent_kmeanspp_kmeanspp_R50_outer2_trainseed625_5seed_summary.csv"
+    ],
+    "num_partition_seeds": 3,
+    "eval_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "episodes_per_eval_seed": 50,
+    "success_rate_matrix_percent": [
+      [
+        56.00000000000001,
+        66.0,
+        54.0,
+        52.0,
+        60.0
+      ],
+      [
+        54.0,
+        68.0,
+        57.99999999999999,
+        50.0,
+        56.00000000000001
+      ],
+      [
+        57.99999999999999,
+        62.0,
+        57.99999999999999,
+        48.0,
+        62.0
+      ]
+    ],
+    "per_partition_mean_percent": [
+      57.6,
+      57.2,
+      57.6
+    ],
+    "per_partition_eval_seed_sample_sd_percent": [
+      5.5497747702046425,
+      6.723094525588644,
+      5.727128425310541
+    ],
+    "grand_mean_percent": 57.46666666666667,
+    "partition_seed_sample_sd_of_means_percent": 0.2309401076758495,
+    "per_eval_seed_partition_mean_percent": [
+      56.0,
+      65.33333333333333,
+      56.666666666666664,
+      50.0,
+      59.333333333333336
+    ],
+    "eval_seed_sample_sd_of_partition_means_percent": 5.565768390597812
+  },
+  "paired_unit": "eval seed after averaging over the three independent partition seeds",
+  "per_eval_seed_difference_percentage_points": [
+    2.6666666666666643,
+    2.6666666666666714,
+    5.333333333333336,
+    6.0,
+    -0.6666666666666714
+  ],
+  "mean_difference_percentage_points": 3.2,
+  "difference_sample_sd_percentage_points": 2.641548367487862,
+  "interpretation": "descriptive; five eval seeds are not a significance test"
+}

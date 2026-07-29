@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Datasets, dense caches, and model artifacts
+data/
+datasets/
+cache/
+**/cache/
+checkpoints/
+**/_work/
+**/_python_deps/
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+*_embeddings.npz
+*transitions.npz
+
+# Runtime products
+*.pid
+*.lock
+*.tmp
+*.bak
+nohup.out
+wandb/
+runs/
+
+# Generated qualitative rollouts
+*.mp4

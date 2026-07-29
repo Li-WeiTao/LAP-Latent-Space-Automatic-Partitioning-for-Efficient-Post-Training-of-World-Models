@@ -1,0 +1,22 @@
+START train_seed=42 gpu=1 cpus=108-111 2026-07-15T06:48:12+00:00
+RUN horizon=short eval_seed=0 2026-07-15T06:48:12+00:00
+DONE horizon=short eval_seed=0 2026-07-15T06:49:15+00:00
+RUN horizon=short eval_seed=1 2026-07-15T06:49:15+00:00
+DONE horizon=short eval_seed=1 2026-07-15T06:50:18+00:00
+RUN horizon=short eval_seed=2 2026-07-15T06:50:18+00:00
+DONE horizon=short eval_seed=2 2026-07-15T06:51:22+00:00
+RUN horizon=short eval_seed=3 2026-07-15T06:51:22+00:00
+DONE horizon=short eval_seed=3 2026-07-15T06:52:23+00:00
+RUN horizon=short eval_seed=4 2026-07-15T06:52:23+00:00
+DONE horizon=short eval_seed=4 2026-07-15T06:53:25+00:00
+RUN horizon=long eval_seed=0 2026-07-15T06:53:25+00:00
+DONE horizon=long eval_seed=0 2026-07-15T06:54:39+00:00
+RUN horizon=long eval_seed=1 2026-07-15T06:54:39+00:00
+DONE horizon=long eval_seed=1 2026-07-15T06:55:58+00:00
+RUN horizon=long eval_seed=2 2026-07-15T06:55:58+00:00
+DONE horizon=long eval_seed=2 2026-07-15T06:57:14+00:00
+RUN horizon=long eval_seed=3 2026-07-15T06:57:14+00:00
+DONE horizon=long eval_seed=3 2026-07-15T06:58:27+00:00
+RUN horizon=long eval_seed=4 2026-07-15T06:58:27+00:00
+DONE horizon=long eval_seed=4 2026-07-15T06:59:45+00:00
+WORKER_COMPLETE 2026-07-15T06:59:45+00:00

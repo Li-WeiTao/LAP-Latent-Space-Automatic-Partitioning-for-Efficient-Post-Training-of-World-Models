@@ -1,0 +1,120 @@
+{
+  "arrays": {
+    "act_emb": {
+      "dtype": "float32",
+      "sha256": "cf236d5858234d5a98329aac8990b0ce52006724fe1bedde863ce98ddbecd70f",
+      "shape": [
+        8192,
+        4,
+        192
+      ]
+    },
+    "emb": {
+      "dtype": "float32",
+      "sha256": "1eed99ec198b3268a3ec7df880704e32a4495cb2b86b70ebaca68618df754fd1",
+      "shape": [
+        8192,
+        4,
+        192
+      ]
+    },
+    "region_starts": {
+      "dtype": "int64",
+      "sha256": "b2f42426cd1c306bde0d4d653edbefd58785a0f1db979545a016bb818a975294",
+      "shape": [
+        8192
+      ]
+    }
+  },
+  "config": {
+    "action_key": "action",
+    "action_norm_starts": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/train_global_reference_starts.npy",
+    "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt",
+    "cpu_threads": 4,
+    "data_file": "/data/sicong/weitao/datasets/lewm/tworoom.h5",
+    "device": "cuda",
+    "frame_batch_size": 0,
+    "frameskip": 0,
+    "history_size": 3,
+    "img_size": 224,
+    "log_every": 20,
+    "max_starts": 8192,
+    "no_chunk_aware_read": false,
+    "num_preds": 1,
+    "num_workers": 4,
+    "output": "experiments/real_gauge_drift/results/unique_timestep_reencode_validation/global_first8192_benchmark_v2.npz",
+    "pixel_key": "pixels",
+    "prefetch_factor": 2,
+    "reference_cache": null,
+    "report": "experiments/real_gauge_drift/results/unique_timestep_reencode_validation/global_first8192_benchmark_v2.report.json",
+    "start_offset": 0,
+    "starts": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/train_global_reference_starts.npy",
+    "transition_batch_size": 128
+  },
+  "counts": {
+    "action_norm_starts": 693728,
+    "actual_padded_encoder_frame_slots": 10752,
+    "duplicate_fraction": 0.67291259765625,
+    "eliminated_duplicate_frames": 22050,
+    "exact_frame_batch_shape_keys": 10718,
+    "extra_shape_keys_for_bitwise_exactness": 0,
+    "frame_slots": 32768,
+    "frameskip": 5,
+    "sequence_length": 4,
+    "source_transition_count": 693728,
+    "source_transition_offset": 0,
+    "transitions": 8192,
+    "unique_frames": 10718
+  },
+  "efficiency": {
+    "actual_kernel_frame_reduction_fraction": 0.671875,
+    "actual_kernel_frame_speedup_after_padding": 3.0476190476190474,
+    "exact_shape_key_reduction_fraction_before_padding": 0.67291259765625,
+    "exact_shape_key_speedup_before_padding": 3.057286807240157,
+    "ideal_unique_frame_speedup": 3.057286807240157
+  },
+  "environment": {
+    "cuda_runtime": "13.0",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 4090",
+    "h5py": "3.16.0",
+    "numpy": "2.2.6",
+    "python": "3.10.9 (main, Mar  1 2023, 18:23:06) [GCC 11.2.0]",
+    "torch": "2.12.1+cu130"
+  },
+  "method": "unique_timestep_exact_reconstruction",
+  "output_semantics": "array-level exact; NPZ byte hash may differ",
+  "schema_version": 1,
+  "starts_source": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/train_global_reference_starts.npy",
+  "timing_sec": {
+    "action_encode": 0.03705692000221461,
+    "action_normalization_stats": 0.5484560980112292,
+    "core_precompute": 15.283554820984136,
+    "inverse_reconstruct": 0.005485147004947066,
+    "model_load": 2.686800524010323,
+    "npz_save": 1.096903219993692,
+    "reference_validation": 0.0,
+    "total": 19.68128532700939,
+    "unique_frame_encode": {
+      "aggregate": {
+        "loader_wait_sec": 0.24084081780165434,
+        "preprocess_encode_d2h_sec": 14.940253548091277,
+        "total_sec": 15.241012753976975
+      },
+      "groups": {
+        "512": {
+          "padded_encoder_slots": 10752,
+          "timing_sec": {
+            "loader_wait_sec": 0.24084081780165434,
+            "preprocess_encode_d2h_sec": 14.940253548091277,
+            "total_sec": 15.241012753976975
+          },
+          "unique_keys": 10718
+        }
+      },
+      "padded_encoder_slots": 10752
+    },
+    "unique_index": 0.019653089984785765
+  },
+  "validation": null
+}

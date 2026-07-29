@@ -1,0 +1,56 @@
+{
+  "method": "faiss_spherical_kmeans",
+  "seed": 1,
+  "num_clusters": 3,
+  "cluster_counts": {
+    "cluster0": 325183,
+    "cluster1": 281288,
+    "cluster2": 303252
+  },
+  "train_data_stats": {
+    "embed_dir": "experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors",
+    "cache_regions": [
+      "doorway_corridor",
+      "near_wall",
+      "common",
+      "right_room",
+      "left_room"
+    ],
+    "transition_counts": {
+      "doorway_corridor": 38552,
+      "near_wall": 31533,
+      "common": 297211,
+      "right_room": 324933,
+      "left_room": 330243
+    },
+    "num_expanded_vectors": 4089888,
+    "num_dropped_duplicate_timesteps": 3180165,
+    "num_unique_timesteps": 909723,
+    "frameskip": 5,
+    "latent_dim": 192
+  },
+  "timing_sec": {
+    "fit_sec": 0.12901643570512533,
+    "assign_train_sec": 0.5964974598027766,
+    "total_sec": 0.7255138955079019,
+    "niter": 100,
+    "device": "cpu",
+    "backend": "faiss_spherical_kmeans",
+    "gpu_id": null,
+    "max_points_per_centroid": 256,
+    "fit_sample_cap": 768,
+    "num_fit_vectors": 768,
+    "num_assign_vectors": 909723,
+    "fit_protocol": "FAISS subsampled centroid fit (<= 768 vectors) + assign all 909723 vectors",
+    "assign_all_vectors_sec_mean": 0.753913527354598,
+    "assign_per_vector_us_mean": 0.8287286650492491,
+    "num_vectors": 909723,
+    "repeats": 3,
+    "assign_backend": "numpy"
+  },
+  "classification_rule": "spherical: argmax cosine similarity to L2-normalized centroids",
+  "spherical": true,
+  "niter": 100,
+  "max_points_per_centroid": 256,
+  "device": "cpu"
+}

@@ -1,0 +1,111 @@
+{
+  "method": "faiss_spherical_kmeans",
+  "num_clusters": 3,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "embed_dir": "experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors",
+  "device": "cpu",
+  "gpu_id": 0,
+  "load_sec": 18.788401334080845,
+  "runs": [
+    {
+      "method": "faiss_spherical_kmeans",
+      "seed": 0,
+      "num_clusters": 3,
+      "out_dir": "experiments/real_gauge_drift/results/latent_unsup_cluster/faiss_spherical_kmeans_k3_seed0",
+      "num_unique_timesteps": 909723,
+      "timing_sec": {
+        "fit_sec": 0.134859514888376,
+        "assign_train_sec": 0.5757941878400743,
+        "total_sec": 0.7106537027284503,
+        "niter": 100,
+        "device": "cpu",
+        "backend": "faiss_spherical_kmeans",
+        "gpu_id": null,
+        "max_points_per_centroid": 256,
+        "fit_sample_cap": 768,
+        "num_fit_vectors": 768,
+        "num_assign_vectors": 909723,
+        "fit_protocol": "FAISS subsampled centroid fit (<= 768 vectors) + assign all 909723 vectors",
+        "assign_all_vectors_sec_mean": 0.7799319946207106,
+        "assign_per_vector_us_mean": 0.8573290931643045,
+        "num_vectors": 909723,
+        "repeats": 3,
+        "assign_backend": "numpy",
+        "wall_sec": 4.659198170993477
+      },
+      "cluster_counts": {
+        "cluster0": 335473,
+        "cluster1": 239673,
+        "cluster2": 334577
+      }
+    },
+    {
+      "method": "faiss_spherical_kmeans",
+      "seed": 1,
+      "num_clusters": 3,
+      "out_dir": "experiments/real_gauge_drift/results/latent_unsup_cluster/faiss_spherical_kmeans_k3_seed1",
+      "num_unique_timesteps": 909723,
+      "timing_sec": {
+        "fit_sec": 0.12901643570512533,
+        "assign_train_sec": 0.5964974598027766,
+        "total_sec": 0.7255138955079019,
+        "niter": 100,
+        "device": "cpu",
+        "backend": "faiss_spherical_kmeans",
+        "gpu_id": null,
+        "max_points_per_centroid": 256,
+        "fit_sample_cap": 768,
+        "num_fit_vectors": 768,
+        "num_assign_vectors": 909723,
+        "fit_protocol": "FAISS subsampled centroid fit (<= 768 vectors) + assign all 909723 vectors",
+        "assign_all_vectors_sec_mean": 0.753913527354598,
+        "assign_per_vector_us_mean": 0.8287286650492491,
+        "num_vectors": 909723,
+        "repeats": 3,
+        "assign_backend": "numpy",
+        "wall_sec": 4.457336293999106
+      },
+      "cluster_counts": {
+        "cluster0": 325183,
+        "cluster1": 281288,
+        "cluster2": 303252
+      }
+    },
+    {
+      "method": "faiss_spherical_kmeans",
+      "seed": 2,
+      "num_clusters": 3,
+      "out_dir": "experiments/real_gauge_drift/results/latent_unsup_cluster/faiss_spherical_kmeans_k3_seed2",
+      "num_unique_timesteps": 909723,
+      "timing_sec": {
+        "fit_sec": 0.12850319501012564,
+        "assign_train_sec": 0.5844661616720259,
+        "total_sec": 0.7129693566821516,
+        "niter": 100,
+        "device": "cpu",
+        "backend": "faiss_spherical_kmeans",
+        "gpu_id": null,
+        "max_points_per_centroid": 256,
+        "fit_sample_cap": 768,
+        "num_fit_vectors": 768,
+        "num_assign_vectors": 909723,
+        "fit_protocol": "FAISS subsampled centroid fit (<= 768 vectors) + assign all 909723 vectors",
+        "assign_all_vectors_sec_mean": 0.7544879959896207,
+        "assign_per_vector_us_mean": 0.8293601414822102,
+        "num_vectors": 909723,
+        "repeats": 3,
+        "assign_backend": "numpy",
+        "wall_sec": 4.435756455175579
+      },
+      "cluster_counts": {
+        "cluster0": 297334,
+        "cluster1": 258823,
+        "cluster2": 353566
+      }
+    }
+  ]
+}

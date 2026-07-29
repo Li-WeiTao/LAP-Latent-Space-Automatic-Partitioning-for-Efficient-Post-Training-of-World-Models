@@ -1,0 +1,241 @@
+{
+  "manifest_schema_version": 2,
+  "dataset": "tworoom",
+  "cluster_artifact_dir": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_random_voronoi_k3/random_voronoi_k3_seed2",
+  "kmeanspp_label_npz": null,
+  "zscore_params": "experiments/real_gauge_drift/results/latent_random_voronoi_k3/random_voronoi_k3_seed2/zscore_params.npz",
+  "cluster_meta": {
+    "version_label": "latent_random_voronoi_v1",
+    "assignment_schema_version": 2,
+    "method": "zscore_l2_random_voronoi",
+    "description": "Random-K capacity control: K train latents are sampled uniformly without optimization and define a cosine Voronoi router.",
+    "seed": 2,
+    "num_clusters": 3,
+    "cluster_counts": {
+      "cluster0": 306107,
+      "cluster1": 369415,
+      "cluster2": 234201
+    },
+    "cluster_fractions": [
+      0.3364837428535939,
+      0.40607415663888896,
+      0.25744210050751715
+    ],
+    "latent_dim": 192,
+    "spherical": true,
+    "classification_rule": "zscore and L2-normalize latent; choose maximum-cosine random training prototype; route to that prototype's cluster id",
+    "prototype_sampling": {
+      "algorithm": "uniform_without_replacement",
+      "optimized": false,
+      "num_restarts": 0,
+      "anchor_rows": [
+        237994,
+        99437,
+        761960
+      ],
+      "anchor_global_idx": [
+        240802,
+        100612,
+        771269
+      ]
+    },
+    "num_routing_prototypes": 3,
+    "route_anchor": "transition_start",
+    "transition_label_offset_steps": 0,
+    "preprocess": "zscore_l2",
+    "zscore_eps": 9.999999974752427e-07,
+    "zscore_source": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_kmeanspp_multirestart_k3/zscore_params.npz",
+    "zscore_source_sha256": "56a2c067215345adea193945641c8dd8cd6fcf7d9818dd951dbdf3d9f10208d3",
+    "full_labels_sha256": "bfbbda634a3ffafc9d18661628a05bf6c1493217e385642444fb5324d5483ce9",
+    "output_file_sha256": {
+      "centroids.npy": "426d5aff4e2d6fb2b631c518960bb86f754beff8e4df353ac9c3bac7db048612",
+      "routing_prototypes.npy": "896c50f58ae1be0fce4a7dc727cb5d306ea0d8ea65ab48e86f616d8cf80cdcb0",
+      "prototype_cluster_ids.npy": "eed7c944a674e7e9a3f4baf8393c37b9f169123e13a884a08b151a39da2adef5",
+      "cluster_labels.npz": "8a4376109d40febef321231af19f3d560efc970ef442dc978604bc308fc37c18",
+      "zscore_params.npz": "56a2c067215345adea193945641c8dd8cd6fcf7d9818dd951dbdf3d9f10208d3"
+    },
+    "output_file_size_bytes": {
+      "centroids.npy": 2432,
+      "routing_prototypes.npy": 2432,
+      "prototype_cluster_ids.npy": 152,
+      "cluster_labels.npz": 1702273,
+      "zscore_params.npz": 2045
+    },
+    "train_data_stats": {
+      "embed_dir": "experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors",
+      "cache_regions": [
+        "doorway_corridor",
+        "near_wall",
+        "common",
+        "right_room",
+        "left_room"
+      ],
+      "transition_counts": {
+        "doorway_corridor": 38552,
+        "near_wall": 31533,
+        "common": 297211,
+        "right_room": 324933,
+        "left_room": 330243
+      },
+      "num_expanded_vectors": 4089888,
+      "num_dropped_duplicate_timesteps": 3180165,
+      "num_unique_timesteps": 909723,
+      "frameskip": 5,
+      "latent_dim": 192,
+      "load_and_preprocess_sec": 15.051367706968449,
+      "preprocess_source": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_kmeanspp_multirestart_k3/zscore_params.npz"
+    },
+    "timing_sec": {
+      "assign_and_router_check_sec": 0.06549459300003946
+    },
+    "git_commit": "8edfeb336732b5f3ce7b8b210d0ba370a09e2cac"
+  },
+  "cluster_artifact_sha256": {
+    "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_random_voronoi_k3/random_voronoi_k3_seed2/centroids.npy": "426d5aff4e2d6fb2b631c518960bb86f754beff8e4df353ac9c3bac7db048612",
+    "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_random_voronoi_k3/random_voronoi_k3_seed2/cluster_labels.npz": "8a4376109d40febef321231af19f3d560efc970ef442dc978604bc308fc37c18",
+    "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_random_voronoi_k3/random_voronoi_k3_seed2/routing_prototypes.npy": "896c50f58ae1be0fce4a7dc727cb5d306ea0d8ea65ab48e86f616d8cf80cdcb0",
+    "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_random_voronoi_k3/random_voronoi_k3_seed2/prototype_cluster_ids.npy": "eed7c944a674e7e9a3f4baf8393c37b9f169123e13a884a08b151a39da2adef5",
+    "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_random_voronoi_k3/random_voronoi_k3_seed2/zscore_params.npz": "56a2c067215345adea193945641c8dd8cd6fcf7d9818dd951dbdf3d9f10208d3",
+    "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_random_voronoi_k3/random_voronoi_k3_seed2/cluster_meta.json": "62664130230212ad80ff9eb1ffd35279f38e5168501232436f7448ff002ae739"
+  },
+  "base_checkpoint": {
+    "path": "/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt",
+    "size_bytes": 72334197,
+    "sha256": "18b5764492c74de5487efdadb66adab11876cb230952765b17c0815fa87b13ff"
+  },
+  "train_starts": {
+    "path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/train_global_reference_starts.npy",
+    "size_bytes": 5549952,
+    "sha256": "7c3047914d9f54c07ccafa5dcf13a27412bf963cd96fd0e2675feadaef8ae496"
+  },
+  "input_embedding_cache": {
+    "path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_latent_spectral_spectral_M20000_k30_P16_seed0_trainseed42/P_train_global_merged_embeddings.npz",
+    "size_bytes": 1270750864,
+    "sha256": "2d9f3c42fe28a01c07b5b8058cb5054c20ec4e2bc207e42ef3c7f0afb54cefcf",
+    "origin": "reused"
+  },
+  "embedding_source_dir": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors",
+  "embedding_source_caches": [
+    {
+      "path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/P_train_left_room_embeddings.npz",
+      "exists": true,
+      "size_bytes": 666471436,
+      "mtime_ns": 1783923025018258998
+    },
+    {
+      "path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/P_train_doorway_corridor_embeddings.npz",
+      "exists": true,
+      "size_bytes": 157592552,
+      "mtime_ns": 1783923019130088763
+    },
+    {
+      "path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/P_train_right_room_embeddings.npz",
+      "exists": true,
+      "size_bytes": 656411109,
+      "mtime_ns": 1783923044148811852
+    }
+  ],
+  "num_train_transitions": 693728,
+  "route_anchor": "transition_start",
+  "route_label_offset_steps": 0,
+  "assignment_schema_version": 2,
+  "history_size": 3,
+  "num_preds": 1,
+  "batch_size": 128,
+  "epochs": 50,
+  "lr": 5e-05,
+  "weight_decay": 0.001,
+  "min_cluster_samples": 256,
+  "seed": 42,
+  "select_best_by_eval": true,
+  "checkpoint_selection": {
+    "criterion": "minimum_predictor_loss",
+    "monitor_split": "same_cluster_training_embedding_pool",
+    "is_held_out_validation": false
+  },
+  "immutable_config": {
+    "dataset": "tworoom",
+    "cluster_source": {
+      "kind": "cluster_artifact",
+      "path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_random_voronoi_k3/random_voronoi_k3_seed2"
+    },
+    "cluster_artifact_sha256": {
+      "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_random_voronoi_k3/random_voronoi_k3_seed2/centroids.npy": "426d5aff4e2d6fb2b631c518960bb86f754beff8e4df353ac9c3bac7db048612",
+      "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_random_voronoi_k3/random_voronoi_k3_seed2/cluster_labels.npz": "8a4376109d40febef321231af19f3d560efc970ef442dc978604bc308fc37c18",
+      "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_random_voronoi_k3/random_voronoi_k3_seed2/routing_prototypes.npy": "896c50f58ae1be0fce4a7dc727cb5d306ea0d8ea65ab48e86f616d8cf80cdcb0",
+      "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_random_voronoi_k3/random_voronoi_k3_seed2/prototype_cluster_ids.npy": "eed7c944a674e7e9a3f4baf8393c37b9f169123e13a884a08b151a39da2adef5",
+      "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_random_voronoi_k3/random_voronoi_k3_seed2/zscore_params.npz": "56a2c067215345adea193945641c8dd8cd6fcf7d9818dd951dbdf3d9f10208d3",
+      "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_random_voronoi_k3/random_voronoi_k3_seed2/cluster_meta.json": "62664130230212ad80ff9eb1ffd35279f38e5168501232436f7448ff002ae739"
+    },
+    "base_checkpoint": {
+      "path": "/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt",
+      "size_bytes": 72334197,
+      "sha256": "18b5764492c74de5487efdadb66adab11876cb230952765b17c0815fa87b13ff"
+    },
+    "train_starts": {
+      "path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/train_global_reference_starts.npy",
+      "size_bytes": 5549952,
+      "sha256": "7c3047914d9f54c07ccafa5dcf13a27412bf963cd96fd0e2675feadaef8ae496"
+    },
+    "input_embedding_cache": {
+      "path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_latent_spectral_spectral_M20000_k30_P16_seed0_trainseed42/P_train_global_merged_embeddings.npz",
+      "size_bytes": 1270750864,
+      "sha256": "2d9f3c42fe28a01c07b5b8058cb5054c20ec4e2bc207e42ef3c7f0afb54cefcf"
+    },
+    "num_train_transitions": 693728,
+    "num_clusters": 3,
+    "route_anchor": "transition_start",
+    "route_label_offset_steps": 0,
+    "assignment_schema_version": 2,
+    "training": {
+      "history_size": 3,
+      "num_preds": 1,
+      "batch_size": 128,
+      "epochs": 50,
+      "lr": 5e-05,
+      "weight_decay": 0.001,
+      "min_cluster_samples": 256,
+      "seed": 42,
+      "select_best_by_eval": true,
+      "checkpoint_selection": {
+        "criterion": "minimum_predictor_loss",
+        "monitor_split": "same_cluster_training_embedding_pool",
+        "is_held_out_validation": false
+      },
+      "device": "cuda"
+    }
+  },
+  "immutable_config_sha256": "6b74ff7362e2c272db61d86a9e8ba38a221c5709172ed9de0bda0d178d3ed3ad",
+  "clusters": {
+    "cluster0": {
+      "num_samples": 231676,
+      "status": "trained",
+      "best_epoch": 49,
+      "best_eval_loss": 0.0008438851537277294,
+      "output_ckpt": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_latent_random_voronoi_k3_seed2_trainseed42/P_train_cluster0_object.ckpt",
+      "output_ckpt_sha256": "3c9d6a363fb1259c66d55d781a3899f39bb13da1c395dadb8a6c02f3021e004d",
+      "output_metadata": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_latent_random_voronoi_k3_seed2_trainseed42/P_train_cluster0_object.json",
+      "output_metadata_sha256": "e8a5c982eb8e097089055254e02abe4b2459d665e2ec13c32495401247ad54c9"
+    },
+    "cluster1": {
+      "num_samples": 282582,
+      "status": "trained",
+      "best_epoch": 49,
+      "best_eval_loss": 0.0009805856108667623,
+      "output_ckpt": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_latent_random_voronoi_k3_seed2_trainseed42/P_train_cluster1_object.ckpt",
+      "output_ckpt_sha256": "d85ff1041ae53fcfccd85bc3d0fc3de73d5eef67a74ea29f2e397b89c9f2b6e4",
+      "output_metadata": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_latent_random_voronoi_k3_seed2_trainseed42/P_train_cluster1_object.json",
+      "output_metadata_sha256": "4bf8f85b5325abe5893df0ffa8822e9a526b7b4155fbdb43140f81b5a73fce1d"
+    },
+    "cluster2": {
+      "num_samples": 179470,
+      "status": "trained",
+      "best_epoch": 46,
+      "best_eval_loss": 0.0008574076219600257,
+      "output_ckpt": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_latent_random_voronoi_k3_seed2_trainseed42/P_train_cluster2_object.ckpt",
+      "output_ckpt_sha256": "4cba7ba5c8bbafd35fd02b905ce3131d75c6a96146eebeb32ecf4d449d9178d8",
+      "output_metadata": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_latent_random_voronoi_k3_seed2_trainseed42/P_train_cluster2_object.json",
+      "output_metadata_sha256": "f9e75add7b7353eeb1bf2701c734ba37f97197160446bad1f00b9a6cc3676ac2"
+    }
+  }
+}

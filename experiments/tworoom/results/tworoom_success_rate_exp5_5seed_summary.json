@@ -1,0 +1,26 @@
+{
+  "priority5": {
+    "n_seeds": 5,
+    "mean_success_rate": 92.8,
+    "std_success_rate": 3.03315017762062,
+    "per_seed": [
+      96.0,
+      94.0,
+      88.0,
+      92.0,
+      94.0
+    ]
+  },
+  "rooms3": {
+    "n_seeds": 5,
+    "mean_success_rate": 92.8,
+    "std_success_rate": 3.63318042491699,
+    "per_seed": [
+      98.0,
+      94.0,
+      88.0,
+      92.0,
+      92.0
+    ]
+  }
+}

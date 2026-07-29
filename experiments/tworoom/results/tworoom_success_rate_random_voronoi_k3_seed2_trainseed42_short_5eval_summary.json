@@ -1,0 +1,14 @@
+{
+  "random_voronoi_k3": {
+    "n_seeds": 5,
+    "mean_success_rate": 92.0,
+    "std_success_rate": 4.242640687119285,
+    "per_seed": [
+      96.0,
+      92.0,
+      86.0,
+      90.0,
+      96.0
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use LAP, please cite the accompanying paper and this software."
+title: "LAP: Latent-Space Auto-Partitioned Fine-Tuning for World Models"
+type: software
+authors:
+  - family-names: Li
+    given-names: WeiTao
+repository-code: "https://github.com/Li-WeiTao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models"
+license: Apache-2.0
+version: 0.1.0
+date-released: 2026-07-30

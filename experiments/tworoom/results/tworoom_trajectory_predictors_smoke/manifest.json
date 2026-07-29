@@ -1,0 +1,30 @@
+{
+  "dataset": "tworoom",
+  "data_file": "/data/sicong/weitao/datasets/lewm/tworoom.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt",
+  "train_config": {
+    "history_size": 3,
+    "num_preds": 1,
+    "frameskip": 0,
+    "img_size": 224,
+    "train_fraction": 0.9,
+    "split_seed": 3072,
+    "seed": 0,
+    "max_starts": 512,
+    "min_region_samples": 256,
+    "batch_size": 128,
+    "epochs": 2,
+    "lr": 5e-05,
+    "weight_decay": 0.001
+  },
+  "num_all_starts": 512,
+  "num_train_global_reference_starts": 461,
+  "action_norm_reference": "train_global",
+  "regions": {
+    "common": {
+      "num_samples": 191,
+      "output_ckpt": "experiments/real_gauge_drift/results/tworoom_trajectory_predictors_smoke/P_common_object.ckpt",
+      "status": "skipped"
+    }
+  }
+}

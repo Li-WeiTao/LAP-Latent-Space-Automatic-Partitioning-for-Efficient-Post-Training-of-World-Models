@@ -1,0 +1,193 @@
+{
+  "metadata": {
+    "reference_split": "reference",
+    "reference_pca_residual": 14.786085213962854,
+    "reference_frame_residual": 184.4639831216559,
+    "align_dim": 2,
+    "latent_dim": 192,
+    "state_dim": 2,
+    "state_dims_kept": [
+      0,
+      1
+    ],
+    "state_mean": [
+      112.2101251219779,
+      73.6421144486629
+    ],
+    "state_std": [
+      15.616806304836938,
+      16.546449010944873
+    ],
+    "latent_mean_shape": [
+      1,
+      192
+    ],
+    "latent_std_shape": [
+      1,
+      192
+    ],
+    "latent_pca_basis_shape": [
+      192,
+      2
+    ],
+    "state_pca_basis_shape": [
+      2,
+      2
+    ],
+    "r2_mode": "holdout"
+  },
+  "metrics": [
+    {
+      "split": "common",
+      "n": 3302,
+      "dim": 2,
+      "pca_residual": 13.768789740702754,
+      "pca_drift": 0.06795035386002919,
+      "pca_residual_ratio": 0.9311991336083756,
+      "pca_drift_to_residual_ratio": 0.07297080872127763,
+      "frame_residual": 184.1237088225378,
+      "frame_drift": 0.12038987701095342,
+      "frame_residual_ratio": 0.9981553347522877,
+      "frame_drift_to_residual_ratio": 0.12061236645167056,
+      "state_to_latent_r2": 0.05451088290763262,
+      "latent_to_state_r2": 0.9998929861446753,
+      "orthogonality_error": NaN,
+      "orthogonal_recovery_error": NaN,
+      "reference_overlap_n": 0,
+      "reference_overlap_ratio": 0.0
+    },
+    {
+      "split": "doorway_corridor",
+      "n": 1451,
+      "dim": 2,
+      "pca_residual": 2.7678801582664088,
+      "pca_drift": 0.8886013455999696,
+      "pca_residual_ratio": 0.18719492808363136,
+      "pca_drift_to_residual_ratio": 4.746930671103602,
+      "frame_residual": 189.89241317620053,
+      "frame_drift": 1.2917294402322064,
+      "frame_residual_ratio": 1.0294281298857322,
+      "frame_drift_to_residual_ratio": 1.2548029364365,
+      "state_to_latent_r2": 0.1698291954292407,
+      "latent_to_state_r2": 0.9999701465875483,
+      "orthogonality_error": NaN,
+      "orthogonal_recovery_error": NaN,
+      "reference_overlap_n": 0,
+      "reference_overlap_ratio": 0.0
+    },
+    {
+      "split": "goal_other_side",
+      "n": 11649,
+      "dim": 2,
+      "pca_residual": 16.478415584772666,
+      "pca_drift": 0.8759352821797105,
+      "pca_residual_ratio": 1.1144542552216992,
+      "pca_drift_to_residual_ratio": 0.7859768833712013,
+      "frame_residual": 263.5960327201806,
+      "frame_drift": 1.4169591293665875,
+      "frame_residual_ratio": 1.4289837412126944,
+      "frame_drift_to_residual_ratio": 0.9915852003768119,
+      "state_to_latent_r2": 0.029618423784122716,
+      "latent_to_state_r2": 0.9921678498887008,
+      "orthogonality_error": NaN,
+      "orthogonal_recovery_error": NaN,
+      "reference_overlap_n": 0,
+      "reference_overlap_ratio": 0.0
+    },
+    {
+      "split": "iid_nonoverlap",
+      "n": 3302,
+      "dim": 2,
+      "pca_residual": 13.768789740702754,
+      "pca_drift": 0.06795035386002919,
+      "pca_residual_ratio": 0.9311991336083756,
+      "pca_drift_to_residual_ratio": 0.07297080872127763,
+      "frame_residual": 184.1237088225378,
+      "frame_drift": 0.12038987701095342,
+      "frame_residual_ratio": 0.9981553347522877,
+      "frame_drift_to_residual_ratio": 0.12061236645167056,
+      "state_to_latent_r2": 0.05685186591643898,
+      "latent_to_state_r2": 0.9998678257259671,
+      "orthogonality_error": NaN,
+      "orthogonal_recovery_error": NaN,
+      "reference_overlap_n": 0,
+      "reference_overlap_ratio": 0.0
+    },
+    {
+      "split": "left_room",
+      "n": 6154,
+      "dim": 2,
+      "pca_residual": 15.845389484012077,
+      "pca_drift": 0.3750979475559309,
+      "pca_residual_ratio": 1.07164196977898,
+      "pca_drift_to_residual_ratio": 0.35002170326806314,
+      "frame_residual": 271.92267254286537,
+      "frame_drift": 1.4227629178851595,
+      "frame_residual_ratio": 1.474123392226265,
+      "frame_drift_to_residual_ratio": 0.9651586328438186,
+      "state_to_latent_r2": 0.06715062600243482,
+      "latent_to_state_r2": 0.9994060554805032,
+      "orthogonality_error": NaN,
+      "orthogonal_recovery_error": NaN,
+      "reference_overlap_n": 0,
+      "reference_overlap_ratio": 0.0
+    },
+    {
+      "split": "near_wall",
+      "n": 5455,
+      "dim": 2,
+      "pca_residual": 25.771989244462937,
+      "pca_drift": 1.3025350064572128,
+      "pca_residual_ratio": 1.7429893627370743,
+      "pca_drift_to_residual_ratio": 0.7472994582199006,
+      "frame_residual": 271.28907365419076,
+      "frame_drift": 1.49904491704951,
+      "frame_residual_ratio": 1.4706885813870307,
+      "frame_drift_to_residual_ratio": 1.0192809926046453,
+      "state_to_latent_r2": 0.08706511340238288,
+      "latent_to_state_r2": 0.9987098030025643,
+      "orthogonality_error": NaN,
+      "orthogonal_recovery_error": NaN,
+      "reference_overlap_n": 0,
+      "reference_overlap_ratio": 0.0
+    },
+    {
+      "split": "reference",
+      "n": 3302,
+      "dim": 2,
+      "pca_residual": 14.786085213962854,
+      "pca_drift": 0.0,
+      "pca_residual_ratio": 0.9999999999999324,
+      "pca_drift_to_residual_ratio": 0.0,
+      "frame_residual": 184.4639831216559,
+      "frame_drift": 0.0,
+      "frame_residual_ratio": 0.9999999999999946,
+      "frame_drift_to_residual_ratio": 0.0,
+      "state_to_latent_r2": 0.056302265510467686,
+      "latent_to_state_r2": 0.9998841416567618,
+      "orthogonality_error": NaN,
+      "orthogonal_recovery_error": NaN,
+      "reference_overlap_n": 3302,
+      "reference_overlap_ratio": 1.0
+    },
+    {
+      "split": "right_room",
+      "n": 6133,
+      "dim": 2,
+      "pca_residual": 15.403613577588068,
+      "pca_drift": 1.4142135623730947,
+      "pca_residual_ratio": 1.0417641556022568,
+      "pca_drift_to_residual_ratio": 1.357517970614148,
+      "frame_residual": 266.8452510247339,
+      "frame_drift": 1.4172551633329942,
+      "frame_residual_ratio": 1.446598119095939,
+      "frame_drift_to_residual_ratio": 0.9797158897301328,
+      "state_to_latent_r2": 0.07362131417470263,
+      "latent_to_state_r2": 0.9977604821825528,
+      "orthogonality_error": NaN,
+      "orthogonal_recovery_error": NaN,
+      "reference_overlap_n": 0,
+      "reference_overlap_ratio": 0.0
+    }
+  ]
+}

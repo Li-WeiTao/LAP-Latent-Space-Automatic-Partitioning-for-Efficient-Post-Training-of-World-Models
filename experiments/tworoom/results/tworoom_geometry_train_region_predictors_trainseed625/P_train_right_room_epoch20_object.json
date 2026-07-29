@@ -1,0 +1,6 @@
+{
+  "region": "right_room",
+  "epoch": 20,
+  "train_loss": 0.001559478798425236,
+  "eval_loss": 0.0015161760330367
+}

@@ -1,0 +1,28 @@
+{
+  "dataset": "tworoom",
+  "data_root": "/data/sicong/weitao/datasets/lewm",
+  "data_file": "/data/sicong/weitao/datasets/lewm/tworoom.h5",
+  "state_key": "proprio",
+  "latent_source": "privileged-control",
+  "checkpoint": null,
+  "checkpoint_cache_dir": null,
+  "out_dir": "experiments/real_gauge_drift/results/smoke_tworoom_control",
+  "max_samples": 3000,
+  "batch_size": 128,
+  "img_size": 224,
+  "device": "auto",
+  "seed": 0,
+  "reference_split": "common",
+  "align_dim": null,
+  "min_split_size": 100,
+  "num_sampled": 3000,
+  "available_splits": {
+    "common": 967,
+    "left_room": 990,
+    "right_room": 1016,
+    "doorway_corridor": 300,
+    "near_wall": 823,
+    "goal_other_side": 2110
+  },
+  "cwd": "/data/sicong/weitao/le-wm"
+}

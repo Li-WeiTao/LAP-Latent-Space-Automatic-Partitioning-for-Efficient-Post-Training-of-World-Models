@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lap-world-model"
+version = "0.1.0"
+description = "Latent-space auto-partitioned fine-tuning for world models"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [{ name = "WeiTao Li" }]
+dependencies = [
+  "numpy>=2.2,<2.3",
+  "scipy>=1.15,<1.16",
+  "scikit-learn>=1.7,<1.8",
+  "threadpoolctl>=3.6,<4",
+]
+
+[project.optional-dependencies]
+tworoom = [
+  "torch>=2.12,<2.13",
+  "torchvision",
+  "h5py>=3.16,<3.17",
+  "hydra-core>=1.3,<1.4",
+  "matplotlib>=3.10,<3.11",
+  "stable-pretraining==0.1.7",
+  "stable-worldmodel==0.1.1",
+]
+test = ["pytest>=8,<9"]
+
+[tool.setuptools.packages.find]
+include = ["lap*", "backends*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "experiments/tworoom/tests"]

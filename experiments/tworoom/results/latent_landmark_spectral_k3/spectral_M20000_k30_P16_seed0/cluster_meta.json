@@ -1,0 +1,211 @@
+{
+  "version_label": "latent_landmark_spectral_v1",
+  "assignment_schema_version": 2,
+  "method": "zscore_l2_landmark_spectral_prototype",
+  "description": "landmark spectral partition with prototype out-of-sample extension",
+  "seed": 0,
+  "num_clusters": 3,
+  "num_landmarks": 20000,
+  "latent_dim": 192,
+  "spherical": true,
+  "classification_rule": "zscore and L2-normalize latent; choose maximum-cosine routing prototype; route to that prototype's owner cluster",
+  "num_routing_prototypes": 48,
+  "prototypes_per_cluster": 16,
+  "prototype_fit": {
+    "algorithm": "full-landmark spherical K-means++",
+    "n_init": 5,
+    "max_iter": 100,
+    "rel_tol": 1e-06,
+    "patience": 5
+  },
+  "prototype_holdout": {
+    "episode_disjoint": true,
+    "fraction": 0.2,
+    "split_seed": 7919,
+    "num_train": 16000,
+    "num_holdout": 4000,
+    "threshold_macro_f1": 0.97,
+    "threshold_min_class_recall": 0.95,
+    "attempts": [
+      {
+        "macro_f1": 0.992906108828547,
+        "per_class_recall": [
+          0.9838492597577388,
+          0.9984871406959153,
+          0.99748322147651
+        ],
+        "min_class_recall": 0.9838492597577388,
+        "accuracy": 0.99275,
+        "prototypes_per_cluster": 16
+      }
+    ]
+  },
+  "all_landmark_router_fidelity": {
+    "macro_f1": 0.989154110245518,
+    "per_class_recall": [
+      0.9792879382699337,
+      0.9939195509822264,
+      0.9953218261009841
+    ],
+    "min_class_recall": 0.9792879382699337,
+    "accuracy": 0.98895
+  },
+  "graph": {
+    "effective_knn": 30,
+    "num_undirected_nonzeros": 661402,
+    "num_connected_components": 1,
+    "component_fractions": [
+      1.0
+    ],
+    "sigma_floor": 0.016894663870334625,
+    "degree_min": 7.775027148425579,
+    "degree_mean": 19.693072633488104,
+    "degree_max": 28.16749094426632
+  },
+  "knn": {
+    "backend": "torch_cuda_exact_cosine",
+    "device": "cuda:0",
+    "query_chunk": 2048,
+    "sec": 0.13504099598503672,
+    "peak_cuda_allocated_mb": 336.4609375
+  },
+  "spectral": {
+    "eigensolver_sec": 0.4531948849908076,
+    "spectral_kmeans_sec": 0.0992829540045932,
+    "normalized_adjacency_eigenvalues_desc": [
+      0.9999999999999978,
+      0.9998396341255286,
+      0.9993856653795425,
+      0.9985542467158838,
+      0.9984785970545909
+    ],
+    "laplacian_eigenvalues_asc": [
+      2.220446049250313e-15,
+      0.00016036587447143535,
+      0.0006143346204574573,
+      0.0014457532841162246,
+      0.0015214029454091449
+    ],
+    "eigengap_after_k": 0.0008314186636587673,
+    "spectral_kmeans_inertia": 2103.31103515625,
+    "spectral_kmeans_n_iter": 5,
+    "normalized_cut": 0.02578317227844362,
+    "landmark_cluster_counts": [
+      7387,
+      6414,
+      6199
+    ]
+  },
+  "full_cluster_counts": [
+    329377,
+    294713,
+    285633
+  ],
+  "full_cluster_fractions": [
+    0.36206295762556295,
+    0.3239590512716508,
+    0.31397799110278624
+  ],
+  "min_full_cluster_fraction_threshold": 0.02,
+  "route_anchor": "transition_start",
+  "history_size": 3,
+  "frameskip": 5,
+  "transition_label_offset_steps": 0,
+  "preprocess": "zscore_l2",
+  "zscore_eps": 1e-06,
+  "full_labels_sha256": "0201553a4c3db3cc0310a6d0e94e6361b3e1bcd014eb671c0ebb7e8cee324fa3",
+  "train_data_stats": {
+    "embed_dir": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors",
+    "cache_regions": [
+      "doorway_corridor",
+      "near_wall",
+      "common",
+      "right_room",
+      "left_room"
+    ],
+    "transition_counts": {
+      "doorway_corridor": 38552,
+      "near_wall": 31533,
+      "common": 297211,
+      "right_room": 324933,
+      "left_room": 330243
+    },
+    "num_expanded_vectors": 4089888,
+    "num_dropped_duplicate_timesteps": 3180165,
+    "num_unique_timesteps": 909723,
+    "frameskip": 5,
+    "latent_dim": 192
+  },
+  "timing_sec": {
+    "landmark_sampling_sec": 0.07823027498670854,
+    "knn": {
+      "backend": "torch_cuda_exact_cosine",
+      "device": "cuda:0",
+      "query_chunk": 2048,
+      "sec": 0.13504099598503672,
+      "peak_cuda_allocated_mb": 336.4609375
+    },
+    "graph_build_sec": 0.08067930399556644,
+    "spectral": {
+      "eigensolver_sec": 0.4531948849908076,
+      "spectral_kmeans_sec": 0.0992829540045932,
+      "normalized_adjacency_eigenvalues_desc": [
+        0.9999999999999978,
+        0.9998396341255286,
+        0.9993856653795425,
+        0.9985542467158838,
+        0.9984785970545909
+      ],
+      "laplacian_eigenvalues_asc": [
+        2.220446049250313e-15,
+        0.00016036587447143535,
+        0.0006143346204574573,
+        0.0014457532841162246,
+        0.0015214029454091449
+      ],
+      "eigengap_after_k": 0.0008314186636587673,
+      "spectral_kmeans_inertia": 2103.31103515625,
+      "spectral_kmeans_n_iter": 5,
+      "normalized_cut": 0.02578317227844362,
+      "landmark_cluster_counts": [
+        7387,
+        6414,
+        6199
+      ]
+    },
+    "prototype_fit_and_validation_sec": 3.6212737300083973,
+    "full_assignment": {
+      "backend": "torch_cuda",
+      "device": "cuda:0",
+      "sec": 0.07211591801024042
+    },
+    "artifact_arrays_save_sec": 0.6071943620045204,
+    "partition_seed_sec": 5.790070870978525,
+    "shared_load_preprocess_sec": 14.401841184007935,
+    "end_to_end_sec": 20.19191205498646
+  },
+  "router_microbenchmark_cpu": {
+    "1": {
+      "actual_batch_size": 1,
+      "repeats": 100,
+      "mean_ms": 0.02068985137157142,
+      "mean_us_per_vector": 20.68985137157142
+    },
+    "300": {
+      "actual_batch_size": 300,
+      "repeats": 10,
+      "mean_ms": 0.15385459701064974,
+      "mean_us_per_vector": 0.5128486567021658
+    },
+    "15000": {
+      "actual_batch_size": 15000,
+      "repeats": 3,
+      "mean_ms": 2.914081676863134,
+      "mean_us_per_vector": 0.1942721117908756
+    }
+  },
+  "target_wall_sec": 120.0,
+  "within_target_wall_sec": true,
+  "peak_process_rss_mb": 7653.0859375,
+  "git_commit": "8edfeb336732b5f3ce7b8b210d0ba370a09e2cac"
+}

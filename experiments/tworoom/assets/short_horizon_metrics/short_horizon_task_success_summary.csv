@@ -1,0 +1,16 @@
+"configuration","model","mean","sd","train_seed_0_mean","train_seed_42_mean","train_seed_625_mean","uncertainty"
+"Baseline","Baseline",90.4,NA,NA,NA,NA,"fixed reference; no fine-tuning seed"
+"Global-FT
+45ep","Global-FT45",91.3333333333333,1.4047538337137,91.2,90,92.8,"sample SD across fine-tuning seeds 0/42/625"
+"rooms3
+30ep","rooms3",92,0.799999999999997,92,92.8,91.2,"sample SD across fine-tuning seeds 0/42/625"
+"priority5
+30ep","priority5",92,0.799999999999997,92,92.8,91.2,"sample SD across fine-tuning seeds 0/42/625"
+"rooms3
+50ep","rooms3",91.8666666666667,0.832666399786451,91.6,92.8,91.2,"sample SD across fine-tuning seeds 0/42/625"
+"priority5
+50ep","priority5",92,0.799999999999997,92,92.8,91.2,"sample SD across fine-tuning seeds 0/42/625"
+"rooms3
+80ep","rooms3",92,0.799999999999997,92,92.8,91.2,"sample SD across fine-tuning seeds 0/42/625"
+"priority5
+80ep","priority5",92,0.692820323027553,91.6,92.8,91.6,"sample SD across fine-tuning seeds 0/42/625"

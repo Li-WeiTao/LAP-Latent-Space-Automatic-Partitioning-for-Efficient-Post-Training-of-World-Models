@@ -1,0 +1,2 @@
+seed,mode,success_rate,successes,num_eval,classify_ms_per_step,out_dir
+0,latent_cluster3,62.0,31,50,3.745335074020478,experiments/real_gauge_drift/results/tworoom_success_rate_latent_kmeanspp_R50_outer0_exp6_b100_seed0

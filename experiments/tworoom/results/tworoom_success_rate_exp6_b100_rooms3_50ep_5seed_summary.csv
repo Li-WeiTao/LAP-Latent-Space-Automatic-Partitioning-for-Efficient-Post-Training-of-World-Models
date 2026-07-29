@@ -1,0 +1,2 @@
+seed,mode,success_rate,successes,num_eval,out_dir
+0,rooms3,64.0,32,50,experiments/real_gauge_drift/results/tworoom_success_rate_rooms3_exp6_b100_seed0

@@ -1,0 +1,5 @@
+model,split,accuracy,balanced_accuracy,macro_f1,left_room_f1,doorway_corridor_f1,right_room_f1
+linear_softmax_probe,val,0.998928,0.997567,0.996535,0.999374,0.990743,0.999488
+linear_softmax_probe,test,0.998805,0.997187,0.995982,0.999257,0.989212,0.999478
+rff_rbf_probe,val,0.999405,0.997234,0.998066,0.999609,0.994831,0.999759
+rff_rbf_probe,test,0.999355,0.996510,0.997802,0.999685,0.994089,0.999631

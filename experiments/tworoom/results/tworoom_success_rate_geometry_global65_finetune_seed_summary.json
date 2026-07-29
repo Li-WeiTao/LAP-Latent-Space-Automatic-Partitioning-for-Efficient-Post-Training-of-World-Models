@@ -1,0 +1,594 @@
+{
+  "protocol": {
+    "fine_tuning_seeds": [
+      0,
+      42,
+      625
+    ],
+    "eval_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "episodes_per_eval_seed": 50,
+    "primary_std": "sample standard deviation across the three fine-tuning-seed means"
+  },
+  "results": [
+    {
+      "horizon": "short",
+      "method": "rooms3_30ep",
+      "fine_tuning_seed_results": {
+        "0": {
+          "eval_seed_scores": [
+            98.0,
+            94.0,
+            84.0,
+            90.0,
+            94.0
+          ],
+          "eval_seed_mean": 92.0,
+          "eval_seed_sample_std": 5.291502622129181
+        },
+        "42": {
+          "eval_seed_scores": [
+            98.0,
+            94.0,
+            88.0,
+            92.0,
+            92.0
+          ],
+          "eval_seed_mean": 92.8,
+          "eval_seed_sample_std": 3.63318042491699
+        },
+        "625": {
+          "eval_seed_scores": [
+            94.0,
+            96.0,
+            86.0,
+            90.0,
+            90.0
+          ],
+          "eval_seed_mean": 91.2,
+          "eval_seed_sample_std": 3.8987177379235853
+        }
+      },
+      "fine_tuning_seed_mean": 92.0,
+      "fine_tuning_seed_sample_std": 0.7999999999999972
+    },
+    {
+      "horizon": "short",
+      "method": "priority5_30ep",
+      "fine_tuning_seed_results": {
+        "0": {
+          "eval_seed_scores": [
+            96.0,
+            92.0,
+            86.0,
+            92.0,
+            94.0
+          ],
+          "eval_seed_mean": 92.0,
+          "eval_seed_sample_std": 3.7416573867739413
+        },
+        "42": {
+          "eval_seed_scores": [
+            96.0,
+            94.0,
+            88.0,
+            92.0,
+            94.0
+          ],
+          "eval_seed_mean": 92.8,
+          "eval_seed_sample_std": 3.03315017762062
+        },
+        "625": {
+          "eval_seed_scores": [
+            96.0,
+            94.0,
+            86.0,
+            88.0,
+            92.0
+          ],
+          "eval_seed_mean": 91.2,
+          "eval_seed_sample_std": 4.147288270665544
+        }
+      },
+      "fine_tuning_seed_mean": 92.0,
+      "fine_tuning_seed_sample_std": 0.7999999999999972
+    },
+    {
+      "horizon": "short",
+      "method": "rooms3_50ep",
+      "fine_tuning_seed_results": {
+        "0": {
+          "eval_seed_scores": [
+            96.0,
+            92.0,
+            88.0,
+            90.0,
+            92.0
+          ],
+          "eval_seed_mean": 91.6,
+          "eval_seed_sample_std": 2.9664793948382653
+        },
+        "42": {
+          "eval_seed_scores": [
+            98.0,
+            94.0,
+            88.0,
+            92.0,
+            92.0
+          ],
+          "eval_seed_mean": 92.8,
+          "eval_seed_sample_std": 3.63318042491699
+        },
+        "625": {
+          "eval_seed_scores": [
+            94.0,
+            94.0,
+            90.0,
+            88.0,
+            90.0
+          ],
+          "eval_seed_mean": 91.2,
+          "eval_seed_sample_std": 2.6832815729997477
+        }
+      },
+      "fine_tuning_seed_mean": 91.86666666666666,
+      "fine_tuning_seed_sample_std": 0.8326663997864513
+    },
+    {
+      "horizon": "short",
+      "method": "priority5_50ep",
+      "fine_tuning_seed_results": {
+        "0": {
+          "eval_seed_scores": [
+            96.0,
+            94.0,
+            88.0,
+            90.0,
+            92.0
+          ],
+          "eval_seed_mean": 92.0,
+          "eval_seed_sample_std": 3.1622776601683795
+        },
+        "42": {
+          "eval_seed_scores": [
+            96.0,
+            94.0,
+            88.0,
+            92.0,
+            94.0
+          ],
+          "eval_seed_mean": 92.8,
+          "eval_seed_sample_std": 3.03315017762062
+        },
+        "625": {
+          "eval_seed_scores": [
+            96.0,
+            94.0,
+            86.0,
+            90.0,
+            90.0
+          ],
+          "eval_seed_mean": 91.2,
+          "eval_seed_sample_std": 3.8987177379235853
+        }
+      },
+      "fine_tuning_seed_mean": 92.0,
+      "fine_tuning_seed_sample_std": 0.7999999999999972
+    },
+    {
+      "horizon": "short",
+      "method": "rooms3_doorway80",
+      "fine_tuning_seed_results": {
+        "0": {
+          "eval_seed_scores": [
+            96.0,
+            92.0,
+            88.0,
+            90.0,
+            94.0
+          ],
+          "eval_seed_mean": 92.0,
+          "eval_seed_sample_std": 3.1622776601683795
+        },
+        "42": {
+          "eval_seed_scores": [
+            98.0,
+            94.0,
+            88.0,
+            92.0,
+            92.0
+          ],
+          "eval_seed_mean": 92.8,
+          "eval_seed_sample_std": 3.63318042491699
+        },
+        "625": {
+          "eval_seed_scores": [
+            94.0,
+            94.0,
+            90.0,
+            88.0,
+            90.0
+          ],
+          "eval_seed_mean": 91.2,
+          "eval_seed_sample_std": 2.6832815729997477
+        }
+      },
+      "fine_tuning_seed_mean": 92.0,
+      "fine_tuning_seed_sample_std": 0.7999999999999972
+    },
+    {
+      "horizon": "short",
+      "method": "priority5_doorway80",
+      "fine_tuning_seed_results": {
+        "0": {
+          "eval_seed_scores": [
+            96.0,
+            94.0,
+            88.0,
+            90.0,
+            90.0
+          ],
+          "eval_seed_mean": 91.6,
+          "eval_seed_sample_std": 3.286335345030997
+        },
+        "42": {
+          "eval_seed_scores": [
+            96.0,
+            94.0,
+            88.0,
+            92.0,
+            94.0
+          ],
+          "eval_seed_mean": 92.8,
+          "eval_seed_sample_std": 3.03315017762062
+        },
+        "625": {
+          "eval_seed_scores": [
+            96.0,
+            94.0,
+            88.0,
+            90.0,
+            90.0
+          ],
+          "eval_seed_mean": 91.6,
+          "eval_seed_sample_std": 3.286335345030997
+        }
+      },
+      "fine_tuning_seed_mean": 92.0,
+      "fine_tuning_seed_sample_std": 0.6928203230275526
+    },
+    {
+      "horizon": "short",
+      "method": "global_ft_65ep",
+      "fine_tuning_seed_results": {
+        "0": {
+          "eval_seed_scores": [
+            92.0,
+            90.0,
+            86.0,
+            88.0,
+            90.0
+          ],
+          "eval_seed_mean": 89.2,
+          "eval_seed_sample_std": 2.280350850198276
+        },
+        "42": {
+          "eval_seed_scores": [
+            96.0,
+            94.0,
+            86.0,
+            92.0,
+            94.0
+          ],
+          "eval_seed_mean": 92.4,
+          "eval_seed_sample_std": 3.847076812334269
+        },
+        "625": {
+          "eval_seed_scores": [
+            90.0,
+            90.0,
+            86.0,
+            88.0,
+            94.0
+          ],
+          "eval_seed_mean": 89.6,
+          "eval_seed_sample_std": 2.9664793948382653
+        }
+      },
+      "fine_tuning_seed_mean": 90.4,
+      "fine_tuning_seed_sample_std": 1.743559577416273
+    },
+    {
+      "horizon": "long",
+      "method": "rooms3_30ep",
+      "fine_tuning_seed_results": {
+        "0": {
+          "eval_seed_scores": [
+            60.0,
+            64.0,
+            62.0,
+            60.0,
+            60.0
+          ],
+          "eval_seed_mean": 61.2,
+          "eval_seed_sample_std": 1.7888543819998317
+        },
+        "42": {
+          "eval_seed_scores": [
+            60.0,
+            68.0,
+            56.00000000000001,
+            57.99999999999999,
+            57.99999999999999
+          ],
+          "eval_seed_mean": 60.0,
+          "eval_seed_sample_std": 4.69041575982343
+        },
+        "625": {
+          "eval_seed_scores": [
+            60.0,
+            70.0,
+            60.0,
+            57.99999999999999,
+            64.0
+          ],
+          "eval_seed_mean": 62.4,
+          "eval_seed_sample_std": 4.7749345545253306
+        }
+      },
+      "fine_tuning_seed_mean": 61.2,
+      "fine_tuning_seed_sample_std": 1.1999999999999993
+    },
+    {
+      "horizon": "long",
+      "method": "priority5_30ep",
+      "fine_tuning_seed_results": {
+        "0": {
+          "eval_seed_scores": [
+            62.0,
+            64.0,
+            60.0,
+            57.99999999999999,
+            64.0
+          ],
+          "eval_seed_mean": 61.6,
+          "eval_seed_sample_std": 2.607680962081062
+        },
+        "42": {
+          "eval_seed_scores": [
+            60.0,
+            66.0,
+            56.00000000000001,
+            60.0,
+            60.0
+          ],
+          "eval_seed_mean": 60.4,
+          "eval_seed_sample_std": 3.577708763999661
+        },
+        "625": {
+          "eval_seed_scores": [
+            57.99999999999999,
+            70.0,
+            66.0,
+            57.99999999999999,
+            62.0
+          ],
+          "eval_seed_mean": 62.8,
+          "eval_seed_sample_std": 5.2153619241621225
+        }
+      },
+      "fine_tuning_seed_mean": 61.6,
+      "fine_tuning_seed_sample_std": 1.1999999999999993
+    },
+    {
+      "horizon": "long",
+      "method": "rooms3_50ep",
+      "fine_tuning_seed_results": {
+        "0": {
+          "eval_seed_scores": [
+            60.0,
+            64.0,
+            57.99999999999999,
+            54.0,
+            57.99999999999999
+          ],
+          "eval_seed_mean": 58.8,
+          "eval_seed_sample_std": 3.633180424916991
+        },
+        "42": {
+          "eval_seed_scores": [
+            60.0,
+            64.0,
+            60.0,
+            54.0,
+            57.99999999999999
+          ],
+          "eval_seed_mean": 59.199999999999996,
+          "eval_seed_sample_std": 3.633180424916991
+        },
+        "625": {
+          "eval_seed_scores": [
+            56.00000000000001,
+            64.0,
+            60.0,
+            64.0,
+            64.0
+          ],
+          "eval_seed_mean": 61.6,
+          "eval_seed_sample_std": 3.5777087639996608
+        }
+      },
+      "fine_tuning_seed_mean": 59.86666666666667,
+      "fine_tuning_seed_sample_std": 1.5143755588800758
+    },
+    {
+      "horizon": "long",
+      "method": "priority5_50ep",
+      "fine_tuning_seed_results": {
+        "0": {
+          "eval_seed_scores": [
+            60.0,
+            64.0,
+            56.00000000000001,
+            54.0,
+            60.0
+          ],
+          "eval_seed_mean": 58.800000000000004,
+          "eval_seed_sample_std": 3.8987177379235844
+        },
+        "42": {
+          "eval_seed_scores": [
+            60.0,
+            64.0,
+            57.99999999999999,
+            56.00000000000001,
+            57.99999999999999
+          ],
+          "eval_seed_mean": 59.199999999999996,
+          "eval_seed_sample_std": 3.03315017762062
+        },
+        "625": {
+          "eval_seed_scores": [
+            56.00000000000001,
+            60.0,
+            66.0,
+            64.0,
+            70.0
+          ],
+          "eval_seed_mean": 63.2,
+          "eval_seed_sample_std": 5.403702434442516
+        }
+      },
+      "fine_tuning_seed_mean": 60.4,
+      "fine_tuning_seed_sample_std": 2.433105012119289
+    },
+    {
+      "horizon": "long",
+      "method": "rooms3_doorway80",
+      "fine_tuning_seed_results": {
+        "0": {
+          "eval_seed_scores": [
+            60.0,
+            64.0,
+            57.99999999999999,
+            54.0,
+            57.99999999999999
+          ],
+          "eval_seed_mean": 58.8,
+          "eval_seed_sample_std": 3.633180424916991
+        },
+        "42": {
+          "eval_seed_scores": [
+            60.0,
+            66.0,
+            60.0,
+            56.00000000000001,
+            57.99999999999999
+          ],
+          "eval_seed_mean": 60.0,
+          "eval_seed_sample_std": 3.7416573867739404
+        },
+        "625": {
+          "eval_seed_scores": [
+            56.00000000000001,
+            68.0,
+            57.99999999999999,
+            64.0,
+            64.0
+          ],
+          "eval_seed_mean": 62.0,
+          "eval_seed_sample_std": 4.898979485566356
+        }
+      },
+      "fine_tuning_seed_mean": 60.266666666666666,
+      "fine_tuning_seed_sample_std": 1.6165807537309533
+    },
+    {
+      "horizon": "long",
+      "method": "priority5_doorway80",
+      "fine_tuning_seed_results": {
+        "0": {
+          "eval_seed_scores": [
+            60.0,
+            62.0,
+            60.0,
+            54.0,
+            60.0
+          ],
+          "eval_seed_mean": 59.2,
+          "eval_seed_sample_std": 3.03315017762062
+        },
+        "42": {
+          "eval_seed_scores": [
+            60.0,
+            66.0,
+            57.99999999999999,
+            57.99999999999999,
+            57.99999999999999
+          ],
+          "eval_seed_mean": 59.99999999999999,
+          "eval_seed_sample_std": 3.4641016151377575
+        },
+        "625": {
+          "eval_seed_scores": [
+            56.00000000000001,
+            62.0,
+            64.0,
+            64.0,
+            70.0
+          ],
+          "eval_seed_mean": 63.2,
+          "eval_seed_sample_std": 5.019960159204451
+        }
+      },
+      "fine_tuning_seed_mean": 60.8,
+      "fine_tuning_seed_sample_std": 2.1166010488516744
+    },
+    {
+      "horizon": "long",
+      "method": "global_ft_65ep",
+      "fine_tuning_seed_results": {
+        "0": {
+          "eval_seed_scores": [
+            56.00000000000001,
+            68.0,
+            56.00000000000001,
+            52.0,
+            57.99999999999999
+          ],
+          "eval_seed_mean": 58.0,
+          "eval_seed_sample_std": 5.999999999999999
+        },
+        "42": {
+          "eval_seed_scores": [
+            60.0,
+            62.0,
+            52.0,
+            52.0,
+            60.0
+          ],
+          "eval_seed_mean": 57.2,
+          "eval_seed_sample_std": 4.8166378315169185
+        },
+        "625": {
+          "eval_seed_scores": [
+            60.0,
+            62.0,
+            57.99999999999999,
+            54.0,
+            56.00000000000001
+          ],
+          "eval_seed_mean": 58.0,
+          "eval_seed_sample_std": 3.162277660168378
+        }
+      },
+      "fine_tuning_seed_mean": 57.733333333333334,
+      "fine_tuning_seed_sample_std": 0.461880215351699
+    }
+  ]
+}

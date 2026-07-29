@@ -1,0 +1,46 @@
+{
+  "dataset": "tworoom",
+  "cluster_artifact_dir": null,
+  "kmeanspp_label_npz": "experiments/real_gauge_drift/results/latent_kmeanspp_multirestart_k3/labels/kmeanspp_R50_outer0.npz",
+  "zscore_params": "experiments/real_gauge_drift/results/latent_kmeanspp_multirestart_k3/zscore_params.npz",
+  "cluster_meta": {
+    "method": "zscore_l2_spherical_kmeanspp",
+    "num_clusters": 3,
+    "seed": 0,
+    "inner_restart_budget": 50,
+    "classification_rule": "zscore L2-normalize latent, then argmax cosine similarity to centroids",
+    "spherical": true,
+    "label_npz": "experiments/real_gauge_drift/results/latent_kmeanspp_multirestart_k3/labels/kmeanspp_R50_outer0.npz",
+    "objective_final": 0.15813203155994415,
+    "selected_inner_restart": 33,
+    "zscore_params_npz": "experiments/real_gauge_drift/results/latent_kmeanspp_multirestart_k3/zscore_params.npz"
+  },
+  "embedding_source_dir": "experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors",
+  "num_train_transitions": 693728,
+  "epochs": 50,
+  "seed": 0,
+  "select_best_by_eval": true,
+  "clusters": {
+    "cluster0": {
+      "num_samples": 232240,
+      "status": "trained",
+      "output_ckpt": "experiments/real_gauge_drift/results/tworoom_latent_kmeanspp_kmeanspp_R50_outer0_trainseed0/P_train_cluster0_object.ckpt",
+      "best_epoch": 50,
+      "best_eval_loss": 0.0008785411953622668
+    },
+    "cluster1": {
+      "num_samples": 229533,
+      "status": "trained",
+      "output_ckpt": "experiments/real_gauge_drift/results/tworoom_latent_kmeanspp_kmeanspp_R50_outer0_trainseed0/P_train_cluster1_object.ckpt",
+      "best_epoch": 41,
+      "best_eval_loss": 0.0009023301350024116
+    },
+    "cluster2": {
+      "num_samples": 231955,
+      "status": "trained",
+      "output_ckpt": "experiments/real_gauge_drift/results/tworoom_latent_kmeanspp_kmeanspp_R50_outer0_trainseed0/P_train_cluster2_object.ckpt",
+      "best_epoch": 49,
+      "best_eval_loss": 0.0009367177559970604
+    }
+  }
+}

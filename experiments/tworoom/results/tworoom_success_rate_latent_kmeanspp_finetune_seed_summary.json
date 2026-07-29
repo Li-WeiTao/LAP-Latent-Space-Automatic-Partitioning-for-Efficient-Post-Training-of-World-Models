@@ -1,0 +1,75 @@
+{
+  "protocol": {
+    "routing": "mpc",
+    "goal_offset": 50,
+    "eval_budget": 50,
+    "fine_tuning_seeds": [
+      0,
+      42,
+      625
+    ],
+    "outer_seeds": [
+      0,
+      1,
+      2
+    ],
+    "eval_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "primary_std": "sample SD across fine-tuning-seed means",
+    "marginalization": "for each fine-tuning seed, mean over 3 outer seeds x 5 eval seeds"
+  },
+  "per_fine_tuning_seed": {
+    "0": {
+      "train_seed": 0,
+      "outer0_mean": 58.0,
+      "outer1_mean": 59.199999999999996,
+      "outer2_mean": 57.6,
+      "mean_over_outer_and_eval": 58.266666666666666,
+      "outer_seed_sample_std": 0.8326663997864501,
+      "eval_seed_marginal_sample_std": 3.418901707988821,
+      "n_outer_seeds": 3,
+      "n_eval_seeds_per_outer": 5
+    },
+    "42": {
+      "train_seed": 42,
+      "outer0_mean": 60.8,
+      "outer1_mean": 60.4,
+      "outer2_mean": 57.6,
+      "mean_over_outer_and_eval": 59.6,
+      "outer_seed_sample_std": 1.7435595774162673,
+      "eval_seed_marginal_sample_std": 4.462186808181735,
+      "n_outer_seeds": 3,
+      "n_eval_seeds_per_outer": 5
+    },
+    "625": {
+      "train_seed": 625,
+      "outer0_mean": 57.6,
+      "outer1_mean": 57.2,
+      "outer2_mean": 57.599999999999994,
+      "mean_over_outer_and_eval": 57.46666666666667,
+      "outer_seed_sample_std": 0.23094010767584744,
+      "eval_seed_marginal_sample_std": 5.565768390597812,
+      "n_outer_seeds": 3,
+      "n_eval_seeds_per_outer": 5
+    }
+  },
+  "final": {
+    "method": "latent_kmeanspp_cluster_switch_50ep",
+    "routing": "mpc",
+    "horizon": "long",
+    "train_seed_0_mean": 58.266666666666666,
+    "train_seed_42_mean": 59.6,
+    "train_seed_625_mean": 57.46666666666667,
+    "fine_tuning_seed_mean": 58.44444444444444,
+    "fine_tuning_seed_sample_std": 1.0777205024873013,
+    "n_fine_tuning_seeds": 3,
+    "n_outer_seeds_per_fine_tuning_seed": 3,
+    "n_eval_seeds_per_outer": 5,
+    "episodes_per_eval_seed": 50
+  }
+}

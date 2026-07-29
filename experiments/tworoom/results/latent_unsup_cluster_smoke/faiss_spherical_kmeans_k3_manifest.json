@@ -1,0 +1,33 @@
+{
+  "method": "faiss_spherical_kmeans",
+  "num_clusters": 3,
+  "seeds": [
+    0
+  ],
+  "embed_dir": "experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors",
+  "runs": [
+    {
+      "method": "faiss_spherical_kmeans",
+      "seed": 0,
+      "num_clusters": 3,
+      "out_dir": "experiments/real_gauge_drift/results/latent_unsup_cluster_smoke/faiss_spherical_kmeans_k3_seed0",
+      "num_unique_timesteps": 909723,
+      "timing_sec": {
+        "fit_sec": 0.13200770691037178,
+        "assign_train_sec": 0.03198467614129186,
+        "total_sec": 0.16399238305166364,
+        "niter": 100,
+        "assign_all_vectors_sec_mean": 0.7496310189987222,
+        "assign_per_vector_us_mean": 0.8240211789728547,
+        "num_vectors": 909723,
+        "repeats": 3,
+        "wall_sec": 16.000392004847527
+      },
+      "cluster_counts": {
+        "cluster0": 335473,
+        "cluster1": 239673,
+        "cluster2": 334577
+      }
+    }
+  ]
+}

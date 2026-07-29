@@ -1,0 +1,153 @@
+{
+  "arrays": {
+    "act_emb": {
+      "dtype": "float32",
+      "sha256": "4ae04c74c9a837a28fe4615f39346da2fd230e4462b68940c3c8106610a8d908",
+      "shape": [
+        513,
+        4,
+        192
+      ]
+    },
+    "emb": {
+      "dtype": "float32",
+      "sha256": "914c363fc1d99828649d4cae7ff9989fe7e1a487cd4434f79d4ddf4eef8e39fa",
+      "shape": [
+        513,
+        4,
+        192
+      ]
+    },
+    "region_starts": {
+      "dtype": "int64",
+      "sha256": "2d58948c36cd782d723792b6bce022c18893cb15527d450e69d1c97ac0746124",
+      "shape": [
+        513
+      ]
+    }
+  },
+  "config": {
+    "action_key": "action",
+    "action_norm_starts": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/train_global_reference_starts.npy",
+    "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt",
+    "cpu_threads": 4,
+    "data_file": "/data/sicong/weitao/datasets/lewm/tworoom.h5",
+    "device": "cuda",
+    "frame_batch_size": 0,
+    "frameskip": 0,
+    "history_size": 3,
+    "img_size": 224,
+    "log_every": 10,
+    "max_starts": 513,
+    "no_chunk_aware_read": false,
+    "num_preds": 1,
+    "num_workers": 4,
+    "output": "experiments/real_gauge_drift/results/unique_timestep_reencode_validation/left_first513_v2.npz",
+    "pixel_key": "pixels",
+    "prefetch_factor": 2,
+    "reference_cache": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/P_train_left_room_embeddings.npz",
+    "report": "experiments/real_gauge_drift/results/unique_timestep_reencode_validation/left_first513_v2.report.json",
+    "start_offset": 0,
+    "starts": null,
+    "transition_batch_size": 128
+  },
+  "counts": {
+    "action_norm_starts": 693728,
+    "duplicate_fraction": 0.6408382066276803,
+    "eliminated_duplicate_frames": 1315,
+    "exact_frame_batch_shape_keys": 737,
+    "extra_shape_keys_for_bitwise_exactness": 0,
+    "frame_slots": 2052,
+    "frameskip": 5,
+    "sequence_length": 4,
+    "source_transition_count": 330243,
+    "source_transition_offset": 0,
+    "transitions": 513,
+    "unique_frames": 737
+  },
+  "efficiency": {
+    "theoretical_visual_work_reduction_fraction": 0.6408382066276803,
+    "theoretical_visual_work_speedup": 2.7842605156037994
+  },
+  "method": "unique_timestep_exact_reconstruction",
+  "output_semantics": "array-level exact; NPZ byte hash may differ",
+  "schema_version": 1,
+  "starts_source": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/P_train_left_room_embeddings.npz::region_starts",
+  "timing_sec": {
+    "action_encode": 0.016432864998932928,
+    "action_normalization_stats": 0.5432495509739965,
+    "core_precompute": 1.9867065079743043,
+    "inverse_reconstruct": 0.00029432796873152256,
+    "model_load": 2.6835607870016247,
+    "npz_save": 0.07090532599249855,
+    "reference_validation": 6.252021719003096,
+    "total": 11.597036694001872,
+    "unique_frame_encode": {
+      "aggregate": {
+        "loader_wait_sec": 0.25557844096329063,
+        "preprocess_encode_d2h_sec": 1.6551861929474398,
+        "total_sec": 1.9699793150066398
+      },
+      "groups": {
+        "512": {
+          "padded_encoder_slots": 1024,
+          "timing_sec": {
+            "loader_wait_sec": 0.25557844096329063,
+            "preprocess_encode_d2h_sec": 1.6551861929474398,
+            "total_sec": 1.9699793150066398
+          },
+          "unique_keys": 737
+        }
+      }
+    },
+    "unique_index": 0.0012784039718098938
+  },
+  "validation": {
+    "arrays": {
+      "act_emb": {
+        "array_equal": true,
+        "dtype": "float32",
+        "dtype_equal": true,
+        "generated_sha256": "4ae04c74c9a837a28fe4615f39346da2fd230e4462b68940c3c8106610a8d908",
+        "max_abs_error": 0.0,
+        "mismatch_count": 0,
+        "reference_sha256": "4ae04c74c9a837a28fe4615f39346da2fd230e4462b68940c3c8106610a8d908",
+        "shape": [
+          513,
+          4,
+          192
+        ],
+        "shape_equal": true
+      },
+      "emb": {
+        "array_equal": true,
+        "dtype": "float32",
+        "dtype_equal": true,
+        "generated_sha256": "914c363fc1d99828649d4cae7ff9989fe7e1a487cd4434f79d4ddf4eef8e39fa",
+        "max_abs_error": 0.0,
+        "mismatch_count": 0,
+        "reference_sha256": "914c363fc1d99828649d4cae7ff9989fe7e1a487cd4434f79d4ddf4eef8e39fa",
+        "shape": [
+          513,
+          4,
+          192
+        ],
+        "shape_equal": true
+      },
+      "region_starts": {
+        "array_equal": true,
+        "dtype": "int64",
+        "dtype_equal": true,
+        "generated_sha256": "2d58948c36cd782d723792b6bce022c18893cb15527d450e69d1c97ac0746124",
+        "max_abs_error": 0.0,
+        "mismatch_count": 0,
+        "reference_sha256": "2d58948c36cd782d723792b6bce022c18893cb15527d450e69d1c97ac0746124",
+        "shape": [
+          513
+        ],
+        "shape_equal": true
+      }
+    },
+    "passed": true
+  }
+}

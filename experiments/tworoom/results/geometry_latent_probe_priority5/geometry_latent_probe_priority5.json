@@ -1,0 +1,256 @@
+{
+  "dataset": "tworoom",
+  "embedding_dir": "experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors",
+  "sample_unit": "single_latent_vector",
+  "split_unit": "episode",
+  "partition": "priority5",
+  "label_names": [
+    "doorway_corridor",
+    "near_wall",
+    "common",
+    "right_room",
+    "left_room"
+  ],
+  "rooms3_thresholds": {
+    "img_size": 224.0,
+    "border": 14.0,
+    "wall_center": 112.0,
+    "wall_width": 10.0,
+    "wall_lo": 107.0,
+    "wall_hi": 117.0,
+    "pos_min": 14.0,
+    "pos_max": 209.0,
+    "near_wall_margin": 15.0,
+    "common_interior_margin": 20.0,
+    "x_lo_common": 34.0,
+    "x_hi_common_left": 87.0,
+    "x_lo_common_right": 137.0,
+    "x_hi_common": 189.0,
+    "y_lo_common": 34.0,
+    "y_hi_common": 189.0,
+    "x_lo_wall": 29.0,
+    "x_hi_wall": 194.0,
+    "y_lo_wall": 29.0,
+    "y_hi_wall": 194.0,
+    "x_mid": 112.0
+  },
+  "data_source": "P_train_geometry_priority5_cache_expanded_dedup",
+  "data_stats": {
+    "partition": "priority5",
+    "transition_counts": {
+      "doorway_corridor": 38552,
+      "near_wall": 31533,
+      "common": 297211,
+      "right_room": 324933,
+      "left_room": 330243
+    },
+    "num_expanded_vectors": 4089888,
+    "num_vectors_before_dedup": 4089888,
+    "num_dropped_duplicate_timesteps": 3180165,
+    "num_unique_timesteps": 909723
+  },
+  "frameskip": 5,
+  "episode_split": {
+    "episode_split_seed": 20260711,
+    "episode_train_fraction": 0.7,
+    "episode_val_fraction": 0.15,
+    "episode_test_fraction": 0.15,
+    "num_unique_episodes": 10000,
+    "num_train_episodes": 7000,
+    "num_val_episodes": 1500,
+    "num_test_episodes": 1500
+  },
+  "vector_class_counts": {
+    "train": {
+      "doorway_corridor": 36469,
+      "near_wall": 27193,
+      "common": 277526,
+      "right_room": 147613,
+      "left_room": 148321
+    },
+    "val": {
+      "doorway_corridor": 7858,
+      "near_wall": 5695,
+      "common": 58993,
+      "right_room": 31928,
+      "left_room": 31694
+    },
+    "test": {
+      "doorway_corridor": 7477,
+      "near_wall": 5790,
+      "common": 60893,
+      "right_room": 30209,
+      "left_room": 32064
+    }
+  },
+  "model_seed": 20260711,
+  "device": "cuda",
+  "models": {
+    "linear_softmax_probe": {
+      "train_fit_sec": 21.271178026217967,
+      "train_accuracy": 0.9869475547854257,
+      "method": "linear_softmax_probe",
+      "architecture": "Linear + CrossEntropyLoss + AdamW",
+      "kernel": null,
+      "n_components": null,
+      "gamma": null,
+      "val": {
+        "accuracy": 0.9874566711709065,
+        "balanced_accuracy": 0.9809519699343884,
+        "macro_f1": 0.9806876613322277,
+        "per_class": {
+          "doorway_corridor": {
+            "precision": 0.9907301587301587,
+            "recall": 0.9928735047085773,
+            "f1": 0.9918006737430878,
+            "support": 7858
+          },
+          "near_wall": {
+            "precision": 0.9445707291484525,
+            "recall": 0.9485513608428446,
+            "f1": 0.9465568599964955,
+            "support": 5695
+          },
+          "common": {
+            "precision": 0.9902791161603354,
+            "recall": 0.9929313647381893,
+            "f1": 0.9916034669555797,
+            "support": 58993
+          },
+          "right_room": {
+            "precision": 0.9889715149987396,
+            "recall": 0.9830243046855425,
+            "f1": 0.9859889419452124,
+            "support": 31928
+          },
+          "left_room": {
+            "precision": 0.9875974374349102,
+            "recall": 0.9873793146967881,
+            "f1": 0.9874883640207633,
+            "support": 31694
+          }
+        }
+      },
+      "test": {
+        "accuracy": 0.9869093254564512,
+        "balanced_accuracy": 0.9803855875255838,
+        "macro_f1": 0.9795981966058932,
+        "per_class": {
+          "doorway_corridor": {
+            "precision": 0.9919732441471572,
+            "recall": 0.9917079042396684,
+            "f1": 0.9918405564472981,
+            "support": 7477
+          },
+          "near_wall": {
+            "precision": 0.9363079019073569,
+            "recall": 0.9495682210708117,
+            "f1": 0.9428914422912021,
+            "support": 5790
+          },
+          "common": {
+            "precision": 0.990303665607495,
+            "recall": 0.9929220107401507,
+            "f1": 0.9916111097443971,
+            "support": 60893
+          },
+          "right_room": {
+            "precision": 0.9892602228003469,
+            "recall": 0.9818266079645139,
+            "f1": 0.9855293980827698,
+            "support": 30209
+          },
+          "left_room": {
+            "precision": 0.9863338533541341,
+            "recall": 0.9859031936127745,
+            "f1": 0.9861184764637989,
+            "support": 32064
+          }
+        }
+      }
+    },
+    "rff_rbf_probe": {
+      "train_fit_sec": 21.111946570686996,
+      "train_accuracy": 0.992320152184354,
+      "method": "rff_rbf_probe",
+      "architecture": "RandomFourierFeatures + Linear + CrossEntropyLoss + AdamW",
+      "kernel": "rbf",
+      "n_components": 8192,
+      "gamma": 0.005208333333333333,
+      "val": {
+        "accuracy": 0.992377063627284,
+        "balanced_accuracy": 0.9883113136736569,
+        "macro_f1": 0.9884700049224768,
+        "per_class": {
+          "doorway_corridor": {
+            "precision": 0.9992310649750096,
+            "recall": 0.9922372104861288,
+            "f1": 0.9957218568418365,
+            "support": 7858
+          },
+          "near_wall": {
+            "precision": 0.9638009049773756,
+            "recall": 0.9724319578577699,
+            "f1": 0.9680971943011975,
+            "support": 5695
+          },
+          "common": {
+            "precision": 0.9928753524336918,
+            "recall": 0.9968809858796807,
+            "f1": 0.994874137231019,
+            "support": 58993
+          },
+          "right_room": {
+            "precision": 0.9930884986334076,
+            "recall": 0.9900714106740165,
+            "f1": 0.9915776596245236,
+            "support": 31928
+          },
+          "left_room": {
+            "precision": 0.9942326583642298,
+            "recall": 0.9899350034706884,
+            "f1": 0.9920791766138085,
+            "support": 31694
+          }
+        }
+      },
+      "test": {
+        "accuracy": 0.9919887417267084,
+        "balanced_accuracy": 0.9879783219911478,
+        "macro_f1": 0.9877171961021067,
+        "per_class": {
+          "doorway_corridor": {
+            "precision": 0.9995949230353767,
+            "recall": 0.9901029824796042,
+            "f1": 0.9948263118994827,
+            "support": 7477
+          },
+          "near_wall": {
+            "precision": 0.9580787508486083,
+            "recall": 0.9749568221070811,
+            "f1": 0.9664441020373223,
+            "support": 5790
+          },
+          "common": {
+            "precision": 0.9927722270371037,
+            "recall": 0.9970111507069778,
+            "f1": 0.9948871736886092,
+            "support": 60893
+          },
+          "right_room": {
+            "precision": 0.9934868574086997,
+            "recall": 0.9896719520672648,
+            "f1": 0.991575735464827,
+            "support": 30209
+          },
+          "left_room": {
+            "precision": 0.9935714509705541,
+            "recall": 0.9881487025948104,
+            "f1": 0.990852657420293,
+            "support": 32064
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "region": "doorway_corridor",
+  "epoch": 50,
+  "train_loss": 0.0018468714785991095,
+  "eval_loss": 0.0020755704533817147
+}

@@ -1,0 +1,6 @@
+train_seed,outer_seed,eval_seed,mode,routing,success_rate,successes,num_eval,classify_ms_per_step,out_dir
+625,2,0,latent_cluster3,mpc,57.99999999999999,29,50,3.2127204965703036,experiments/real_gauge_drift/results/tworoom_success_rate_latent_kmeanspp_kmeanspp_R50_outer2_trainseed625_evalseed0
+625,2,1,latent_cluster3,mpc,62.0,31,50,3.4120462437653365,experiments/real_gauge_drift/results/tworoom_success_rate_latent_kmeanspp_kmeanspp_R50_outer2_trainseed625_evalseed1
+625,2,2,latent_cluster3,mpc,57.99999999999999,29,50,3.3448326425607235,experiments/real_gauge_drift/results/tworoom_success_rate_latent_kmeanspp_kmeanspp_R50_outer2_trainseed625_evalseed2
+625,2,3,latent_cluster3,mpc,48.0,24,50,3.435486634997287,experiments/real_gauge_drift/results/tworoom_success_rate_latent_kmeanspp_kmeanspp_R50_outer2_trainseed625_evalseed3
+625,2,4,latent_cluster3,mpc,62.0,31,50,3.312444656427639,experiments/real_gauge_drift/results/tworoom_success_rate_latent_kmeanspp_kmeanspp_R50_outer2_trainseed625_evalseed4

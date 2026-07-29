@@ -1,0 +1,6 @@
+eval_seed,train_seed,horizon,mode,success_rate,successes,num_eval,out_dir
+0,42,short,global_ft_45ep,96.0,48,50,experiments/real_gauge_drift/results/tworoom_success_rate_global_ft_45ep_trainseed42_short_seed0
+1,42,short,global_ft_45ep,88.0,44,50,experiments/real_gauge_drift/results/tworoom_success_rate_global_ft_45ep_trainseed42_short_seed1
+2,42,short,global_ft_45ep,86.0,43,50,experiments/real_gauge_drift/results/tworoom_success_rate_global_ft_45ep_trainseed42_short_seed2
+3,42,short,global_ft_45ep,96.0,48,50,experiments/real_gauge_drift/results/tworoom_success_rate_global_ft_45ep_trainseed42_short_seed3
+4,42,short,global_ft_45ep,84.0,42,50,experiments/real_gauge_drift/results/tworoom_success_rate_global_ft_45ep_trainseed42_short_seed4

@@ -1,0 +1,174 @@
+{
+  "metadata": {
+    "reference_split": "reference",
+    "reference_pca_residual": 23.257831059153624,
+    "reference_frame_residual": 182.57009485733755,
+    "align_dim": 2,
+    "latent_dim": 192,
+    "state_dim": 2,
+    "state_dims_kept": [
+      0,
+      1
+    ],
+    "state_mean": [
+      110.5079083442688,
+      69.99286251068115
+    ],
+    "state_std": [
+      15.161557989109198,
+      15.541676037462961
+    ],
+    "latent_mean_shape": [
+      1,
+      192
+    ],
+    "latent_std_shape": [
+      1,
+      192
+    ],
+    "latent_pca_basis_shape": [
+      192,
+      2
+    ],
+    "state_pca_basis_shape": [
+      2,
+      2
+    ],
+    "r2_mode": "holdout"
+  },
+  "metrics": [
+    {
+      "split": "common",
+      "n": 79,
+      "dim": 2,
+      "pca_residual": 9.73987787376611,
+      "pca_drift": 1.4142135623730945,
+      "pca_residual_ratio": 0.41877842559753015,
+      "pca_drift_to_residual_ratio": 3.376997180195852,
+      "frame_residual": 199.98172977701952,
+      "frame_drift": 0.9526356977600035,
+      "frame_residual_ratio": 1.0953695890517368,
+      "frame_drift_to_residual_ratio": 0.8696933959832059,
+      "state_to_latent_r2": -0.057643611144303275,
+      "latent_to_state_r2": 0.8800993695500683,
+      "orthogonality_error": NaN,
+      "orthogonal_recovery_error": NaN,
+      "reference_overlap_n": 0,
+      "reference_overlap_ratio": 0.0
+    },
+    {
+      "split": "goal_other_side",
+      "n": 297,
+      "dim": 2,
+      "pca_residual": 16.06169325033795,
+      "pca_drift": 1.4142135623730947,
+      "pca_residual_ratio": 0.6905929108129725,
+      "pca_drift_to_residual_ratio": 2.0478251951735524,
+      "frame_residual": 287.9646714440011,
+      "frame_drift": 1.357447119474863,
+      "frame_residual_ratio": 1.5772828056479817,
+      "frame_drift_to_residual_ratio": 0.8606237984800283,
+      "state_to_latent_r2": 0.0010713862168867383,
+      "latent_to_state_r2": 0.5856765023100454,
+      "orthogonality_error": NaN,
+      "orthogonal_recovery_error": NaN,
+      "reference_overlap_n": 0,
+      "reference_overlap_ratio": 0.0
+    },
+    {
+      "split": "iid_nonoverlap",
+      "n": 79,
+      "dim": 2,
+      "pca_residual": 9.73987787376611,
+      "pca_drift": 1.4142135623730945,
+      "pca_residual_ratio": 0.41877842559753015,
+      "pca_drift_to_residual_ratio": 3.376997180195852,
+      "frame_residual": 199.98172977701952,
+      "frame_drift": 0.9526356977600035,
+      "frame_residual_ratio": 1.0953695890517368,
+      "frame_drift_to_residual_ratio": 0.8696933959832059,
+      "state_to_latent_r2": -0.08535845384110297,
+      "latent_to_state_r2": 0.8305607350610261,
+      "orthogonality_error": NaN,
+      "orthogonal_recovery_error": NaN,
+      "reference_overlap_n": 0,
+      "reference_overlap_ratio": 0.0
+    },
+    {
+      "split": "left_room",
+      "n": 156,
+      "dim": 2,
+      "pca_residual": 17.175884224115464,
+      "pca_drift": 1.4142135623730943,
+      "pca_residual_ratio": 0.7384989675275324,
+      "pca_drift_to_residual_ratio": 1.9149838043862333,
+      "frame_residual": 301.3428784483677,
+      "frame_drift": 1.4109325484205204,
+      "frame_residual_ratio": 1.6505599051358273,
+      "frame_drift_to_residual_ratio": 0.8548205636338643,
+      "state_to_latent_r2": 0.036351580605312184,
+      "latent_to_state_r2": 0.9860015197748356,
+      "orthogonality_error": NaN,
+      "orthogonal_recovery_error": NaN,
+      "reference_overlap_n": 0,
+      "reference_overlap_ratio": 0.0
+    },
+    {
+      "split": "near_wall",
+      "n": 137,
+      "dim": 2,
+      "pca_residual": 26.597590669739827,
+      "pca_drift": 1.9456559829955526,
+      "pca_residual_ratio": 1.1435972082732377,
+      "pca_drift_to_residual_ratio": 1.7013472653817276,
+      "frame_residual": 301.4886614343325,
+      "frame_drift": 1.4692372842108026,
+      "frame_residual_ratio": 1.6513584093272107,
+      "frame_drift_to_residual_ratio": 0.8897143563210503,
+      "state_to_latent_r2": 0.03126239321029911,
+      "latent_to_state_r2": 0.8823423924183337,
+      "orthogonality_error": NaN,
+      "orthogonal_recovery_error": NaN,
+      "reference_overlap_n": 0,
+      "reference_overlap_ratio": 0.0
+    },
+    {
+      "split": "reference",
+      "n": 80,
+      "dim": 2,
+      "pca_residual": 23.257831059153624,
+      "pca_drift": 0.0,
+      "pca_residual_ratio": 0.999999999999957,
+      "pca_drift_to_residual_ratio": 0.0,
+      "frame_residual": 182.57009485733755,
+      "frame_drift": 0.0,
+      "frame_residual_ratio": 0.9999999999999946,
+      "frame_drift_to_residual_ratio": 0.0,
+      "state_to_latent_r2": -0.046120650598241664,
+      "latent_to_state_r2": 0.7743601238239564,
+      "orthogonality_error": NaN,
+      "orthogonal_recovery_error": NaN,
+      "reference_overlap_n": 80,
+      "reference_overlap_ratio": 1.0
+    },
+    {
+      "split": "right_room",
+      "n": 154,
+      "dim": 2,
+      "pca_residual": 18.0309962257634,
+      "pca_drift": 0.4744369544328671,
+      "pca_residual_ratio": 0.7752655946250042,
+      "pca_drift_to_residual_ratio": 0.6119669926301066,
+      "frame_residual": 285.3487731225027,
+      "frame_drift": 1.3537785625898335,
+      "frame_residual_ratio": 1.5629546194050896,
+      "frame_drift_to_residual_ratio": 0.8661662634224522,
+      "state_to_latent_r2": 0.01185378982922669,
+      "latent_to_state_r2": 0.9855668160765396,
+      "orthogonality_error": NaN,
+      "orthogonal_recovery_error": NaN,
+      "reference_overlap_n": 0,
+      "reference_overlap_ratio": 0.0
+    }
+  ]
+}

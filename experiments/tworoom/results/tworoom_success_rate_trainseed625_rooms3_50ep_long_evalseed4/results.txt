@@ -1,0 +1,88 @@
+==== CONFIG ====
+cache_dir: null
+solver:
+  _target_: stable_worldmodel.solver.CEMSolver
+  model: ???
+  batch_size: 1
+  num_samples: 300
+  var_scale: 1.0
+  n_steps: 30
+  topk: 30
+  device: cuda
+  seed: ${seed}
+world:
+  env_name: swm/TwoRoom-v1
+  num_envs: ${eval.num_eval}
+  max_episode_steps: 100
+seed: 4
+policy: random
+dataset:
+  stats: ${eval.dataset_name}
+  keys_to_cache:
+  - action
+  - proprio
+plan_config:
+  horizon: 5
+  receding_horizon: 5
+  action_block: 5
+eval:
+  num_eval: 50
+  goal_offset_steps: 50
+  eval_budget: 50
+  img_size: 224
+  dataset_name: tworoom
+  callables:
+  - method: _set_state
+    args:
+      state:
+        value: proprio
+  - method: _set_goal_state
+    args:
+      goal_state:
+        value: goal_proprio
+output:
+  filename: tworoom_results.txt
+
+==== MODEL ====
+{
+  "mode": "rooms3",
+  "base_encoder_checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt",
+  "region_predictors": {
+    "left_room": "experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors_trainseed625/P_train_left_room_object.ckpt",
+    "doorway_corridor": "experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors_trainseed625/P_train_doorway_corridor_object.ckpt",
+    "right_room": "experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors_trainseed625/P_train_right_room_object.ckpt"
+  },
+  "region_rule": "geometry x: left<107, doorway 107-117, right>117",
+  "switch_timing": "each MPC replan from current proprio",
+  "geometry_thresholds": {
+    "img_size": 224.0,
+    "border": 14.0,
+    "wall_center": 112.0,
+    "wall_width": 10.0,
+    "wall_lo": 107.0,
+    "wall_hi": 117.0,
+    "pos_min": 14.0,
+    "pos_max": 209.0,
+    "near_wall_margin": 15.0,
+    "common_interior_margin": 20.0,
+    "x_lo_common": 34.0,
+    "x_hi_common_left": 87.0,
+    "x_lo_common_right": 137.0,
+    "x_hi_common": 189.0,
+    "y_lo_common": 34.0,
+    "y_hi_common": 189.0,
+    "x_lo_wall": 29.0,
+    "x_hi_wall": 194.0,
+    "y_lo_wall": 29.0,
+    "y_hi_wall": 194.0,
+    "x_mid": 112.0
+  }
+}
+==== RESULTS ====
+metrics: {'success_rate': 64.0, 'episode_successes': array([ True,  True, False,  True,  True,  True,  True,  True,  True,
+        True, False,  True,  True,  True, False,  True,  True, False,
+        True, False,  True, False, False, False,  True, False,  True,
+        True, False, False, False,  True,  True, False, False,  True,
+       False, False,  True,  True,  True,  True,  True, False,  True,
+        True,  True, False,  True,  True]), 'seeds': None}
+evaluation_time: 64.47134065628052 seconds

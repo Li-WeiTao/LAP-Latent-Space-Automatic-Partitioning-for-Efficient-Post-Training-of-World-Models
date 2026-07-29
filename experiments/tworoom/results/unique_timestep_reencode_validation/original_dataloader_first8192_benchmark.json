@@ -1,0 +1,17 @@
+{
+  "transitions": 8192,
+  "frame_slots": 32768,
+  "core_precompute_sec": 120.09667155699572,
+  "emb_shape": [
+    8192,
+    4,
+    192
+  ],
+  "act_shape": [
+    8192,
+    4,
+    192
+  ],
+  "workers": 4,
+  "batch_size": 128
+}

@@ -1,0 +1,170 @@
+{
+  "config": {
+    "predictor_a": "experiments/real_gauge_drift/results/tworoom_trajectory_predictors/P_common_object.ckpt",
+    "predictor_b": "/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt",
+    "predictor_a_name": "P_common",
+    "predictor_b_name": "P_train_global",
+    "encoder_checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt",
+    "checkpoint_cache_dir": null,
+    "dataset": "tworoom",
+    "data_root": "/data/sicong/weitao/datasets/lewm",
+    "data_file": null,
+    "state_key": null,
+    "history_size": 3,
+    "max_steps": 10,
+    "batch_size": 64,
+    "img_size": 224,
+    "frameskip": 0,
+    "seed": 0,
+    "split_seed": 3072,
+    "train_fraction": 0.9,
+    "train_max_samples": 5000,
+    "test_max_samples": 0,
+    "encode_log_every": 20,
+    "test_starts": null,
+    "load_test_cache": null,
+    "save_test_cache": "experiments/real_gauge_drift/cache/tworoom_trajectory_test_full_transitions.npz",
+    "out_dir": "experiments/real_gauge_drift/results/tworoom_trajectory_deviation_common_vs_train",
+    "device": "cuda"
+  },
+  "cache_metadata": {
+    "dataset": "tworoom",
+    "data_file": "/data/sicong/weitao/datasets/lewm/tworoom.h5",
+    "state_key": "proprio",
+    "num_starts": 32517,
+    "seq_len": 13,
+    "history_size": 3,
+    "frameskip": 5,
+    "seed": 0,
+    "split_seed": 3072,
+    "train_fraction": 0.9,
+    "test_max_samples": 0,
+    "encoder_checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt",
+    "action_mean": [
+      [
+        0.00674773845821619,
+        -0.08444412052631378,
+        -0.0014777834294363856,
+        -0.07886505126953125,
+        -0.004233415704220533,
+        -0.07820279896259308,
+        -0.0042490544728934765,
+        -0.07493698596954346,
+        -0.0021275035105645657,
+        -0.06623305380344391
+      ]
+    ],
+    "action_std": [
+      [
+        0.8660814762115479,
+        0.8661037087440491,
+        0.8658863306045532,
+        0.8662000298500061,
+        0.8681299090385437,
+        0.8657490015029907,
+        0.8662799000740051,
+        0.866051971912384,
+        0.866854727268219,
+        0.867347776889801
+      ]
+    ],
+    "source": "test_pool"
+  },
+  "num_test_samples": 32517,
+  "predictor_a": "experiments/real_gauge_drift/results/tworoom_trajectory_predictors/P_common_object.ckpt",
+  "predictor_b": "/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt",
+  "predictor_a_name": "P_common",
+  "predictor_b_name": "P_train_global",
+  "metrics": [
+    {
+      "step": 1,
+      "pairwise_mse_mean": 0.10543515361660129,
+      "pairwise_mse_std": 0.12900708384927415,
+      "predictor_a_mse_vs_gt_mean": 0.04834143279931614,
+      "predictor_a_mse_vs_gt_std": 0.13421484579735452,
+      "predictor_b_mse_vs_gt_mean": 0.08362626866055853,
+      "predictor_b_mse_vs_gt_std": 0.05616985500516145
+    },
+    {
+      "step": 2,
+      "pairwise_mse_mean": 0.18545168693558242,
+      "pairwise_mse_std": 0.28178286571235966,
+      "predictor_a_mse_vs_gt_mean": 0.11177902434622955,
+      "predictor_a_mse_vs_gt_std": 0.27825548292714614,
+      "predictor_b_mse_vs_gt_mean": 0.16056512342472357,
+      "predictor_b_mse_vs_gt_std": 0.13944619070550004
+    },
+    {
+      "step": 3,
+      "pairwise_mse_mean": 0.2731698384676843,
+      "pairwise_mse_std": 0.39909176993920453,
+      "predictor_a_mse_vs_gt_mean": 0.18683473995901986,
+      "predictor_a_mse_vs_gt_std": 0.38519351568116955,
+      "predictor_b_mse_vs_gt_mean": 0.2720662953703427,
+      "predictor_b_mse_vs_gt_std": 0.2421368844033655
+    },
+    {
+      "step": 4,
+      "pairwise_mse_mean": 0.3641939198771659,
+      "pairwise_mse_std": 0.47704691099601376,
+      "predictor_a_mse_vs_gt_mean": 0.2658940501060021,
+      "predictor_a_mse_vs_gt_std": 0.45044975979244617,
+      "predictor_b_mse_vs_gt_mean": 0.4143411662959088,
+      "predictor_b_mse_vs_gt_std": 0.3437600310069808
+    },
+    {
+      "step": 5,
+      "pairwise_mse_mean": 0.4575080562375604,
+      "pairwise_mse_std": 0.5333628351161132,
+      "predictor_a_mse_vs_gt_mean": 0.3460318123967814,
+      "predictor_a_mse_vs_gt_std": 0.4928067641278356,
+      "predictor_b_mse_vs_gt_mean": 0.5720034741052773,
+      "predictor_b_mse_vs_gt_std": 0.4323125155371632
+    },
+    {
+      "step": 6,
+      "pairwise_mse_mean": 0.5505117427637444,
+      "pairwise_mse_std": 0.5761897691106027,
+      "predictor_a_mse_vs_gt_mean": 0.42648978366092183,
+      "predictor_a_mse_vs_gt_std": 0.5266958935291542,
+      "predictor_b_mse_vs_gt_mean": 0.7293672098650706,
+      "predictor_b_mse_vs_gt_std": 0.4994297412168009
+    },
+    {
+      "step": 7,
+      "pairwise_mse_mean": 0.637832886090565,
+      "pairwise_mse_std": 0.6109890228537734,
+      "predictor_a_mse_vs_gt_mean": 0.5021688676225209,
+      "predictor_a_mse_vs_gt_std": 0.5540806743069149,
+      "predictor_b_mse_vs_gt_mean": 0.8710610913562711,
+      "predictor_b_mse_vs_gt_std": 0.5505811948248165
+    },
+    {
+      "step": 8,
+      "pairwise_mse_mean": 0.7171247324789691,
+      "pairwise_mse_std": 0.6396863610422359,
+      "predictor_a_mse_vs_gt_mean": 0.5711074375754286,
+      "predictor_a_mse_vs_gt_std": 0.5812432030978392,
+      "predictor_b_mse_vs_gt_mean": 0.9896467134413094,
+      "predictor_b_mse_vs_gt_std": 0.5847671820726656
+    },
+    {
+      "step": 9,
+      "pairwise_mse_mean": 0.7869133354743869,
+      "pairwise_mse_std": 0.668659306665116,
+      "predictor_a_mse_vs_gt_mean": 0.6342285720139791,
+      "predictor_a_mse_vs_gt_std": 0.6100046057895971,
+      "predictor_b_mse_vs_gt_mean": 1.0797644483871436,
+      "predictor_b_mse_vs_gt_std": 0.6125100940440193
+    },
+    {
+      "step": 10,
+      "pairwise_mse_mean": 0.8462063362923613,
+      "pairwise_mse_std": 0.6926830220697804,
+      "predictor_a_mse_vs_gt_mean": 0.6894652499737525,
+      "predictor_a_mse_vs_gt_std": 0.6392286278333523,
+      "predictor_b_mse_vs_gt_mean": 1.1464728085041709,
+      "predictor_b_mse_vs_gt_std": 0.6380968558367578
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+R version 4.6.1 (2026-06-24 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 11 x64 (build 26200)
+
+Matrix products: default
+  LAPACK version 3.12.1
+
+locale:
+[1] C
+system code page: 65001
+
+time zone: Asia/Shanghai
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] ggplot2_4.0.3
+
+loaded via a namespace (and not attached):
+ [1] labeling_0.4.3     scales_1.4.0       compiler_4.6.1     R6_2.6.1          
+ [5] cli_3.6.6          tools_4.6.1        withr_3.0.3        RColorBrewer_1.1-3
+ [9] glue_1.8.1         gtable_0.3.6       farver_2.1.2       vctrs_0.7.3       
+[13] grid_4.6.1         S7_0.2.2           lifecycle_1.0.5    rlang_1.3.0       
+
+Input files:
+common = C:\Users\Li WeiTao\Documents\New project\figure_update\real_inputs\common.csv
+doorway_corridor = C:\Users\Li WeiTao\Documents\New project\figure_update\real_inputs\doorway_corridor.csv
+left_room = C:\Users\Li WeiTao\Documents\New project\figure_update\real_inputs\left_room.csv
+near_wall = C:\Users\Li WeiTao\Documents\New project\figure_update\real_inputs\near_wall.csv
+right_room = C:\Users\Li WeiTao\Documents\New project\figure_update\real_inputs\right_room.csv
+
+Generated files:
+C:\Users\Li WeiTao\Documents\New project\figure_update\outputs\real_gauge_drift_metrics/pairwise_vs_global_rollout_latent_mse.pdf
+C:\Users\Li WeiTao\Documents\New project\figure_update\outputs\real_gauge_drift_metrics/pairwise_vs_global_rollout_latent_mse.png
+C:\Users\Li WeiTao\Documents\New project\figure_update\outputs\real_gauge_drift_metrics/gt_latent_rollout_mse.pdf
+C:\Users\Li WeiTao\Documents\New project\figure_update\outputs\real_gauge_drift_metrics/gt_latent_rollout_mse.png
