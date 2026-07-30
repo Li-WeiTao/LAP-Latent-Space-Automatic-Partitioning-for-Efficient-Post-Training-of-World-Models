@@ -103,8 +103,10 @@ def main() -> None:
         "changed_existing_files": repair_changed,
         "new_files": repair_added,
     }
-    # Write bytes so this provenance artifact is stable on Windows and Linux.
-    MANIFEST.write_bytes((json.dumps(payload, indent=2) + "\n").encode("utf-8"))
+    MANIFEST.write_text(
+        json.dumps(payload, indent=2) + "\n",
+        encoding="utf-8",
+    )
     print(f"Refreshed {len(files)} entries ({changed} changed, {added} new)")
 
 

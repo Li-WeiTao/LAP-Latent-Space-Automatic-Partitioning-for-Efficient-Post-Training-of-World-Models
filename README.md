@@ -414,21 +414,14 @@ deviation and every later experiment. Historical absolute paths inside result
 metadata are retained as provenance; executable launchers and operational
 artifact aliases use paths relative to this repository.
 
-[`experiments/tworoom/EXPERIMENTS.md`](experiments/tworoom/EXPERIMENTS.md)
-groups all migrated experiments by research question, while
-[`EXPERIMENT_INVENTORY.csv`](experiments/tworoom/EXPERIMENT_INVENTORY.csv)
-enumerates every result directory. The 671 relevant raw text logs are retained
-under their original relative result paths and authenticated by
-[`LOG_MANIFEST.csv`](experiments/tworoom/LOG_MANIFEST.csv).
-
 ## Reproducibility and provenance
 
 - Source development tree commit: `8edfeb336732b5f3ce7b8b210d0ba370a09e2cac`.
 - The source tree contained untracked experiment files, so migration uses the
   file-level `MIGRATION_MANIFEST.json` instead of claiming that every experiment
   existed in that source commit.
-- Compact per-run results, relevant raw text logs, source tables, plot programs,
-  and deployable routing artifacts are committed.
+- Compact per-run results, source tables, plot programs, and deployable routing
+  artifacts are committed.
 - Datasets, dense embedding caches, videos, and predictor checkpoints are
   intentionally excluded and have explicit rebuild paths in `ARTIFACTS.md`.
 - LeWM compatibility files retain the upstream MIT license in
