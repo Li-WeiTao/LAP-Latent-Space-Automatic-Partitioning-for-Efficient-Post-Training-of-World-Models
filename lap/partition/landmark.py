@@ -28,9 +28,15 @@ NeighborSearch = Callable[
 def _zscore_l2(values: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     values = np.array(values, dtype=np.float32, copy=True)
     mean = values.mean(axis=0, dtype=np.float64).astype(np.float32)
-    scale = values.std(axis=0, dtype=np.float64).astype(np.float32)
+    # Store the *effective* denominator in the portable artifact.  This keeps
+    # offline fitting and online routing exactly aligned without requiring an
+    # additional, backend-specific epsilon field in the artifact schema.
+    scale = (
+        values.std(axis=0, dtype=np.float64).astype(np.float32)
+        + np.float32(1e-6)
+    )
     values -= mean
-    values /= scale + np.float32(1e-6)
+    values /= scale
     return l2_normalize_rows(values), mean, scale
 
 

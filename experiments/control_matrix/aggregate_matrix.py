@@ -1,0 +1,190 @@
+#!/usr/bin/env python3
+"""Aggregate one task's LeWM comparison matrix by fine-tuning seed."""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+import statistics
+from pathlib import Path
+
+
+PARTITION_METHODS = ("random_voronoi", "kmeanspp", "spectral")
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--dataset-name", required=True)
+    parser.add_argument("--train-seeds", default="0,42,625")
+    parser.add_argument("--partition-seeds", default="0,1,2")
+    parser.add_argument("--eval-seeds", default="0,1,2,3,4")
+    return parser.parse_args()
+
+
+def seeds(text: str) -> list[int]:
+    return [int(value) for value in text.split(",") if value.strip()]
+
+
+def rate(path: Path) -> float:
+    result = json.loads(path.read_text(encoding="utf-8"))
+    return 100.0 * float(result["metrics"]["success_rate"])
+
+
+def mean(values: list[float]) -> float:
+    return statistics.fmean(values)
+
+
+def sd(values: list[float]) -> float:
+    return statistics.stdev(values) if len(values) > 1 else 0.0
+
+
+def main() -> None:
+    args = parse_args()
+    train = seeds(args.train_seeds)
+    partition = seeds(args.partition_seeds)
+    evaluate = seeds(args.eval_seeds)
+    raw_rows: list[dict] = []
+
+    official = [
+        rate(args.root / "eval" / "official" / f"eval{e}" / "results.json")
+        for e in evaluate
+    ]
+    rows = [
+        {
+            "method": "Official baseline",
+            "mean_percent": mean(official),
+            "sd_across_finetuning_seeds_percent": None,
+            "num_finetuning_seeds": 0,
+            "num_partition_seeds": 0,
+            "num_eval_seeds": len(evaluate),
+            "eval_seed_sd_percent": sd(official),
+        }
+    ]
+    for e, value in zip(evaluate, official):
+        raw_rows.append(
+            {
+                "method": "official",
+                "train_seed": "",
+                "partition_seed": "",
+                "eval_seed": e,
+                "success_rate_percent": value,
+            }
+        )
+
+    for method, label in (("joint", "Joint-Continue 3ep"), ("global", "Global-FT50")):
+        train_means: list[float] = []
+        all_values: list[float] = []
+        for t in train:
+            values = [
+                rate(
+                    args.root
+                    / "eval"
+                    / method
+                    / f"train{t}"
+                    / f"eval{e}"
+                    / "results.json"
+                )
+                for e in evaluate
+            ]
+            train_means.append(mean(values))
+            all_values.extend(values)
+            for e, value in zip(evaluate, values):
+                raw_rows.append(
+                    {
+                        "method": method,
+                        "train_seed": t,
+                        "partition_seed": "",
+                        "eval_seed": e,
+                        "success_rate_percent": value,
+                    }
+                )
+        rows.append(
+            {
+                "method": label,
+                "mean_percent": mean(train_means),
+                "sd_across_finetuning_seeds_percent": sd(train_means),
+                "num_finetuning_seeds": len(train),
+                "num_partition_seeds": 0,
+                "num_eval_seeds": len(evaluate),
+                "eval_seed_sd_percent": sd(all_values),
+            }
+        )
+
+    labels = {
+        "random_voronoi": "Random-Voronoi",
+        "kmeanspp": "K-means++",
+        "spectral": "Spectral",
+    }
+    for method in PARTITION_METHODS:
+        train_means = []
+        all_values = []
+        for t in train:
+            values = []
+            for p in partition:
+                for e in evaluate:
+                    value = rate(
+                        args.root
+                        / "eval"
+                        / method
+                        / f"partition{p}_train{t}"
+                        / f"eval{e}"
+                        / "results.json"
+                    )
+                    values.append(value)
+                    raw_rows.append(
+                        {
+                            "method": method,
+                            "train_seed": t,
+                            "partition_seed": p,
+                            "eval_seed": e,
+                            "success_rate_percent": value,
+                        }
+                    )
+            train_means.append(mean(values))
+            all_values.extend(values)
+        rows.append(
+            {
+                "method": labels[method],
+                "mean_percent": mean(train_means),
+                "sd_across_finetuning_seeds_percent": sd(train_means),
+                "num_finetuning_seeds": len(train),
+                "num_partition_seeds": len(partition),
+                "num_eval_seeds": len(evaluate),
+                "eval_seed_sd_percent": sd(all_values),
+            }
+        )
+
+    args.root.mkdir(parents=True, exist_ok=True)
+    with (args.root / "matrix_summary.csv").open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+    with (args.root / "matrix_raw.csv").open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(raw_rows[0]))
+        writer.writeheader()
+        writer.writerows(raw_rows)
+    (args.root / "matrix_summary.json").write_text(
+        json.dumps(
+            {
+                "dataset": args.dataset_name,
+                "train_seeds": train,
+                "partition_seeds": partition,
+                "eval_seeds": evaluate,
+                "primary_error_bar": "sample SD across fine-tuning seeds after averaging partition and evaluation seeds",
+                "rows": rows,
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    for row in rows:
+        spread = row["sd_across_finetuning_seeds_percent"]
+        suffix = "" if spread is None else f" ± {spread:.2f}%"
+        print(f"{row['method']}: {row['mean_percent']:.2f}%{suffix}")
+
+
+if __name__ == "__main__":
+    main()

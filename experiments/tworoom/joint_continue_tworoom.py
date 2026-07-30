@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Jointly continue a released TwoRoom LeWM for one full training-data epoch.
+"""Jointly continue a released LeWM on a selected HDF5 task dataset.
 
 This is a post-training control for frozen-encoder predictor fine-tuning.  The
 released object checkpoint contains no optimizer/scheduler state, so the run
@@ -41,6 +41,11 @@ def parse_args() -> argparse.Namespace:
         "--data-file",
         type=Path,
         default=Path("/data/sicong/weitao/datasets/lewm/tworoom.h5"),
+    )
+    parser.add_argument(
+        "--dataset-name",
+        default="tworoom",
+        help="Provenance/result label; data and model are supplied independently.",
     )
     parser.add_argument(
         "--checkpoint",
@@ -298,6 +303,7 @@ def main() -> None:
     formal_full_epoch = args.max_batches == 0
     metadata = {
         "method": "joint_continue",
+        "dataset": args.dataset_name,
         "description": (
             "All JEPA modules jointly optimized from the released checkpoint "
             "with the original LeWM loss. Optimizer state is fresh because the "

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""TwoRoom task success-rate evaluation (dataset-seeded MPC, CEM).
+"""LeWM task success-rate evaluation (dataset-seeded MPC, CEM).
 
-Matches le-wm eval.py + config/eval/tworoom.yaml, but loads serialized
-*_object.ckpt checkpoints used in this project.
+Matches the selected official ``config/eval/<task>.yaml`` while loading the
+serialized baseline, continued, global-FT, or LAP checkpoints used here.
 """
 
 from __future__ import annotations
@@ -40,6 +40,7 @@ from backends.lewm.routing import (  # noqa: E402
     route_voronoi_torch,
     transform_latent_torch,
 )
+from lap.partition import PartitionArtifact  # noqa: E402
 
 GEOMETRY_TRAIN_PRED_DIR = THIS_DIR / "results" / "tworoom_geometry_train_region_predictors"
 DEFAULT_BASELINE_STARTS = (
@@ -868,12 +869,71 @@ def resolve_model(
     cluster_predictor_dir: Path | None = None,
     kmeanspp_label_npz: Path | None = None,
     zscore_params_npz: Path | None = None,
+    lap_run_dir: Path | None = None,
     latent_routing: str = "mpc",
 ) -> tuple[torch.nn.Module, dict]:
     meta: dict = {"mode": mode}
     if mode == "baseline":
         meta["checkpoint"] = str(checkpoint)
         return load_object_checkpoint(checkpoint, device), meta
+
+    if mode == "lap":
+        if lap_run_dir is None:
+            raise ValueError("--lap-run-dir is required for --mode lap")
+        lap_run_dir = lap_run_dir.resolve(strict=True)
+        artifact = PartitionArtifact.load(lap_run_dir / "partition")
+        num_clusters = artifact.num_regions
+        cluster_ckpts = {
+            f"cluster{k}": lap_run_dir / f"P_train_cluster{k}_object.ckpt"
+            for k in range(num_clusters)
+        }
+        for name, path in cluster_ckpts.items():
+            if not path.is_file():
+                raise FileNotFoundError(f"Missing {name} predictor: {path}")
+        manifest_path = lap_run_dir / "manifest.json"
+        manifest = (
+            json.loads(manifest_path.read_text(encoding="utf-8"))
+            if manifest_path.is_file()
+            else {}
+        )
+        recorded = manifest.get("predictor_checkpoint_sha256", {})
+        for name, path in cluster_ckpts.items():
+            if name in recorded and sha256_file(path) != recorded[name]:
+                raise ValueError(f"Predictor checkpoint hash mismatch: {path}")
+        switch_model = build_latent_cluster_switch_model(
+            checkpoint,
+            cluster_ckpts,
+            artifact.prototypes,
+            device,
+            prototype_cluster_ids=artifact.prototype_region_ids,
+            spherical=True,
+            zscore={
+                "mu": artifact.mean,
+                "sigma": artifact.scale,
+                "eps": 1e-12,
+            },
+            routing_mode=latent_routing,
+        )
+        meta.update(
+            {
+                "base_encoder_checkpoint": str(checkpoint),
+                "lap_run_dir": str(lap_run_dir),
+                "lap_manifest": str(manifest_path) if manifest_path.exists() else None,
+                "cluster_predictors": {
+                    name: str(path) for name, path in cluster_ckpts.items()
+                },
+                "num_clusters": num_clusters,
+                "num_routing_prototypes": int(len(artifact.prototypes)),
+                "partition_metadata": artifact.metadata,
+                "switch_timing": (
+                    "each imagined rollout step from predicted latent"
+                    if latent_routing == "step"
+                    else "once per MPC replan from the observed latent"
+                ),
+                "latent_routing": latent_routing,
+            }
+        )
+        return switch_model, meta
 
     if mode == "latent_cluster3":
         if (cluster_artifact_dir is None) == (kmeanspp_label_npz is None):
@@ -1025,6 +1085,7 @@ def run_eval(
     cluster_predictor_dir: Path | None = None,
     kmeanspp_label_npz: Path | None = None,
     zscore_params_npz: Path | None = None,
+    lap_run_dir: Path | None = None,
     latent_routing: str = "mpc",
 ) -> dict:
     assert (
@@ -1068,6 +1129,7 @@ def run_eval(
         cluster_predictor_dir=cluster_predictor_dir,
         kmeanspp_label_npz=kmeanspp_label_npz,
         zscore_params_npz=zscore_params_npz,
+        lap_run_dir=lap_run_dir,
         latent_routing=latent_routing,
     )
     plan_config = swm.PlanConfig(**cfg.plan_config)
@@ -1191,7 +1253,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--mode",
         default="baseline",
-        choices=("baseline", "rooms3", "priority5", "latent_cluster3"),
+        choices=("baseline", "rooms3", "priority5", "latent_cluster3", "lap"),
     )
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--checkpoint", type=Path, default=DEFAULT_GLOBAL_CKPT)
@@ -1223,6 +1285,22 @@ def parse_args() -> argparse.Namespace:
         "--config-name",
         default="tworoom",
         help="Hydra config under config/eval/ (without .yaml)",
+    )
+    parser.add_argument(
+        "--dataset-tag",
+        default="tworoom",
+        help="Filesystem/result prefix only; the official task comes from --config-name.",
+    )
+    parser.add_argument(
+        "--results-root",
+        type=Path,
+        default=THIS_DIR / "results",
+    )
+    parser.add_argument(
+        "--cache-dir",
+        type=Path,
+        default=None,
+        help="Directory containing <eval.dataset_name>.h5.",
     )
     parser.add_argument(
         "--goal-offset",
@@ -1267,6 +1345,12 @@ def parse_args() -> argparse.Namespace:
         help="Directory with P_train_cluster{k}_object.ckpt (defaults from artifact name)",
     )
     parser.add_argument(
+        "--lap-run-dir",
+        type=Path,
+        default=None,
+        help="Portable LAP training run with partition/ and P_train_cluster*.ckpt.",
+    )
+    parser.add_argument(
         "--latent-routing",
         choices=("mpc", "step"),
         default="mpc",
@@ -1282,7 +1366,15 @@ def main() -> None:
     args = parse_args()
     if args.out_dir is None:
         if args.mode == "baseline":
-            args.out_dir = THIS_DIR / "results" / f"tworoom_success_rate_baseline_seed{args.seed}"
+            args.out_dir = args.results_root / (
+                f"{args.dataset_tag}_success_rate_baseline_seed{args.seed}"
+            )
+        elif args.mode == "lap":
+            run_tag = args.lap_run_dir.name if args.lap_run_dir else "missing_lap_run"
+            args.out_dir = args.results_root / (
+                f"{args.dataset_tag}_success_rate_{run_tag}_{args.latent_routing}_"
+                f"seed{args.seed}"
+            )
         elif args.mode == "latent_cluster3":
             source_tag = (
                 args.cluster_artifact_dir.name
@@ -1299,22 +1391,25 @@ def main() -> None:
                 else "default_predictors"
             )
             args.out_dir = (
-                THIS_DIR
-                / "results"
+                args.results_root
                 / (
-                    f"tworoom_success_rate_latent_{source_tag}_{predictor_tag}_"
+                    f"{args.dataset_tag}_success_rate_latent_{source_tag}_{predictor_tag}_"
                     f"{args.latent_routing}_seed{args.seed}"
                 )
             )
         else:
-            args.out_dir = THIS_DIR / f"results/tworoom_success_rate_{args.mode}_seed{args.seed}"
+            args.out_dir = args.results_root / (
+                f"{args.dataset_tag}_success_rate_{args.mode}_seed{args.seed}"
+            )
 
     eval_start_indices_path = args.eval_start_indices
     if args.sample_eval_starts:
         eval_start_indices_path = None
-    elif eval_start_indices_path is None and args.mode not in ("baseline",):
+    elif eval_start_indices_path is None and args.mode != "baseline":
         eval_start_indices_path = (
-            THIS_DIR / "results" / f"tworoom_success_rate_baseline_seed{args.seed}" / "results.json"
+            args.results_root
+            / f"{args.dataset_tag}_success_rate_baseline_seed{args.seed}"
+            / "results.json"
         )
 
     with hydra.initialize_config_dir(
@@ -1323,6 +1418,8 @@ def main() -> None:
     ):
         cfg = hydra.compose(config_name=args.config_name)
     cfg.seed = args.seed
+    if args.cache_dir is not None:
+        cfg.cache_dir = str(args.cache_dir.resolve(strict=True))
     if args.goal_offset is not None:
         cfg.eval.goal_offset_steps = args.goal_offset
     if args.eval_budget is not None:
@@ -1351,6 +1448,7 @@ def main() -> None:
         cluster_predictor_dir=args.cluster_predictor_dir,
         kmeanspp_label_npz=args.kmeanspp_label_npz,
         zscore_params_npz=args.zscore_params,
+        lap_run_dir=args.lap_run_dir,
         latent_routing=args.latent_routing,
     )
 
