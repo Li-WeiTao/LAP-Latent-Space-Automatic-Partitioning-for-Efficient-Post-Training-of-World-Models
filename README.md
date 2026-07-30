@@ -129,7 +129,12 @@ lap-cache encode \
 Every JSON setting can be overridden without editing a task-specific script,
 for example `--dataset-arg data_file=/path/to/task.h5` or
 `--encoder-arg img_size=224`. `exact` mode preserves the original visual batch
-shapes for bitwise cache reproduction. `fixed` mode uses
+shapes whenever batch shape has not been proven irrelevant, which is required
+for bitwise cache reproduction. This is not an arbitrary exception to
+deduplication: for each dataset/encoder pair, occurrences of one timestep may
+be collapsed across batch shapes only after their FP32 embeddings have been
+verified to be identical. If the embeddings differ, the safe encoding key is
+`(timestep, batch shape)`, not timestep alone. `fixed` mode uses
 `--frame-batch-size` and is the faster option to benchmark for a new
 dataset/model pair. Both modes retain unique-frame deduplication, inverse-index
 window reconstruction, chunk-aware reads, worker prefetching, final-batch
@@ -307,12 +312,19 @@ GPU=0 bash experiments/tworoom/scripts/internal/prepare_tworoom_spectral_inputs.
 This command first reconstructs the official episode-level training split and
 saves the five start-index arrays. It then invokes the generic `lap-cache`
 encoder through `unique_timestep_reencode.py`, passing the LeWM HDF5 dataset
-and LeWM encoder as factories. The generic core encodes each unique
-`(timestep, legacy batch-shape)` key once and reconstructs the original
+and LeWM encoder as factories. In `exact` mode, the generic core encodes each
+unique `(timestep, legacy batch-shape)` key once and reconstructs the original
 overlapping transition windows. The output schema, ordering, dtype, visual
 embeddings, action embeddings, and `region_starts` are identical to the
 original cache builder. New tasks change the dataset/encoder factories or
 their parameters rather than this acceleration algorithm.
+
+The lossless deduplication rule is empirical and simple: if changing the batch
+shape changes an embedding, both encoding keys must be retained; if it does
+not, only one encoding is retained. Thus, reconstructing repeated window slots
+does not imply that the visual encoder was run repeatedly. The PushT
+batch-shape audit and its measured tolerances are recorded in
+[`experiments/pusht/README.md`](experiments/pusht/README.md).
 
 The five geometry names are only a storage decomposition inherited from the
 original cache layout. The spectral loader concatenates them, deduplicates by

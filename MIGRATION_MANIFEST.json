@@ -47,10 +47,10 @@
       "source_sha256": "0e66685ed351839b0baf614c4207aa2c5e6ab9dbe419aac9c38d0998a000200c"
     },
     {
-      "bytes": 17974,
+      "bytes": 18827,
       "origin": "generated_for_lap",
       "path": "README.md",
-      "sha256": "a2f9e568e0fde2619028fa0db9a041a604385fd1ba3de76d7b7f1ad10ccec7a5"
+      "sha256": "7a0cc1054415622cdf03123f3dfc57bebf1c00b8f2d5292c015622d0659046a1"
     },
     {
       "bytes": 7279,
@@ -245,6 +245,12 @@
       "origin": "generated_for_lap",
       "path": "experiments/control_matrix/train_predictors.py",
       "sha256": "1592459add4f6a8b1f8256b99ed95bfea5cb2b0bd2b5a8b41cd26cfdef1180aa"
+    },
+    {
+      "bytes": 3775,
+      "origin": "generated_for_lap",
+      "path": "experiments/pusht/README.md",
+      "sha256": "acdea0942b500eb9df294343681ee970edebfee4c535e2070c6ce36f3a8c95d1"
     },
     {
       "bytes": 3843,
@@ -21115,7 +21121,7 @@
       "sha256": "62ad56c6c5c1ad68b4fa44f14e28938ec12b0b95e948a25c7e42a0799e039189"
     }
   ],
-  "generated_at_utc": "2026-07-30T10:55:14.914505+00:00",
+  "generated_at_utc": "2026-07-30T12:48:37.835837+00:00",
   "migration_scope": {
     "readme_start_heading": "trajectory deviation experiment",
     "readme_start_line": 410,
@@ -21270,7 +21276,7 @@
   ],
   "repair_revision": {
     "purpose": "close independent-repository end-to-end reproducibility gaps",
-    "changed_existing_files": 8,
-    "new_files": 90
+    "changed_existing_files": 1,
+    "new_files": 0
   }
 }
