@@ -514,11 +514,12 @@ def build_latent_cluster_switch_model(
     routing_mode: str = "mpc",
 ) -> LatentClusterSwitchJEPA:
     base = load_object_checkpoint(base_ckpt, device)
-    if not isinstance(base, JEPA):
-        raise TypeError(f"Expected JEPA checkpoint, got {type(base)}")
+    validate_jepa_components(base, source=base_ckpt)
     cluster_models = {
         name: load_object_checkpoint(path, device) for name, path in cluster_ckpts.items()
     }
+    for name, model in cluster_models.items():
+        validate_jepa_components(model, source=cluster_ckpts[name])
     model = LatentClusterSwitchJEPA(
         base,
         cluster_models,
@@ -799,6 +800,28 @@ def load_object_checkpoint(path: Path, device: torch.device) -> torch.nn.Module:
     return model
 
 
+def validate_jepa_components(model: torch.nn.Module, *, source: Path) -> None:
+    """Validate the shared module contract of official and vendored JEPA models.
+
+    Official ``stable_worldmodel`` checkpoints serialize ``LeWM`` while older
+    TwoRoom checkpoints serialize this repository's vendored ``JEPA`` class.
+    The routing wrappers need the same five modules from either implementation,
+    so checking the serialized Python class would reject a compatible model.
+    """
+
+    required = ("encoder", "predictor", "action_encoder", "projector", "pred_proj")
+    missing = [
+        name
+        for name in required
+        if not isinstance(getattr(model, name, None), torch.nn.Module)
+    ]
+    if missing:
+        raise TypeError(
+            f"Checkpoint {source} does not implement the JEPA module contract; "
+            f"missing components: {missing}"
+        )
+
+
 def build_region_switch_model(
     base_ckpt: Path,
     region_ckpts: dict[str, Path],
@@ -807,11 +830,12 @@ def build_region_switch_model(
     region_selector,
 ) -> RegionSwitchJEPA:
     base = load_object_checkpoint(base_ckpt, device)
-    if not isinstance(base, JEPA):
-        raise TypeError(f"Expected JEPA checkpoint, got {type(base)}")
+    validate_jepa_components(base, source=base_ckpt)
     region_models = {
         name: load_object_checkpoint(path, device) for name, path in region_ckpts.items()
     }
+    for name, model in region_models.items():
+        validate_jepa_components(model, source=region_ckpts[name])
     thresholds = tworoom_geometry_thresholds()
     return RegionSwitchJEPA(
         base,
