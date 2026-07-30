@@ -6,10 +6,15 @@
     2
   ],
   "artifacts": [
-    "experiments/real_gauge_drift/results/latent_landmark_spectral_k3/spectral_M20000_k30_P16_seed0",
-    "experiments/real_gauge_drift/results/latent_landmark_spectral_k3/spectral_M20000_k30_P16_seed1",
-    "experiments/real_gauge_drift/results/latent_landmark_spectral_k3/spectral_M20000_k30_P16_seed2"
+    "experiments/tworoom/results/latent_landmark_spectral_k3/spectral_M20000_k30_P16_seed0",
+    "experiments/tworoom/results/latent_landmark_spectral_k3/spectral_M20000_k30_P16_seed1",
+    "experiments/tworoom/results/latent_landmark_spectral_k3/spectral_M20000_k30_P16_seed2"
   ],
+  "artifacts_by_seed": {
+    "0": "experiments/tworoom/results/latent_landmark_spectral_k3/spectral_M20000_k30_P16_seed0",
+    "1": "experiments/tworoom/results/latent_landmark_spectral_k3/spectral_M20000_k30_P16_seed1",
+    "2": "experiments/tworoom/results/latent_landmark_spectral_k3/spectral_M20000_k30_P16_seed2"
+  },
   "shared_load_preprocess_sec": 14.401841184007935,
   "pairwise": [
     {

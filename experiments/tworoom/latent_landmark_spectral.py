@@ -71,6 +71,12 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--data-root", type=Path, default=Path("/data/sicong/weitao/datasets/lewm")
     )
+    p.add_argument(
+        "--data-file",
+        type=Path,
+        default=None,
+        help="Explicit dataset file; overrides --data-root/DATASET_DEFAULT_FILE.",
+    )
     # v1 reuses the TwoRoom priority5 embedding caches.  The algorithm is
     # dataset-agnostic, but other datasets need their own cache-manifest adapter.
     p.add_argument("--dataset", default="tworoom", choices=("tworoom",))
@@ -1479,6 +1485,9 @@ def main() -> None:
     args_record = json_ready(vars(args))
     args_record["embed_dir"] = str(args.embed_dir.expanduser().resolve())
     args_record["data_root"] = str(args.data_root.expanduser().resolve())
+    args_record["data_file"] = (
+        str(args.data_file.expanduser().resolve()) if args.data_file else None
+    )
 
     shared_t0 = time.perf_counter()
     provenance_t0 = time.perf_counter()
@@ -1503,7 +1512,7 @@ def main() -> None:
     )
     X, mu, sigma = zscore_l2_inplace(np.asarray(Z, dtype=np.float32))
     spec = DATASETS[args.dataset]
-    h5_path = args.data_root / spec.default_file
+    h5_path = args.data_file or (args.data_root / spec.default_file)
     episode_ids = episode_ids_at_indices(h5_path, global_idx)
     data_load_preprocess_sec = time.perf_counter() - load_t0
     semantic_t0 = time.perf_counter()

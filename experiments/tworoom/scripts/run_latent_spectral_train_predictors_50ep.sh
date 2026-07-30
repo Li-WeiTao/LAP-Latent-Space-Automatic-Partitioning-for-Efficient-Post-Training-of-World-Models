@@ -5,8 +5,10 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 cd "$REPO_ROOT"
-source .venv/bin/activate
-export STABLEWM_HOME=/data/sicong/weitao/.stable_worldmodel
+if [[ -f .venv/bin/activate ]]; then
+  source .venv/bin/activate
+fi
+export STABLEWM_HOME="${STABLEWM_HOME:-${LAP_STABLEWM_HOME:-/data/sicong/weitao/.stable_worldmodel}}"
 export OMP_NUM_THREADS="${OMP_NUM_THREADS:-4}"
 export MKL_NUM_THREADS="${MKL_NUM_THREADS:-4}"
 export OPENBLAS_NUM_THREADS="${OPENBLAS_NUM_THREADS:-4}"
@@ -55,7 +57,7 @@ PY
   fi
 fi
 EMBED_DIR="${EMBED_DIR:-${ROOT}/results/tworoom_geometry_train_region_predictors}"
-CKPT="${CKPT:-/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt}"
+CKPT="${CKPT:-${LAP_LEWM_CHECKPOINT:-${STABLEWM_HOME}/tworoom/lewm_object.ckpt}}"
 artifact_tag="$(basename "${ARTIFACT_DIR}")"
 OUT_DIR="${OUT_DIR:-${ROOT}/results/tworoom_latent_spectral_${artifact_tag}_trainseed${TRAIN_SEED}}"
 LOG="${OUT_DIR}/train_50ep.log"

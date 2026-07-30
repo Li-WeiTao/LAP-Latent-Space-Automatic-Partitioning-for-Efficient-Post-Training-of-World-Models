@@ -853,6 +853,15 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Reuse P_train_{region}_embeddings.npz from this dir (rooms3 merge for global FT)",
     )
+    parser.add_argument(
+        "--prepare-starts-only",
+        action="store_true",
+        help=(
+            "Save the global training starts and one P_{prefix}{region}_starts.npy "
+            "file per requested region, then exit before encoding or training. "
+            "This bootstraps the lossless unique-timestep cache builder."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -1075,6 +1084,67 @@ def main() -> None:
     name_prefix = args.predictor_prefix
     if args.restrict_to_train_split and not name_prefix:
         name_prefix = "train_"
+
+    if args.prepare_starts_only:
+        if args.train_global_predictor:
+            raise ValueError(
+                "--prepare-starts-only is for regional cache preparation and "
+                "cannot be combined with --train-global-predictor"
+            )
+        args.out_dir.mkdir(parents=True, exist_ok=True)
+        if region_thresholds is not None:
+            threshold_name = (
+                "geometry_region_thresholds.npy"
+                if split_mode == "geometry"
+                else "train_region_thresholds.npy"
+            )
+            np.save(args.out_dir / threshold_name, region_thresholds)
+        np.save(args.out_dir / "train_global_reference_starts.npy", train_starts)
+
+        prepared_regions: dict[str, dict[str, object]] = {}
+        for region in args.regions:
+            if region not in region_masks:
+                raise KeyError(
+                    f"Region '{region}' not found. Available: {sorted(region_masks)}"
+                )
+            region_mask = region_masks[region]
+            if args.restrict_to_train_split:
+                region_mask = region_mask & train_mask
+            region_starts = all_starts[region_mask]
+            starts_path = args.out_dir / f"P_{name_prefix}{region}_starts.npy"
+            np.save(starts_path, region_starts)
+            prepared_regions[region] = {
+                "num_starts": int(len(region_starts)),
+                "starts_file": str(starts_path),
+            }
+            print(
+                f"[prepare-starts] {region}: {len(region_starts)} -> {starts_path}",
+                flush=True,
+            )
+
+        starts_manifest = {
+            "mode": "prepare_starts_only",
+            "dataset": args.dataset,
+            "data_file": str(h5_path),
+            "checkpoint": args.checkpoint,
+            "train_config": asdict(cfg),
+            "num_all_starts": int(len(all_starts)),
+            "num_train_global_reference_starts": int(len(train_starts)),
+            "training_data": (
+                "train_split_intersection"
+                if args.restrict_to_train_split
+                else "full_dataset"
+            ),
+            "predictor_prefix": name_prefix,
+            "region_split_mode": split_mode,
+            "region_thresholds": region_thresholds,
+            "regions": prepared_regions,
+        }
+        with (args.out_dir / "starts_only_manifest.json").open("w") as handle:
+            json.dump(json_ready(starts_manifest), handle, indent=2)
+            handle.write("\n")
+        print("[prepare-starts] complete; no embeddings or predictors were trained")
+        return
 
     with h5py.File(h5_path, "r") as h5:
         frameskip = infer_frameskip(base_model, int(h5["action"].shape[1]), cfg.frameskip)

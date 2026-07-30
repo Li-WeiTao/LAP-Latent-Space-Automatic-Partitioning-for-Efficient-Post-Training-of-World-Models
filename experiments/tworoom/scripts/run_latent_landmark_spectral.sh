@@ -5,7 +5,9 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 cd "$REPO_ROOT"
-source .venv/bin/activate
+if [[ -f .venv/bin/activate ]]; then
+  source .venv/bin/activate
+fi
 
 export OMP_NUM_THREADS="${OMP_NUM_THREADS:-4}"
 export MKL_NUM_THREADS="${MKL_NUM_THREADS:-4}"
@@ -16,6 +18,9 @@ GPU="${GPU:?set GPU to one available physical GPU id}"
 export CUDA_VISIBLE_DEVICES="${GPU}"
 
 ROOT="experiments/tworoom"
+DATA_ROOT="${LAP_DATA_ROOT:-/data/sicong/weitao/datasets/lewm}"
+DATA_FILE="${LAP_TWOROOM_DATA:-${DATA_ROOT}/tworoom.h5}"
+EMBED_DIR="${EMBED_DIR:-${ROOT}/results/tworoom_geometry_train_region_predictors}"
 SEEDS="${SEEDS:-0}"
 NUM_CLUSTERS="${NUM_CLUSTERS:-3}"
 AUTO_K="${AUTO_K:-0}"
@@ -55,6 +60,9 @@ fi
 
 echo "==== landmark spectral partition started at $(date) GPU=${GPU} seeds=${SEEDS} ===="
 /usr/bin/time -p nice -n 10 python "${ROOT}/latent_landmark_spectral.py" \
+  --embed-dir "${EMBED_DIR}" \
+  --data-root "${DATA_ROOT}" \
+  --data-file "${DATA_FILE}" \
   --seeds "${SEEDS}" \
   --out-dir "${OUT_DIR}" \
   --num-clusters "${NUM_CLUSTERS}" \

@@ -1,0 +1,89 @@
+{
+  "files_read": 185,
+  "expected_files": 185,
+  "train_seeds": [
+    0,
+    42,
+    625
+  ],
+  "partition_seeds": [
+    0,
+    1,
+    2
+  ],
+  "eval_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "eval_start_indices_sha256_by_seed": {
+    "0": "64dc4cb629087442ff0e7d5e73f13aa7a0befa4e9bd6bbb3cdc2d2c82bee75a3",
+    "1": "75d95d494077423cc4aa3b9188e36c204f6ec68712ba375e6f049aebc4ec6f60",
+    "2": "9e7cb4a47915c9419b7a28c766de97fcc45a093e2977a9a2d341bb1ac1fadaa8",
+    "3": "2a295ed5067c1e65b7b71fb60987ae76c5e864e104a82d15552fd9f853ab25a3",
+    "4": "e5bce804d9413429a07b86b3f05861f4e64d6c3bb552fbc21c4fbc42d2de7b62"
+  },
+  "aggregation_unit": "fine_tuning_seed",
+  "partition_method_inner_average": "3 partition seeds x 5 eval seeds",
+  "spectral_artifact_tags": null,
+  "summary": [
+    {
+      "method_id": "baseline",
+      "method_label": "Official\\nbaseline",
+      "seed_type": "official",
+      "n_method_seeds": 1,
+      "mean_percent": 49.2,
+      "sd_percent": ""
+    },
+    {
+      "method_id": "joint3",
+      "method_label": "Joint-Continue\\n3ep",
+      "seed_type": "fine_tuning",
+      "n_method_seeds": 3,
+      "mean_percent": 53.06666666666666,
+      "sd_percent": 1.2220201853215569
+    },
+    {
+      "method_id": "globalft50",
+      "method_label": "Global-FT\\n50ep",
+      "seed_type": "fine_tuning",
+      "n_method_seeds": 3,
+      "mean_percent": 58.13333333333333,
+      "sd_percent": 1.22202018532156
+    },
+    {
+      "method_id": "random",
+      "method_label": "Random-Voronoi\\nK3-50",
+      "seed_type": "fine_tuning",
+      "n_method_seeds": 3,
+      "mean_percent": 59.333333333333336,
+      "sd_percent": 0.5811865258054235
+    },
+    {
+      "method_id": "kmeans",
+      "method_label": "K-means++\\nK3-50",
+      "seed_type": "fine_tuning",
+      "n_method_seeds": 3,
+      "mean_percent": 58.44444444444444,
+      "sd_percent": 1.0777205024873013
+    },
+    {
+      "method_id": "spectral",
+      "method_label": "Spectral\\nK3-50",
+      "seed_type": "fine_tuning",
+      "n_method_seeds": 3,
+      "mean_percent": 61.37777777777778,
+      "sd_percent": 0.6301087501670162
+    },
+    {
+      "method_id": "rooms3",
+      "method_label": "Human partition\\nrooms3-50",
+      "seed_type": "fine_tuning",
+      "n_method_seeds": 3,
+      "mean_percent": 59.86666666666667,
+      "sd_percent": 1.5143755588800758
+    }
+  ]
+}

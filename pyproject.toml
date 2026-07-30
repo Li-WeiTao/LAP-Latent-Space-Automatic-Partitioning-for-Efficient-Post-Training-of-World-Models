@@ -32,5 +32,9 @@ test = ["pytest>=8,<9"]
 [tool.setuptools.packages.find]
 include = ["lap*", "backends*"]
 
+[tool.setuptools]
+py-modules = ["jepa", "module", "utils", "eval", "train"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests", "experiments/tworoom/tests"]
+pythonpath = [".", "experiments/tworoom"]

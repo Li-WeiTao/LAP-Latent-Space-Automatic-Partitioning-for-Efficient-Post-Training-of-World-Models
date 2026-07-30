@@ -35,7 +35,13 @@ official checkpoint paths explicitly:
 ```bash
 export LAP_TWOROOM_DATA=/path/to/tworoom.h5
 export LAP_LEWM_CHECKPOINT=/path/to/lewm_object.ckpt
+export GPU=0
 ```
+
+The checkpoint used by the committed runs has SHA-256
+`18b5764492c74de5487efdadb66adab11876cb230952765b17c0815fa87b13ff`.
+Record the dataset SHA-256 locally before a new full run because the dataset is
+not distributed by this repository.
 
 Every new run should record:
 
@@ -48,11 +54,19 @@ Every new run should record:
 
 ## What is and is not precomputed
 
-Compact CSV/JSON summaries, partition artifacts needed for online routing, and
-figures are committed. Model checkpoints, dense embedding caches, videos, and
-large per-timestep arrays are omitted. The checked-in summaries can be audited
-without rerunning training; reproducing a model from raw trajectories requires
-the external dataset and official checkpoint.
+Compact per-run JSON, CSV summaries, deployable routing artifacts, figure source
+tables, plotting programs, and figures are committed. Model checkpoints, dense
+embedding caches, videos, and large per-timestep arrays are omitted. The
+checked-in summaries can be audited without rerunning training. The omitted
+spectral inputs have a complete rebuild path:
+
+```bash
+GPU=0 bash experiments/tworoom/scripts/prepare_tworoom_spectral_inputs.sh
+```
+
+The geometry-named files created by this command are storage shards only. The
+automatic partitioner concatenates and deduplicates their latent vectors and
+does not consume the geometry labels.
 
 ## Verification levels
 
@@ -64,3 +78,6 @@ the external dataset and official checkpoint.
 - `full`: encoding, partitioning, regional training, and paired planning
   evaluation are rerun. Full verification is intentionally not executed during
   repository migration.
+
+The repository validator includes a 185-file main-result audit and verifies
+that every method uses the same `eval_start_indices` for each evaluation seed.

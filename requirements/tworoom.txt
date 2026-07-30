@@ -10,3 +10,4 @@ stable-pretraining==0.1.7
 stable-worldmodel==0.1.1
 torch==2.12.1
 faiss-cpu==1.14.3
+umap-learn==0.5.12

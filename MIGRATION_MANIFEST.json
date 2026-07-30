@@ -1,10 +1,10 @@
 {
   "files": [
     {
-      "bytes": 186,
+      "bytes": 238,
       "origin": "generated_for_lap",
       "path": ".env.example",
-      "sha256": "7a4f6a4e9670ff6de4e96799f8388b9de3f8b1f47f173154dfae65df0769256b"
+      "sha256": "39c4d5ebc84eef4ec9878a3ffc3746abfe81ed0239c92c7355095df76b296bba"
     },
     {
       "bytes": 507,
@@ -13,16 +13,16 @@
       "sha256": "7a9ec0766222efb2656ba4fec5698765453e47cb95c252feea96a50267e680dd"
     },
     {
-      "bytes": 507,
+      "bytes": 596,
       "origin": "generated_for_lap",
       "path": ".gitignore",
-      "sha256": "73741f6023ee7e7b61acb0b2372a099addb244508cda3186f9fbef245483e75d"
+      "sha256": "4abf009e70e59c23467da24d0d8cbf965c8d59ad9e01bebe77fbfc2b9552a13d"
     },
     {
-      "bytes": 1480,
+      "bytes": 1957,
       "origin": "generated_for_lap",
       "path": "ARTIFACTS.md",
-      "sha256": "1ed674ae325306a3edda90d5a2b4cf68e5cadf9b55e3c8bb5dbb5613bb2612ee"
+      "sha256": "20f33515867a913ae1427d97bd38b93d7bd38acd51d521436049a359aa757815"
     },
     {
       "bytes": 414,
@@ -38,31 +38,31 @@
     },
     {
       "bytes": 1067,
-      "origin": "migrated",
+      "origin": "migrated_repaired_for_lap",
       "path": "LICENSES/LEWM-LICENSE",
-      "relation": "line_endings_normalized",
+      "relation": "adapted_for_independent_repo",
       "sha256": "4882021920cbd61e050e4dc2e02440e9bd36ea4cbc5803e738a2ee3d63502e07",
       "source_bytes": 1088,
       "source_path": "/data/sicong/weitao/le-wm/LICENSE",
       "source_sha256": "0e66685ed351839b0baf614c4207aa2c5e6ab9dbe419aac9c38d0998a000200c"
     },
     {
-      "bytes": 5501,
+      "bytes": 9812,
       "origin": "generated_for_lap",
       "path": "README.md",
-      "sha256": "596813ff569d78df433836140e23178256188aa32f7ab411204c92c9ab6560e6"
+      "sha256": "7ca9d8351b7c3d218365a58ca3b443238b345f455140d079fee1dc80994ab94f"
     },
     {
-      "bytes": 2691,
+      "bytes": 3374,
       "origin": "generated_for_lap",
       "path": "REPRODUCIBILITY.md",
-      "sha256": "900aa05990707d9f623eff9d3d1533a4071eb841343cdae20190b098b7132d29"
+      "sha256": "38c0458a1734fdcd518cf7190d36aef9d2e15f8c862f78aca1d6690659503fe9"
     },
     {
-      "bytes": 1902,
+      "bytes": 3041,
       "origin": "generated_for_lap",
       "path": "VALIDATION.md",
-      "sha256": "c014df8b049f1af08a70b2cbff82ab5909432aa535595f7d69c5bd9b7b1960de"
+      "sha256": "b0d4954db496f47ed4f1fe55a8da6400569e43956f18dda4a526154383b35a70"
     },
     {
       "bytes": 45,
@@ -185,6 +185,12 @@
       "source_sha256": "f5525d75938d3d5e862fe5b9d5a49094b72d6b14df1ca555b78f70390c287bfe"
     },
     {
+      "bytes": 12447,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/aggregate_tworoom_main.py",
+      "sha256": "ae4c037263f6cfeeaf95c5a26ea686b7a0ae8d1b387176e6a9395f630dd0f56d"
+    },
+    {
       "bytes": 5540,
       "origin": "migrated",
       "path": "experiments/tworoom/aggregate_tworoom_resample_check.py",
@@ -265,6 +271,30 @@
       "source_sha256": "029778ae0694aae5441f60e4f3e78904f5bb9a70162ca6be5bf054a3b21a9f33"
     },
     {
+      "bytes": 9204,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/assets/latent_umap_separability/compute_latent_umap.py",
+      "sha256": "5c681112dc2ac57f6a49e85fb72d234b2dc3d959cdaef82513d8dc28fdcceb14"
+    },
+    {
+      "bytes": 633,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/assets/latent_umap_separability/data/latent_umap_metadata.json",
+      "sha256": "ac4c0d76d90fc2f63cb87ae16acb04024c70028f14abf3999e7d0e91d3ff430e"
+    },
+    {
+      "bytes": 943394,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/assets/latent_umap_separability/data/latent_umap_test_coordinates.csv",
+      "sha256": "26206df7fc3bef41946326f966afcf7f76073b2d4fc42f7323d85214ab4f8e8e"
+    },
+    {
+      "bytes": 903,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/assets/latent_umap_separability/ggplot2_session_info.txt",
+      "sha256": "142466fe1da6b0a486d2591cda2a0209f485de79bd4cb83395a2bacd5de8f965"
+    },
+    {
       "bytes": 522812,
       "origin": "migrated",
       "path": "experiments/tworoom/assets/latent_umap_separability/latent_umap_priority5.pdf",
@@ -303,6 +333,12 @@
       "source_bytes": 202633,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/assets/latent_umap_separability/latent_umap_rooms3.png",
       "source_sha256": "31ba1c2cf219ee2a1d8ee84ff79bfcb04b0e29b20b1e973a5220fe4de4b520db"
+    },
+    {
+      "bytes": 3771,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/assets/latent_umap_separability/plot_latent_umap.R",
+      "sha256": "69f7c139d59d83eb07d4ac2a3b3381acaf8892c1e452a835fb75f9a6c6d481bd"
     },
     {
       "bytes": 767,
@@ -405,11 +441,11 @@
       "source_sha256": "d4771442dae2899f599313913273b4cf726e6bbe975a0b840132ca54246b933d"
     },
     {
-      "bytes": 1750,
-      "origin": "migrated",
+      "bytes": 1714,
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/assets/long_horizon_metrics/tworoom_long_horizon_method_seeds.csv",
-      "relation": "exact_copy",
-      "sha256": "2cf5df0f8e7c17a5b51e1e1c957887ad11765c51f3481b790325bdac8d2b48e3",
+      "relation": "adapted_for_independent_repo",
+      "sha256": "3be016c31bac6fc7d719cec16ddb4175ac2180f1062d61465dfc4f4e2e3107c7",
       "source_bytes": 1750,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/assets/long_horizon_metrics/tworoom_long_horizon_method_seeds.csv",
       "source_sha256": "2cf5df0f8e7c17a5b51e1e1c957887ad11765c51f3481b790325bdac8d2b48e3"
@@ -423,6 +459,54 @@
       "source_bytes": 1152,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/assets/long_horizon_metrics/tworoom_long_horizon_method_summary.csv",
       "source_sha256": "63221dbd3c519216b5f0cffdff8473d3b39881e8a6c3b377eb13e48df262d628"
+    },
+    {
+      "bytes": 588,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/assets/long_horizon_metrics/tworoom_long_horizon_method_summary_from_results.csv",
+      "sha256": "220af4b4c4ef8a19aa817cddaccf26ddabaf9614a296fced93f3748f3c989ca0"
+    },
+    {
+      "bytes": 2373,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/assets/long_horizon_metrics/tworoom_long_horizon_result_audit.json",
+      "sha256": "f36de2812484cc28ba518a8e903a66d8bcf073ac6d2c5ceda21a34968b2a592a"
+    },
+    {
+      "bytes": 859,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/assets/probe_test_multiseed/data/priority5_multiseed_summary.csv",
+      "sha256": "2e41422d1e1df165a13f39a28078996d929fa86507a645e815696e8e281ceb85"
+    },
+    {
+      "bytes": 671,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/assets/probe_test_multiseed/data/rooms3_multiseed_summary.csv",
+      "sha256": "468f0429e3539a59a08104813bf9d651e46b8111e393e86a6672f6b9cebedefe"
+    },
+    {
+      "bytes": 705,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/assets/probe_test_multiseed/ggplot2_bar_session_info.txt",
+      "sha256": "bd816016f0a71358a03c343fa7c1a4ba21a16e41dd5c893aee15a7fcff92e0ce"
+    },
+    {
+      "bytes": 876,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/assets/probe_test_multiseed/ggplot2_session_info.txt",
+      "sha256": "7109e6fcef170d638a2b61c88ffd5920acaf6f420bf5df6701d4c3323ee1eaf8"
+    },
+    {
+      "bytes": 5090,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/assets/probe_test_multiseed/plot_probe_test.R",
+      "sha256": "4990bebd66a932cb0a5328c5d66f6c656639b612897b8ee99917d40e8edf7b3b"
+    },
+    {
+      "bytes": 5267,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/assets/probe_test_multiseed/plot_probe_test_bar.R",
+      "sha256": "d3a6773ba1235e44f6b017493cbe0300665181b131417b867d49c86ee5d3d795"
     },
     {
       "bytes": 41923,
@@ -735,11 +819,11 @@
       "source_sha256": "ec98d1f53c3920a43593324dfa0a94df1d7ec549dee0d562b4f50604811ee245"
     },
     {
-      "bytes": 60114,
-      "origin": "migrated",
+      "bytes": 60425,
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/latent_landmark_spectral.py",
-      "relation": "exact_copy",
-      "sha256": "1001ff690f0d93df3cdc423a9a13bca68fb6d5723ee93b2a1d4316f55dba1309",
+      "relation": "adapted_for_independent_repo",
+      "sha256": "5a0008761a4ddd17bdf29c288d85f33a08e74f1a22770207fcacf50a42db203f",
       "source_bytes": 60114,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/latent_landmark_spectral.py",
       "source_sha256": "1001ff690f0d93df3cdc423a9a13bca68fb6d5723ee93b2a1d4316f55dba1309"
@@ -1465,11 +1549,11 @@
       "source_sha256": "56a2c067215345adea193945641c8dd8cd6fcf7d9818dd951dbdf3d9f10208d3"
     },
     {
-      "bytes": 1225,
-      "origin": "migrated",
+      "bytes": 1522,
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/results/latent_landmark_spectral_k3/stability_summary.json",
-      "relation": "exact_copy",
-      "sha256": "c3b243388e7c68df6d053d3ad602bb57251be4d79b1c129b3806e676a8dfe1c5",
+      "relation": "adapted_for_independent_repo",
+      "sha256": "3d717e160b776fc539c6d760140e5fd228c4572ecb03d6eeccf96551592061bb",
       "source_bytes": 1225,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_landmark_spectral_k3/stability_summary.json",
       "source_sha256": "c3b243388e7c68df6d053d3ad602bb57251be4d79b1c129b3806e676a8dfe1c5"
@@ -2596,9 +2680,9 @@
     },
     {
       "bytes": 107,
-      "origin": "migrated",
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/results/tworoom_geometry_train_global_ft_45ep_status/trainseed0.status",
-      "relation": "exact_copy",
+      "relation": "adapted_for_independent_repo",
       "sha256": "37ab02281a7af87812fa4f12894fa338da112b6703471fd55393fde509d1e6a7",
       "source_bytes": 107,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_global_ft_45ep_status/trainseed0.status",
@@ -2606,9 +2690,9 @@
     },
     {
       "bytes": 108,
-      "origin": "migrated",
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/results/tworoom_geometry_train_global_ft_45ep_status/trainseed42.status",
-      "relation": "exact_copy",
+      "relation": "adapted_for_independent_repo",
       "sha256": "7313bf5e7541322b56980a611bbd9d298100a6778c28ba25b15599c48022bfd7",
       "source_bytes": 108,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_global_ft_45ep_status/trainseed42.status",
@@ -2616,9 +2700,9 @@
     },
     {
       "bytes": 109,
-      "origin": "migrated",
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/results/tworoom_geometry_train_global_ft_45ep_status/trainseed625.status",
-      "relation": "exact_copy",
+      "relation": "adapted_for_independent_repo",
       "sha256": "f9d6781356ab826945bef1914f60b6a3be5cf60478384d52dff2e82fdf63b3ac",
       "source_bytes": 109,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_global_ft_45ep_status/trainseed625.status",
@@ -5646,9 +5730,9 @@
     },
     {
       "bytes": 26,
-      "origin": "migrated",
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/results/tworoom_success_rate_geometry_global65_multiseed_status/trainseed0_long.done",
-      "relation": "exact_copy",
+      "relation": "adapted_for_independent_repo",
       "sha256": "2438ec4df5142e1cdec7f3230c920e864f934bd52d8f4e447a0d079a75100b8f",
       "source_bytes": 26,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_geometry_global65_multiseed_status/trainseed0_long.done",
@@ -5656,9 +5740,9 @@
     },
     {
       "bytes": 26,
-      "origin": "migrated",
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/results/tworoom_success_rate_geometry_global65_multiseed_status/trainseed0_short.done",
-      "relation": "exact_copy",
+      "relation": "adapted_for_independent_repo",
       "sha256": "8dfc267a1012e7794c7c484d93eb6d17ef7d851b503f7f96ec8277e71b7aa6f6",
       "source_bytes": 26,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_geometry_global65_multiseed_status/trainseed0_short.done",
@@ -5666,9 +5750,9 @@
     },
     {
       "bytes": 26,
-      "origin": "migrated",
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/results/tworoom_success_rate_geometry_global65_multiseed_status/trainseed625_long.done",
-      "relation": "exact_copy",
+      "relation": "adapted_for_independent_repo",
       "sha256": "9a0bed8a5d33ffa7591864fa4070ddb5d208af7fd59e133990201165e22adf97",
       "source_bytes": 26,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_geometry_global65_multiseed_status/trainseed625_long.done",
@@ -5676,9 +5760,9 @@
     },
     {
       "bytes": 26,
-      "origin": "migrated",
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/results/tworoom_success_rate_geometry_global65_multiseed_status/trainseed625_short.done",
-      "relation": "exact_copy",
+      "relation": "adapted_for_independent_repo",
       "sha256": "c002c56d24b00f3465c36202b2ffcabe60f988648179a4f9df4b35f7ec654b95",
       "source_bytes": 26,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_geometry_global65_multiseed_status/trainseed625_short.done",
@@ -5736,9 +5820,9 @@
     },
     {
       "bytes": 1226,
-      "origin": "migrated",
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/results/tworoom_success_rate_global_ft_45ep_status/trainseed0.status",
-      "relation": "exact_copy",
+      "relation": "adapted_for_independent_repo",
       "sha256": "706102a4c3954266d663c4595b1e1cc49a17348ef98a7f37a562e12a7ca44ba2",
       "source_bytes": 1226,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_global_ft_45ep_status/trainseed0.status",
@@ -5746,9 +5830,9 @@
     },
     {
       "bytes": 1227,
-      "origin": "migrated",
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/results/tworoom_success_rate_global_ft_45ep_status/trainseed42.status",
-      "relation": "exact_copy",
+      "relation": "adapted_for_independent_repo",
       "sha256": "bf41ce75556c78d9313ab8a8ed2721228009c680a1078cdb70007c6a054120f6",
       "source_bytes": 1227,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_global_ft_45ep_status/trainseed42.status",
@@ -5756,9 +5840,9 @@
     },
     {
       "bytes": 1228,
-      "origin": "migrated",
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/results/tworoom_success_rate_global_ft_45ep_status/trainseed625.status",
-      "relation": "exact_copy",
+      "relation": "adapted_for_independent_repo",
       "sha256": "b8d488c6b84c511db7fb9b4735cbc1bd2a2e7d467de2da674da66e5aefec61c4",
       "source_bytes": 1228,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_global_ft_45ep_status/trainseed625.status",
@@ -6786,9 +6870,9 @@
     },
     {
       "bytes": 531,
-      "origin": "migrated",
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/results/tworoom_success_rate_global_ft_50ep_trainseed_status/trainseed0.status",
-      "relation": "exact_copy",
+      "relation": "adapted_for_independent_repo",
       "sha256": "965b013e89452d978c55bf52bc5c61e2bd5ee2a765782cfb796d44dd85f06d86",
       "source_bytes": 531,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_global_ft_50ep_trainseed_status/trainseed0.status",
@@ -6796,9 +6880,9 @@
     },
     {
       "bytes": 533,
-      "origin": "migrated",
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/results/tworoom_success_rate_global_ft_50ep_trainseed_status/trainseed625.status",
-      "relation": "exact_copy",
+      "relation": "adapted_for_independent_repo",
       "sha256": "5193845b49ad3a9ca7d390b45836cfa2f31d7cfba3262171ff5b4e1c94814664",
       "source_bytes": 533,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_global_ft_50ep_trainseed_status/trainseed625.status",
@@ -8816,9 +8900,9 @@
     },
     {
       "bytes": 26,
-      "origin": "migrated",
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/results/tworoom_success_rate_latent_kmeanspp_trainseed_status/trainseed0_outer0.done",
-      "relation": "exact_copy",
+      "relation": "adapted_for_independent_repo",
       "sha256": "fe84d89670f9e1964284c797af112d9ec0749f6b0f2a9a14da82f81c659496e3",
       "source_bytes": 26,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_latent_kmeanspp_trainseed_status/trainseed0_outer0.done",
@@ -8826,9 +8910,9 @@
     },
     {
       "bytes": 26,
-      "origin": "migrated",
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/results/tworoom_success_rate_latent_kmeanspp_trainseed_status/trainseed0_outer1.done",
-      "relation": "exact_copy",
+      "relation": "adapted_for_independent_repo",
       "sha256": "fe84d89670f9e1964284c797af112d9ec0749f6b0f2a9a14da82f81c659496e3",
       "source_bytes": 26,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_latent_kmeanspp_trainseed_status/trainseed0_outer1.done",
@@ -8836,9 +8920,9 @@
     },
     {
       "bytes": 26,
-      "origin": "migrated",
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/results/tworoom_success_rate_latent_kmeanspp_trainseed_status/trainseed0_outer2.done",
-      "relation": "exact_copy",
+      "relation": "adapted_for_independent_repo",
       "sha256": "b6e12495b8e2a9c505dc5b681f84ade62a4c775091c0de2a745a19315d8bca0b",
       "source_bytes": 26,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_latent_kmeanspp_trainseed_status/trainseed0_outer2.done",
@@ -8846,9 +8930,9 @@
     },
     {
       "bytes": 26,
-      "origin": "migrated",
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/results/tworoom_success_rate_latent_kmeanspp_trainseed_status/trainseed625_outer0.done",
-      "relation": "exact_copy",
+      "relation": "adapted_for_independent_repo",
       "sha256": "b6e12495b8e2a9c505dc5b681f84ade62a4c775091c0de2a745a19315d8bca0b",
       "source_bytes": 26,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_latent_kmeanspp_trainseed_status/trainseed625_outer0.done",
@@ -8856,9 +8940,9 @@
     },
     {
       "bytes": 26,
-      "origin": "migrated",
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/results/tworoom_success_rate_latent_kmeanspp_trainseed_status/trainseed625_outer1.done",
-      "relation": "exact_copy",
+      "relation": "adapted_for_independent_repo",
       "sha256": "b6e12495b8e2a9c505dc5b681f84ade62a4c775091c0de2a745a19315d8bca0b",
       "source_bytes": 26,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_latent_kmeanspp_trainseed_status/trainseed625_outer1.done",
@@ -8866,9 +8950,9 @@
     },
     {
       "bytes": 26,
-      "origin": "migrated",
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/results/tworoom_success_rate_latent_kmeanspp_trainseed_status/trainseed625_outer2.done",
-      "relation": "exact_copy",
+      "relation": "adapted_for_independent_repo",
       "sha256": "b6e12495b8e2a9c505dc5b681f84ade62a4c775091c0de2a745a19315d8bca0b",
       "source_bytes": 26,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_success_rate_latent_kmeanspp_trainseed_status/trainseed625_outer2.done",
@@ -16055,6 +16139,12 @@
       "source_sha256": "b78e8490bd4dbbcb05c2cc6b3c3bbb063aa135b08f1a98cfdaec97e10b61301d"
     },
     {
+      "bytes": 2400,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/prepare_tworoom_spectral_inputs.sh",
+      "sha256": "329e9739c8cb072ff2e9f7e02bade259d03766005a0c785208d3980f7a7b2799"
+    },
+    {
       "bytes": 3112,
       "origin": "migrated",
       "path": "experiments/tworoom/scripts/queue_latent_kmeanspp_step_routing_when_gpus_free.sh",
@@ -16345,11 +16435,11 @@
       "source_sha256": "6a5bbda431ee5fa4942668da6e230e4b306da11c8dc3518631376a638d05f36f"
     },
     {
-      "bytes": 2398,
-      "origin": "migrated",
+      "bytes": 2737,
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/scripts/run_latent_landmark_spectral.sh",
-      "relation": "transformed",
-      "sha256": "add83f3e205f933d8c05b7648d04cbc286f9bfeacde05e8c811db4b4aa52e47b",
+      "relation": "adapted_for_independent_repo",
+      "sha256": "2ed73aeb231e05dff531defe39ff9045c20aadc1faaa75eea76eb22015a47cc8",
       "source_bytes": 2313,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_latent_landmark_spectral.sh",
       "source_sha256": "37c5f9a31cbf18f717d6df799bc5841e0476d4758c2b3c8d3bd9b7ee1d783364"
@@ -16415,11 +16505,11 @@
       "source_sha256": "954b312824c83b95311f30520f798cbebd703776b2761ffed85866d43383f970"
     },
     {
-      "bytes": 3339,
-      "origin": "migrated",
+      "bytes": 3425,
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/scripts/run_latent_spectral_train_predictors_50ep.sh",
-      "relation": "transformed",
-      "sha256": "f0307b570d4665c04438170e90dcfef459df15a01f63e01f8243420605bdec66",
+      "relation": "adapted_for_independent_repo",
+      "sha256": "bbd9cfad173e0ce1377bd996d29715a97a892706373e8d0142b809f6b0da410f",
       "source_bytes": 3254,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_latent_spectral_train_predictors_50ep.sh",
       "source_sha256": "ee2b86d4c48ec7aa79d01d2df1f3d32aecd8e2aac1d19cc1a86edd2ad43db2a2"
@@ -16625,11 +16715,11 @@
       "source_sha256": "91f316a6ad109186a210f3aa853a1b0d427f2963fac5f0d631290738fe3a8d3e"
     },
     {
-      "bytes": 4604,
-      "origin": "migrated",
+      "bytes": 4690,
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/scripts/run_success_rate_5seed_latent_spectral_longrange.sh",
-      "relation": "transformed",
-      "sha256": "49b534bef8cd3e30b8906fb8ad46fcc533ba36d084239ab4ac1a5ed5196f06e2",
+      "relation": "adapted_for_independent_repo",
+      "sha256": "942a798a8e5b191e0d5eb10d035bbf0b8f93891795b08c84a6d06905484cfcca",
       "source_bytes": 4519,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_5seed_latent_spectral_longrange.sh",
       "source_sha256": "14c16b75288e3529db6335d2c3d6b146a37b1791dd8d0e30cb9cd535e053102e"
@@ -16815,11 +16905,11 @@
       "source_sha256": "c54c92daa95a6836b535ca08443e99adbfdf021891f1860d192a1d3e6bea0837"
     },
     {
-      "bytes": 41502,
-      "origin": "migrated",
+      "bytes": 44473,
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/trajectory.py",
-      "relation": "transformed",
-      "sha256": "1b0790ae330d934d4a2c11ddaba34cccde58854ef79cc0ab9006605b47353e9b",
+      "relation": "adapted_for_independent_repo",
+      "sha256": "28164d41b8a40075a3dbf96f90c05669a65ba489186f52c0ae46051d7966aa34",
       "source_bytes": 41511,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/trajectory.py",
       "source_sha256": "b0f81cd0958eede2a83d638ceb406aa19fc35592ee31b1f9c05c4044ed3ebb2c"
@@ -16947,16 +17037,22 @@
       "sha256": "57505dfc4a8d31f8214163870f54c948a49c0bc3a8d37bbadd599f52f9530328"
     },
     {
-      "bytes": 849,
+      "bytes": 968,
       "origin": "generated_for_lap",
       "path": "pyproject.toml",
-      "sha256": "525c0c8e8167e9bf1aa7e32271a422f361ebf911a0d15cf606f8b1ea9b177813"
+      "sha256": "bddeb0e5b40fbb5031500e79b7fe215e2313f6b229bf786aadecc12db7405e56"
     },
     {
-      "bytes": 261,
+      "bytes": 296,
+      "origin": "generated_for_lap",
+      "path": "requirements/figures.md",
+      "sha256": "375086e65cde9135b4bae9a850af10d9a00f57d852e0d982e189a387e7c260d8"
+    },
+    {
+      "bytes": 280,
       "origin": "generated_for_lap",
       "path": "requirements/tworoom.txt",
-      "sha256": "44738bd6765a2269b41062635c4053df0d0c0820af5d3f51cb22b294a84e1e32"
+      "sha256": "19ee92b3d058786f6769f65625547d800f0e93f03506053526c62989da5d5d7e"
     },
     {
       "bytes": 2382,
@@ -16965,10 +17061,16 @@
       "sha256": "c08e526fb3c43328ab10b30784d77a3ebcacb587b0c6d1da10dae2dc21422c48"
     },
     {
-      "bytes": 2952,
+      "bytes": 3608,
+      "origin": "generated_for_lap",
+      "path": "scripts/refresh_migration_manifest.py",
+      "sha256": "d6d256fa98562b0dbb59c588c83244b13b1146477070bbf144d82dff9da6663f"
+    },
+    {
+      "bytes": 5378,
       "origin": "generated_for_lap",
       "path": "scripts/validate_repository.py",
-      "sha256": "5403d7630e111008c937c2a5b3b8aab10ae52c937e15bcf4204f467c5895784d"
+      "sha256": "db35422e6b80fc45ab373aaafd236dbf96dd1b2512a28d0be42b951197293128"
     },
     {
       "bytes": 163,
@@ -16983,7 +17085,7 @@
       "sha256": "62ad56c6c5c1ad68b4fa44f14e28938ec12b0b95e948a25c7e42a0799e039189"
     }
   ],
-  "generated_at_utc": "2026-07-29T17:36:43.225628+00:00",
+  "generated_at_utc": "2026-07-30T03:04:44.597402+00:00",
   "migration_scope": {
     "readme_start_heading": "trajectory deviation experiment",
     "readme_start_line": 410,
@@ -17135,5 +17237,10 @@
     "?? .gitignore",
     "?? cd",
     "?? experiments/"
-  ]
+  ],
+  "repair_revision": {
+    "purpose": "close independent-repository end-to-end reproducibility gaps",
+    "changed_existing_files": 16,
+    "new_files": 17
+  }
 }

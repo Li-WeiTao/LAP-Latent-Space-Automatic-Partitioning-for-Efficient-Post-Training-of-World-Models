@@ -7,6 +7,8 @@ __pycache__/
 .ruff_cache/
 .venv/
 venv/
+build/
+dist/
 
 # Editors and OS
 .vscode/
@@ -21,6 +23,8 @@ Thumbs.db
 
 # Datasets, dense caches, and model artifacts
 data/
+!experiments/tworoom/assets/**/data/
+!experiments/tworoom/assets/**/data/**
 datasets/
 cache/
 **/cache/
