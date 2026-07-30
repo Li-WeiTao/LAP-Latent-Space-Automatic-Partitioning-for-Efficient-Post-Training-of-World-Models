@@ -14,8 +14,6 @@
 *.csv -text
 *.json -text
 *.txt -text
-*.log -text
-*.out -text
 
 # Binary experiment artifacts and figures.
 *.npz binary
