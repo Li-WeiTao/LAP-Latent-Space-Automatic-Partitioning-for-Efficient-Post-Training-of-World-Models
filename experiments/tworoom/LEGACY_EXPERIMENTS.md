@@ -1,5 +1,10 @@
 # 轨迹偏差实验
 
+> 历史说明：本文档保留开发期命令和结果解释。原先位于 `scripts/` 的
+> queue、nohup、恢复和局部重跑脚本已移至 `legacy/orchestration/`，不再是
+> 正式复现入口。正式实验集合与统一入口以 `reproduction_manifest.json`
+> 和 `python experiments/tworoom/reproduce.py list` 为准。
+
 为了直观显示数据集上不同区域动力学规律不一致，我们采用 open-loop latent rollout 的方式比较不同 predictor 的轨迹偏差。
 
 ## 准备工作

@@ -205,7 +205,19 @@ checkpoint has no post-training seed and therefore no error bar.
 
 The table is not hand-entered: 185 committed `results.json` files reproduce its
 seed-level CSV, and all methods use identical evaluation starts for each of the
-five evaluation seeds.
+five evaluation seeds. The supported clean-run entrypoint is:
+
+```bash
+export LAP_TWOROOM_DATA=/absolute/path/to/tworoom.h5
+export LAP_LEWM_CHECKPOINT=/absolute/path/to/lewm_object.ckpt
+export GPU=0
+python experiments/tworoom/reproduce.py check --profile main
+python experiments/tworoom/reproduce.py run --profile main
+```
+
+Use `python experiments/tworoom/reproduce.py list --profile full` to see every
+retained analysis, ablation, and validation family. The registry deliberately
+excludes development-time queue, `nohup`, recovery, and partial-rerun launchers.
 
 ## Repository layout
 
@@ -219,7 +231,7 @@ lap/
 backends/
   lewm/             LeWM adapter and MIT-licensed compatibility backend
 experiments/
-  tworoom/          migrated programs, launchers, compact results, and figures
+  tworoom/          audited reproduction registry, programs, results, and figures
 requirements/       Python and figure environment records
 scripts/            repository-level validation utilities
 ```

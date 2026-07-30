@@ -21,8 +21,10 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 cd "$REPO_ROOT"
-source .venv/bin/activate
-export STABLEWM_HOME=/data/sicong/weitao/.stable_worldmodel
+if [[ -f .venv/bin/activate ]]; then
+  source .venv/bin/activate
+fi
+export STABLEWM_HOME="${STABLEWM_HOME:-${LAP_STABLEWM_HOME:-$HOME/.stable_worldmodel}}"
 
 ROOT="experiments/tworoom"
 GPU="${GPU:?set GPU=0..N}"
@@ -31,7 +33,9 @@ EPOCHS="${EPOCHS:-30}"
 SEED="${SEED:-42}"
 MAIN_DIR="${MAIN_DIR:-${ROOT}/results/tworoom_geometry_train_region_predictors}"
 WORK_DIR="${WORK_DIR:-${MAIN_DIR}/_work/${REGION}_${EPOCHS}ep_seed${SEED}}"
-CKPT="${LAP_LEWM_CHECKPOINT:-/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt}"
+DATA_FILE="${LAP_TWOROOM_DATA:-${LAP_DATA_ROOT:-$HOME/.stable_worldmodel/datasets}/tworoom.h5}"
+CKPT="${LAP_LEWM_CHECKPOINT:-${STABLEWM_HOME}/tworoom/lewm_object.ckpt}"
+PYTHON="${PYTHON:-python}"
 LOG="${MAIN_DIR}/train_${EPOCHS}ep_${REGION}.log"
 
 mkdir -p "${MAIN_DIR}" "${WORK_DIR}"
@@ -83,7 +87,9 @@ fi
 export CUDA_VISIBLE_DEVICES="${GPU}"
 echo "==== GPU=${GPU} REGION=${REGION} EPOCHS=${EPOCHS} SEED=${SEED} WORK_DIR=${WORK_DIR} started at $(date) ====" | tee "${LOG}"
 
-/usr/bin/time -p python "${ROOT}/trajectory.py" \
+/usr/bin/time -p "$PYTHON" "${ROOT}/trajectory.py" \
+  --dataset tworoom \
+  --data-file "${DATA_FILE}" \
   --region-split-mode geometry \
   --restrict-to-train-split \
   --checkpoint "${CKPT}" \

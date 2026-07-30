@@ -27,6 +27,32 @@ TwoRoom development README and includes every subsequent experiment:
 - Main automatic configuration: K=3, landmark spectral partition, 50 predictor
   epochs, and per-MPC routing.
 
+## Supported TwoRoom entrypoints
+
+The machine-readable authority is
+`experiments/tworoom/reproduction_manifest.json`. It separates the canonical
+paper matrix from analysis, ablation, and validation profiles. Preflight does
+not start training:
+
+```bash
+python experiments/tworoom/reproduce.py list --profile full
+python experiments/tworoom/reproduce.py check --profile main
+```
+
+After setting the external paths and GPU, the complete seven-method main matrix
+is launched with:
+
+```bash
+python experiments/tworoom/reproduce.py run --profile main
+```
+
+The entrypoint includes Official baseline, Joint-Continue 3ep, Global-FT50,
+Random-Voronoi K3-50, K-means++ K3-50, Spectral K3-50, and human rooms3-50.
+Automatic methods use the dataset/model-parameterized control-matrix runner;
+the human partition remains a TwoRoom-only comparison. Development-time queue,
+`nohup`, recovery, and partial-rerun launchers are retained under
+`experiments/tworoom/legacy/orchestration/` for provenance and are not called.
+
 ## External inputs
 
 The repository never silently substitutes external inputs. Set the dataset and
@@ -136,6 +162,7 @@ operations to the new modules:
 - the historical full-data spectral assignments are replayed through
   `LeWMLatentCache` and `IndexedPartitioner` before any predictor is trained.
 
-The old script names remain only as experiment-specific CLI/configuration
-adapters so published commands continue to work; they are no longer separate
-algorithm implementations.
+Supported historical script names remain as experiment-specific
+CLI/configuration helpers and are no longer separate algorithm implementations.
+Development-only orchestration launchers have been quarantined under
+`legacy/orchestration`; the canonical registry never resolves to them.
