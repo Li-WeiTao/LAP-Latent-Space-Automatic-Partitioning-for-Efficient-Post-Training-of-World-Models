@@ -14,10 +14,13 @@ efficiency experiment.
 
 ## Method
 
-LAP has four stages:
+The end-to-end workflow has four stages, with encoding deliberately outside
+the LAP method boundary:
 
-1. Freeze the pretrained world-model encoder and encode training trajectories.
-2. Automatically partition the latent space. The main method uses lightweight
+1. Use a backend-specific fast encoder, or an official release, to prepare a
+   frozen-encoder latent transition cache.
+2. Give that latent cache and the pretrained world model to LAP. LAP
+   automatically partitions the latent space; the main method uses lightweight
    landmark spectral partitioning.
 3. Fine-tune one dynamics predictor on each partition while keeping the encoder
    frozen.
@@ -28,6 +31,67 @@ The deployed spectral router is a small spherical Voronoi lookup: normalize the
 current latent, choose the nearest prototype, and use that prototype's owner
 cluster. Candidate actions, goals, task IDs, and future observations are not
 router inputs.
+
+## Interface boundary
+
+The post-training API is intentionally:
+
+```python
+result = method.fit(latent_cache, pretrained_model)
+```
+
+It is not `fit(raw_dataset, pretrained_model)`. Raw observations, HDF5 layout,
+image preprocessing, and expensive visual encoding belong to an upstream cache
+builder. This separation makes one cache reusable across partition seeds and
+predictor fine-tuning seeds, and allows an official latent cache to be consumed
+without re-encoding.
+
+A cache contains current-state routing latents plus the backend-owned latent
+transition windows and conditioning needed to train its predictor. For LeWM,
+the exact cache fields are `emb`, `act_emb`, and `region_starts`. The spectral
+partitioner and router read only `emb`; `act_emb` is used only by the
+action-conditioned predictor optimizer.
+
+```python
+import torch
+
+from backends.lewm import (
+    LeWMBackendFactory,
+    LeWMLatentCache,
+    LeWMRegionalPredictorTrainer,
+)
+from lap import (
+    LAP,
+    LAPConfig,
+    LandmarkSpectralConfig,
+    LandmarkSpectralPartitioner,
+    RegionalTrainingConfig,
+)
+
+device = torch.device("cuda:0")
+cache = LeWMLatentCache.from_npz("tworoom_lewm_train_latent_cache.npz")
+method = LAP(
+    backend_factory=LeWMBackendFactory(load_pretrained_lewm),
+    partitioner=LandmarkSpectralPartitioner(
+        LandmarkSpectralConfig(num_regions=3, num_landmarks=20_000)
+    ),
+    trainer=LeWMRegionalPredictorTrainer(device),
+    config=LAPConfig(
+        training=RegionalTrainingConfig(
+            epochs=50,
+            batch_size=128,
+            train_seed=42,
+            options={"history_size": 3, "num_preds": 1},
+        )
+    ),
+)
+result = method.fit(cache, "/path/to/lewm_object.ckpt")
+```
+
+`load_pretrained_lewm` is supplied by the LeWM installation or experiment
+adapter. A different JEPA-derived world model provides its own cache adapter,
+backend factory, and predictor trainer; the LAP partition/routing code is
+unchanged.
 
 ## TwoRoom result snapshot
 
@@ -131,7 +195,7 @@ The recorded figure environment is R 4.6.1 with ggplot2 4.0.3; see
 
 Run all commands from the repository root after loading `.env`.
 
-### 1. Build lossless frozen-encoder caches
+### 1. Build the lossless frozen-encoder cache upstream of LAP
 
 ```bash
 GPU=0 bash experiments/tworoom/scripts/prepare_tworoom_spectral_inputs.sh
@@ -148,6 +212,19 @@ The five geometry names are only a storage decomposition inherited from the
 original cache layout. The spectral loader concatenates them, deduplicates by
 global timestep, and discards their labels before automatic partitioning; LAP
 does not use these geometry labels to choose the spectral regions.
+
+To package those lossless shards as the single cache object accepted by the
+generic API:
+
+```bash
+python experiments/tworoom/build_lap_latent_cache.py \
+  --embedding-source-dir "$EMBED_DIR" \
+  --train-starts "$EMBED_DIR/train_global_reference_starts.npy" \
+  --output "$EMBED_DIR/tworoom_lewm_train_latent_cache.npz"
+```
+
+This packaging step performs no model inference and preserves the original
+transition order, dtype, latent windows, action embeddings, and sample IDs.
 
 By default outputs are written under:
 

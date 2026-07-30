@@ -64,6 +64,21 @@ spectral inputs have a complete rebuild path:
 GPU=0 bash experiments/tworoom/scripts/prepare_tworoom_spectral_inputs.sh
 ```
 
+Encoding is an explicit upstream preprocessing stage, not part of `LAP.fit`.
+The architecture-neutral method receives a prepared latent cache and the
+pretrained model. For TwoRoom/LeWM, the cache stores exact `emb`, `act_emb`, and
+`region_starts` arrays. The cache can be packaged as one file with:
+
+```bash
+python experiments/tworoom/build_lap_latent_cache.py \
+  --embedding-source-dir "$EMBED_DIR" \
+  --train-starts "$EMBED_DIR/train_global_reference_starts.npy" \
+  --output "$EMBED_DIR/tworoom_lewm_train_latent_cache.npz"
+```
+
+An official cache may replace this step if its backend adapter supplies the same
+semantic fields and records its provenance.
+
 The geometry-named files created by this command are storage shards only. The
 automatic partitioner concatenates and deduplicates their latent vectors and
 does not consume the geometry labels.
@@ -73,6 +88,8 @@ does not consume the geometry labels.
 - `static`: Python syntax, imports, shell syntax, relative paths, and manifest
   integrity are checked.
 - `smoke`: a small synthetic partition/router test runs without the TwoRoom data.
+- `cache-contract`: the new LAP latent-cache and indexed-partition interfaces
+  reproduce all 693,728 historical TwoRoom training assignments exactly.
 - `result-audit`: checked-in summary tables are recomputed from committed compact
   per-run results where available.
 - `full`: encoding, partitioning, regional training, and paired planning
@@ -81,3 +98,21 @@ does not consume the geometry labels.
 
 The repository validator includes a 185-file main-result audit and verifies
 that every method uses the same `eval_start_indices` for each evaluation seed.
+
+## Migration equivalence
+
+The independent API is not a parallel reimplementation beside the TwoRoom
+code. The executable experiment entrypoints delegate their result-affecting
+operations to the new modules:
+
+- graph construction, eigengap selection, and spectral labels resolve to
+  `lap.partition.spectral`;
+- predictor-only FP32 optimization resolves to `backends.lewm.finetuning`;
+- online Torch routing resolves to `backends.lewm.routing`, whose assignments
+  are tested against the NumPy `lap.routing.VoronoiRouter`;
+- the historical full-data spectral assignments are replayed through
+  `LeWMLatentCache` and `IndexedPartitioner` before any predictor is trained.
+
+The old script names remain only as experiment-specific CLI/configuration
+adapters so published commands continue to work; they are no longer separate
+algorithm implementations.

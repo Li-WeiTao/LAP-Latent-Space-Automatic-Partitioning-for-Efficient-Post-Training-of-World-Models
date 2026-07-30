@@ -9,17 +9,16 @@ per region on all transitions in that region, with a frozen encoder.
 from __future__ import annotations
 
 import argparse
-import copy
 import json
 import time
 import sys
-from dataclasses import asdict, dataclass
+from dataclasses import asdict
 from pathlib import Path
 
 import h5py
 import numpy as np
 import torch
-from torch.utils.data import DataLoader, Dataset, TensorDataset
+from torch.utils.data import DataLoader, Dataset
 
 try:
     sys.stdout.reconfigure(line_buffering=True)
@@ -47,6 +46,16 @@ from predictor_rule_drift import (  # noqa: E402
     valid_transition_starts,
 )
 from gauge_drift import preprocess_pixels  # noqa: E402
+from backends.lewm.finetuning import (  # noqa: E402
+    LeWMTrainConfig as TrainConfig,
+    eval_predictor_loss,
+    freeze_encoder_path,
+    save_region_predictor,
+    set_training_seed,
+    train_region_predictor,
+    trainable_predictor_params,
+    unfreeze_predictor_path,
+)
 
 
 REGION_SPLITS = (
@@ -57,38 +66,6 @@ REGION_SPLITS = (
     "right_room",
 )
 GLOBAL_FT_EMBED_REGIONS = ("left_room", "doorway_corridor", "right_room")
-
-
-@dataclass
-class TrainConfig:
-    history_size: int = 3
-    num_preds: int = 1
-    frameskip: int = 0
-    img_size: int = 224
-    train_fraction: float = 0.9
-    split_seed: int = 3072
-    seed: int = 42
-    max_starts: int = 0
-    min_region_samples: int = 256
-    batch_size: int = 128
-    epochs: int = 30
-    lr: float = 5e-5
-    weight_decay: float = 1e-3
-
-
-def set_training_seed(seed: int) -> None:
-    """Fix Python / NumPy / PyTorch / cuDNN RNG for reproducible predictor FT."""
-    import os
-    import random
-
-    os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed_all(seed)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
 
 
 def json_ready(value):
@@ -161,26 +138,6 @@ def region_masks_at_starts(
         if len(mask) == n
     }
     return masks, thresholds
-
-
-def freeze_encoder_path(model: torch.nn.Module) -> None:
-    for name in ("encoder", "projector", "action_encoder"):
-        module = getattr(model, name, None)
-        if module is None:
-            continue
-        for param in module.parameters():
-            param.requires_grad = False
-        module.eval()
-
-
-def unfreeze_predictor_path(model: torch.nn.Module) -> None:
-    for name in ("predictor", "pred_proj"):
-        module = getattr(model, name, None)
-        if module is None:
-            continue
-        for param in module.parameters():
-            param.requires_grad = True
-        module.train()
 
 
 def embedding_cache_path(out_dir: Path, region: str, name_prefix: str = "") -> Path:
@@ -345,45 +302,6 @@ def load_global_train_embeddings_from_region_caches(
         flush=True,
     )
     return emb, act_emb
-
-
-@torch.no_grad()
-def eval_predictor_loss(
-    model: torch.nn.Module,
-    emb: torch.Tensor,
-    act_emb: torch.Tensor,
-    cfg: TrainConfig,
-    device: torch.device,
-) -> float:
-    model.eval()
-    loader = DataLoader(
-        TensorDataset(emb, act_emb),
-        batch_size=cfg.batch_size,
-        shuffle=False,
-        drop_last=False,
-    )
-    total_sse = 0.0
-    total_elems = 0
-    for batch_emb, batch_act in loader:
-        batch_emb = batch_emb.to(device)
-        batch_act = batch_act.to(device)
-        ctx_emb = batch_emb[:, : cfg.history_size]
-        ctx_act = batch_act[:, : cfg.history_size]
-        tgt_emb = batch_emb[:, cfg.num_preds :]
-        pred_emb = model.predict(ctx_emb, ctx_act)
-        total_sse += float((pred_emb - tgt_emb).pow(2).sum().detach().cpu())
-        total_elems += tgt_emb.numel()
-    return total_sse / max(total_elems, 1)
-
-
-def trainable_predictor_params(model: torch.nn.Module) -> list[torch.nn.Parameter]:
-    names = ("predictor", "pred_proj")
-    params: list[torch.nn.Parameter] = []
-    for name in names:
-        module = getattr(model, name, None)
-        if module is not None:
-            params.extend(p for p in module.parameters() if p.requires_grad)
-    return params
 
 
 @torch.no_grad()
@@ -592,153 +510,6 @@ def precompute_embeddings(
             pin_memory=pin_memory,
         )
     raise ValueError(f"Unknown embedding backend: {backend}")
-
-
-def predictor_loss(
-    model: torch.nn.Module,
-    emb: torch.Tensor,
-    act_emb: torch.Tensor,
-    history_size: int,
-    num_preds: int,
-) -> torch.Tensor:
-    ctx_emb = emb[:, :history_size]
-    ctx_act = act_emb[:, :history_size]
-    tgt_emb = emb[:, num_preds:]
-    pred_emb = model.predict(ctx_emb, ctx_act)
-    return (pred_emb - tgt_emb).pow(2).mean()
-
-
-def _predictor_state_dict(model: torch.nn.Module) -> dict[str, torch.Tensor]:
-    state: dict[str, torch.Tensor] = {}
-    for name in ("predictor", "pred_proj"):
-        module = getattr(model, name, None)
-        if module is not None:
-            state.update({f"{name}.{k}": v.detach().cpu().clone() for k, v in module.state_dict().items()})
-    return state
-
-
-def _load_predictor_state_dict(model: torch.nn.Module, state: dict[str, torch.Tensor]) -> None:
-    for name in ("predictor", "pred_proj"):
-        module = getattr(model, name, None)
-        if module is None:
-            continue
-        prefix = f"{name}."
-        subset = {k[len(prefix) :]: v for k, v in state.items() if k.startswith(prefix)}
-        if subset:
-            module.load_state_dict(subset)
-
-
-def train_region_predictor(
-    base_model: torch.nn.Module,
-    emb: torch.Tensor,
-    act_emb: torch.Tensor,
-    cfg: TrainConfig,
-    device: torch.device,
-    *,
-    save_epochs: list[int] | None = None,
-    checkpoint_dir: Path | None = None,
-    region: str | None = None,
-    name_prefix: str = "",
-    select_best_by_eval: bool = False,
-) -> tuple[torch.nn.Module, dict]:
-    model = copy.deepcopy(base_model).to(device)
-    freeze_encoder_path(model)
-    unfreeze_predictor_path(model)
-
-    params = trainable_predictor_params(model)
-    if not params:
-        raise RuntimeError("No trainable predictor parameters found")
-
-    set_training_seed(cfg.seed)
-    loader = DataLoader(
-        TensorDataset(emb, act_emb),
-        batch_size=cfg.batch_size,
-        shuffle=True,
-        drop_last=len(emb) >= cfg.batch_size,
-        generator=torch.Generator().manual_seed(cfg.seed),
-    )
-    optim = torch.optim.AdamW(params, lr=cfg.lr, weight_decay=cfg.weight_decay)
-
-    save_epochs_set = set(save_epochs or [])
-    saved_checkpoints: dict[int, str] = {}
-    best_epoch = 0
-    best_eval_loss = float("inf")
-    best_state: dict[str, torch.Tensor] | None = None
-
-    history: list[dict] = []
-    for epoch in range(cfg.epochs):
-        epoch_losses: list[float] = []
-        for batch_emb, batch_act in loader:
-            batch_emb = batch_emb.to(device)
-            batch_act = batch_act.to(device)
-            optim.zero_grad(set_to_none=True)
-            loss = predictor_loss(model, batch_emb, batch_act, cfg.history_size, cfg.num_preds)
-            loss.backward()
-            optim.step()
-            epoch_losses.append(float(loss.detach().cpu()))
-
-        epoch_no = epoch + 1
-        train_loss = float(np.mean(epoch_losses))
-        eval_loss = eval_predictor_loss(model, emb, act_emb, cfg, device)
-        row = {"epoch": epoch_no, "loss": train_loss, "eval_loss": eval_loss}
-        history.append(row)
-        print(
-            f"  [train] epoch {epoch_no}/{cfg.epochs}  "
-            f"train_loss={train_loss:.6f}  eval_loss={eval_loss:.6f}",
-            flush=True,
-        )
-
-        if select_best_by_eval and eval_loss < best_eval_loss:
-            best_eval_loss = eval_loss
-            best_epoch = epoch_no
-            best_state = _predictor_state_dict(model)
-
-        if epoch_no in save_epochs_set and checkpoint_dir is not None and region is not None:
-            ckpt_path = checkpoint_dir / f"P_{name_prefix}{region}_epoch{epoch_no}_object.ckpt"
-            save_region_predictor(
-                model,
-                ckpt_path,
-                metadata={
-                    "region": region,
-                    "epoch": epoch_no,
-                    "train_loss": train_loss,
-                    "eval_loss": eval_loss,
-                },
-            )
-            saved_checkpoints[epoch_no] = str(ckpt_path)
-            print(f"  [checkpoint] saved {ckpt_path}", flush=True)
-
-    if select_best_by_eval and best_state is not None:
-        _load_predictor_state_dict(model, best_state)
-        final_loss = best_eval_loss
-        print(
-            f"  [best] epoch {best_epoch}  eval_loss={best_eval_loss:.6f} "
-            f"(selected over {cfg.epochs} epochs)",
-            flush=True,
-        )
-    else:
-        final_loss = eval_predictor_loss(model, emb, act_emb, cfg, device)
-        best_epoch = cfg.epochs
-        best_eval_loss = final_loss
-
-    stats = {
-        "epochs": cfg.epochs,
-        "final_loss": final_loss,
-        "best_epoch": best_epoch,
-        "best_eval_loss": best_eval_loss,
-        "select_best_by_eval": select_best_by_eval,
-        "saved_checkpoints": saved_checkpoints,
-        "history": history,
-    }
-    return model, stats
-
-
-def save_region_predictor(model: torch.nn.Module, path: Path, metadata: dict) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    torch.save(model, path)
-    meta_path = path.with_suffix(".json")
-    with meta_path.open("w") as f:
-        json.dump(json_ready(metadata), f, indent=2)
 
 
 def parse_args() -> argparse.Namespace:

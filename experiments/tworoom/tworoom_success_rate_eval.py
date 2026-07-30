@@ -22,7 +22,6 @@ import numpy as np
 import stable_pretraining as spt
 import stable_worldmodel as swm
 import torch
-import torch.nn.functional as F
 from einops import rearrange
 from omegaconf import OmegaConf
 from sklearn import preprocessing
@@ -37,6 +36,10 @@ from gauge_drift import tworoom_geometry_thresholds  # noqa: E402
 from jepa import JEPA, detach_clone  # noqa: E402
 from latent_cluster_common import resolve_cluster_source  # noqa: E402
 from latent_cluster_train_predictors import manifest_file_lock  # noqa: E402
+from backends.lewm.routing import (  # noqa: E402
+    route_voronoi_torch,
+    transform_latent_torch,
+)
 
 GEOMETRY_TRAIN_PRED_DIR = THIS_DIR / "results" / "tworoom_geometry_train_region_predictors"
 DEFAULT_BASELINE_STARTS = (
@@ -269,25 +272,25 @@ class LatentClusterSwitchJEPA(JEPA):
         )
 
     def _transform_latent(self, latent: torch.Tensor) -> torch.Tensor:
-        if self.zscore_mu.numel() == 0:
-            return latent
-        routed = (latent.float() - self.zscore_mu) / (
-            self.zscore_sigma + self.zscore_eps
+        """Expose the backend transform for diagnostics and contract tests."""
+
+        return transform_latent_torch(
+            latent,
+            mean=self.zscore_mu if self.zscore_mu.numel() else None,
+            scale=self.zscore_sigma if self.zscore_sigma.numel() else None,
+            eps=self.zscore_eps,
         )
-        return F.normalize(routed, dim=1)
 
     def _assign_clusters(self, latent: torch.Tensor) -> torch.Tensor:
-        routed = self._transform_latent(latent)
-        centroids = self.cluster_centroids
-        if self.spherical:
-            routed = F.normalize(routed.float(), dim=1)
-            centroids = F.normalize(centroids.float(), dim=1)
-            prototype_ids = (routed @ centroids.T).argmax(dim=1)
-        else:
-            prototype_ids = torch.cdist(
-                routed.float(), centroids.float(), p=2
-            ).argmin(dim=1)
-        return self.prototype_cluster_ids[prototype_ids]
+        return route_voronoi_torch(
+            latent,
+            self.cluster_centroids,
+            self.prototype_cluster_ids,
+            mean=self.zscore_mu if self.zscore_mu.numel() else None,
+            scale=self.zscore_sigma if self.zscore_sigma.numel() else None,
+            eps=self.zscore_eps,
+            spherical=self.spherical,
+        )
 
     def _timed_assign_clusters(self, latent: torch.Tensor) -> torch.Tensor:
         """Assign clusters without synchronizing the online CUDA execution path."""

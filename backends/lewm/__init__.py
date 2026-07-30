@@ -3,6 +3,18 @@
 The vendored compatibility files are covered by LICENSES/LEWM-LICENSE.
 """
 
-from .adapter import LeWMBackend
+from .adapter import LeWMBackend, LeWMBackendFactory
+from .cache import LeWMCachedPayload, LeWMLatentCache
+from .finetuning import LeWMRegionalPredictorTrainer, LeWMTrainConfig
+from .routing import route_voronoi_torch, transform_latent_torch
 
-__all__ = ["LeWMBackend"]
+__all__ = [
+    "LeWMBackend",
+    "LeWMBackendFactory",
+    "LeWMCachedPayload",
+    "LeWMLatentCache",
+    "LeWMRegionalPredictorTrainer",
+    "LeWMTrainConfig",
+    "route_voronoi_torch",
+    "transform_latent_torch",
+]

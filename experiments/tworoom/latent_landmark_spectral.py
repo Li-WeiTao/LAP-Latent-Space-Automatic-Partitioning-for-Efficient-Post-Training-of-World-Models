@@ -35,9 +35,7 @@ import sklearn
 import torch
 import threadpoolctl
 from scipy import sparse
-from scipy.sparse.csgraph import connected_components
 from scipy.sparse.linalg import eigsh
-from sklearn.cluster import KMeans
 from sklearn.metrics import (
     adjusted_rand_score,
     f1_score,
@@ -45,7 +43,6 @@ from sklearn.metrics import (
     recall_score,
 )
 from sklearn.model_selection import GroupShuffleSplit
-from threadpoolctl import threadpool_limits
 
 THIS_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(THIS_DIR))
@@ -556,84 +553,6 @@ def cosine_knn_faiss_hnsw(
     }
 
 
-def build_self_tuned_graph(
-    neighbors: np.ndarray,
-    similarities: np.ndarray,
-    k: int,
-) -> tuple[sparse.csr_matrix, dict]:
-    nbr = neighbors[:, :k]
-    sim = np.clip(similarities[:, :k], -1.0, 1.0)
-    dist2 = np.maximum(2.0 - 2.0 * sim, 0.0)
-    sigma = np.sqrt(dist2[:, -1])
-    positive = sigma[sigma > 0]
-    if not len(positive):
-        raise RuntimeError("All landmark local scales are zero")
-    sigma_floor = max(float(np.quantile(positive, 0.01)) * 0.1, 1e-4)
-    sigma = np.maximum(sigma, sigma_floor)
-    denominator = sigma[:, None] * sigma[nbr]
-    exponent = np.clip(dist2 / denominator, 0.0, 50.0)
-    weights = np.exp(-exponent).astype(np.float64)
-    rows = np.repeat(np.arange(len(nbr), dtype=np.int64), k)
-    W = sparse.coo_matrix(
-        (weights.reshape(-1), (rows, nbr.reshape(-1))),
-        shape=(len(nbr), len(nbr)),
-        dtype=np.float64,
-    ).tocsr()
-    W = W.maximum(W.T).tocsr()
-    W.setdiag(0.0)
-    W.eliminate_zeros()
-    n_components, component_labels = connected_components(
-        W, directed=False, return_labels=True
-    )
-    component_counts = np.bincount(component_labels, minlength=n_components)
-    degree = np.asarray(W.sum(axis=1)).reshape(-1)
-    if np.any(degree <= 0):
-        raise RuntimeError("kNN graph contains zero-degree landmarks")
-    return W, {
-        "effective_knn": int(k),
-        "num_undirected_nonzeros": int(W.nnz),
-        "num_connected_components": int(n_components),
-        "component_fractions": (component_counts / len(component_labels)).tolist(),
-        "sigma_floor": sigma_floor,
-        "degree_min": float(degree.min()),
-        "degree_mean": float(degree.mean()),
-        "degree_max": float(degree.max()),
-    }
-
-
-def select_k_from_laplacian_eigenvalues(
-    laplacian_eigenvalues: np.ndarray,
-    *,
-    k_min: int,
-    k_max: int,
-) -> tuple[int, dict]:
-    """Apply the predeclared largest-eigengap rule; ties choose the smaller K."""
-    eigenvalues = np.asarray(laplacian_eigenvalues, dtype=np.float64)
-    if k_min < 2 or k_max < k_min:
-        raise ValueError("auto-K requires 2 <= k_min <= k_max")
-    if len(eigenvalues) <= k_max:
-        raise ValueError(
-            f"Need at least {k_max + 1} Laplacian eigenvalues for auto-K, "
-            f"got {len(eigenvalues)}"
-        )
-    candidates = list(range(k_min, k_max + 1))
-    gaps = {
-        k: float(eigenvalues[k] - eigenvalues[k - 1]) for k in candidates
-    }
-    selected = max(candidates, key=lambda k: (gaps[k], -k))
-    return selected, {
-        "mode": "auto_largest_eigengap",
-        "rule": (
-            "argmax_{K in [k_min,k_max]} (lambda_{K+1}-lambda_K) "
-            "on the symmetric normalized graph Laplacian; ties choose smaller K"
-        ),
-        "k_min": int(k_min),
-        "k_max": int(k_max),
-        "candidate_eigengaps": {str(k): gaps[k] for k in candidates},
-        "selected_num_clusters": int(selected),
-    }
-
-
 def auto_select_num_clusters(
     W: sparse.csr_matrix,
     *,
@@ -676,65 +595,6 @@ def auto_select_num_clusters(
         }
     )
     return selected, meta
-
-
-def spectral_labels(
-    W: sparse.csr_matrix,
-    *,
-    num_clusters: int,
-    seed: int,
-    eig_tol: float,
-    eig_maxiter: int,
-    spectral_n_init: int,
-    cpu_threads: int,
-) -> tuple[np.ndarray, np.ndarray, np.ndarray, dict]:
-    degree = np.asarray(W.sum(axis=1)).reshape(-1)
-    inv_sqrt = 1.0 / np.sqrt(degree)
-    S = sparse.diags(inv_sqrt) @ W @ sparse.diags(inv_sqrt)
-    num_nodes = W.shape[0]
-    num_eigs = min(num_clusters + 2, num_nodes - 1)
-    v0 = np.random.default_rng(seed).standard_normal(num_nodes)
-    eig_t0 = time.perf_counter()
-    values, vectors = eigsh(
-        S,
-        k=num_eigs,
-        which="LA",
-        tol=eig_tol,
-        maxiter=eig_maxiter,
-        v0=v0,
-    )
-    eig_sec = time.perf_counter() - eig_t0
-    order = np.argsort(values)[::-1]
-    values = values[order]
-    vectors = vectors[:, order]
-    embedding = l2_normalize_rows(vectors[:, :num_clusters].astype(np.float32))
-    km_t0 = time.perf_counter()
-    with threadpool_limits(limits=cpu_threads):
-        km = KMeans(
-            n_clusters=num_clusters,
-            init="k-means++",
-            n_init=spectral_n_init,
-            max_iter=300,
-            random_state=seed,
-            algorithm="lloyd",
-        ).fit(embedding)
-    labels = km.labels_.astype(np.int64)
-    laplacian_eigenvalues = 1.0 - values
-    eigengap = None
-    if len(laplacian_eigenvalues) > num_clusters:
-        eigengap = float(
-            laplacian_eigenvalues[num_clusters]
-            - laplacian_eigenvalues[num_clusters - 1]
-        )
-    return labels, embedding, laplacian_eigenvalues, {
-        "eigensolver_sec": eig_sec,
-        "spectral_kmeans_sec": time.perf_counter() - km_t0,
-        "normalized_adjacency_eigenvalues_desc": values.tolist(),
-        "laplacian_eigenvalues_asc": laplacian_eigenvalues.tolist(),
-        "eigengap_after_k": eigengap,
-        "spectral_kmeans_inertia": float(km.inertia_),
-        "spectral_kmeans_n_iter": int(km.n_iter_),
-    }
 
 
 def episode_group_holdout(
@@ -972,6 +832,22 @@ def benchmark_router(
             "mean_us_per_vector": float(np.mean(times) / n * 1e6),
         }
     return rows
+
+
+# All runs below resolve these globals at execution time.  Point them at the
+# architecture-neutral LAP implementation so this TwoRoom program is an
+# adapter/configuration layer, not a second spectral algorithm implementation.
+from lap.partition.spectral import (  # noqa: E402
+    build_self_tuned_graph as _lap_build_self_tuned_graph,
+    l2_normalize_rows as _lap_l2_normalize_rows,
+    select_k_from_laplacian_eigenvalues as _lap_select_k,
+    spectral_labels as _lap_spectral_labels,
+)
+
+l2_normalize_rows = _lap_l2_normalize_rows
+build_self_tuned_graph = _lap_build_self_tuned_graph
+select_k_from_laplacian_eigenvalues = _lap_select_k
+spectral_labels = _lap_spectral_labels
 
 
 def result_affecting_args(args: argparse.Namespace) -> dict:

@@ -20,6 +20,9 @@
 | Main CLI `--help` checks | 5/5 passed |
 | Landmark spectral contract tests | 8/8 passed |
 | Additional routing/manifest/rollout tests | 18/18 passed |
+| Generic latent-cache LAP API tests | 5/5 passed |
+| Historical TwoRoom cache assignment replay | 693,728/693,728 exact |
+| Legacy vs migrated FP32 trainer | predictor and pred-proj parameters bitwise exact |
 | Extracted architecture-neutral spectral primitives | exact numerical match |
 | Main-result JSON files independently aggregated | 185/185 |
 | Main plot seed values reproduced | 19/19 exact |
@@ -52,13 +55,31 @@ training starts and the expected storage-shard counts:
 The generated region names are not consumed as labels by spectral partitioning;
 the loader concatenates and deduplicates their latent vectors.
 
+The cache-contract validation read the existing 1.27 GB merged latent cache
+without re-encoding or copying it. The new `LeWMLatentCache` and
+`IndexedPartitioner` reproduced the historical training assignment counts:
+
+| Spectral region | Transitions |
+|---|---:|
+| cluster0 | 248,828 |
+| cluster1 | 226,864 |
+| cluster2 | 218,036 |
+
+The trainer equivalence check ran the source-tree `train_region_predictor` and
+the migrated `backends.lewm.finetuning.train_region_predictor` on the same tiny
+world model, latent cache, FP32 CPU configuration, and seed. The selected epoch,
+complete loss history, and every tensor in `predictor` and `pred_proj` matched
+exactly.
+
 ## Verification boundary
 
 The migration verifies repository structure, syntax, imports, compact results,
 artifact contracts, routing behavior, manifest transactions, result aggregation,
 figure rendering, packaging, and numerical equivalence of the extracted
-spectral primitives. It also verifies that the newly documented raw-data path
-reconstructs every start-index input needed by the lossless cache builder.
+spectral primitives. It verifies that the new public post-training boundary is
+`latent cache + pretrained model`, and that raw-data encoding remains a separate
+upstream step. It also verifies that this upstream path reconstructs every
+start-index input needed by the lossless cache builder.
 
 It does not claim a new full reproduction of dense GPU encoding, predictor
 training, or MPC evaluation; those stages require multiple GPU hours. Their

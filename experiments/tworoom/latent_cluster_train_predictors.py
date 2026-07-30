@@ -47,6 +47,8 @@ from trajectory import (  # noqa: E402
     starts_match_cached,
     train_region_predictor,
 )
+from backends.lewm.cache import LeWMLatentCache  # noqa: E402
+from lap.partition import IndexedPartitioner, PartitionArtifact  # noqa: E402
 
 
 def parse_args() -> argparse.Namespace:
@@ -119,6 +121,14 @@ def parse_args() -> argparse.Namespace:
         "--dry-run",
         action="store_true",
         help="Validate artifact coverage and print cluster counts without loading/training a model.",
+    )
+    parser.add_argument(
+        "--validate-cache-only",
+        action="store_true",
+        help=(
+            "Load the prepared latent cache and verify the new LAP cache/partition "
+            "contracts against historical assignments, then exit before model loading."
+        ),
     )
     parser.add_argument(
         "--overwrite-existing",
@@ -475,6 +485,8 @@ def commit_staged_cluster_merge(
 
 def main() -> None:
     args = parse_args()
+    if args.dry_run and args.validate_cache_only:
+        raise SystemExit("Choose only one of --dry-run and --validate-cache-only")
     if (args.cluster_artifact_dir is None) == (args.kmeanspp_label_npz is None):
         raise SystemExit(
             "Exactly one cluster source is required: --cluster-artifact-dir XOR "
@@ -648,6 +660,55 @@ def main() -> None:
                     tmp_cache.unlink()
             cache_origin = "created_from_region_caches"
             print(f"  [cache] saved merged embeddings to {merged_cache}", flush=True)
+
+    # Execute the historical full-data assignments through LAP's public
+    # latent-cache/partition contracts.  IndexedPartitioner preserves the saved
+    # spectral pseudo-labels exactly; the portable artifact below is the same
+    # Voronoi router consumed by deployment.
+    zscore = artifact.get("zscore")
+    latent_dim = int(np.asarray(artifact["routing_vectors"]).shape[1])
+    if zscore is None:
+        router_mean = np.zeros(latent_dim, dtype=np.float32)
+        router_scale = np.ones(latent_dim, dtype=np.float32)
+    else:
+        router_mean = np.asarray(zscore["mu"], dtype=np.float32)
+        router_scale = np.asarray(zscore["sigma"], dtype=np.float32)
+    portable_artifact = PartitionArtifact(
+        prototypes=np.asarray(artifact["routing_vectors"], dtype=np.float32),
+        prototype_region_ids=np.asarray(
+            artifact["prototype_cluster_ids"], dtype=np.int64
+        ),
+        mean=router_mean,
+        scale=np.maximum(router_scale, np.float32(1e-12)),
+        metadata=dict(artifact["meta"]),
+    )
+    encoded_dataset = LeWMLatentCache(
+        emb,
+        act_emb,
+        route_label_indices,
+        route_index=0,
+        metadata={"dataset": "tworoom", "source": str(merged_cache)},
+    ).load()
+    core_partition = IndexedPartitioner(
+        portable_artifact,
+        np.asarray(artifact["global_idx"], dtype=np.int64),
+        np.asarray(artifact["labels"], dtype=np.int64),
+    ).fit(
+        encoded_dataset.routing_latents,
+        sample_ids=encoded_dataset.sample_ids,
+    )
+    if not np.array_equal(core_partition.labels, cluster_ids):
+        raise RuntimeError(
+            "LAP partition contract disagrees with the historical assignment path"
+        )
+    cluster_ids = core_partition.labels
+    if args.validate_cache_only:
+        shutil.rmtree(staging_dir, ignore_errors=True)
+        print(
+            "[validate-cache-only] latent cache and LAP assignment contracts passed",
+            flush=True,
+        )
+        return
 
     checkpoint_provenance = file_provenance(Path(args.checkpoint))
     train_starts_provenance = file_provenance(args.train_starts)
