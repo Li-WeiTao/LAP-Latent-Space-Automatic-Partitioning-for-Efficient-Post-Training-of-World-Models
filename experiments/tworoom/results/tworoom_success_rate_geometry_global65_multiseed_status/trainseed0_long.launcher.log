@@ -1,0 +1,106 @@
+START train_seed=0 eval_seed=0 horizon=long method=rooms3_30ep gpu=3 cpus=120-123 2026-07-15T02:43:07+00:00
+DONE train_seed=0 eval_seed=0 horizon=long method=rooms3_30ep success_rate=60.0 successes=30/50
+DONE train_seed=0 eval_seed=0 horizon=long method=rooms3_30ep 2026-07-15T02:44:27+00:00
+START train_seed=0 eval_seed=0 horizon=long method=priority5_30ep gpu=3 cpus=120-123 2026-07-15T02:44:27+00:00
+DONE train_seed=0 eval_seed=0 horizon=long method=priority5_30ep success_rate=62.0 successes=31/50
+DONE train_seed=0 eval_seed=0 horizon=long method=priority5_30ep 2026-07-15T02:45:46+00:00
+START train_seed=0 eval_seed=0 horizon=long method=rooms3_50ep gpu=3 cpus=120-123 2026-07-15T02:45:46+00:00
+DONE train_seed=0 eval_seed=0 horizon=long method=rooms3_50ep success_rate=60.0 successes=30/50
+DONE train_seed=0 eval_seed=0 horizon=long method=rooms3_50ep 2026-07-15T02:47:04+00:00
+START train_seed=0 eval_seed=0 horizon=long method=priority5_50ep gpu=3 cpus=120-123 2026-07-15T02:47:04+00:00
+DONE train_seed=0 eval_seed=0 horizon=long method=priority5_50ep success_rate=60.0 successes=30/50
+DONE train_seed=0 eval_seed=0 horizon=long method=priority5_50ep 2026-07-15T02:48:24+00:00
+START train_seed=0 eval_seed=0 horizon=long method=rooms3_doorway80 gpu=3 cpus=120-123 2026-07-15T02:48:24+00:00
+DONE train_seed=0 eval_seed=0 horizon=long method=rooms3_doorway80 success_rate=60.0 successes=30/50
+DONE train_seed=0 eval_seed=0 horizon=long method=rooms3_doorway80 2026-07-15T02:50:00+00:00
+START train_seed=0 eval_seed=0 horizon=long method=priority5_doorway80 gpu=3 cpus=120-123 2026-07-15T02:50:00+00:00
+DONE train_seed=0 eval_seed=0 horizon=long method=priority5_doorway80 success_rate=60.0 successes=30/50
+DONE train_seed=0 eval_seed=0 horizon=long method=priority5_doorway80 2026-07-15T02:51:26+00:00
+START train_seed=0 eval_seed=0 horizon=long method=global_ft_65ep gpu=3 cpus=120-123 2026-07-15T02:51:26+00:00
+DONE train_seed=0 eval_seed=0 horizon=long method=global_ft_65ep success_rate=56.00000000000001 successes=28/50
+DONE train_seed=0 eval_seed=0 horizon=long method=global_ft_65ep 2026-07-15T02:52:44+00:00
+START train_seed=0 eval_seed=1 horizon=long method=rooms3_30ep gpu=3 cpus=120-123 2026-07-15T02:52:44+00:00
+DONE train_seed=0 eval_seed=1 horizon=long method=rooms3_30ep success_rate=64.0 successes=32/50
+DONE train_seed=0 eval_seed=1 horizon=long method=rooms3_30ep 2026-07-15T02:54:06+00:00
+START train_seed=0 eval_seed=1 horizon=long method=priority5_30ep gpu=3 cpus=120-123 2026-07-15T02:54:06+00:00
+DONE train_seed=0 eval_seed=1 horizon=long method=priority5_30ep success_rate=64.0 successes=32/50
+DONE train_seed=0 eval_seed=1 horizon=long method=priority5_30ep 2026-07-15T02:55:28+00:00
+START train_seed=0 eval_seed=1 horizon=long method=rooms3_50ep gpu=3 cpus=120-123 2026-07-15T02:55:28+00:00
+DONE train_seed=0 eval_seed=1 horizon=long method=rooms3_50ep success_rate=64.0 successes=32/50
+DONE train_seed=0 eval_seed=1 horizon=long method=rooms3_50ep 2026-07-15T02:56:50+00:00
+START train_seed=0 eval_seed=1 horizon=long method=priority5_50ep gpu=3 cpus=120-123 2026-07-15T02:56:50+00:00
+DONE train_seed=0 eval_seed=1 horizon=long method=priority5_50ep success_rate=64.0 successes=32/50
+DONE train_seed=0 eval_seed=1 horizon=long method=priority5_50ep 2026-07-15T02:58:11+00:00
+START train_seed=0 eval_seed=1 horizon=long method=rooms3_doorway80 gpu=3 cpus=120-123 2026-07-15T02:58:11+00:00
+DONE train_seed=0 eval_seed=1 horizon=long method=rooms3_doorway80 success_rate=64.0 successes=32/50
+DONE train_seed=0 eval_seed=1 horizon=long method=rooms3_doorway80 2026-07-15T02:59:30+00:00
+START train_seed=0 eval_seed=1 horizon=long method=priority5_doorway80 gpu=3 cpus=120-123 2026-07-15T02:59:30+00:00
+DONE train_seed=0 eval_seed=1 horizon=long method=priority5_doorway80 success_rate=62.0 successes=31/50
+DONE train_seed=0 eval_seed=1 horizon=long method=priority5_doorway80 2026-07-15T03:00:51+00:00
+START train_seed=0 eval_seed=1 horizon=long method=global_ft_65ep gpu=3 cpus=120-123 2026-07-15T03:00:51+00:00
+DONE train_seed=0 eval_seed=1 horizon=long method=global_ft_65ep success_rate=68.0 successes=34/50
+DONE train_seed=0 eval_seed=1 horizon=long method=global_ft_65ep 2026-07-15T03:02:12+00:00
+START train_seed=0 eval_seed=2 horizon=long method=rooms3_30ep gpu=3 cpus=120-123 2026-07-15T03:02:12+00:00
+DONE train_seed=0 eval_seed=2 horizon=long method=rooms3_30ep success_rate=62.0 successes=31/50
+DONE train_seed=0 eval_seed=2 horizon=long method=rooms3_30ep 2026-07-15T03:03:33+00:00
+START train_seed=0 eval_seed=2 horizon=long method=priority5_30ep gpu=3 cpus=120-123 2026-07-15T03:03:33+00:00
+DONE train_seed=0 eval_seed=2 horizon=long method=priority5_30ep success_rate=60.0 successes=30/50
+DONE train_seed=0 eval_seed=2 horizon=long method=priority5_30ep 2026-07-15T03:04:52+00:00
+START train_seed=0 eval_seed=2 horizon=long method=rooms3_50ep gpu=3 cpus=120-123 2026-07-15T03:04:52+00:00
+DONE train_seed=0 eval_seed=2 horizon=long method=rooms3_50ep success_rate=57.99999999999999 successes=29/50
+DONE train_seed=0 eval_seed=2 horizon=long method=rooms3_50ep 2026-07-15T03:06:10+00:00
+START train_seed=0 eval_seed=2 horizon=long method=priority5_50ep gpu=3 cpus=120-123 2026-07-15T03:06:10+00:00
+DONE train_seed=0 eval_seed=2 horizon=long method=priority5_50ep success_rate=56.00000000000001 successes=28/50
+DONE train_seed=0 eval_seed=2 horizon=long method=priority5_50ep 2026-07-15T03:07:29+00:00
+START train_seed=0 eval_seed=2 horizon=long method=rooms3_doorway80 gpu=3 cpus=120-123 2026-07-15T03:07:29+00:00
+DONE train_seed=0 eval_seed=2 horizon=long method=rooms3_doorway80 success_rate=57.99999999999999 successes=29/50
+DONE train_seed=0 eval_seed=2 horizon=long method=rooms3_doorway80 2026-07-15T03:08:46+00:00
+START train_seed=0 eval_seed=2 horizon=long method=priority5_doorway80 gpu=3 cpus=120-123 2026-07-15T03:08:46+00:00
+DONE train_seed=0 eval_seed=2 horizon=long method=priority5_doorway80 success_rate=60.0 successes=30/50
+DONE train_seed=0 eval_seed=2 horizon=long method=priority5_doorway80 2026-07-15T03:10:04+00:00
+START train_seed=0 eval_seed=2 horizon=long method=global_ft_65ep gpu=3 cpus=120-123 2026-07-15T03:10:04+00:00
+DONE train_seed=0 eval_seed=2 horizon=long method=global_ft_65ep success_rate=56.00000000000001 successes=28/50
+DONE train_seed=0 eval_seed=2 horizon=long method=global_ft_65ep 2026-07-15T03:11:23+00:00
+START train_seed=0 eval_seed=3 horizon=long method=rooms3_30ep gpu=3 cpus=120-123 2026-07-15T03:11:23+00:00
+DONE train_seed=0 eval_seed=3 horizon=long method=rooms3_30ep success_rate=60.0 successes=30/50
+DONE train_seed=0 eval_seed=3 horizon=long method=rooms3_30ep 2026-07-15T03:12:45+00:00
+START train_seed=0 eval_seed=3 horizon=long method=priority5_30ep gpu=3 cpus=120-123 2026-07-15T03:12:45+00:00
+DONE train_seed=0 eval_seed=3 horizon=long method=priority5_30ep success_rate=57.99999999999999 successes=29/50
+DONE train_seed=0 eval_seed=3 horizon=long method=priority5_30ep 2026-07-15T03:14:05+00:00
+START train_seed=0 eval_seed=3 horizon=long method=rooms3_50ep gpu=3 cpus=120-123 2026-07-15T03:14:05+00:00
+DONE train_seed=0 eval_seed=3 horizon=long method=rooms3_50ep success_rate=54.0 successes=27/50
+DONE train_seed=0 eval_seed=3 horizon=long method=rooms3_50ep 2026-07-15T03:15:22+00:00
+START train_seed=0 eval_seed=3 horizon=long method=priority5_50ep gpu=3 cpus=120-123 2026-07-15T03:15:22+00:00
+DONE train_seed=0 eval_seed=3 horizon=long method=priority5_50ep success_rate=54.0 successes=27/50
+DONE train_seed=0 eval_seed=3 horizon=long method=priority5_50ep 2026-07-15T03:16:42+00:00
+START train_seed=0 eval_seed=3 horizon=long method=rooms3_doorway80 gpu=3 cpus=120-123 2026-07-15T03:16:42+00:00
+DONE train_seed=0 eval_seed=3 horizon=long method=rooms3_doorway80 success_rate=54.0 successes=27/50
+DONE train_seed=0 eval_seed=3 horizon=long method=rooms3_doorway80 2026-07-15T03:18:04+00:00
+START train_seed=0 eval_seed=3 horizon=long method=priority5_doorway80 gpu=3 cpus=120-123 2026-07-15T03:18:04+00:00
+DONE train_seed=0 eval_seed=3 horizon=long method=priority5_doorway80 success_rate=54.0 successes=27/50
+DONE train_seed=0 eval_seed=3 horizon=long method=priority5_doorway80 2026-07-15T03:19:25+00:00
+START train_seed=0 eval_seed=3 horizon=long method=global_ft_65ep gpu=3 cpus=120-123 2026-07-15T03:19:25+00:00
+DONE train_seed=0 eval_seed=3 horizon=long method=global_ft_65ep success_rate=52.0 successes=26/50
+DONE train_seed=0 eval_seed=3 horizon=long method=global_ft_65ep 2026-07-15T03:20:43+00:00
+START train_seed=0 eval_seed=4 horizon=long method=rooms3_30ep gpu=3 cpus=120-123 2026-07-15T03:20:43+00:00
+DONE train_seed=0 eval_seed=4 horizon=long method=rooms3_30ep success_rate=60.0 successes=30/50
+DONE train_seed=0 eval_seed=4 horizon=long method=rooms3_30ep 2026-07-15T03:22:02+00:00
+START train_seed=0 eval_seed=4 horizon=long method=priority5_30ep gpu=3 cpus=120-123 2026-07-15T03:22:02+00:00
+DONE train_seed=0 eval_seed=4 horizon=long method=priority5_30ep success_rate=64.0 successes=32/50
+DONE train_seed=0 eval_seed=4 horizon=long method=priority5_30ep 2026-07-15T03:23:24+00:00
+START train_seed=0 eval_seed=4 horizon=long method=rooms3_50ep gpu=3 cpus=120-123 2026-07-15T03:23:24+00:00
+DONE train_seed=0 eval_seed=4 horizon=long method=rooms3_50ep success_rate=57.99999999999999 successes=29/50
+DONE train_seed=0 eval_seed=4 horizon=long method=rooms3_50ep 2026-07-15T03:24:44+00:00
+START train_seed=0 eval_seed=4 horizon=long method=priority5_50ep gpu=3 cpus=120-123 2026-07-15T03:24:44+00:00
+DONE train_seed=0 eval_seed=4 horizon=long method=priority5_50ep success_rate=60.0 successes=30/50
+DONE train_seed=0 eval_seed=4 horizon=long method=priority5_50ep 2026-07-15T03:26:03+00:00
+START train_seed=0 eval_seed=4 horizon=long method=rooms3_doorway80 gpu=3 cpus=120-123 2026-07-15T03:26:03+00:00
+DONE train_seed=0 eval_seed=4 horizon=long method=rooms3_doorway80 success_rate=57.99999999999999 successes=29/50
+DONE train_seed=0 eval_seed=4 horizon=long method=rooms3_doorway80 2026-07-15T03:27:24+00:00
+START train_seed=0 eval_seed=4 horizon=long method=priority5_doorway80 gpu=3 cpus=120-123 2026-07-15T03:27:24+00:00
+DONE train_seed=0 eval_seed=4 horizon=long method=priority5_doorway80 success_rate=60.0 successes=30/50
+DONE train_seed=0 eval_seed=4 horizon=long method=priority5_doorway80 2026-07-15T03:28:45+00:00
+START train_seed=0 eval_seed=4 horizon=long method=global_ft_65ep gpu=3 cpus=120-123 2026-07-15T03:28:45+00:00
+DONE train_seed=0 eval_seed=4 horizon=long method=global_ft_65ep success_rate=57.99999999999999 successes=29/50
+DONE train_seed=0 eval_seed=4 horizon=long method=global_ft_65ep 2026-07-15T03:30:08+00:00
+WORKER_COMPLETE train_seed=0 horizon=long 2026-07-15T03:30:08+00:00
