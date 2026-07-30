@@ -1,0 +1,72 @@
+[device] cuda:0
+  [cache] doorway_corridor: 38552 transitions, 154208 latent vectors from P_train_doorway_corridor_embeddings.npz
+  [cache] near_wall: 31533 transitions, 126132 latent vectors from P_train_near_wall_embeddings.npz
+  [cache] common: 297211 transitions, 1188844 latent vectors from P_train_common_embeddings.npz
+  [cache] right_room: 324933 transitions, 1299732 latent vectors from P_train_right_room_embeddings.npz
+  [cache] left_room: 330243 transitions, 1320972 latent vectors from P_train_left_room_embeddings.npz
+  [dedup] 4089888 expanded vectors -> 909723 unique timesteps (dropped_duplicates=3180165)
+[load+preprocess] N=909723 dim=192 in 22.49s
+
+==== outer_seed=0 (50 kmeans++ restarts) ====
+  objectives: min=0.152425 max=0.158132 mean=0.155862
+
+==== outer_seed=1 (50 kmeans++ restarts) ====
+  objectives: min=0.152600 max=0.158599 mean=0.155829
+
+==== outer_seed=2 (50 kmeans++ restarts) ====
+  objectives: min=0.152010 max=0.158552 mean=0.155470
+
+==== outer_seed=3 (50 kmeans++ restarts) ====
+  objectives: min=0.150768 max=0.158341 mean=0.155038
+
+==== outer_seed=4 (50 kmeans++ restarts) ====
+  objectives: min=0.150668 max=0.158784 mean=0.155847
+
+==== outer_seed=5 (50 kmeans++ restarts) ====
+  objectives: min=0.152896 max=0.158451 mean=0.155671
+
+==== outer_seed=6 (50 kmeans++ restarts) ====
+  objectives: min=0.151717 max=0.158334 mean=0.155652
+
+==== outer_seed=7 (50 kmeans++ restarts) ====
+  objectives: min=0.152895 max=0.159049 mean=0.155488
+
+==== outer_seed=8 (50 kmeans++ restarts) ====
+  objectives: min=0.151597 max=0.157744 mean=0.155320
+
+==== outer_seed=9 (50 kmeans++ restarts) ====
+  objectives: min=0.152699 max=0.157962 mean=0.155706
+
+==== outer_seed=10 (50 kmeans++ restarts) ====
+  objectives: min=0.152039 max=0.158503 mean=0.155552
+
+==== outer_seed=11 (50 kmeans++ restarts) ====
+  objectives: min=0.151057 max=0.158503 mean=0.155510
+
+==== outer_seed=12 (50 kmeans++ restarts) ====
+  objectives: min=0.152120 max=0.158142 mean=0.155988
+
+==== outer_seed=13 (50 kmeans++ restarts) ====
+  objectives: min=0.150317 max=0.158367 mean=0.155401
+
+==== outer_seed=14 (50 kmeans++ restarts) ====
+  objectives: min=0.152764 max=0.158686 mean=0.155573
+
+==== outer_seed=15 (50 kmeans++ restarts) ====
+  objectives: min=0.152168 max=0.158231 mean=0.155643
+
+==== outer_seed=16 (50 kmeans++ restarts) ====
+  objectives: min=0.151375 max=0.158841 mean=0.155406
+
+==== outer_seed=17 (50 kmeans++ restarts) ====
+  objectives: min=0.150943 max=0.158282 mean=0.155454
+
+==== outer_seed=18 (50 kmeans++ restarts) ====
+  objectives: min=0.151668 max=0.158442 mean=0.155607
+
+==== outer_seed=19 (50 kmeans++ restarts) ====
+  objectives: min=0.152841 max=0.158837 mean=0.155780
+
+[R=1] ARI=0.1681±0.0922  consensus_q=0.658  obj_mean=0.155864 gap=0.003185
+
+[R=5] ARI=0.2535±0.1179  consensus_q=0.722  obj_mean=0.157176 gap=0.001873

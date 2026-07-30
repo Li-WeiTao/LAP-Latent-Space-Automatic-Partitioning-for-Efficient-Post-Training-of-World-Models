@@ -1,0 +1,4 @@
+Launching outer=0 on physical GPU 3 at Tue Jul 14 08:42:11 AM UTC 2026
+Launching outer=1 on physical GPU 4 at Tue Jul 14 08:42:11 AM UTC 2026
+Launching outer=2 on physical GPU 5 at Tue Jul 14 08:42:11 AM UTC 2026
+All three latent K-means++ step-routing outer seeds finished at Tue Jul 14 09:56:48 AM UTC 2026

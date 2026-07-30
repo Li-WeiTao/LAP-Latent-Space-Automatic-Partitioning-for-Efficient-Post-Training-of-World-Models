@@ -1,0 +1,40 @@
+==== GPU=1 REGION=doorway_corridor EPOCHS=30 SEED=42 WORK_DIR=experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/_work/doorway_corridor_30ep_seed42 started at Mon Jul 13 06:37:22 AM UTC 2026 ====
+[split] TwoRoom regions from fixed task geometry (wall_center=112, wall_width=10)
+[train] doorway_corridor: 38552 train∩region transitions
+  [cache] loaded embeddings from experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/_work/doorway_corridor_30ep_seed42/P_train_doorway_corridor_embeddings.npz
+  [train] epoch 1/30  train_loss=0.032469  eval_loss=0.015733
+  [train] epoch 2/30  train_loss=0.015265  eval_loss=0.013296
+  [train] epoch 3/30  train_loss=0.013587  eval_loss=0.011786
+  [train] epoch 4/30  train_loss=0.012567  eval_loss=0.010515
+  [train] epoch 5/30  train_loss=0.011503  eval_loss=0.010634
+  [train] epoch 6/30  train_loss=0.010717  eval_loss=0.010424
+  [train] epoch 7/30  train_loss=0.010326  eval_loss=0.009712
+  [train] epoch 8/30  train_loss=0.009493  eval_loss=0.008512
+  [train] epoch 9/30  train_loss=0.008596  eval_loss=0.007230
+  [train] epoch 10/30  train_loss=0.008107  eval_loss=0.008029
+  [train] epoch 11/30  train_loss=0.008044  eval_loss=0.006859
+  [train] epoch 12/30  train_loss=0.007310  eval_loss=0.006758
+  [train] epoch 13/30  train_loss=0.007225  eval_loss=0.006245
+  [train] epoch 14/30  train_loss=0.007022  eval_loss=0.007007
+  [train] epoch 15/30  train_loss=0.006710  eval_loss=0.006204
+  [train] epoch 16/30  train_loss=0.006007  eval_loss=0.005833
+  [train] epoch 17/30  train_loss=0.006061  eval_loss=0.005865
+  [train] epoch 18/30  train_loss=0.005871  eval_loss=0.004847
+  [train] epoch 19/30  train_loss=0.005575  eval_loss=0.005248
+  [train] epoch 20/30  train_loss=0.005257  eval_loss=0.006050
+  [train] epoch 21/30  train_loss=0.005846  eval_loss=0.004782
+  [train] epoch 22/30  train_loss=0.004888  eval_loss=0.004826
+  [train] epoch 23/30  train_loss=0.005059  eval_loss=0.004837
+  [train] epoch 24/30  train_loss=0.004232  eval_loss=0.003955
+  [train] epoch 25/30  train_loss=0.004863  eval_loss=0.004473
+  [train] epoch 26/30  train_loss=0.004684  eval_loss=0.004172
+  [train] epoch 27/30  train_loss=0.004107  eval_loss=0.003690
+  [train] epoch 28/30  train_loss=0.004379  eval_loss=0.003724
+  [train] epoch 29/30  train_loss=0.003945  eval_loss=0.003587
+  [train] epoch 30/30  train_loss=0.003752  eval_loss=0.004263
+  saved experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/_work/doorway_corridor_30ep_seed42/P_train_doorway_corridor_object.ckpt  best_epoch=30  best_eval_loss=0.004263
+Wrote manifest to experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/_work/doorway_corridor_30ep_seed42/manifest.json
+real 177.78
+user 218.23
+sys 2.57
+==== GPU=1 REGION=doorway_corridor finished at Mon Jul 13 06:40:20 AM UTC 2026 ====

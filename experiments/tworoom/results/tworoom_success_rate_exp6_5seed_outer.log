@@ -1,0 +1,52 @@
+==== exp6 baseline seed=0 started at Fri Jul 10 02:41:54 AM UTC 2026 ====
+seed=0 mode=baseline success_rate=50.0% (25/50)
+==== exp6 baseline seed=0 finished at Fri Jul 10 02:43:41 AM UTC 2026 ====
+==== exp6 rooms3 seed=0 started at Fri Jul 10 02:43:41 AM UTC 2026 ====
+seed=0 mode=rooms3 success_rate=57.99999999999999% (29/50)
+==== exp6 rooms3 seed=0 finished at Fri Jul 10 02:45:30 AM UTC 2026 ====
+==== exp6 priority5 seed=0 started at Fri Jul 10 02:45:30 AM UTC 2026 ====
+seed=0 mode=priority5 success_rate=57.99999999999999% (29/50)
+==== exp6 priority5 seed=0 finished at Fri Jul 10 02:47:20 AM UTC 2026 ====
+==== exp6 baseline seed=1 started at Fri Jul 10 02:47:20 AM UTC 2026 ====
+seed=1 mode=baseline success_rate=56.00000000000001% (28/50)
+==== exp6 baseline seed=1 finished at Fri Jul 10 02:49:13 AM UTC 2026 ====
+==== exp6 rooms3 seed=1 started at Fri Jul 10 02:49:13 AM UTC 2026 ====
+seed=1 mode=rooms3 success_rate=68.0% (34/50)
+==== exp6 rooms3 seed=1 finished at Fri Jul 10 02:51:08 AM UTC 2026 ====
+==== exp6 priority5 seed=1 started at Fri Jul 10 02:51:08 AM UTC 2026 ====
+seed=1 mode=priority5 success_rate=68.0% (34/50)
+==== exp6 priority5 seed=1 finished at Fri Jul 10 02:53:02 AM UTC 2026 ====
+==== exp6 baseline seed=2 started at Fri Jul 10 02:53:02 AM UTC 2026 ====
+seed=2 mode=baseline success_rate=42.0% (21/50)
+==== exp6 baseline seed=2 finished at Fri Jul 10 02:54:53 AM UTC 2026 ====
+==== exp6 rooms3 seed=2 started at Fri Jul 10 02:54:53 AM UTC 2026 ====
+seed=2 mode=rooms3 success_rate=62.0% (31/50)
+==== exp6 rooms3 seed=2 finished at Fri Jul 10 02:56:42 AM UTC 2026 ====
+==== exp6 priority5 seed=2 started at Fri Jul 10 02:56:42 AM UTC 2026 ====
+seed=2 mode=priority5 success_rate=64.0% (32/50)
+==== exp6 priority5 seed=2 finished at Fri Jul 10 02:58:33 AM UTC 2026 ====
+==== exp6 baseline seed=3 started at Fri Jul 10 02:58:33 AM UTC 2026 ====
+seed=3 mode=baseline success_rate=48.0% (24/50)
+==== exp6 baseline seed=3 finished at Fri Jul 10 03:00:15 AM UTC 2026 ====
+==== exp6 rooms3 seed=3 started at Fri Jul 10 03:00:15 AM UTC 2026 ====
+seed=3 mode=rooms3 success_rate=62.0% (31/50)
+==== exp6 rooms3 seed=3 finished at Fri Jul 10 03:02:03 AM UTC 2026 ====
+==== exp6 priority5 seed=3 started at Fri Jul 10 03:02:03 AM UTC 2026 ====
+seed=3 mode=priority5 success_rate=64.0% (32/50)
+==== exp6 priority5 seed=3 finished at Fri Jul 10 03:03:58 AM UTC 2026 ====
+==== exp6 baseline seed=4 started at Fri Jul 10 03:03:58 AM UTC 2026 ====
+seed=4 mode=baseline success_rate=50.0% (25/50)
+==== exp6 baseline seed=4 finished at Fri Jul 10 03:05:46 AM UTC 2026 ====
+==== exp6 rooms3 seed=4 started at Fri Jul 10 03:05:46 AM UTC 2026 ====
+seed=4 mode=rooms3 success_rate=60.0% (30/50)
+==== exp6 rooms3 seed=4 finished at Fri Jul 10 03:07:36 AM UTC 2026 ====
+==== exp6 priority5 seed=4 started at Fri Jul 10 03:07:36 AM UTC 2026 ====
+seed=4 mode=priority5 success_rate=62.0% (31/50)
+==== exp6 priority5 seed=4 finished at Fri Jul 10 03:09:23 AM UTC 2026 ====
+=== TwoRoom success rate (5 seeds) ===
+baseline   mean=49.20% ± 5.02%  per-seed: [50.0, 56.0, 42.0, 48.0, 50.0]
+priority5  mean=63.20% ± 3.63%  per-seed: [58.0, 68.0, 64.0, 64.0, 62.0]
+rooms3     mean=62.00% ± 3.74%  per-seed: [58.0, 68.0, 62.0, 62.0, 60.0]
+
+Wrote experiments/real_gauge_drift/results/tworoom_success_rate_exp6_5seed_summary.json
+==== exp6 long-range (goal_offset=50) 5-seed eval finished at Fri Jul 10 03:09:23 AM UTC 2026 ====

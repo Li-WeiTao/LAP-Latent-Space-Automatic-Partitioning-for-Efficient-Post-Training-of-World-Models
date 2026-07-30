@@ -1,0 +1,4 @@
+=== TwoRoom success rate (5 seeds) ===
+random_voronoi_k3 mean=57.60% ± 3.29%  per-seed: [62.0, 54.0, 56.0, 56.0, 60.0]
+
+Wrote experiments/real_gauge_drift/results/tworoom_success_rate_random_voronoi_k3_seed2_trainseed42_long_5eval_summary.json

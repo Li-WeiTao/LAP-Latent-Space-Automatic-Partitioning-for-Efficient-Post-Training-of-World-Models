@@ -1,0 +1,6 @@
+  [encode:dataloader] batch 16/64 (2048/8192 samples)
+  [encode:dataloader] batch 32/64 (4096/8192 samples)
+  [encode:dataloader] batch 48/64 (6144/8192 samples)
+  [encode:dataloader] batch 64/64 (8192/8192 samples)
+  [encode:dataloader] timing total=122.87s loader_wait=77.28s preprocess+encode=45.52s workers=4 prefetch=2
+DENSE_ALIGNED_BENCH {"sample": 8192, "total_train": 693728, "seconds": 122.96127517701825, "samples_per_sec": 66.62260120681559, "projected_full_sec": 10412.802674072573, "projected_full_min": 173.54671123454287}

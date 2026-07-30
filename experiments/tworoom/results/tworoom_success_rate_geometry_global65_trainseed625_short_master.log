@@ -1,0 +1,71 @@
+START train_seed=625 eval_seed=0 horizon=short method=rooms3_30ep gpu=1 cpus=116-119 2026-07-15T02:43:07+00:00
+DONE train_seed=625 eval_seed=0 horizon=short method=rooms3_30ep 2026-07-15T02:44:13+00:00
+START train_seed=625 eval_seed=0 horizon=short method=priority5_30ep gpu=1 cpus=116-119 2026-07-15T02:44:13+00:00
+DONE train_seed=625 eval_seed=0 horizon=short method=priority5_30ep 2026-07-15T02:45:18+00:00
+START train_seed=625 eval_seed=0 horizon=short method=rooms3_50ep gpu=1 cpus=116-119 2026-07-15T02:45:18+00:00
+DONE train_seed=625 eval_seed=0 horizon=short method=rooms3_50ep 2026-07-15T02:46:22+00:00
+START train_seed=625 eval_seed=0 horizon=short method=priority5_50ep gpu=1 cpus=116-119 2026-07-15T02:46:22+00:00
+DONE train_seed=625 eval_seed=0 horizon=short method=priority5_50ep 2026-07-15T02:47:26+00:00
+START train_seed=625 eval_seed=0 horizon=short method=rooms3_doorway80 gpu=1 cpus=116-119 2026-07-15T02:47:26+00:00
+DONE train_seed=625 eval_seed=0 horizon=short method=rooms3_doorway80 2026-07-15T02:48:30+00:00
+START train_seed=625 eval_seed=0 horizon=short method=priority5_doorway80 gpu=1 cpus=116-119 2026-07-15T02:48:30+00:00
+DONE train_seed=625 eval_seed=0 horizon=short method=priority5_doorway80 2026-07-15T02:49:34+00:00
+START train_seed=625 eval_seed=0 horizon=short method=global_ft_65ep gpu=1 cpus=116-119 2026-07-15T02:49:34+00:00
+DONE train_seed=625 eval_seed=0 horizon=short method=global_ft_65ep 2026-07-15T02:50:37+00:00
+START train_seed=625 eval_seed=1 horizon=short method=rooms3_30ep gpu=1 cpus=116-119 2026-07-15T02:50:37+00:00
+DONE train_seed=625 eval_seed=1 horizon=short method=rooms3_30ep 2026-07-15T02:51:40+00:00
+START train_seed=625 eval_seed=1 horizon=short method=priority5_30ep gpu=1 cpus=116-119 2026-07-15T02:51:40+00:00
+DONE train_seed=625 eval_seed=1 horizon=short method=priority5_30ep 2026-07-15T02:52:43+00:00
+START train_seed=625 eval_seed=1 horizon=short method=rooms3_50ep gpu=1 cpus=116-119 2026-07-15T02:52:43+00:00
+DONE train_seed=625 eval_seed=1 horizon=short method=rooms3_50ep 2026-07-15T02:53:46+00:00
+START train_seed=625 eval_seed=1 horizon=short method=priority5_50ep gpu=1 cpus=116-119 2026-07-15T02:53:46+00:00
+DONE train_seed=625 eval_seed=1 horizon=short method=priority5_50ep 2026-07-15T02:54:50+00:00
+START train_seed=625 eval_seed=1 horizon=short method=rooms3_doorway80 gpu=1 cpus=116-119 2026-07-15T02:54:50+00:00
+DONE train_seed=625 eval_seed=1 horizon=short method=rooms3_doorway80 2026-07-15T02:55:54+00:00
+START train_seed=625 eval_seed=1 horizon=short method=priority5_doorway80 gpu=1 cpus=116-119 2026-07-15T02:55:54+00:00
+DONE train_seed=625 eval_seed=1 horizon=short method=priority5_doorway80 2026-07-15T02:57:00+00:00
+START train_seed=625 eval_seed=1 horizon=short method=global_ft_65ep gpu=1 cpus=116-119 2026-07-15T02:57:00+00:00
+DONE train_seed=625 eval_seed=1 horizon=short method=global_ft_65ep 2026-07-15T02:58:02+00:00
+START train_seed=625 eval_seed=2 horizon=short method=rooms3_30ep gpu=1 cpus=116-119 2026-07-15T02:58:02+00:00
+DONE train_seed=625 eval_seed=2 horizon=short method=rooms3_30ep 2026-07-15T02:59:08+00:00
+START train_seed=625 eval_seed=2 horizon=short method=priority5_30ep gpu=1 cpus=116-119 2026-07-15T02:59:08+00:00
+DONE train_seed=625 eval_seed=2 horizon=short method=priority5_30ep 2026-07-15T03:00:17+00:00
+START train_seed=625 eval_seed=2 horizon=short method=rooms3_50ep gpu=1 cpus=116-119 2026-07-15T03:00:17+00:00
+DONE train_seed=625 eval_seed=2 horizon=short method=rooms3_50ep 2026-07-15T03:01:25+00:00
+START train_seed=625 eval_seed=2 horizon=short method=priority5_50ep gpu=1 cpus=116-119 2026-07-15T03:01:25+00:00
+DONE train_seed=625 eval_seed=2 horizon=short method=priority5_50ep 2026-07-15T03:02:31+00:00
+START train_seed=625 eval_seed=2 horizon=short method=rooms3_doorway80 gpu=1 cpus=116-119 2026-07-15T03:02:31+00:00
+DONE train_seed=625 eval_seed=2 horizon=short method=rooms3_doorway80 2026-07-15T03:03:39+00:00
+START train_seed=625 eval_seed=2 horizon=short method=priority5_doorway80 gpu=1 cpus=116-119 2026-07-15T03:03:39+00:00
+DONE train_seed=625 eval_seed=2 horizon=short method=priority5_doorway80 2026-07-15T03:04:46+00:00
+START train_seed=625 eval_seed=2 horizon=short method=global_ft_65ep gpu=1 cpus=116-119 2026-07-15T03:04:46+00:00
+DONE train_seed=625 eval_seed=2 horizon=short method=global_ft_65ep 2026-07-15T03:05:52+00:00
+START train_seed=625 eval_seed=3 horizon=short method=rooms3_30ep gpu=1 cpus=116-119 2026-07-15T03:05:52+00:00
+DONE train_seed=625 eval_seed=3 horizon=short method=rooms3_30ep 2026-07-15T03:06:58+00:00
+START train_seed=625 eval_seed=3 horizon=short method=priority5_30ep gpu=1 cpus=116-119 2026-07-15T03:06:58+00:00
+DONE train_seed=625 eval_seed=3 horizon=short method=priority5_30ep 2026-07-15T03:08:03+00:00
+START train_seed=625 eval_seed=3 horizon=short method=rooms3_50ep gpu=1 cpus=116-119 2026-07-15T03:08:03+00:00
+DONE train_seed=625 eval_seed=3 horizon=short method=rooms3_50ep 2026-07-15T03:09:07+00:00
+START train_seed=625 eval_seed=3 horizon=short method=priority5_50ep gpu=1 cpus=116-119 2026-07-15T03:09:07+00:00
+DONE train_seed=625 eval_seed=3 horizon=short method=priority5_50ep 2026-07-15T03:10:11+00:00
+START train_seed=625 eval_seed=3 horizon=short method=rooms3_doorway80 gpu=1 cpus=116-119 2026-07-15T03:10:11+00:00
+DONE train_seed=625 eval_seed=3 horizon=short method=rooms3_doorway80 2026-07-15T03:11:14+00:00
+START train_seed=625 eval_seed=3 horizon=short method=priority5_doorway80 gpu=1 cpus=116-119 2026-07-15T03:11:14+00:00
+DONE train_seed=625 eval_seed=3 horizon=short method=priority5_doorway80 2026-07-15T03:12:20+00:00
+START train_seed=625 eval_seed=3 horizon=short method=global_ft_65ep gpu=1 cpus=116-119 2026-07-15T03:12:20+00:00
+DONE train_seed=625 eval_seed=3 horizon=short method=global_ft_65ep 2026-07-15T03:13:24+00:00
+START train_seed=625 eval_seed=4 horizon=short method=rooms3_30ep gpu=1 cpus=116-119 2026-07-15T03:13:24+00:00
+DONE train_seed=625 eval_seed=4 horizon=short method=rooms3_30ep 2026-07-15T03:14:29+00:00
+START train_seed=625 eval_seed=4 horizon=short method=priority5_30ep gpu=1 cpus=116-119 2026-07-15T03:14:29+00:00
+DONE train_seed=625 eval_seed=4 horizon=short method=priority5_30ep 2026-07-15T03:15:32+00:00
+START train_seed=625 eval_seed=4 horizon=short method=rooms3_50ep gpu=1 cpus=116-119 2026-07-15T03:15:32+00:00
+DONE train_seed=625 eval_seed=4 horizon=short method=rooms3_50ep 2026-07-15T03:16:38+00:00
+START train_seed=625 eval_seed=4 horizon=short method=priority5_50ep gpu=1 cpus=116-119 2026-07-15T03:16:38+00:00
+DONE train_seed=625 eval_seed=4 horizon=short method=priority5_50ep 2026-07-15T03:17:42+00:00
+START train_seed=625 eval_seed=4 horizon=short method=rooms3_doorway80 gpu=1 cpus=116-119 2026-07-15T03:17:42+00:00
+DONE train_seed=625 eval_seed=4 horizon=short method=rooms3_doorway80 2026-07-15T03:18:47+00:00
+START train_seed=625 eval_seed=4 horizon=short method=priority5_doorway80 gpu=1 cpus=116-119 2026-07-15T03:18:47+00:00
+DONE train_seed=625 eval_seed=4 horizon=short method=priority5_doorway80 2026-07-15T03:19:51+00:00
+START train_seed=625 eval_seed=4 horizon=short method=global_ft_65ep gpu=1 cpus=116-119 2026-07-15T03:19:51+00:00
+DONE train_seed=625 eval_seed=4 horizon=short method=global_ft_65ep 2026-07-15T03:20:55+00:00
+WORKER_COMPLETE train_seed=625 horizon=short 2026-07-15T03:20:55+00:00

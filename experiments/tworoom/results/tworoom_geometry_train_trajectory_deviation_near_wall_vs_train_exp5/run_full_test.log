@@ -1,0 +1,20 @@
+[load] predictor A: experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/P_train_near_wall_object.ckpt
+[load] predictor B: /data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt
+[cache] loaded test transitions from experiments/real_gauge_drift/cache/tworoom_trajectory_test_full_transitions.npz
+[rollout] 32517 test samples, history=3, max_steps=10
+Wrote experiments/real_gauge_drift/results/tworoom_geometry_train_trajectory_deviation_near_wall_vs_train_exp5/trajectory_deviation.csv
+Wrote experiments/real_gauge_drift/results/tworoom_geometry_train_trajectory_deviation_near_wall_vs_train_exp5/trajectory_deviation.json
+step  pairwise_mse  A_vs_gt  B_vs_gt
+   1  0.068981  0.024138  0.083626
+   2  0.100880  0.076246  0.160565
+   3  0.137256  0.159840  0.272066
+   4  0.180904  0.271005  0.414341
+   5  0.230767  0.398720  0.572003
+   6  0.284585  0.529807  0.729367
+   7  0.338889  0.651949  0.871061
+   8  0.390439  0.761945  0.989647
+   9  0.435695  0.850905  1.079764
+  10  0.474889  0.922987  1.146473
+real 33.28
+user 48.08
+sys 1.26
