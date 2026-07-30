@@ -223,10 +223,10 @@
       "sha256": "e518fd5667da4e2784b2d793fee35465b705f0a7df48bd178365468c2eb429d8"
     },
     {
-      "bytes": 13624,
+      "bytes": 13789,
       "origin": "generated_for_lap",
       "path": "experiments/control_matrix/fit_partition.py",
-      "sha256": "422ac3b66dc702b02f2462753e44dd40dea4b93f94c8392634bdf4d044facf18"
+      "sha256": "8d3ec33e7d7b415e17e5ebcc6587f6c3944bfa5dd95d0a76643b2a9a5beddda6"
     },
     {
       "bytes": 9202,
@@ -21127,7 +21127,7 @@
       "sha256": "62ad56c6c5c1ad68b4fa44f14e28938ec12b0b95e948a25c7e42a0799e039189"
     }
   ],
-  "generated_at_utc": "2026-07-30T13:14:02.325478+00:00",
+  "generated_at_utc": "2026-07-30T13:19:12.581687+00:00",
   "migration_scope": {
     "readme_start_heading": "trajectory deviation experiment",
     "readme_start_line": 410,
@@ -21282,7 +21282,7 @@
   ],
   "repair_revision": {
     "purpose": "close independent-repository end-to-end reproducibility gaps",
-    "changed_existing_files": 6,
-    "new_files": 1
+    "changed_existing_files": 1,
+    "new_files": 0
   }
 }

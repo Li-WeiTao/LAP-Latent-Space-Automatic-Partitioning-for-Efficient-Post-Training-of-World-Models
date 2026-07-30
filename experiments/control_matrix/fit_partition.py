@@ -303,7 +303,9 @@ def main() -> None:
         import shutil
 
         shutil.rmtree(args.out_dir)
-    args.out_dir.mkdir(parents=True)
+    # A prior pre-fit failure can leave an empty directory.  It is safe to
+    # reuse, while a non-empty directory still requires --overwrite above.
+    args.out_dir.mkdir(parents=True, exist_ok=True)
 
     started = time.perf_counter()
     raw, sample_ids, cache_stats = load_unique_latents(
