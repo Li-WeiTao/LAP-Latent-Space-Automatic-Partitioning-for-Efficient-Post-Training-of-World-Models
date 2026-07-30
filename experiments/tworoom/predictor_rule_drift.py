@@ -77,13 +77,23 @@ def valid_transition_starts(
     n = h5[state_key].shape[0]
     end = np.arange(n) + (seq_len - 1) * step_stride
     valid = end < n
-    if "ep_idx" in h5:
-        ep = h5["ep_idx"][:]
+    episode_key = (
+        "episode_idx"
+        if "episode_idx" in h5
+        else ("ep_idx" if "ep_idx" in h5 else None)
+    )
+    ep = None if episode_key is None else h5[episode_key][:]
+    if ep is not None:
         valid &= ep == ep[np.minimum(end, n - 1)]
-    if "step_idx" in h5 and "ep_len" in h5:
+    if "step_idx" in h5 and "ep_len" in h5 and ep is not None:
         step = h5["step_idx"][:]
         ep_len = h5["ep_len"][:]
-        valid &= step + (seq_len - 1) * step_stride < ep_len[h5["ep_idx"][:]]
+        if ep.min(initial=0) < 0 or ep.max(initial=-1) >= len(ep_len):
+            raise ValueError(
+                f"{episode_key} contains IDs outside ep_len: "
+                f"range=[{ep.min()}, {ep.max()}], ep_len={len(ep_len)}"
+            )
+        valid &= step + (seq_len - 1) * step_stride < ep_len[ep]
     valid &= finite_rows(h5[state_key][:])
     valid &= finite_rows(h5["action"][:])
     if spec.pixel_key in h5:
