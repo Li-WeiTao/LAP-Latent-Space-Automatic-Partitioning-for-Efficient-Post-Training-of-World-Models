@@ -1,0 +1,173 @@
+08:53:08 | INFO  | __init__.py | JAX version 0.6.2 available.
+08:53:11 | INFO  | atomic_chec~| [atomic_save] installed crash-safe checkpoint plugin (write to sibling .tmp + fsync + atomic rename)
+08:53:11 | INFO  | __init__.py | Cached 'action' from '/data/sicong/weitao/datasets/lewm/tworoom.h5'
+08:53:11 | INFO  | __init__.py | Cached 'proprio' from '/data/sicong/weitao/datasets/lewm/tworoom.h5'
+/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/lance/__init__.py:320: UserWarning: lance is not fork-safe. If you are using multiprocessing, use spawn or forkserver instead.
+  warnings.warn(
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+[train] epoch=1/3 batch=1/5138 pred=0.025589 sigreg=1.214411 total=0.134886 grad_norm=0.6118
+[train] epoch=1/3 batch=100/5138 pred=0.019817 sigreg=1.204632 total=0.128234 grad_norm=0.4455
+[train] epoch=1/3 batch=200/5138 pred=0.019002 sigreg=1.215078 total=0.128359 grad_norm=0.5167
+[train] epoch=1/3 batch=300/5138 pred=0.018660 sigreg=1.214024 total=0.127922 grad_norm=0.3705
+[train] epoch=1/3 batch=400/5138 pred=0.018568 sigreg=1.215339 total=0.127948 grad_norm=0.4602
+[train] epoch=1/3 batch=500/5138 pred=0.018453 sigreg=1.215780 total=0.127873 grad_norm=0.4379
+[train] epoch=1/3 batch=600/5138 pred=0.018324 sigreg=1.217395 total=0.127890 grad_norm=0.4218
+[train] epoch=1/3 batch=700/5138 pred=0.018286 sigreg=1.217910 total=0.127898 grad_norm=0.4152
+[train] epoch=1/3 batch=800/5138 pred=0.018194 sigreg=1.218771 total=0.127883 grad_norm=0.4431
+[train] epoch=1/3 batch=900/5138 pred=0.018134 sigreg=1.218724 total=0.127820 grad_norm=0.3992
+[train] epoch=1/3 batch=1000/5138 pred=0.018072 sigreg=1.219123 total=0.127793 grad_norm=0.4379
+[train] epoch=1/3 batch=1100/5138 pred=0.017993 sigreg=1.219197 total=0.127721 grad_norm=0.4297
+[train] epoch=1/3 batch=1200/5138 pred=0.017927 sigreg=1.218862 total=0.127625 grad_norm=0.4206
+[train] epoch=1/3 batch=1300/5138 pred=0.017915 sigreg=1.218711 total=0.127599 grad_norm=0.3803
+[train] epoch=1/3 batch=1400/5138 pred=0.017863 sigreg=1.218108 total=0.127493 grad_norm=0.3971
+[train] epoch=1/3 batch=1500/5138 pred=0.017838 sigreg=1.218154 total=0.127472 grad_norm=0.5137
+[train] epoch=1/3 batch=1600/5138 pred=0.017828 sigreg=1.217455 total=0.127399 grad_norm=0.3739
+[train] epoch=1/3 batch=1700/5138 pred=0.017790 sigreg=1.217117 total=0.127330 grad_norm=0.4161
+[train] epoch=1/3 batch=1800/5138 pred=0.017766 sigreg=1.217234 total=0.127317 grad_norm=0.4409
+[train] epoch=1/3 batch=1900/5138 pred=0.017741 sigreg=1.217174 total=0.127287 grad_norm=0.4762
+[train] epoch=1/3 batch=2000/5138 pred=0.017716 sigreg=1.216957 total=0.127242 grad_norm=0.4393
+[train] epoch=1/3 batch=2100/5138 pred=0.017697 sigreg=1.216793 total=0.127209 grad_norm=0.4597
+[train] epoch=1/3 batch=2200/5138 pred=0.017693 sigreg=1.217281 total=0.127248 grad_norm=0.4272
+[train] epoch=1/3 batch=2300/5138 pred=0.017701 sigreg=1.217507 total=0.127277 grad_norm=0.3913
+[train] epoch=1/3 batch=2400/5138 pred=0.017699 sigreg=1.217477 total=0.127272 grad_norm=0.6062
+[train] epoch=1/3 batch=2500/5138 pred=0.017667 sigreg=1.217309 total=0.127225 grad_norm=0.3768
+[train] epoch=1/3 batch=2600/5138 pred=0.017643 sigreg=1.217477 total=0.127216 grad_norm=0.4922
+[train] epoch=1/3 batch=2700/5138 pred=0.017621 sigreg=1.217321 total=0.127180 grad_norm=0.4553
+[train] epoch=1/3 batch=2800/5138 pred=0.017607 sigreg=1.217384 total=0.127171 grad_norm=0.4492
+[train] epoch=1/3 batch=2900/5138 pred=0.017567 sigreg=1.217049 total=0.127101 grad_norm=0.3782
+[train] epoch=1/3 batch=3000/5138 pred=0.017553 sigreg=1.217043 total=0.127086 grad_norm=0.4009
+[train] epoch=1/3 batch=3100/5138 pred=0.017519 sigreg=1.217256 total=0.127072 grad_norm=0.4007
+[train] epoch=1/3 batch=3200/5138 pred=0.017501 sigreg=1.217309 total=0.127059 grad_norm=0.4360
+[train] epoch=1/3 batch=3300/5138 pred=0.017478 sigreg=1.217387 total=0.127043 grad_norm=0.6494
+[train] epoch=1/3 batch=3400/5138 pred=0.017468 sigreg=1.217393 total=0.127034 grad_norm=0.4173
+[train] epoch=1/3 batch=3500/5138 pred=0.017440 sigreg=1.217402 total=0.127006 grad_norm=0.3489
+[train] epoch=1/3 batch=3600/5138 pred=0.017425 sigreg=1.217236 total=0.126976 grad_norm=0.4237
+[train] epoch=1/3 batch=3700/5138 pred=0.017414 sigreg=1.217163 total=0.126959 grad_norm=0.4063
+[train] epoch=1/3 batch=3800/5138 pred=0.017399 sigreg=1.217178 total=0.126945 grad_norm=0.3974
+[train] epoch=1/3 batch=3900/5138 pred=0.017387 sigreg=1.216912 total=0.126909 grad_norm=0.3906
+[train] epoch=1/3 batch=4000/5138 pred=0.017369 sigreg=1.216657 total=0.126869 grad_norm=0.3771
+[train] epoch=1/3 batch=4100/5138 pred=0.017354 sigreg=1.216688 total=0.126856 grad_norm=0.3751
+[train] epoch=1/3 batch=4200/5138 pred=0.017333 sigreg=1.216868 total=0.126851 grad_norm=0.4167
+[train] epoch=1/3 batch=4300/5138 pred=0.017315 sigreg=1.216988 total=0.126844 grad_norm=0.4361
+[train] epoch=1/3 batch=4400/5138 pred=0.017298 sigreg=1.216921 total=0.126821 grad_norm=0.4786
+[train] epoch=1/3 batch=4500/5138 pred=0.017288 sigreg=1.216875 total=0.126806 grad_norm=0.4738
+[train] epoch=1/3 batch=4600/5138 pred=0.017278 sigreg=1.216830 total=0.126793 grad_norm=0.4475
+[train] epoch=1/3 batch=4700/5138 pred=0.017268 sigreg=1.216869 total=0.126786 grad_norm=0.4222
+[train] epoch=1/3 batch=4800/5138 pred=0.017246 sigreg=1.216747 total=0.126753 grad_norm=0.4344
+[train] epoch=1/3 batch=4900/5138 pred=0.017239 sigreg=1.216930 total=0.126762 grad_norm=0.5315
+[train] epoch=1/3 batch=5000/5138 pred=0.017231 sigreg=1.217018 total=0.126762 grad_norm=0.4108
+[train] epoch=1/3 batch=5100/5138 pred=0.017215 sigreg=1.216853 total=0.126732 grad_norm=0.4036
+[train] epoch=2/3 batch=62/5138 pred=0.016422 sigreg=1.203895 total=0.124773 grad_norm=0.4118
+[train] epoch=2/3 batch=162/5138 pred=0.016041 sigreg=1.212565 total=0.125172 grad_norm=0.4300
+[train] epoch=2/3 batch=262/5138 pred=0.016167 sigreg=1.214599 total=0.125481 grad_norm=0.4180
+[train] epoch=2/3 batch=362/5138 pred=0.016196 sigreg=1.213849 total=0.125442 grad_norm=0.3860
+[train] epoch=2/3 batch=462/5138 pred=0.016236 sigreg=1.212857 total=0.125393 grad_norm=0.5680
+[train] epoch=2/3 batch=562/5138 pred=0.016238 sigreg=1.214280 total=0.125523 grad_norm=0.3705
+[train] epoch=2/3 batch=662/5138 pred=0.016250 sigreg=1.215632 total=0.125657 grad_norm=0.4607
+[train] epoch=2/3 batch=762/5138 pred=0.016216 sigreg=1.214540 total=0.125525 grad_norm=0.3755
+[train] epoch=2/3 batch=862/5138 pred=0.016181 sigreg=1.215192 total=0.125549 grad_norm=0.3988
+[train] epoch=2/3 batch=962/5138 pred=0.016240 sigreg=1.214992 total=0.125589 grad_norm=0.4352
+[train] epoch=2/3 batch=1062/5138 pred=0.016259 sigreg=1.215364 total=0.125641 grad_norm=0.4037
+[train] epoch=2/3 batch=1162/5138 pred=0.016254 sigreg=1.214909 total=0.125596 grad_norm=0.3982
+[train] epoch=2/3 batch=1262/5138 pred=0.016268 sigreg=1.214705 total=0.125591 grad_norm=0.4049
+[train] epoch=2/3 batch=1362/5138 pred=0.016243 sigreg=1.214442 total=0.125542 grad_norm=0.5306
+[train] epoch=2/3 batch=1462/5138 pred=0.016242 sigreg=1.214139 total=0.125514 grad_norm=0.3895
+[train] epoch=2/3 batch=1562/5138 pred=0.016243 sigreg=1.214614 total=0.125559 grad_norm=0.4135
+[train] epoch=2/3 batch=1662/5138 pred=0.016224 sigreg=1.214719 total=0.125549 grad_norm=0.5115
+[train] epoch=2/3 batch=1762/5138 pred=0.016203 sigreg=1.214955 total=0.125549 grad_norm=0.5013
+[train] epoch=2/3 batch=1862/5138 pred=0.016207 sigreg=1.214918 total=0.125550 grad_norm=0.3976
+[train] epoch=2/3 batch=1962/5138 pred=0.016211 sigreg=1.214835 total=0.125546 grad_norm=0.3945
+[train] epoch=2/3 batch=2062/5138 pred=0.016198 sigreg=1.214939 total=0.125542 grad_norm=0.3535
+[train] epoch=2/3 batch=2162/5138 pred=0.016199 sigreg=1.214674 total=0.125520 grad_norm=0.4022
+[train] epoch=2/3 batch=2262/5138 pred=0.016216 sigreg=1.214626 total=0.125532 grad_norm=0.4005
+[train] epoch=2/3 batch=2362/5138 pred=0.016211 sigreg=1.214086 total=0.125479 grad_norm=0.3719
+[train] epoch=2/3 batch=2462/5138 pred=0.016229 sigreg=1.213645 total=0.125457 grad_norm=0.4217
+[train] epoch=2/3 batch=2562/5138 pred=0.016233 sigreg=1.213711 total=0.125467 grad_norm=0.4396
+[train] epoch=2/3 batch=2662/5138 pred=0.016222 sigreg=1.213380 total=0.125426 grad_norm=0.3596
+[train] epoch=2/3 batch=2762/5138 pred=0.016214 sigreg=1.213527 total=0.125432 grad_norm=0.4121
+[train] epoch=2/3 batch=2862/5138 pred=0.016199 sigreg=1.213475 total=0.125412 grad_norm=0.4112
+[train] epoch=2/3 batch=2962/5138 pred=0.016194 sigreg=1.213205 total=0.125382 grad_norm=0.3945
+[train] epoch=2/3 batch=3062/5138 pred=0.016175 sigreg=1.213074 total=0.125352 grad_norm=0.4232
+[train] epoch=2/3 batch=3162/5138 pred=0.016170 sigreg=1.212989 total=0.125339 grad_norm=0.3742
+[train] epoch=2/3 batch=3262/5138 pred=0.016147 sigreg=1.212925 total=0.125310 grad_norm=0.3845
+[train] epoch=2/3 batch=3362/5138 pred=0.016137 sigreg=1.212835 total=0.125292 grad_norm=0.4125
+[train] epoch=2/3 batch=3462/5138 pred=0.016132 sigreg=1.212614 total=0.125267 grad_norm=0.4002
+[train] epoch=2/3 batch=3562/5138 pred=0.016135 sigreg=1.212751 total=0.125282 grad_norm=0.4234
+[train] epoch=2/3 batch=3662/5138 pred=0.016138 sigreg=1.212660 total=0.125278 grad_norm=0.4078
+[train] epoch=2/3 batch=3762/5138 pred=0.016144 sigreg=1.212597 total=0.125278 grad_norm=0.4151
+[train] epoch=2/3 batch=3862/5138 pred=0.016131 sigreg=1.212629 total=0.125268 grad_norm=0.5111
+[train] epoch=2/3 batch=3962/5138 pred=0.016123 sigreg=1.212483 total=0.125246 grad_norm=0.3722
+[train] epoch=2/3 batch=4062/5138 pred=0.016111 sigreg=1.212335 total=0.125221 grad_norm=0.3552
+[train] epoch=2/3 batch=4162/5138 pred=0.016108 sigreg=1.212292 total=0.125214 grad_norm=0.3942
+[train] epoch=2/3 batch=4262/5138 pred=0.016097 sigreg=1.212126 total=0.125188 grad_norm=0.3951
+[train] epoch=2/3 batch=4362/5138 pred=0.016090 sigreg=1.212148 total=0.125183 grad_norm=0.4068
+[train] epoch=2/3 batch=4462/5138 pred=0.016083 sigreg=1.212245 total=0.125185 grad_norm=0.4279
+[train] epoch=2/3 batch=4562/5138 pred=0.016074 sigreg=1.212342 total=0.125185 grad_norm=0.4334
+[train] epoch=2/3 batch=4662/5138 pred=0.016071 sigreg=1.212262 total=0.125175 grad_norm=0.3929
+[train] epoch=2/3 batch=4762/5138 pred=0.016064 sigreg=1.212323 total=0.125173 grad_norm=0.4848
+[train] epoch=2/3 batch=4862/5138 pred=0.016061 sigreg=1.212163 total=0.125155 grad_norm=0.4259
+[train] epoch=2/3 batch=4962/5138 pred=0.016053 sigreg=1.212092 total=0.125141 grad_norm=0.3927
+[train] epoch=2/3 batch=5062/5138 pred=0.016046 sigreg=1.212089 total=0.125134 grad_norm=0.3995
+[train] epoch=3/3 batch=24/5138 pred=0.015727 sigreg=1.202372 total=0.123940 grad_norm=0.3653
+[train] epoch=3/3 batch=124/5138 pred=0.015171 sigreg=1.201402 total=0.123297 grad_norm=0.4285
+[train] epoch=3/3 batch=224/5138 pred=0.015388 sigreg=1.203382 total=0.123693 grad_norm=0.3441
+[train] epoch=3/3 batch=324/5138 pred=0.015413 sigreg=1.204199 total=0.123791 grad_norm=0.3648
+[train] epoch=3/3 batch=424/5138 pred=0.015476 sigreg=1.203909 total=0.123828 grad_norm=0.4037
+[train] epoch=3/3 batch=524/5138 pred=0.015458 sigreg=1.205708 total=0.123972 grad_norm=0.4223
+[train] epoch=3/3 batch=624/5138 pred=0.015423 sigreg=1.205041 total=0.123877 grad_norm=0.4052
+[train] epoch=3/3 batch=724/5138 pred=0.015475 sigreg=1.205968 total=0.124012 grad_norm=0.3718
+[train] epoch=3/3 batch=824/5138 pred=0.015449 sigreg=1.206205 total=0.124007 grad_norm=0.4109
+[train] epoch=3/3 batch=924/5138 pred=0.015470 sigreg=1.207641 total=0.124157 grad_norm=0.3955
+[train] epoch=3/3 batch=1024/5138 pred=0.015485 sigreg=1.206371 total=0.124058 grad_norm=0.4412
+[train] epoch=3/3 batch=1124/5138 pred=0.015431 sigreg=1.206354 total=0.124003 grad_norm=0.4141
+[train] epoch=3/3 batch=1224/5138 pred=0.015431 sigreg=1.205832 total=0.123956 grad_norm=0.3568
+[train] epoch=3/3 batch=1324/5138 pred=0.015438 sigreg=1.205670 total=0.123948 grad_norm=0.4307
+[train] epoch=3/3 batch=1424/5138 pred=0.015439 sigreg=1.205980 total=0.123977 grad_norm=0.3712
+[train] epoch=3/3 batch=1524/5138 pred=0.015433 sigreg=1.205994 total=0.123973 grad_norm=0.3903
+[train] epoch=3/3 batch=1624/5138 pred=0.015424 sigreg=1.206281 total=0.123990 grad_norm=0.4084
+[train] epoch=3/3 batch=1724/5138 pred=0.015405 sigreg=1.206449 total=0.123985 grad_norm=0.4318
+[train] epoch=3/3 batch=1824/5138 pred=0.015408 sigreg=1.206325 total=0.123977 grad_norm=0.4576
+[train] epoch=3/3 batch=1924/5138 pred=0.015411 sigreg=1.206715 total=0.124016 grad_norm=0.3608
+[train] epoch=3/3 batch=2024/5138 pred=0.015401 sigreg=1.206604 total=0.123996 grad_norm=0.3717
+[train] epoch=3/3 batch=2124/5138 pred=0.015395 sigreg=1.206701 total=0.123998 grad_norm=0.3655
+[train] epoch=3/3 batch=2224/5138 pred=0.015380 sigreg=1.206940 total=0.124004 grad_norm=0.4061
+[train] epoch=3/3 batch=2324/5138 pred=0.015388 sigreg=1.207030 total=0.124021 grad_norm=0.4817
+[train] epoch=3/3 batch=2424/5138 pred=0.015391 sigreg=1.206800 total=0.124003 grad_norm=0.3899
+[train] epoch=3/3 batch=2524/5138 pred=0.015365 sigreg=1.206541 total=0.123953 grad_norm=0.3576
+[train] epoch=3/3 batch=2624/5138 pred=0.015352 sigreg=1.206031 total=0.123894 grad_norm=0.4365
+[train] epoch=3/3 batch=2724/5138 pred=0.015350 sigreg=1.206106 total=0.123900 grad_norm=0.3764
+[train] epoch=3/3 batch=2824/5138 pred=0.015349 sigreg=1.206408 total=0.123926 grad_norm=0.3888
+[train] epoch=3/3 batch=2924/5138 pred=0.015339 sigreg=1.206248 total=0.123902 grad_norm=0.4353
+[train] epoch=3/3 batch=3024/5138 pred=0.015337 sigreg=1.206364 total=0.123910 grad_norm=0.4148
+[train] epoch=3/3 batch=3124/5138 pred=0.015335 sigreg=1.206221 total=0.123895 grad_norm=0.4069
+[train] epoch=3/3 batch=3224/5138 pred=0.015335 sigreg=1.206269 total=0.123899 grad_norm=0.3935
+[train] epoch=3/3 batch=3324/5138 pred=0.015327 sigreg=1.206234 total=0.123888 grad_norm=0.4672
+[train] epoch=3/3 batch=3424/5138 pred=0.015319 sigreg=1.206064 total=0.123865 grad_norm=0.3805
+[train] epoch=3/3 batch=3524/5138 pred=0.015317 sigreg=1.206070 total=0.123864 grad_norm=0.4007
+[train] epoch=3/3 batch=3624/5138 pred=0.015327 sigreg=1.206014 total=0.123868 grad_norm=0.3407
+[train] epoch=3/3 batch=3724/5138 pred=0.015317 sigreg=1.205799 total=0.123839 grad_norm=0.3998
+[train] epoch=3/3 batch=3824/5138 pred=0.015308 sigreg=1.205766 total=0.123827 grad_norm=0.4308
+[train] epoch=3/3 batch=3924/5138 pred=0.015307 sigreg=1.205581 total=0.123809 grad_norm=0.4176
+[train] epoch=3/3 batch=4024/5138 pred=0.015298 sigreg=1.205455 total=0.123789 grad_norm=0.3697
+[train] epoch=3/3 batch=4124/5138 pred=0.015286 sigreg=1.205281 total=0.123761 grad_norm=0.3898
+[train] epoch=3/3 batch=4224/5138 pred=0.015281 sigreg=1.205149 total=0.123744 grad_norm=0.3454
+[train] epoch=3/3 batch=4324/5138 pred=0.015276 sigreg=1.204952 total=0.123722 grad_norm=0.4828
+[train] epoch=3/3 batch=4424/5138 pred=0.015260 sigreg=1.204821 total=0.123694 grad_norm=0.3939
+[train] epoch=3/3 batch=4524/5138 pred=0.015257 sigreg=1.204781 total=0.123687 grad_norm=0.4035
+[train] epoch=3/3 batch=4624/5138 pred=0.015251 sigreg=1.204671 total=0.123671 grad_norm=0.3912
+[train] epoch=3/3 batch=4724/5138 pred=0.015249 sigreg=1.204610 total=0.123664 grad_norm=0.3551
+[train] epoch=3/3 batch=4824/5138 pred=0.015249 sigreg=1.204487 total=0.123653 grad_norm=0.3862
+[train] epoch=3/3 batch=4924/5138 pred=0.015247 sigreg=1.204264 total=0.123630 grad_norm=0.4248
+[train] epoch=3/3 batch=5024/5138 pred=0.015244 sigreg=1.203998 total=0.123604 grad_norm=0.3983
+[train] epoch=3/3 batch=5124/5138 pred=0.015238 sigreg=1.203764 total=0.123577 grad_norm=0.3576
+[done] checkpoint=experiments/real_gauge_drift/results/tworoom_joint_continue_3ep_trainseed0/joint_continue_object.ckpt formal_full_epoch=True training_sec=5806.4
+real 5817.95
+user 16971.51
+sys 13065.57

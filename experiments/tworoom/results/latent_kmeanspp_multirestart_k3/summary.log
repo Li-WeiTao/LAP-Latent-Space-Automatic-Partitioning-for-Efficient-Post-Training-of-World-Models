@@ -1,0 +1,29 @@
+[device] cuda:0
+  [cache] doorway_corridor: 38552 transitions, 154208 latent vectors from P_train_doorway_corridor_embeddings.npz
+  [cache] near_wall: 31533 transitions, 126132 latent vectors from P_train_near_wall_embeddings.npz
+  [cache] common: 297211 transitions, 1188844 latent vectors from P_train_common_embeddings.npz
+  [cache] right_room: 324933 transitions, 1299732 latent vectors from P_train_right_room_embeddings.npz
+  [cache] left_room: 330243 transitions, 1320972 latent vectors from P_train_left_room_embeddings.npz
+  [dedup] 4089888 expanded vectors -> 909723 unique timesteps (dropped_duplicates=3180165)
+[load+preprocess] N=909723 dim=192 in 18.56s
+[summary-only] loaded 1000 inner runs from CSV
+
+[R=1] ARI=0.1681±0.0922  consensus_q=0.658  obj_mean=0.155864 gap=0.003185
+
+[R=5] ARI=0.2535±0.1179  consensus_q=0.722  obj_mean=0.157176 gap=0.001873
+
+[R=10] ARI=0.3482±0.1495  consensus_q=0.784  obj_mean=0.157865 gap=0.001184
+
+[R=20] ARI=0.3846±0.1366  consensus_q=0.812  obj_mean=0.158160 gap=0.000889
+
+[R=50] ARI=0.4835±0.1490  consensus_q=0.856  obj_mean=0.158439 gap=0.000610
+
+==== restart budget summary ====
+  random (v2)  R=1  ARI=0.2261  consensus_q=0.689
+  kmeans++  R= 1  ARI=0.1681  consensus_q=0.658  obj_gap=0.003185
+  kmeans++  R= 5  ARI=0.2535  consensus_q=0.722  obj_gap=0.001873
+  kmeans++  R=10  ARI=0.3482  consensus_q=0.784  obj_gap=0.001184
+  kmeans++  R=20  ARI=0.3846  consensus_q=0.812  obj_gap=0.000889
+  kmeans++  R=50  ARI=0.4835  consensus_q=0.856  obj_gap=0.000610
+
+[done] -> /data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/latent_kmeanspp_multirestart_k3

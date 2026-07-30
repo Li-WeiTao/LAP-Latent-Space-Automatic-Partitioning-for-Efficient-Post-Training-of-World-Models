@@ -1,0 +1,11 @@
+START train_seed=625 outer=2 eval_seed=0 gpu=6 cpus=124-127 2026-07-15T04:10:30+00:00
+DONE train_seed=625 outer=2 eval_seed=0 2026-07-15T04:12:18+00:00
+START train_seed=625 outer=2 eval_seed=1 gpu=6 cpus=124-127 2026-07-15T04:12:18+00:00
+DONE train_seed=625 outer=2 eval_seed=1 2026-07-15T04:13:51+00:00
+START train_seed=625 outer=2 eval_seed=2 gpu=6 cpus=124-127 2026-07-15T04:13:51+00:00
+DONE train_seed=625 outer=2 eval_seed=2 2026-07-15T04:15:44+00:00
+START train_seed=625 outer=2 eval_seed=3 gpu=6 cpus=124-127 2026-07-15T04:15:44+00:00
+DONE train_seed=625 outer=2 eval_seed=3 2026-07-15T04:17:13+00:00
+START train_seed=625 outer=2 eval_seed=4 gpu=6 cpus=124-127 2026-07-15T04:17:13+00:00
+DONE train_seed=625 outer=2 eval_seed=4 2026-07-15T04:18:39+00:00
+WORKER_COMPLETE train_seed=625 outer=2 2026-07-15T04:18:39+00:00

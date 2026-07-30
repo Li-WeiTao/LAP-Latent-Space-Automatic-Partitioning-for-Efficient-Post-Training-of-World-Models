@@ -1,0 +1,4 @@
+[data] train starts: 50000
+  left_room: 23708 (47.4%)
+  doorway_corridor: 2850 (5.7%)
+  right_room: 23442 (46.9%)

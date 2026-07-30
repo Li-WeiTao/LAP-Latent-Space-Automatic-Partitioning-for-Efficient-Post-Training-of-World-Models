@@ -1,0 +1,48 @@
+==== geometry priority5 latent probes (episode split) started at Sat Jul 11 10:17:16 AM UTC 2026 ====
+[device] cuda
+[data] partition=priority5 loading P_train embeddings from experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors
+  [cache] doorway_corridor: 38552 transitions, 154208 latent vectors from P_train_doorway_corridor_embeddings.npz
+  [cache] near_wall: 31533 transitions, 126132 latent vectors from P_train_near_wall_embeddings.npz
+  [cache] common: 297211 transitions, 1188844 latent vectors from P_train_common_embeddings.npz
+  [cache] right_room: 324933 transitions, 1299732 latent vectors from P_train_right_room_embeddings.npz
+  [cache] left_room: 330243 transitions, 1320972 latent vectors from P_train_left_room_embeddings.npz
+  [data] 4089888 expanded vectors -> 4089888 priority5 latent vectors
+  [dedup] unique global timesteps=909723 dropped_duplicates=3180165
+[split] episodes train/val/test = 7000/1500/1500
+  vectors train/val/test = 637122/136168/136433
+  train counts: {'doorway_corridor': 36469, 'near_wall': 27193, 'common': 277526, 'right_room': 147613, 'left_room': 148321}
+  val   counts: {'doorway_corridor': 7858, 'near_wall': 5695, 'common': 58993, 'right_room': 31928, 'left_room': 31694}
+  test  counts: {'doorway_corridor': 7477, 'near_wall': 5790, 'common': 60893, 'right_room': 30209, 'left_room': 32064}
+[model] linear_softmax_probe (GPU)
+  [val] acc=0.9875 bal_acc=0.9810 macro_f1=0.9807
+    doorway_corridor: P=0.9907 R=0.9929 F1=0.9918
+    near_wall: P=0.9446 R=0.9486 F1=0.9466
+    common: P=0.9903 R=0.9929 F1=0.9916
+    right_room: P=0.9890 R=0.9830 F1=0.9860
+    left_room: P=0.9876 R=0.9874 F1=0.9875
+  [test] acc=0.9869 bal_acc=0.9804 macro_f1=0.9796
+    doorway_corridor: P=0.9920 R=0.9917 F1=0.9918
+    near_wall: P=0.9363 R=0.9496 F1=0.9429
+    common: P=0.9903 R=0.9929 F1=0.9916
+    right_room: P=0.9893 R=0.9818 F1=0.9855
+    left_room: P=0.9863 R=0.9859 F1=0.9861
+[model] rff_rbf_probe (GPU)
+  [val] acc=0.9924 bal_acc=0.9883 macro_f1=0.9885
+    doorway_corridor: P=0.9992 R=0.9922 F1=0.9957
+    near_wall: P=0.9638 R=0.9724 F1=0.9681
+    common: P=0.9929 R=0.9969 F1=0.9949
+    right_room: P=0.9931 R=0.9901 F1=0.9916
+    left_room: P=0.9942 R=0.9899 F1=0.9921
+  [test] acc=0.9920 bal_acc=0.9880 macro_f1=0.9877
+    doorway_corridor: P=0.9996 R=0.9901 F1=0.9948
+    near_wall: P=0.9581 R=0.9750 F1=0.9664
+    common: P=0.9928 R=0.9970 F1=0.9949
+    right_room: P=0.9935 R=0.9897 F1=0.9916
+    left_room: P=0.9936 R=0.9881 F1=0.9909
+Wrote experiments/real_gauge_drift/results/geometry_latent_probe_priority5/geometry_latent_probe_priority5.json
+Wrote experiments/real_gauge_drift/results/geometry_latent_probe_priority5/geometry_latent_probe_priority5_metrics.csv
+Wrote experiments/real_gauge_drift/results/geometry_latent_probe_priority5/geometry_latent_probe_priority5_split.npz
+real 70.90
+user 88.83
+sys 9.59
+==== finished at Sat Jul 11 10:18:27 AM UTC 2026 ====

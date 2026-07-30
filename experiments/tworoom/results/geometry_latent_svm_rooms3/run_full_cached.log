@@ -1,0 +1,38 @@
+==== geometry rooms3 latent probes (episode split) started at Sat Jul 11 09:51:39 AM UTC 2026 ====
+[device] cuda
+[data] loading P_train rooms3 embeddings from experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors
+  [cache] left_room: 330243 transitions, 1320972 latent vectors from P_train_left_room_embeddings.npz
+  [cache] doorway_corridor: 38552 transitions, 154208 latent vectors from P_train_doorway_corridor_embeddings.npz
+  [cache] right_room: 324933 transitions, 1299732 latent vectors from P_train_right_room_embeddings.npz
+  [data] 2774912 expanded vectors -> 2774912 rooms3 latent vectors
+  [dedup] unique global timesteps=909723 dropped_duplicates=1865189
+[split] episodes train/val/test = 7000/1500/1500
+  vectors train/val/test = 637122/136168/136433
+  train counts: {'left_room': 300659, 'doorway_corridor': 36469, 'right_room': 299994}
+  val   counts: {'left_room': 63892, 'doorway_corridor': 7858, 'right_room': 64418}
+  test  counts: {'left_room': 66621, 'doorway_corridor': 7477, 'right_room': 62335}
+[model] linear_softmax_probe (GPU)
+  [val] acc=0.9989 bal_acc=0.9976 macro_f1=0.9965
+    left_room: P=0.9994 R=0.9993 F1=0.9994
+    doorway_corridor: P=0.9872 R=0.9943 F1=0.9907
+    right_room: P=0.9999 R=0.9991 F1=0.9995
+  [test] acc=0.9988 bal_acc=0.9972 macro_f1=0.9960
+    left_room: P=0.9994 R=0.9991 F1=0.9993
+    doorway_corridor: P=0.9851 R=0.9933 F1=0.9892
+    right_room: P=0.9998 R=0.9991 F1=0.9995
+[model] rff_rbf_probe (GPU)
+  [val] acc=0.9994 bal_acc=0.9972 macro_f1=0.9981
+    left_room: P=0.9993 R=0.9999 F1=0.9996
+    doorway_corridor: P=0.9977 R=0.9920 F1=0.9948
+    right_room: P=0.9997 R=0.9998 F1=0.9998
+  [test] acc=0.9994 bal_acc=0.9965 macro_f1=0.9978
+    left_room: P=0.9994 R=0.9999 F1=0.9997
+    doorway_corridor: P=0.9985 R=0.9897 F1=0.9941
+    right_room: P=0.9994 R=0.9999 F1=0.9996
+Wrote experiments/real_gauge_drift/results/geometry_latent_svm_rooms3/geometry_latent_svm_rooms3.json
+Wrote experiments/real_gauge_drift/results/geometry_latent_svm_rooms3/geometry_latent_svm_rooms3_metrics.csv
+Wrote experiments/real_gauge_drift/results/geometry_latent_svm_rooms3/geometry_latent_svm_rooms3_split.npz
+real 62.50
+user 85.77
+sys 4.54
+==== finished at Sat Jul 11 09:52:42 AM UTC 2026 ====

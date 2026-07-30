@@ -1,0 +1,40 @@
+==== GPU=3 REGION=near_wall EPOCHS=30 SEED=42 WORK_DIR=experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/_work/near_wall_30ep_seed42 started at Mon Jul 13 06:37:22 AM UTC 2026 ====
+[split] TwoRoom regions from fixed task geometry (wall_center=112, wall_width=10)
+[train] near_wall: 31533 train∩region transitions
+  [cache] loaded embeddings from experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/_work/near_wall_30ep_seed42/P_train_near_wall_embeddings.npz
+  [train] epoch 1/30  train_loss=0.029325  eval_loss=0.007685
+  [train] epoch 2/30  train_loss=0.005977  eval_loss=0.005076
+  [train] epoch 3/30  train_loss=0.004939  eval_loss=0.004552
+  [train] epoch 4/30  train_loss=0.004489  eval_loss=0.004059
+  [train] epoch 5/30  train_loss=0.004085  eval_loss=0.004173
+  [train] epoch 6/30  train_loss=0.003856  eval_loss=0.003560
+  [train] epoch 7/30  train_loss=0.003589  eval_loss=0.003236
+  [train] epoch 8/30  train_loss=0.003384  eval_loss=0.003090
+  [train] epoch 9/30  train_loss=0.003246  eval_loss=0.003025
+  [train] epoch 10/30  train_loss=0.003188  eval_loss=0.003072
+  [train] epoch 11/30  train_loss=0.002922  eval_loss=0.002868
+  [train] epoch 12/30  train_loss=0.002793  eval_loss=0.002636
+  [train] epoch 13/30  train_loss=0.002648  eval_loss=0.002402
+  [train] epoch 14/30  train_loss=0.002543  eval_loss=0.002373
+  [train] epoch 15/30  train_loss=0.002409  eval_loss=0.002393
+  [train] epoch 16/30  train_loss=0.002428  eval_loss=0.002272
+  [train] epoch 17/30  train_loss=0.002311  eval_loss=0.002233
+  [train] epoch 18/30  train_loss=0.002231  eval_loss=0.002118
+  [train] epoch 19/30  train_loss=0.002114  eval_loss=0.002010
+  [train] epoch 20/30  train_loss=0.002060  eval_loss=0.002046
+  [train] epoch 21/30  train_loss=0.002025  eval_loss=0.001967
+  [train] epoch 22/30  train_loss=0.001919  eval_loss=0.001747
+  [train] epoch 23/30  train_loss=0.001888  eval_loss=0.001796
+  [train] epoch 24/30  train_loss=0.001834  eval_loss=0.001748
+  [train] epoch 25/30  train_loss=0.001898  eval_loss=0.001902
+  [train] epoch 26/30  train_loss=0.002384  eval_loss=0.002018
+  [train] epoch 27/30  train_loss=0.001888  eval_loss=0.001613
+  [train] epoch 28/30  train_loss=0.001696  eval_loss=0.001756
+  [train] epoch 29/30  train_loss=0.001633  eval_loss=0.001594
+  [train] epoch 30/30  train_loss=0.001598  eval_loss=0.001552
+  saved experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/_work/near_wall_30ep_seed42/P_train_near_wall_object.ckpt  best_epoch=30  best_eval_loss=0.001552
+Wrote manifest to experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors/_work/near_wall_30ep_seed42/manifest.json
+real 152.60
+user 165.97
+sys 2.10
+==== GPU=3 REGION=near_wall finished at Mon Jul 13 06:39:55 AM UTC 2026 ====

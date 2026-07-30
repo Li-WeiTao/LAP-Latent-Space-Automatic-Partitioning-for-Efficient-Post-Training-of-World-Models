@@ -1,0 +1,65 @@
+==== GPU=2 REGION=doorway_corridor EPOCHS=50 SEED=625 WORK_DIR=/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors_trainseed625/_work/doorway_corridor_50ep_seed625 started at Tue Jul 14 03:14:41 PM UTC 2026 ====
+[split] TwoRoom regions from fixed task geometry (wall_center=112, wall_width=10)
+[train] doorway_corridor: 38552 train∩region transitions
+  [cache] loaded embeddings from /data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors_trainseed625/_work/doorway_corridor_50ep_seed625/P_train_doorway_corridor_embeddings.npz
+  [train] epoch 1/50  train_loss=0.032466  eval_loss=0.016365
+  [train] epoch 2/50  train_loss=0.015206  eval_loss=0.013290
+  [train] epoch 3/50  train_loss=0.013691  eval_loss=0.012542
+  [train] epoch 4/50  train_loss=0.012343  eval_loss=0.011088
+  [train] epoch 5/50  train_loss=0.011921  eval_loss=0.010419
+  [train] epoch 6/50  train_loss=0.010736  eval_loss=0.009709
+  [train] epoch 7/50  train_loss=0.010054  eval_loss=0.009919
+  [train] epoch 8/50  train_loss=0.009715  eval_loss=0.008244
+  [train] epoch 9/50  train_loss=0.008898  eval_loss=0.008510
+  [train] epoch 10/50  train_loss=0.008646  eval_loss=0.008062
+  [train] epoch 11/50  train_loss=0.007838  eval_loss=0.007450
+  [train] epoch 12/50  train_loss=0.007110  eval_loss=0.006051
+  [train] epoch 13/50  train_loss=0.007137  eval_loss=0.006835
+  [train] epoch 14/50  train_loss=0.006772  eval_loss=0.006666
+  [train] epoch 15/50  train_loss=0.006627  eval_loss=0.007014
+  [train] epoch 16/50  train_loss=0.006527  eval_loss=0.005634
+  [train] epoch 17/50  train_loss=0.006201  eval_loss=0.005854
+  [train] epoch 18/50  train_loss=0.005826  eval_loss=0.004954
+  [train] epoch 19/50  train_loss=0.005363  eval_loss=0.005163
+  [train] epoch 20/50  train_loss=0.005146  eval_loss=0.005855
+  [checkpoint] saved /data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors_trainseed625/_work/doorway_corridor_50ep_seed625/P_train_doorway_corridor_epoch20_object.ckpt
+  [train] epoch 21/50  train_loss=0.005266  eval_loss=0.005430
+  [train] epoch 22/50  train_loss=0.005025  eval_loss=0.004283
+  [train] epoch 23/50  train_loss=0.004884  eval_loss=0.004394
+  [train] epoch 24/50  train_loss=0.004906  eval_loss=0.004575
+  [train] epoch 25/50  train_loss=0.004655  eval_loss=0.004524
+  [train] epoch 26/50  train_loss=0.004681  eval_loss=0.005342
+  [train] epoch 27/50  train_loss=0.004210  eval_loss=0.003715
+  [train] epoch 28/50  train_loss=0.003698  eval_loss=0.003831
+  [train] epoch 29/50  train_loss=0.003735  eval_loss=0.003633
+  [train] epoch 30/50  train_loss=0.004032  eval_loss=0.004709
+  [checkpoint] saved /data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors_trainseed625/_work/doorway_corridor_50ep_seed625/P_train_doorway_corridor_epoch30_object.ckpt
+  [train] epoch 31/50  train_loss=0.004268  eval_loss=0.004148
+  [train] epoch 32/50  train_loss=0.003860  eval_loss=0.003556
+  [train] epoch 33/50  train_loss=0.003171  eval_loss=0.002969
+  [train] epoch 34/50  train_loss=0.003124  eval_loss=0.006042
+  [train] epoch 35/50  train_loss=0.004720  eval_loss=0.003776
+  [train] epoch 36/50  train_loss=0.004062  eval_loss=0.003958
+  [train] epoch 37/50  train_loss=0.003635  eval_loss=0.004125
+  [train] epoch 38/50  train_loss=0.003477  eval_loss=0.002679
+  [train] epoch 39/50  train_loss=0.002859  eval_loss=0.003067
+  [train] epoch 40/50  train_loss=0.003692  eval_loss=0.003938
+  [checkpoint] saved /data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors_trainseed625/_work/doorway_corridor_50ep_seed625/P_train_doorway_corridor_epoch40_object.ckpt
+  [train] epoch 41/50  train_loss=0.002834  eval_loss=0.002972
+  [train] epoch 42/50  train_loss=0.003121  eval_loss=0.003946
+  [train] epoch 43/50  train_loss=0.004026  eval_loss=0.004083
+  [train] epoch 44/50  train_loss=0.002934  eval_loss=0.002253
+  [train] epoch 45/50  train_loss=0.002550  eval_loss=0.001918
+  [train] epoch 46/50  train_loss=0.002652  eval_loss=0.003293
+  [train] epoch 47/50  train_loss=0.002887  eval_loss=0.002701
+  [train] epoch 48/50  train_loss=0.002297  eval_loss=0.002350
+  [train] epoch 49/50  train_loss=0.002869  eval_loss=0.002989
+  [train] epoch 50/50  train_loss=0.002446  eval_loss=0.001663
+  [checkpoint] saved /data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors_trainseed625/_work/doorway_corridor_50ep_seed625/P_train_doorway_corridor_epoch50_object.ckpt
+  [best] epoch 50  eval_loss=0.001663 (selected over 50 epochs)
+  saved /data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors_trainseed625/_work/doorway_corridor_50ep_seed625/P_train_doorway_corridor_object.ckpt  best_epoch=50  best_eval_loss=0.001663
+Wrote manifest to /data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_geometry_train_region_predictors_trainseed625/_work/doorway_corridor_50ep_seed625/manifest.json
+real 524.14
+user 291.22
+sys 3.32
+==== GPU=2 REGION=doorway_corridor finished at Tue Jul 14 03:23:26 PM UTC 2026 ====
