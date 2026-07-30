@@ -1,4 +1,4 @@
-# LAP: Latent-Space Auto-Partitioned Fine-Tuning for World Models
+# LAP: Latent-Space Automatic Partitioning for Efficient Post-Training of World Models
 
 LAP is a low-cost post-training framework for latent world models. It freezes a
 pretrained encoder, partitions the planning latent space without action labels,
