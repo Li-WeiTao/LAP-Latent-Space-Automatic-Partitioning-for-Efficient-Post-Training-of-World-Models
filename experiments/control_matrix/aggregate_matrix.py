@@ -29,7 +29,13 @@ def seeds(text: str) -> list[int]:
 
 def rate(path: Path) -> float:
     result = json.loads(path.read_text(encoding="utf-8"))
-    return 100.0 * float(result["metrics"]["success_rate"])
+    value = float(result["metrics"]["success_rate"])
+    if not 0.0 <= value <= 100.0:
+        raise ValueError(
+            f"success_rate must use the official percentage scale [0, 100]: "
+            f"{value} in {path}"
+        )
+    return value
 
 
 def mean(values: list[float]) -> float:
