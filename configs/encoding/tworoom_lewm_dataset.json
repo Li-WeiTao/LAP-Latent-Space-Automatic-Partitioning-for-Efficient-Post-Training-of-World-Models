@@ -1,0 +1,10 @@
+{
+  "data_file": "$LAP_TWOROOM_DATA",
+  "starts": "$LAP_TWOROOM_STARTS",
+  "action_norm_starts": "$LAP_TWOROOM_STARTS",
+  "pixel_key": "pixels",
+  "action_key": "action",
+  "history_size": 3,
+  "num_preds": 1,
+  "frameskip": 0
+}

@@ -34,6 +34,7 @@ official checkpoint paths explicitly:
 
 ```bash
 export LAP_TWOROOM_DATA=/path/to/tworoom.h5
+export LAP_TWOROOM_STARTS=/path/to/train_global_reference_starts.npy
 export LAP_LEWM_CHECKPOINT=/path/to/lewm_object.ckpt
 export GPU=0
 ```
@@ -78,6 +79,28 @@ python experiments/tworoom/build_lap_latent_cache.py \
 
 An official cache may replace this step if its backend adapter supplies the same
 semantic fields and records its provenance.
+
+If an official cache is unavailable, use the model- and task-parameterized
+upstream encoder. The command itself has no TwoRoom/Push-T switch and imports no
+fixed encoder architecture:
+
+```bash
+lap-cache encode \
+  --dataset-factory backends.lewm.encoding:make_hdf5_transition_dataset \
+  --dataset-config configs/encoding/tworoom_lewm_dataset.json \
+  --encoder-factory backends.lewm.encoding:make_encoder \
+  --encoder-config configs/encoding/lewm_encoder.json \
+  --pretrained-model "$LAP_LEWM_CHECKPOINT" \
+  --output "$EMBED_DIR/tworoom_lewm_train_latent_cache.npz" \
+  --batch-shape-mode exact --device cuda
+```
+
+`--batch-shape-mode exact` is the publication-reproduction setting: it keys a
+frame by both its dataset ID and legacy visual batch shape. For a new model with
+no historical bitwise cache contract, `fixed` retains the same lossless
+unique-frame/inverse-index logic and permits an independently tuned
+`--frame-batch-size`. Dataset and encoder configuration, Git commit, checkpoint
+hash, cache report, and adapter import paths are required run metadata.
 
 The geometry-named files created by this command are storage shards only. The
 automatic partitioner concatenates and deduplicates their latent vectors and

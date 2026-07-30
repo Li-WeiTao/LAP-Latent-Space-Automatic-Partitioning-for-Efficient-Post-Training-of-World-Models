@@ -1312,8 +1312,11 @@ CUDA_VISIBLE_DEVICES=0 OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 nice -n 10 \
 
 ### 推荐：唯一 timestep 无损重编码
 
-后续需要重新生成 latent cache 时，**推荐优先使用**独立脚本
-`experiments/tworoom/unique_timestep_reencode.py`。相邻 transition windows
+后续需要重新生成 latent cache 时，**推荐优先使用**通用入口
+`lap-cache encode`（仓库内兼容路径为
+`experiments/tworoom/unique_timestep_reencode.py`）。任务数据集和世界模型
+encoder 分别通过 factory 与配置参数注入，脚本本身不固定 TwoRoom、Push-T 或
+LeWM。相邻 transition windows
 共享大量图像帧；该脚本先构造所有窗口的 global frame indices，对唯一 timestep
 只运行一次 frozen encoder，再通过 inverse index 重建原来的 `(N, 4, 192)` 窗口。
 它同时保持原有 transition 顺序、train-global action normalization、action padding、
@@ -1328,13 +1331,19 @@ CUDA 尾批后实际编码 910,208 帧，仍远少于原始 2,774,912 个 frame 
 
 ```bash
 CUDA_VISIBLE_DEVICES=0 OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 \
-OPENBLAS_NUM_THREADS=4 nice -n 10 \
+OPENBLAS_NUM_THREADS=4 \
+LAP_TWOROOM_STARTS=experiments/tworoom/results/tworoom_geometry_train_region_predictors/train_global_reference_starts.npy \
+nice -n 10 \
 .venv/bin/python experiments/tworoom/unique_timestep_reencode.py \
-  --starts experiments/tworoom/results/tworoom_geometry_train_region_predictors/train_global_reference_starts.npy \
-  --action-norm-starts experiments/tworoom/results/tworoom_geometry_train_region_predictors/train_global_reference_starts.npy \
+  encode \
+  --dataset-factory backends.lewm.encoding:make_hdf5_transition_dataset \
+  --dataset-config configs/encoding/tworoom_lewm_dataset.json \
+  --encoder-factory backends.lewm.encoding:make_encoder \
+  --encoder-config configs/encoding/lewm_encoder.json \
+  --pretrained-model "$LAP_LEWM_CHECKPOINT" \
   --output experiments/tworoom/results/unique_timestep_reencode/P_train_global_embeddings.npz \
   --report experiments/tworoom/results/unique_timestep_reencode/P_train_global_embeddings.report.json \
-  --num-workers 4 --cpu-threads 4 --device cuda
+  --batch-shape-mode exact --num-workers 4 --cpu-threads 4 --device cuda
 ```
 
 **TwoRoom 全局训练集耗时口径**（693,728 transitions，RTX 4090，FP32，4 workers）：

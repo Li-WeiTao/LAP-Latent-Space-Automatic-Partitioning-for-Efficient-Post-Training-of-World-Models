@@ -21,6 +21,9 @@
 | Landmark spectral contract tests | 8/8 passed |
 | Additional routing/manifest/rollout tests | 18/18 passed |
 | Generic latent-cache LAP API tests | 5/5 passed |
+| Generic fast-cache adapter/CLI tests | 2/2 passed |
+| Real LeWM cache prefix reproduction through generic encoder | 512/512 transitions; 3/3 arrays exact |
+| Generic cache CLI/help and TwoRoom launcher syntax | passed |
 | Historical TwoRoom cache assignment replay | 693,728/693,728 exact |
 | Legacy vs migrated FP32 trainer | predictor and pred-proj parameters bitwise exact |
 | Extracted architecture-neutral spectral primitives | exact numerical match |
@@ -30,6 +33,8 @@
 | Main/UMAP/probe PNG rerender hashes | 4/4 exact |
 | Starts-only raw-data bootstrap smoke test | passed |
 | Wheel compatibility modules | 5/5 included |
+| v0.3 wheel cache CLI + encoding modules | entry point and 3/3 modules included |
+| Installed `lap-cache` run outside repository | passed |
 | Top-level TwoRoom Python files copied | 29/29 |
 | TwoRoom launcher files copied | 80/80 |
 | TwoRoom test files copied | 3/3 |
@@ -70,6 +75,16 @@ the migrated `backends.lewm.finetuning.train_region_predictor` on the same tiny
 world model, latent cache, FP32 CPU configuration, and seed. The selected epoch,
 complete loss history, and every tensor in `predictor` and `pred_proj` matched
 exactly.
+
+The v0.3 generic cache-builder validation instantiated dataset and encoder
+factories independently, overrode both through CLI parameters, and reconstructed
+overlapping latent windows from unique frame IDs. A second check used the
+official LeWM checkpoint, the real TwoRoom HDF5 dataset, and the first 512
+transitions of the historical doorway cache. The generated `emb`, `act_emb`,
+and `region_starts` arrays matched the historical cache in shape, dtype, order,
+SHA-256, and every element. This check used the new generic
+`lap-cache encode` path; the deleted task-specific implementation was not
+called.
 
 ## Verification boundary
 

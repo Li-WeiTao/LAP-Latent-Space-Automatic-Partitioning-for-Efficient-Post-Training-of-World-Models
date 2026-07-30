@@ -53,11 +53,16 @@ for region in "${REGIONS[@]}"; do
   if [[ "${OVERWRITE_EXISTING}" == "1" ]]; then
     rm -f -- "${output}" "${report}"
   fi
-  python "${ROOT}/unique_timestep_reencode.py" \
-    --data-file "${DATA_FILE}" \
-    --checkpoint "${CKPT}" \
-    --starts "${starts}" \
-    --action-norm-starts "${OUT_DIR}/train_global_reference_starts.npy" \
+  python "${ROOT}/unique_timestep_reencode.py" encode \
+    --dataset-factory backends.lewm.encoding:make_hdf5_transition_dataset \
+    --dataset-arg "data_file=${DATA_FILE}" \
+    --dataset-arg "starts=${starts}" \
+    --dataset-arg "action_norm_starts=${OUT_DIR}/train_global_reference_starts.npy" \
+    --dataset-arg history_size=3 \
+    --dataset-arg num_preds=1 \
+    --encoder-factory backends.lewm.encoding:make_encoder \
+    --encoder-arg img_size=224 \
+    --pretrained-model "${CKPT}" \
     --output "${output}" \
     --report "${report}" \
     --num-workers "${ENCODE_WORKERS}" \

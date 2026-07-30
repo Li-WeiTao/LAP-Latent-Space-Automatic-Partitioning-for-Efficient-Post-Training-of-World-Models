@@ -47,22 +47,22 @@
       "source_sha256": "0e66685ed351839b0baf614c4207aa2c5e6ab9dbe419aac9c38d0998a000200c"
     },
     {
-      "bytes": 12443,
+      "bytes": 16958,
       "origin": "generated_for_lap",
       "path": "README.md",
-      "sha256": "57d321343deb8c8a14b8b92eccd8d8791f1f4f927d00de184ac20327615b9901"
+      "sha256": "d0b9b54f65b1ac22206f67051649123eb8b3fbb60967e88b359e87916fe81938"
     },
     {
-      "bytes": 5034,
+      "bytes": 6173,
       "origin": "generated_for_lap",
       "path": "REPRODUCIBILITY.md",
-      "sha256": "3bfbf59e370fab83d38f90b11f7244b08262a15e97be49d33e543d3cd9b9829c"
+      "sha256": "36d66c42f121cd3eceb5256f8ea575bcc8020e1b80f0579f498efbe37fec6c8b"
     },
     {
-      "bytes": 4050,
+      "bytes": 5018,
       "origin": "generated_for_lap",
       "path": "VALIDATION.md",
-      "sha256": "3bd55c85ae907ecdcb4c59cb4977e8873b44788f3a93ca1163413e34a5837821"
+      "sha256": "b1e3b972ddc3a9f4c2ab5b87b2dff0ff7652991e44b1fd727358b9b245da2a07"
     },
     {
       "bytes": 45,
@@ -71,10 +71,10 @@
       "sha256": "79dd64b3af594bd15c3b349dd28452e1cc561bc81e062b13a81a64a65a784808"
     },
     {
-      "bytes": 574,
+      "bytes": 701,
       "origin": "generated_for_lap",
       "path": "backends/lewm/__init__.py",
-      "sha256": "b5ae1abeef3d992fa67e1f660bbe9741ed8c9db191dde09565983c759e60a14b"
+      "sha256": "efaa3944f8f93d1a9299ed1c7c14ec726d49e224f24913ca0a5ee2cdf98ddb9c"
     },
     {
       "bytes": 3233,
@@ -87,6 +87,12 @@
       "origin": "generated_for_lap",
       "path": "backends/lewm/cache.py",
       "sha256": "612fd584480167a0b0b1caaf09a2a52e2c8ab1abb01a2c14f53d13a1b2672190"
+    },
+    {
+      "bytes": 17518,
+      "origin": "generated_for_lap",
+      "path": "backends/lewm/encoding.py",
+      "sha256": "be751c32ba0bb9962899b84ad59769a2bb70abeeae7ec552ad9feb69502fc6eb"
     },
     {
       "bytes": 10376,
@@ -157,17 +163,29 @@
       "source_sha256": "6d98db4dc2232596ca3ff0118ad2a43e0b16522c51f307625e87a9a7d6e9bcfd"
     },
     {
+      "bytes": 72,
+      "origin": "generated_for_lap",
+      "path": "configs/encoding/lewm_encoder.json",
+      "sha256": "c022d2e5883b22a9e3b5725779fa4bb03f7a60cd34c7e0a9280d16aaa8beeaca"
+    },
+    {
+      "bytes": 229,
+      "origin": "generated_for_lap",
+      "path": "configs/encoding/tworoom_lewm_dataset.json",
+      "sha256": "981582f3c4872a8faed6a4d4b4b7285ec41d1afd7e339e969754fcc8770653bd"
+    },
+    {
       "bytes": 164,
       "origin": "generated_for_lap",
       "path": "eval.py",
       "sha256": "c2222f0525a6050352f75921a20552dd10808e1236fa58086cea02630bfda62c"
     },
     {
-      "bytes": 98919,
-      "origin": "migrated",
+      "bytes": 99318,
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/LEGACY_EXPERIMENTS.md",
-      "relation": "transformed",
-      "sha256": "df1d8f9deb7a040fc169ed8cbdae56d2504560a5e57d5f123d4c9d52125ac685",
+      "relation": "adapted_for_independent_repo",
+      "sha256": "b618a43c6d0fe9ebdaa517b9398c71ca9d9f6cbf7735495e8ba41af3d98536a8",
       "source_bytes": 115573,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/README.md",
       "source_sha256": "5ab3ba22d6e939754a5e071e5bedde8ca58e245512a2fd8f8358c0d676304c84"
@@ -16163,10 +16181,10 @@
       "source_sha256": "b78e8490bd4dbbcb05c2cc6b3c3bbb063aa135b08f1a98cfdaec97e10b61301d"
     },
     {
-      "bytes": 2400,
+      "bytes": 2685,
       "origin": "generated_for_lap",
       "path": "experiments/tworoom/scripts/prepare_tworoom_spectral_inputs.sh",
-      "sha256": "329e9739c8cb072ff2e9f7e02bade259d03766005a0c785208d3980f7a7b2799"
+      "sha256": "d2f9da14c184218dd1fc9f6731d10b5a4da92b59bf0567f0c4c2cb0418cc52fd"
     },
     {
       "bytes": 3112,
@@ -16969,11 +16987,11 @@
       "source_sha256": "71cdec6ac64740363b81a7d50ce36432b6705e5a9f0cc2a8daf22b3bebc1a5b5"
     },
     {
-      "bytes": 32385,
-      "origin": "migrated",
+      "bytes": 484,
+      "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/unique_timestep_reencode.py",
-      "relation": "transformed",
-      "sha256": "a2afc09dc3148bceef7adabd5e415cde18a97551e2d89c6e6cdb7d0c3a0b847b",
+      "relation": "adapted_for_independent_repo",
+      "sha256": "c69307380003dc998bdec590d062b89d9d0420130dd5342b9d04f9c367ac7c38",
       "source_bytes": 32420,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/unique_timestep_reencode.py",
       "source_sha256": "202180b71f41dcbf3ccfb7df82e31a6d687356cac2beebe6b64ba36b14fa7d60"
@@ -16998,7 +17016,25 @@
       "bytes": 1267,
       "origin": "generated_for_lap",
       "path": "lap/__init__.py",
-      "sha256": "d18fe9d076951687ca63e5552010d8462e069294f501de061544778a633328f9"
+      "sha256": "42195feb20e1ae8686fd4df23a7e8dc62edb4c68d916c6e2b31d8ec7ba3a6491"
+    },
+    {
+      "bytes": 170,
+      "origin": "generated_for_lap",
+      "path": "lap/encoding/__init__.py",
+      "sha256": "998037d4953c16300c0b98ca6e8d66180a255ce3c3072dcb8aaec3d55355db8e"
+    },
+    {
+      "bytes": 9368,
+      "origin": "generated_for_lap",
+      "path": "lap/encoding/cli.py",
+      "sha256": "0e195dc9453b95f473f288f5d7376ad6f9edc097ff6e18f823e80afe25f3a266"
+    },
+    {
+      "bytes": 19506,
+      "origin": "generated_for_lap",
+      "path": "lap/encoding/fast.py",
+      "sha256": "0801231cdfb639769435a9c450836bda995f0624d98ef266f98df45a1630dacc"
     },
     {
       "bytes": 135,
@@ -17013,16 +17049,22 @@
       "sha256": "c8b95f3f70a4609a8621926db02965fe4f4633a632dc018cbd01fdaee61877a5"
     },
     {
-      "bytes": 608,
+      "bytes": 763,
       "origin": "generated_for_lap",
       "path": "lap/interfaces/__init__.py",
-      "sha256": "d0021c82d22d4b1d50d96cc74b4bd9f9e6a5a1c520982f678ef4c4e39744d21d"
+      "sha256": "3804bc6f02163b774397b28706d038e0be59d6ba341cfb9493770484f46b16cb"
     },
     {
       "bytes": 2871,
       "origin": "generated_for_lap",
       "path": "lap/interfaces/cache.py",
       "sha256": "79dc4c7fbdc912b2c68e36b9b6eb70e69fb0c11cc0eed1b24fed93ae25bb6652"
+    },
+    {
+      "bytes": 3828,
+      "origin": "generated_for_lap",
+      "path": "lap/interfaces/encoding.py",
+      "sha256": "d1d25885c9b20aef29da2e580eaf3fcae2340fcb63cf80a12edcdbaf2228702a"
     },
     {
       "bytes": 1586,
@@ -17097,10 +17139,10 @@
       "sha256": "57505dfc4a8d31f8214163870f54c948a49c0bc3a8d37bbadd599f52f9530328"
     },
     {
-      "bytes": 968,
+      "bytes": 1056,
       "origin": "generated_for_lap",
       "path": "pyproject.toml",
-      "sha256": "7f6fa4f58264c4e152b6106eba134823b622ac350ae5eb2dd61d1db272ac8f4e"
+      "sha256": "13e27eeb5cd9c00ee60d67ff181e5df237ef110368ad26ab412c47c710df9b25"
     },
     {
       "bytes": 296,
@@ -17121,6 +17163,12 @@
       "sha256": "c08e526fb3c43328ab10b30784d77a3ebcacb587b0c6d1da10dae2dc21422c48"
     },
     {
+      "bytes": 285,
+      "origin": "generated_for_lap",
+      "path": "scripts/encode_latent_cache.py",
+      "sha256": "eb63410f2bc78f1e3c83645f5f2c4c54171800bdab7af521835dc650e60cfd83"
+    },
+    {
       "bytes": 3608,
       "origin": "generated_for_lap",
       "path": "scripts/refresh_migration_manifest.py",
@@ -17137,6 +17185,24 @@
       "origin": "generated_for_lap",
       "path": "scripts/validate_repository.py",
       "sha256": "db35422e6b80fc45ab373aaafd236dbf96dd1b2512a28d0be42b951197293128"
+    },
+    {
+      "bytes": 31,
+      "origin": "generated_for_lap",
+      "path": "tests/__init__.py",
+      "sha256": "0e3802e6e0f474c9c55d26ef9717e9a0bd4d421627ee87595f952f275946e42c"
+    },
+    {
+      "bytes": 2837,
+      "origin": "generated_for_lap",
+      "path": "tests/fixtures_encoding.py",
+      "sha256": "f5faa3b0b7681a2f3a127986234b936d61e4239e8574d1532c42179681583809"
+    },
+    {
+      "bytes": 4279,
+      "origin": "generated_for_lap",
+      "path": "tests/test_fast_encoding.py",
+      "sha256": "c3b1c05bae32e6e1e19a547c5de05c94837c1e28034ab6025a479d5f91699fff"
     },
     {
       "bytes": 3970,
@@ -17169,7 +17235,7 @@
       "sha256": "62ad56c6c5c1ad68b4fa44f14e28938ec12b0b95e948a25c7e42a0799e039189"
     }
   ],
-  "generated_at_utc": "2026-07-30T04:15:04.417841+00:00",
+  "generated_at_utc": "2026-07-30T05:07:41.229922+00:00",
   "migration_scope": {
     "readme_start_heading": "trajectory deviation experiment",
     "readme_start_line": 410,
@@ -17324,7 +17390,7 @@
   ],
   "repair_revision": {
     "purpose": "close independent-repository end-to-end reproducibility gaps",
-    "changed_existing_files": 17,
-    "new_files": 14
+    "changed_existing_files": 1,
+    "new_files": 0
   }
 }

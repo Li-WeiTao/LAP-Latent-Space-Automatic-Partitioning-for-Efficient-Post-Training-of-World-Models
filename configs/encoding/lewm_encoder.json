@@ -1,0 +1,5 @@
+{
+  "img_size": 224,
+  "frameskip": 0,
+  "checkpoint_cache_dir": null
+}

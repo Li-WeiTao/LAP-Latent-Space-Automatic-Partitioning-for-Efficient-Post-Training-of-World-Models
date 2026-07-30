@@ -1,4 +1,5 @@
 from .cache import EncodedTransitions, InMemoryLatentCache, LatentCache
+from .encoding import EncodingDataset, EncodingSelection, LatentEncoderAdapter
 from .training import (
     PredictorTrainingResult,
     RegionalPredictorTrainer,
@@ -13,9 +14,12 @@ from .world_model import (
 
 __all__ = [
     "EncodedTransitions",
+    "EncodingDataset",
+    "EncodingSelection",
     "FrozenWorldModelBackend",
     "InMemoryLatentCache",
     "LatentCache",
+    "LatentEncoderAdapter",
     "PredictorHandle",
     "PredictorTrainingResult",
     "RegionalPredictorTrainer",
