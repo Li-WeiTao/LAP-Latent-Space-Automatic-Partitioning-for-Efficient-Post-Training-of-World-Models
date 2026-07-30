@@ -301,7 +301,7 @@ Run all commands from the repository root after loading `.env`.
 ### 1. Build the lossless frozen-encoder cache upstream of LAP
 
 ```bash
-GPU=0 bash experiments/tworoom/scripts/prepare_tworoom_spectral_inputs.sh
+GPU=0 bash experiments/tworoom/scripts/internal/prepare_tworoom_spectral_inputs.sh
 ```
 
 This command first reconstructs the official episode-level training split and
@@ -349,7 +349,7 @@ unchanged:
 ```bash
 SPECTRAL_RUN=experiments/tworoom/results/reproduction_spectral_k3
 GPU=0 SEEDS=0,1,2 OUT_DIR="$SPECTRAL_RUN" \
-  bash experiments/tworoom/scripts/run_latent_landmark_spectral.sh
+  bash experiments/tworoom/scripts/analysis/run_latent_landmark_spectral.sh
 ```
 
 The generated `stability_summary.json` maps every partition seed to its exact,
@@ -362,7 +362,7 @@ for partition_seed in 0 1 2; do
   for train_seed in 0 42 625; do
     GPU=0 SPECTRAL_ROOT="$SPECTRAL_RUN" \
       SPECTRAL_SEED="$partition_seed" TRAIN_SEED="$train_seed" \
-      bash experiments/tworoom/scripts/run_latent_spectral_train_predictors_50ep.sh
+      bash experiments/tworoom/scripts/internal/run_latent_spectral_train_predictors_50ep.sh
   done
 done
 ```
@@ -379,7 +379,7 @@ for partition_seed in 0 1 2; do
     GPU=0 SPECTRAL_ROOT="$SPECTRAL_RUN" \
       SPECTRAL_SEED="$partition_seed" TRAIN_SEED="$train_seed" \
       LATENT_ROUTING=mpc \
-      bash experiments/tworoom/scripts/run_success_rate_5seed_latent_spectral_longrange.sh
+      bash experiments/tworoom/scripts/internal/run_success_rate_5seed_latent_spectral_longrange.sh
   done
 done
 ```

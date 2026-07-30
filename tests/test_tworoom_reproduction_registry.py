@@ -41,9 +41,33 @@ def test_main_profile_has_single_canonical_entrypoint():
 
 
 def test_canonical_shell_uses_parameterized_data_and_checkpoint():
-    script = (TWOROOM / "scripts" / "run_tworoom_main_matrix.sh").read_text(
+    script = (TWOROOM / "scripts" / "canonical" / "run_tworoom_main_matrix.sh").read_text(
         encoding="utf-8"
     )
     assert "LAP_TWOROOM_DATA" in script
     assert "LAP_LEWM_CHECKPOINT" in script
     assert "/data/sicong" not in script
+
+
+def test_script_tree_is_physically_partitioned():
+    scripts = TWOROOM / "scripts"
+    assert not list(scripts.glob("*.sh"))
+    assert not list(scripts.glob("*.R"))
+    for directory in ("canonical", "analysis", "ablations", "internal", "legacy"):
+        assert (scripts / directory).is_dir()
+
+
+def test_registered_shell_commands_match_their_physical_tiers():
+    payload = json.loads(
+        (TWOROOM / "reproduction_manifest.json").read_text(encoding="utf-8")
+    )
+    tier_directories = {
+        "canonical": "canonical",
+        "analysis": "analysis",
+        "ablation": "ablations",
+    }
+    for experiment in payload["experiments"]:
+        command = experiment["command"]
+        directory = tier_directories.get(experiment["tier"])
+        if directory is not None and command.startswith("bash "):
+            assert f"/scripts/{directory}/" in command

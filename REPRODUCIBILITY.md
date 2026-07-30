@@ -51,7 +51,7 @@ Random-Voronoi K3-50, K-means++ K3-50, Spectral K3-50, and human rooms3-50.
 Automatic methods use the dataset/model-parameterized control-matrix runner;
 the human partition remains a TwoRoom-only comparison. Development-time queue,
 `nohup`, recovery, and partial-rerun launchers are retained under
-`experiments/tworoom/legacy/orchestration/` for provenance and are not called.
+`experiments/tworoom/scripts/legacy/` for provenance and are not called.
 
 ## External inputs
 
@@ -88,7 +88,7 @@ checked-in summaries can be audited without rerunning training. The omitted
 spectral inputs have a complete rebuild path:
 
 ```bash
-GPU=0 bash experiments/tworoom/scripts/prepare_tworoom_spectral_inputs.sh
+GPU=0 bash experiments/tworoom/scripts/internal/prepare_tworoom_spectral_inputs.sh
 ```
 
 Encoding is an explicit upstream preprocessing stage, not part of `LAP.fit`.
@@ -165,4 +165,4 @@ operations to the new modules:
 Supported historical script names remain as experiment-specific
 CLI/configuration helpers and are no longer separate algorithm implementations.
 Development-only orchestration launchers have been quarantined under
-`legacy/orchestration`; the canonical registry never resolves to them.
+`scripts/legacy`; the canonical registry never resolves to them.

@@ -19,10 +19,10 @@
       "sha256": "4abf009e70e59c23467da24d0d8cbf965c8d59ad9e01bebe77fbfc2b9552a13d"
     },
     {
-      "bytes": 1957,
+      "bytes": 1966,
       "origin": "generated_for_lap",
       "path": "ARTIFACTS.md",
-      "sha256": "20f33515867a913ae1427d97bd38b93d7bd38acd51d521436049a359aa757815"
+      "sha256": "075070867f73a50fd102222bc6d710ae5d9c15c49b2c479409ad7cd259830076"
     },
     {
       "bytes": 414,
@@ -47,16 +47,16 @@
       "source_sha256": "0e66685ed351839b0baf614c4207aa2c5e6ab9dbe419aac9c38d0998a000200c"
     },
     {
-      "bytes": 17938,
+      "bytes": 17974,
       "origin": "generated_for_lap",
       "path": "README.md",
-      "sha256": "9f59223f2486ceeab860534fef69b0cd5ebec7324eeae33f30ee6c2c402a4d2c"
+      "sha256": "a2f9e568e0fde2619028fa0db9a041a604385fd1ba3de76d7b7f1ad10ccec7a5"
     },
     {
-      "bytes": 7282,
+      "bytes": 7279,
       "origin": "generated_for_lap",
       "path": "REPRODUCIBILITY.md",
-      "sha256": "209b344b8555a5b1b1c23b42481e1a1492bd4828e0429e56f05d4c5083ee3d6c"
+      "sha256": "27f58543212c3e449c2b1fe85ca44f726870ee43036269b767f58058e35a4eec"
     },
     {
       "bytes": 5018,
@@ -259,11 +259,11 @@
       "sha256": "9e52e4d7c3a57bc6e9b124a6345f2690d65e9f4fdcfa9365df6e965301a9892b"
     },
     {
-      "bytes": 99655,
+      "bytes": 100312,
       "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/LEGACY_EXPERIMENTS.md",
       "relation": "adapted_for_independent_repo",
-      "sha256": "694d7792f430baefa79881687c5267fa92e244c7f46eccf11f9c82348176b730",
+      "sha256": "e5ce928914bf4e8748752d48b4487b2a75374dc3561f167e4c11bf2d4e9f5aac",
       "source_bytes": 115573,
       "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/README.md",
       "source_sha256": "5ab3ba22d6e939754a5e071e5bedde8ca58e245512a2fd8f8358c0d676304c84"
@@ -1011,144 +1011,6 @@
       "source_sha256": "be33e23068629d5a764d523c422ad6f2f630a530a05bb0903eae3f91c203cfc8"
     },
     {
-      "bytes": 806,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/README.md",
-      "sha256": "3de5816661bee3a9aeb11dee0921b2c0c6c7194ddcb9f2f0274f7aae64f706c1"
-    },
-    {
-      "bytes": 1568,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/archive_aborted_training.sh",
-      "sha256": "f7c929774bf63171d81b3b025d6a127191c5c37c2df57c0edccb9052d6a90f7b"
-    },
-    {
-      "bytes": 6271,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/dispatch_geometry_retrain.sh",
-      "sha256": "d644aff6085015cb502aadbf630a8a013d6cf8bfdb663d050c4e5d6246ad0517"
-    },
-    {
-      "bytes": 1988,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/launch_joint_continue_tworoom_3seed_3ep_long.sh",
-      "sha256": "3c55f869696299226b6160c84857b4c9684a4e102cfd1e473aee7ae6bbaa5b21"
-    },
-    {
-      "bytes": 3112,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/queue_latent_kmeanspp_step_routing_when_gpus_free.sh",
-      "sha256": "0be8359b88d9c44bd7470a8256cdc7fa8eda97d59016c64f2c2e77d68b766207"
-    },
-    {
-      "bytes": 2536,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/queue_tworoom_control_baselines.sh",
-      "sha256": "89f60bc086404b07c459c941d4efb1242b5452c20264123d0e4f814bad4e2b67"
-    },
-    {
-      "bytes": 1106,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/run_dispatch_geometry_retrain_nohup.sh",
-      "sha256": "0f2f6dd5c8673dfba174a965c2469b537e25b518e36ccdd139f3f452c72da7c4"
-    },
-    {
-      "bytes": 943,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/run_geometry_train_global_ft_50ep_nohup.sh",
-      "sha256": "9edcf1eaad9842d346ac4bc9a91309b2f734d602674fb4e52c82d89e0e5c7d78"
-    },
-    {
-      "bytes": 1014,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/run_geometry_train_global_ft_65ep_nohup.sh",
-      "sha256": "9b90d994bcf9ce0a7e5e5a93a2513d1583c3845357d1270cb46f4a534418256f"
-    },
-    {
-      "bytes": 971,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/run_latent_kmeanspp_train_cluster2_outer0_nohup.sh",
-      "sha256": "00a3634c19f5c56a0bfb1ddfb7a65bd32e5566b9916bbfd058c8c009d473e600"
-    },
-    {
-      "bytes": 1596,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/run_latent_spectral_all_trainseed_eval_rerun.sh",
-      "sha256": "6a581b6ba3f2e495b50425e2fc1df61e746dcb5caa37698ab8747f3cade2ed82"
-    },
-    {
-      "bytes": 4437,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/run_latent_spectral_k3_50_fair_eval_after_train.sh",
-      "sha256": "bbda1d76d4f6614c06ad636dd6c9dbf511457f23904c5cd2c2bfdb2e947f7040"
-    },
-    {
-      "bytes": 4629,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/run_latent_spectral_seed_eval_after_train.sh",
-      "sha256": "2b99aeaaa978dd094fd49f6e00d479c376fdfbbb9b97834101f5d1817d3c1fc5"
-    },
-    {
-      "bytes": 3777,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/run_latent_spectral_trainseed625_after_seed42.sh",
-      "sha256": "b4c8b858594fad206d5a42a96e56ec5c2c700a9e66bb93f9efb635fef44ec197"
-    },
-    {
-      "bytes": 4385,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/run_retrain_all_multipredictor_seed42.sh",
-      "sha256": "034c3d8844a221b8c1c3b9e0b3a3fb85bee2cb5e00f7c23328e324f18f36ce85"
-    },
-    {
-      "bytes": 7671,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/run_retrain_all_multipredictor_seed42_parallel.sh",
-      "sha256": "3e4257454b9466b6f9fa4853f6fab76685a059eb67914fce8c0763a3d71c7ea8"
-    },
-    {
-      "bytes": 814,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/run_success_rate_5seed_30ep_rooms3_priority5_nohup.sh",
-      "sha256": "195bcb7f7269bc47bf33572861caa208cc84f8ce6c64e601d1df9fbf2bf51d82"
-    },
-    {
-      "bytes": 1369,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/run_success_rate_exp7_goal100_parallel_nohup.sh",
-      "sha256": "02a41d99ad3616db0bfc50fecf2634ffe34f7475b8e4df837aabc03dfc0cc429"
-    },
-    {
-      "bytes": 792,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/run_success_rate_global_ft_50ep_longrange_nohup.sh",
-      "sha256": "9b868190a419fbaa63ebde589f2891bb8c9e825d88f9e4576a49086603628445"
-    },
-    {
-      "bytes": 840,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/run_success_rate_latent_kmeanspp_longrange_all_outer_nohup.sh",
-      "sha256": "36941f2977dbe34552a2d7f8dc7431a9b785b0768ca841e51c3e7c321cad7e95"
-    },
-    {
-      "bytes": 1090,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/run_success_rate_latent_kmeanspp_step_routing_parallel.sh",
-      "sha256": "6e4087cc919c12e30b9e2747887e246e9304a603fcad9e4415008432de4f2666"
-    },
-    {
-      "bytes": 4110,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/run_success_rate_remaining_seed42.sh",
-      "sha256": "698835fe26212f7f4cd7b0bfaa5cb7caa847f03945d4e3dfa959eddc5735e3c6"
-    },
-    {
-      "bytes": 797,
-      "origin": "generated_for_lap",
-      "path": "experiments/tworoom/legacy/orchestration/run_success_rate_remaining_seed42_nohup.sh",
-      "sha256": "48396b46e3023df833d81a587682fc589da397c5492a84f0d17457ba688facfa"
-    },
-    {
       "bytes": 39371,
       "origin": "migrated_repaired_for_lap",
       "path": "experiments/tworoom/predictor_rule_drift.py",
@@ -1175,10 +1037,10 @@
       "sha256": "49690a46327106be2c6ff4fab4179ee67f4026285ed6de812eaa7cefe499705c"
     },
     {
-      "bytes": 4767,
+      "bytes": 4842,
       "origin": "generated_for_lap",
       "path": "experiments/tworoom/reproduction_manifest.json",
-      "sha256": "2d886935aa0d7b5dd73ed2f62ba103137c2f28454cbf6c91f1214ba2a8f941f4"
+      "sha256": "7bae9a4ab0028da7cbdd769742f8577f0e8ddfceb385a9aa38c1a8e1af6b500a"
     },
     {
       "bytes": 2131,
@@ -20367,620 +20229,550 @@
       "source_sha256": "3aeba223c9f74b9ddf1bbf411b54b6ceb81c4bab7ad58591b3c8c85deb8e3c6e"
     },
     {
-      "bytes": 1272,
+      "bytes": 1639,
       "origin": "generated_for_lap",
       "path": "experiments/tworoom/scripts/README.md",
-      "sha256": "35063fb01ef716666baf0c37ee1dc425bc957cb36c68f3e453a2caa9a4e500fd"
+      "sha256": "527628874c207b7a056d6ec9dda39d807dcb7224a8d212064dc6b92f201a53f4"
     },
     {
-      "bytes": 5980,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/plot_long_horizon_success.R",
-      "relation": "exact_copy",
-      "sha256": "ba4545ad68342fc50ab45f7614a08bf7cfecce1906ed82feb70caa9a66c4a65f",
-      "source_bytes": 5980,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/plot_long_horizon_success.R",
-      "source_sha256": "ba4545ad68342fc50ab45f7614a08bf7cfecce1906ed82feb70caa9a66c4a65f"
-    },
-    {
-      "bytes": 6751,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/plot_real_gauge_drift_metrics.R",
-      "relation": "exact_copy",
-      "sha256": "0f05f3e5fab9395c1e2e0f7a36fe746f8a81ccf67ca973125985fd468db5d642",
-      "source_bytes": 6751,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/plot_real_gauge_drift_metrics.R",
-      "source_sha256": "0f05f3e5fab9395c1e2e0f7a36fe746f8a81ccf67ca973125985fd468db5d642"
-    },
-    {
-      "bytes": 6027,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/plot_short_horizon_success.R",
-      "relation": "exact_copy",
-      "sha256": "a9311f8c401a8eae604443e500b214792fca8a5e9e1b6d3233b59438b394905d",
-      "source_bytes": 6027,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/plot_short_horizon_success.R",
-      "source_sha256": "a9311f8c401a8eae604443e500b214792fca8a5e9e1b6d3233b59438b394905d"
-    },
-    {
-      "bytes": 3630,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/plot_single_replan_latency.R",
-      "relation": "exact_copy",
-      "sha256": "e77b0ee79832907499ee633a4427c4a6325558df30e570e95a14ca30c33cfca5",
-      "source_bytes": 3630,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/plot_single_replan_latency.R",
-      "source_sha256": "e77b0ee79832907499ee633a4427c4a6325558df30e570e95a14ca30c33cfca5"
-    },
-    {
-      "bytes": 6571,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/plot_tworoom_geometry_regions.R",
-      "relation": "transformed",
-      "sha256": "3141eadc33f97506897d2f2124549c9091b5571ceb7eb9c5b816521d5db27cf8",
-      "source_bytes": 6641,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/plot_tworoom_geometry_regions.R",
-      "source_sha256": "b78e8490bd4dbbcb05c2cc6b3c3bbb063aa135b08f1a98cfdaec97e10b61301d"
-    },
-    {
-      "bytes": 2685,
+      "bytes": 284,
       "origin": "generated_for_lap",
-      "path": "experiments/tworoom/scripts/prepare_tworoom_spectral_inputs.sh",
-      "sha256": "d2f9da14c184218dd1fc9f6731d10b5a4da92b59bf0567f0c4c2cb0418cc52fd"
+      "path": "experiments/tworoom/scripts/ablations/README.md",
+      "sha256": "1d118db04c2c3ab614db67ceee4cba11fe4a84ca29ea1e5e0a10369ddcaa8028"
     },
     {
-      "bytes": 1301,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_geometry_latent_probe_priority5.sh",
-      "relation": "transformed",
-      "sha256": "9a45ef05806ebf546c7f70c7bcf833b7f537e600d563c0b778214fc07f29e195",
-      "source_bytes": 1196,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_geometry_latent_probe_priority5.sh",
-      "source_sha256": "17191c35b79101ead473583a1c1cfcabf23c4474da9329eaeec0d4dc280ef84e"
+      "bytes": 1653,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_geometry_train_doorway_80ep_best.sh",
+      "sha256": "c483324dc8648436031a29e9967379760731425e3bf49c4efe49cd1dc3873783"
     },
     {
-      "bytes": 1099,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_geometry_latent_probe_priority5_multiseed.sh",
-      "relation": "transformed",
-      "sha256": "c66fedccd507d6e25750cd47648af34d1349be1cc08f43db510d8bd0a6dc1f91",
-      "source_bytes": 994,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_geometry_latent_probe_priority5_multiseed.sh",
-      "source_sha256": "4c2cdcabaad92663b47a6f204ed1bffb9e09c4f84e36b1edb98e86539112cb1b"
+      "bytes": 1805,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_geometry_train_doorway_one_region.sh",
+      "sha256": "0aae02a8b6bd93948c6ac59d610c86e6b5e7ecb88d23713785c5888b1eecc855"
     },
     {
-      "bytes": 1087,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_geometry_latent_probe_rooms3_multiseed.sh",
-      "relation": "transformed",
-      "sha256": "2d0a04932f9ae74e529390d68f680c9c2fa4c8e07d88cd391cf4fbc212ce6e3a",
-      "source_bytes": 982,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_geometry_latent_probe_rooms3_multiseed.sh",
-      "source_sha256": "1f8445bb99f5a8d5a9753ac4d3a5e58076f4c45f796cd8f7c0c4584fe27a5433"
+      "bytes": 1575,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_geometry_train_global_ft.sh",
+      "sha256": "598e16f42d43430415189dc4f62d1f24920270139cb04fb5a7910c37e57be291"
     },
     {
-      "bytes": 1243,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_geometry_latent_svm_rooms3.sh",
-      "relation": "transformed",
-      "sha256": "d3f974490a3fb448566b4bf5bd7636b0ff1b5f4ef8ddd8d668b6fb3f80ee5ae7",
-      "source_bytes": 1138,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_geometry_latent_svm_rooms3.sh",
-      "source_sha256": "68dbd1804eafe95d84924f9ef607c0d8a3455e475491d9f66c1056144ef89ddc"
+      "bytes": 1467,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_geometry_train_global_ft_65ep.sh",
+      "sha256": "58da5b53f1f9fbca3e068942b949e353742dbaa1bb38aa4bf07f0e6e767841c9"
     },
     {
-      "bytes": 1153,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_geometry_region_predictors.sh",
-      "relation": "transformed",
-      "sha256": "e9b77523d071bff1bc39c59eb739c6a4358d627f8b0fac33313c3c75229073fc",
-      "source_bytes": 1053,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_geometry_region_predictors.sh",
-      "source_sha256": "590c20f603adc144d103a1a5add5a242c63407fb1e1446f930b51a883dfa8262"
+      "bytes": 1178,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_geometry_train_region_predictors.sh",
+      "sha256": "93ff4ef9b8b51d7c177487288545e82bce8e8d06bd0ea6f7b07bec0eac151a10"
     },
     {
-      "bytes": 1650,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_geometry_train_doorway_80ep_best.sh",
-      "relation": "transformed",
-      "sha256": "8349ee700332801cc69c8ca42cdac151794b1c0881197d1f8455dccce36c816d",
-      "source_bytes": 1559,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_geometry_train_doorway_80ep_best.sh",
-      "source_sha256": "1172bdcd07a1f823699186e3522d953921114563d6465ef2d3a26cd2016bed6c"
+      "bytes": 1318,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_geometry_train_region_predictors_50ep_best.sh",
+      "sha256": "0e5327349a8a6d9db8a3a38d52536c98a8aa5baa00592ca6547fa8441f62ca22"
     },
     {
-      "bytes": 1802,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_geometry_train_doorway_one_region.sh",
-      "relation": "transformed",
-      "sha256": "1b4118b96e35719fcbc890eb9d14d782dc26c30e9e880098a3f22b91e845b036",
-      "source_bytes": 1693,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_geometry_train_doorway_one_region.sh",
-      "source_sha256": "57d531909586e78d5ca2ab8d57d86b72f60a54166b7e6f8217ad87b18ade4c6a"
-    },
-    {
-      "bytes": 1572,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_geometry_train_global_ft.sh",
-      "relation": "transformed",
-      "sha256": "8f7addac8509cb8b54d152bee6686513d4b9683e3863bb843ee30bdb0a2d69fa",
-      "source_bytes": 1463,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_geometry_train_global_ft.sh",
-      "source_sha256": "00be04c49ecf802c01f6be6205d93dff2f2258da3c36447f45b7d3fb435efef9"
-    },
-    {
-      "bytes": 474,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_geometry_train_global_ft_50ep.sh",
-      "relation": "transformed",
-      "sha256": "687d36486195f36fbed4f2b0786bd66490ff4526e8e3f96789c1dccb91a8af2e",
-      "source_bytes": 509,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_geometry_train_global_ft_50ep.sh",
-      "source_sha256": "0b94842f6caece25820e184c75f1138afe108151ac02e3c309b5b6ebad3db81f"
-    },
-    {
-      "bytes": 1464,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_geometry_train_global_ft_65ep.sh",
-      "relation": "transformed",
-      "sha256": "f66c0046b5968dec9d65711607abf04b5ca742d656a7b071a449c6d21690ed9d",
-      "source_bytes": 1373,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_geometry_train_global_ft_65ep.sh",
-      "source_sha256": "a2b49dfa5e3a8f7ca59999139defae461d9f3efe7d0707685f2cf4627de9e4c8"
-    },
-    {
-      "bytes": 3812,
-      "origin": "migrated_repaired_for_lap",
-      "path": "experiments/tworoom/scripts/run_geometry_train_one_region.sh",
-      "relation": "adapted_for_independent_repo",
-      "sha256": "7c4c5aa5c716a2cbba38dec372cceedca2a9d231420f77b66983dde3b19d15bd",
-      "source_bytes": 3476,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_geometry_train_one_region.sh",
-      "source_sha256": "55304341b7f3d028f42137503ce3d28f64bdf1ef597399ff5a4429113129e6cd"
-    },
-    {
-      "bytes": 1175,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_geometry_train_region_predictors.sh",
-      "relation": "transformed",
-      "sha256": "54195a786f50e698282c3dc0c18f2e94f18a10ca2594af169f7f92574ec650d9",
-      "source_bytes": 1075,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_geometry_train_region_predictors.sh",
-      "source_sha256": "581f71e9f637046e4f068b1420c82bfedbc26d18dd54665011474a9f6b267918"
-    },
-    {
-      "bytes": 1315,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_geometry_train_region_predictors_50ep_best.sh",
-      "relation": "transformed",
-      "sha256": "624f5b23ca0694c5e9dcc9b2f42608b98bfd002dd417c97c572cabed72185958",
-      "source_bytes": 1215,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_geometry_train_region_predictors_50ep_best.sh",
-      "source_sha256": "abf2d96153d0ffc1b6edb1ca6163cddfe082c2394f037134340a034b49f4f806"
-    },
-    {
-      "bytes": 2075,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_geometry_train_trajectory_deviation_exp5.sh",
-      "relation": "transformed",
-      "sha256": "6f6d6066cd06c292ac56671fcd44447a74d14610e20f42a33e1d9a754e7a72ed",
-      "source_bytes": 2002,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_geometry_train_trajectory_deviation_exp5.sh",
-      "source_sha256": "dcc4f87711736af576655a236e5e9b546650c5123e84428a1ec8b10dfbcbb053"
-    },
-    {
-      "bytes": 1544,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_geometry_trajectory_deviation.sh",
-      "relation": "transformed",
-      "sha256": "0350617dc6376cfd6e3a1075b07a7f100a005c70afa32f613b8963cef939eaf2",
-      "source_bytes": 1462,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_geometry_trajectory_deviation.sh",
-      "source_sha256": "271e89e652e6c68a74e887c3e889746e029aba42df296dd104e81cdba1c42715"
-    },
-    {
-      "bytes": 991,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_joint_continue_tworoom_1ep.sh",
-      "relation": "transformed",
-      "sha256": "c8398983b6df7999e5fd9bbad5d98c9cf5cdb8205e218801c91206002e9c4661",
-      "source_bytes": 906,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_joint_continue_tworoom_1ep.sh",
-      "source_sha256": "24323fe7f9ef86b73837053117f89023011043475598aa01be492618feb8a79b"
-    },
-    {
-      "bytes": 1120,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_joint_continue_tworoom_3ep.sh",
-      "relation": "transformed",
-      "sha256": "46e6562da1b9f41c466f12a75c366d127a7c6c08663b99e10bb1949a483a9dda",
-      "source_bytes": 1035,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_joint_continue_tworoom_3ep.sh",
-      "source_sha256": "11a69f4813c7a07a636823c042e1957676587b780cb91813420d52bb9a5282df"
-    },
-    {
-      "bytes": 2630,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_joint_continue_tworoom_3ep_long_eval.sh",
-      "relation": "transformed",
-      "sha256": "ea4ccf84e73962532cf25c444782a450d493cc1aeba0abd9d79e97a6f8add28f",
-      "source_bytes": 2545,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_joint_continue_tworoom_3ep_long_eval.sh",
-      "source_sha256": "e486dc50cfd5263255af075ff0e6caa7395fa58944d53c14cdb8e2ea5ce79288"
-    },
-    {
-      "bytes": 2258,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_joint_continue_tworoom_eval.sh",
-      "relation": "transformed",
-      "sha256": "e3139ec3f73bccaaf9dfe55438eb5d73df99d79bbe8d2bd2ad8b04c710f9b90b",
-      "source_bytes": 2173,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_joint_continue_tworoom_eval.sh",
-      "source_sha256": "e92c953c37c3eeebfcf7202f37077b64798097fc14bf809a3002561d2d22b576"
-    },
-    {
-      "bytes": 1580,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_latent_cluster_train_predictors_50ep.sh",
-      "relation": "transformed",
-      "sha256": "fc0e1ac2b70d29c851b78f6854189f88608282a4662fadce750c848b1678248e",
-      "source_bytes": 1471,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_latent_cluster_train_predictors_50ep.sh",
-      "source_sha256": "5489a3718892a7f91921b995bca08ef5fcd41a19c4f0d858ca39c42823aa4ccc"
-    },
-    {
-      "bytes": 706,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_latent_kmeanspp_multirestart.sh",
-      "relation": "transformed",
-      "sha256": "7b76f6ec944b4f9bdb64419a558de1b463e9f6e2a33ff6b96ba7393a44d09767",
-      "source_bytes": 621,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_latent_kmeanspp_multirestart.sh",
-      "source_sha256": "44cf672df608f8b31c068874bb4b9ba162dff6d82f1aeea0c17ff69367ca1dc2"
-    },
-    {
-      "bytes": 1226,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_latent_kmeanspp_predictor_pipeline.sh",
-      "relation": "transformed",
-      "sha256": "7ecf5975275e9e24c256dcdfeaedac839910d6c1a87811638202c508ed1d6137",
-      "source_bytes": 1141,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_latent_kmeanspp_predictor_pipeline.sh",
-      "source_sha256": "8668f3bf9c442b652446490e4f0b04dfb128aef0c190c4b273eeb2a75a891ad5"
-    },
-    {
-      "bytes": 2435,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_latent_kmeanspp_train_predictors_50ep.sh",
-      "relation": "transformed",
-      "sha256": "b173314f65a4c7317a64378dc9dce273962c6f5d0a58518072c23644f6b22a11",
-      "source_bytes": 2326,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_latent_kmeanspp_train_predictors_50ep.sh",
-      "source_sha256": "6a5bbda431ee5fa4942668da6e230e4b306da11c8dc3518631376a638d05f36f"
-    },
-    {
-      "bytes": 2737,
-      "origin": "migrated_repaired_for_lap",
-      "path": "experiments/tworoom/scripts/run_latent_landmark_spectral.sh",
-      "relation": "adapted_for_independent_repo",
-      "sha256": "2ed73aeb231e05dff531defe39ff9045c20aadc1faaa75eea76eb22015a47cc8",
-      "source_bytes": 2313,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_latent_landmark_spectral.sh",
-      "source_sha256": "37c5f9a31cbf18f717d6df799bc5841e0476d4758c2b3c8d3bd9b7ee1d783364"
-    },
-    {
-      "bytes": 733,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_latent_preprocess_convergence.sh",
-      "relation": "transformed",
-      "sha256": "01ec4f88f180fa792837ecf2b4d91c7d60eae27e6a267dc4a3dbf5b3e44ba82a",
-      "source_bytes": 648,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_latent_preprocess_convergence.sh",
-      "source_sha256": "5c4c2c9d9ca483e656f3cc9c181669bd3739cd7f4ae3c8b2a990cea2ba1a4f8f"
-    },
-    {
-      "bytes": 738,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_latent_preprocess_stability.sh",
-      "relation": "transformed",
-      "sha256": "5486aa0ec6353a126fe32df6426b5a7fadb22f90239fb10a4d06edad804f5601",
-      "source_bytes": 653,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_latent_preprocess_stability.sh",
-      "source_sha256": "76a4f74f0503ac2a428e87a635e8e704d8a7b63021a6d6f733f56f226ad97620"
-    },
-    {
-      "bytes": 3474,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_latent_spectral_short_horizon.sh",
-      "relation": "transformed",
-      "sha256": "17de21b1850cab4ffecab5cc21ae2ddd895302456e154b23991886f1e9ce7762",
-      "source_bytes": 3389,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_latent_spectral_short_horizon.sh",
-      "source_sha256": "954b312824c83b95311f30520f798cbebd703776b2761ffed85866d43383f970"
-    },
-    {
-      "bytes": 3425,
-      "origin": "migrated_repaired_for_lap",
-      "path": "experiments/tworoom/scripts/run_latent_spectral_train_predictors_50ep.sh",
-      "relation": "adapted_for_independent_repo",
-      "sha256": "bbd9cfad173e0ce1377bd996d29715a97a892706373e8d0142b809f6b0da410f",
-      "source_bytes": 3254,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_latent_spectral_train_predictors_50ep.sh",
-      "source_sha256": "ee2b86d4c48ec7aa79d01d2df1f3d32aecd8e2aac1d19cc1a86edd2ad43db2a2"
-    },
-    {
-      "bytes": 886,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_latent_unsup_cluster_faiss_3seed.sh",
-      "relation": "transformed",
-      "sha256": "9ded031e1549687a379142c4067dc167c335700817a4982336af0e3b7a3ddace",
-      "source_bytes": 801,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_latent_unsup_cluster_faiss_3seed.sh",
-      "source_sha256": "1d20af23583104d988ff7bfaf4d0238cfafc81c392da0c88fc841876d5538efb"
-    },
-    {
-      "bytes": 2702,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_random_voronoi_eval.sh",
-      "relation": "transformed",
-      "sha256": "2c6522b8e528fd4cee12601ffcb31072b05c9b8f77718cf09688148e45373822",
-      "source_bytes": 2591,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_random_voronoi_eval.sh",
-      "source_sha256": "536d473a5cb39f33a87e6bdee1eb5c93c79b8c519284fe31f7dd0c9798417c4b"
-    },
-    {
-      "bytes": 689,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_random_voronoi_k3.sh",
-      "relation": "transformed",
-      "sha256": "2fdfcee70f8c1e3cb22a7c77f49a6072ceda3e266c287b8c00c3791dde3b36ac",
-      "source_bytes": 604,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_random_voronoi_k3.sh",
-      "source_sha256": "051a9d86191b5a63b6d5219852cd50bcdde5f7a43c96c8621920cd15c32bc363"
-    },
-    {
-      "bytes": 2169,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_random_voronoi_train_predictors_50ep.sh",
-      "relation": "transformed",
-      "sha256": "8d2756b87c63e9064b9577f4b47822763f9cc60fe483828cd5b00601366629cc",
-      "source_bytes": 2058,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_random_voronoi_train_predictors_50ep.sh",
-      "source_sha256": "7eb54033553f40d9782663af0ade5cb9b5a2e5de6e7d8617ae2a39404857d3c4"
-    },
-    {
-      "bytes": 2487,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_success_rate_5seed.sh",
-      "relation": "transformed",
-      "sha256": "53060da1fae01a378de8d0aae5aa6eef88124fe0eae13b59f3521ee5f049f14c",
-      "source_bytes": 2402,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_5seed.sh",
-      "source_sha256": "4d92bc2bccc707a298d48bd709b4288d37fca0f942fb07f8f5ba0aaf6a16f9c2"
-    },
-    {
-      "bytes": 2711,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_success_rate_5seed_30ep_rooms3_priority5.sh",
-      "relation": "transformed",
-      "sha256": "8927b9c1b94562122538fcddca37c96fa8d20ff542bc4f4a285fd4926376091d",
-      "source_bytes": 2626,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_5seed_30ep_rooms3_priority5.sh",
-      "source_sha256": "df8a1de9a6e914ec776d2e7dde130f94996a7c1028df53abdd99f6bf701d5b66"
-    },
-    {
-      "bytes": 2222,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_success_rate_5seed_50ep_rooms3_priority5.sh",
-      "relation": "transformed",
-      "sha256": "dfc1c1d862c955a9d862b3f0cec9357b63ded10521a48466d79ecc03e0aa0c2c",
-      "source_bytes": 2137,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_5seed_50ep_rooms3_priority5.sh",
-      "source_sha256": "89db44018b0c83d71c0af9048e8933d5b34521690c3786a9122ab7e1e04cd16d"
-    },
-    {
-      "bytes": 2238,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_success_rate_5seed_exp5_doorway80.sh",
-      "relation": "transformed",
-      "sha256": "2349ff6ab3d8b72af72dfcd751306c0136a53fd0f0aa31b20a021de46b105965",
-      "source_bytes": 2153,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_5seed_exp5_doorway80.sh",
-      "source_sha256": "085ec572a88306cc67a9b903b53b24174d4e34bf11e02b9ecd79facac3327283"
-    },
-    {
-      "bytes": 2410,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_success_rate_5seed_exp5_priority5.sh",
-      "relation": "transformed",
-      "sha256": "cbda7a7daae784b54f904292fddef7e39a8610ee1d03e02f885a31d6fc78dc14",
-      "source_bytes": 2325,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_5seed_exp5_priority5.sh",
-      "source_sha256": "43a9d8d0494c14df8e4759cc0b75525bcaef68a97dcccc2d5d67ba1af75dd32a"
+      "bytes": 994,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_joint_continue_tworoom_1ep.sh",
+      "sha256": "f51e1f912a597aa17472ca0b42edd519ab3f4dbfd356790cb65a6b6a79c319fa"
     },
     {
       "bytes": 2633,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_success_rate_5seed_exp6_longrange.sh",
-      "relation": "transformed",
-      "sha256": "87e9353daabbc67ff3d830bd4a5b84eda191cde91dfc32eb1f042f42ca94fb8c",
-      "source_bytes": 2548,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_5seed_exp6_longrange.sh",
-      "source_sha256": "4d17e61e6444810416fec6ecbe4260b357506572e4cb7778ce40a76d635766e7"
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_joint_continue_tworoom_3ep_long_eval.sh",
+      "sha256": "96e39c8fabef0143c2705a792e36232693778ae5eb09f5f896d4ec7add9d7f3f"
     },
     {
-      "bytes": 3098,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_success_rate_5seed_exp6_longrange_30ep_50ep.sh",
-      "relation": "transformed",
-      "sha256": "34ea521008cd1b558eeef012a202cc5e256298754c87e151cc242fcf0a31b4e2",
-      "source_bytes": 3013,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_5seed_exp6_longrange_30ep_50ep.sh",
-      "source_sha256": "9c649e52e8288f0af8adefbfc62a96d0731648173ec9c91a17e13bbaf182607a"
+      "bytes": 2261,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_joint_continue_tworoom_eval.sh",
+      "sha256": "59905d36aa89096b7462e58107cc71154c35d0dc89de93c86db6dfa2b167d94c"
     },
     {
-      "bytes": 2489,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_success_rate_5seed_exp8_global_ft.sh",
-      "relation": "transformed",
-      "sha256": "1cff09237e01c23fe3e0a135a1ed6929394c5a4e28106631f71c2b409a9daf43",
-      "source_bytes": 2404,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_5seed_exp8_global_ft.sh",
-      "source_sha256": "f6e63d4f107e73b4cb2b8f85cb08c05ea0b689d865a07a5a6ddae12258a12c74"
+      "bytes": 1247,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_latent_kmeanspp_predictor_pipeline.sh",
+      "sha256": "44500b01c53d00ef073322f4895bbc838acaab4ca47594b5879b9d41d75b39ed"
     },
     {
-      "bytes": 2516,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_success_rate_5seed_exp8_global_ft_longrange.sh",
-      "relation": "transformed",
-      "sha256": "bf87357ebdaaf96889e74651c2f51aa020848bd0ef64758dd617b5708f79a8cc",
-      "source_bytes": 2431,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_5seed_exp8_global_ft_longrange.sh",
-      "source_sha256": "96ff4a445d4707c6a18f309271b95e1f03f587ea122ad0e399682388c0aefb61"
+      "bytes": 3477,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_latent_spectral_short_horizon.sh",
+      "sha256": "51879bc0289292b4869b11320c90a1dfd8a0ebfdfba97a4c7713889544145b7e"
     },
     {
-      "bytes": 3127,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_success_rate_5seed_latent_cluster3_longrange.sh",
-      "relation": "transformed",
-      "sha256": "6f3a0d18927101c25941bdf2ee8f4f9ccfa1e7450c8bc2b43f082f734cf4f8ee",
-      "source_bytes": 3018,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_5seed_latent_cluster3_longrange.sh",
-      "source_sha256": "3964e207dca180cc41d4eac8af53e353fbdd5c46c4918e626618ee34e8a26a60"
+      "bytes": 2490,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_success_rate_5seed.sh",
+      "sha256": "76ab56c5807568bdb3b66aae3c4d8056cf4f0bb6b0faa482321ea8884995653b"
     },
     {
-      "bytes": 3268,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_success_rate_5seed_latent_kmeanspp_longrange.sh",
-      "relation": "transformed",
-      "sha256": "64bfa266acb02cdd2c75a1d36b8c691a2fc158d2827bc2dec28681759f801fa5",
-      "source_bytes": 3159,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_5seed_latent_kmeanspp_longrange.sh",
-      "source_sha256": "0ac3ea31f1c99a7f59333bcc684ee20c5b8f8c952f28bffd05220e11fe3d0797"
+      "bytes": 2714,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_success_rate_5seed_30ep_rooms3_priority5.sh",
+      "sha256": "5fed63606a7e78dfcc00021be6ae6183dc863b1c7c8680c3b617fd6e44b720f1"
     },
     {
-      "bytes": 4065,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_success_rate_5seed_latent_kmeanspp_step_routing_longrange.sh",
-      "relation": "transformed",
-      "sha256": "a20ce77701010b4cb9432fb413b4f985186e7fe96ac608bf06367c3a7568de54",
-      "source_bytes": 3956,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_5seed_latent_kmeanspp_step_routing_longrange.sh",
-      "source_sha256": "91f316a6ad109186a210f3aa853a1b0d427f2963fac5f0d631290738fe3a8d3e"
+      "bytes": 2225,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_success_rate_5seed_50ep_rooms3_priority5.sh",
+      "sha256": "207afc51b6be7952a82807cf292d1653697e3f7e7c465efa0474971e55b33cf6"
     },
     {
-      "bytes": 4690,
-      "origin": "migrated_repaired_for_lap",
-      "path": "experiments/tworoom/scripts/run_success_rate_5seed_latent_spectral_longrange.sh",
-      "relation": "adapted_for_independent_repo",
-      "sha256": "942a798a8e5b191e0d5eb10d035bbf0b8f93891795b08c84a6d06905484cfcca",
-      "source_bytes": 4519,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_5seed_latent_spectral_longrange.sh",
-      "source_sha256": "14c16b75288e3529db6335d2c3d6b146a37b1791dd8d0e30cb9cd535e053102e"
+      "bytes": 2241,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_success_rate_5seed_exp5_doorway80.sh",
+      "sha256": "73c6c60d3fa1aa985d6f85b4b3de93d553157ae91ca3885511045d08964dba3b"
     },
     {
-      "bytes": 821,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_success_rate_baseline_seed42.sh",
-      "relation": "transformed",
-      "sha256": "b1054d1510cdfd64d341ccdb0234834b703c09b431e796e3749059f185cfdb82",
-      "source_bytes": 737,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_baseline_seed42.sh",
-      "source_sha256": "b187f8768bc07b4050115df072c0609d052cd9c6eaf13aa0069d52724770eaf6"
+      "bytes": 2413,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_success_rate_5seed_exp5_priority5.sh",
+      "sha256": "8815b18e2e0c9bd53f7ca3fb881bbc9c80819c194ff64f0f974d6ec9455137cc"
     },
     {
-      "bytes": 853,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_success_rate_exp2_rooms3_seed42.sh",
-      "relation": "transformed",
-      "sha256": "671ba8d7df93fc627808f4e5f8fc493cb1560bc7ff4265b5d6ccede510441f7c",
-      "source_bytes": 786,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_exp2_rooms3_seed42.sh",
-      "source_sha256": "510d39830af8eb6c72c51a7feeb0d5abb0f51f40f79a93d20c402b75c6268df3"
+      "bytes": 2636,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_success_rate_5seed_exp6_longrange.sh",
+      "sha256": "2d3d47c343392fe52d59cddefaa6dd490f356d5bac4306fe3c2d7e4d87a5943b"
     },
     {
-      "bytes": 860,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_success_rate_exp3_priority5_seed42.sh",
-      "relation": "transformed",
-      "sha256": "e0615f2a8e9a606182ed0bce3b3cd88e2ec9c73c90d7bbed5912f4de47a63ef8",
-      "source_bytes": 793,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_exp3_priority5_seed42.sh",
-      "source_sha256": "fe4db913c972beb3b33063da01af5e680e4bea4e23a5a2e5a6014f4ed8ee4157"
+      "bytes": 3101,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_success_rate_5seed_exp6_longrange_30ep_50ep.sh",
+      "sha256": "ec3071bdceda14e57420c404ff21c4c52e624858be7c4e13c91bc879155d551f"
     },
     {
-      "bytes": 7005,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_success_rate_exp7_goal100_model.sh",
-      "relation": "transformed",
-      "sha256": "944e47d13699b067882a0ca01b1577795d36369dbaae58b2f8d84a249ba01602",
-      "source_bytes": 6896,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_exp7_goal100_model.sh",
-      "source_sha256": "0623b8ce9afcc17934bc66a7ba12a9f55604241449e97e5aacd8bfffacacaa4a"
+      "bytes": 2502,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_success_rate_5seed_exp8_global_ft.sh",
+      "sha256": "e7239ca5836c305b6df8b8a3e0dd505ad977390af6cf0310667752b4fe1e8b63"
     },
     {
-      "bytes": 2518,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_success_rate_global_ft_50ep_longrange.sh",
-      "relation": "transformed",
-      "sha256": "11432e05280f62393b0f9897bf2347c350260b5f450c97567b4a0c9508673935",
-      "source_bytes": 2433,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_global_ft_50ep_longrange.sh",
-      "source_sha256": "ec268f42b090ae32dc218669d09fa57b0f3035422f2f94ed827170dac8f2e4f2"
+      "bytes": 2519,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_success_rate_5seed_exp8_global_ft_longrange.sh",
+      "sha256": "eb27f1098832d813a601fe6a25fad942412286273fbf176495d709dc3397555c"
     },
     {
-      "bytes": 587,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_success_rate_latent_kmeanspp_longrange_all_outer.sh",
-      "relation": "exact_copy",
-      "sha256": "b123fbabee87483f09731a88635c8a11a8da6faf9bccbfb2bd31b24c260d8832",
-      "source_bytes": 587,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_latent_kmeanspp_longrange_all_outer.sh",
-      "source_sha256": "b123fbabee87483f09731a88635c8a11a8da6faf9bccbfb2bd31b24c260d8832"
+      "bytes": 4068,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_success_rate_5seed_latent_kmeanspp_step_routing_longrange.sh",
+      "sha256": "d628780c1e08b5131869baa98cb66b6f85143f49d50845f6d5222f41c802fa22"
+    },
+    {
+      "bytes": 824,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_success_rate_baseline_seed42.sh",
+      "sha256": "1c63bca15f5f44966041aa7c9c9fabaf3e3ad0c518122b952354409c4e257249"
+    },
+    {
+      "bytes": 856,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_success_rate_exp2_rooms3_seed42.sh",
+      "sha256": "88ee785c153f85b8c0e850a509eaedcf97b4f26ed8ba3962b86fbd954ac392ed"
+    },
+    {
+      "bytes": 863,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_success_rate_exp3_priority5_seed42.sh",
+      "sha256": "9de207faeb473a7c6361da7149403b7c5165959f74137cf9f116c286e02c2ebc"
+    },
+    {
+      "bytes": 7008,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_success_rate_exp7_goal100_model.sh",
+      "sha256": "e29796f46b1c91f171a153f4894c3c0ad6b81155fd6b1be43cf70ea9680c2664"
+    },
+    {
+      "bytes": 2521,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_success_rate_global_ft_50ep_longrange.sh",
+      "sha256": "7e00d6240b8f0bc1081013024dcc80d649da535a1b74860f0ab6c201a66b420e"
+    },
+    {
+      "bytes": 599,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/ablations/run_success_rate_latent_kmeanspp_longrange_all_outer.sh",
+      "sha256": "aa69087b90195d054092e5ea5537c7a32d3a093be1d920fd42a1c9e06e755e05"
     },
     {
       "bytes": 593,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_success_rate_latent_kmeanspp_step_routing_longrange_all_outer.sh",
-      "relation": "exact_copy",
-      "sha256": "4c77c52a373f98f3f1288706292baaecb1bc7b1f98654d18b926acdb6982e322",
-      "source_bytes": 593,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_success_rate_latent_kmeanspp_step_routing_longrange_all_outer.sh",
-      "source_sha256": "4c77c52a373f98f3f1288706292baaecb1bc7b1f98654d18b926acdb6982e322"
-    },
-    {
-      "bytes": 997,
-      "origin": "migrated",
-      "path": "experiments/tworoom/scripts/run_trajectory_switch_rollout_4way.sh",
-      "relation": "transformed",
-      "sha256": "9f7bdfcaf8c353b8c35f80acda8d38db55a7f2c0c01fa841ea8a80115e1cd13d",
-      "source_bytes": 912,
-      "source_path": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/scripts/run_trajectory_switch_rollout_4way.sh",
-      "source_sha256": "0aeb1e96259cdae62603b0500608423072711ebe9dab95258b3e492b44d9ff5d"
-    },
-    {
-      "bytes": 3373,
       "origin": "generated_for_lap",
-      "path": "experiments/tworoom/scripts/run_tworoom_human_rooms3_matrix.sh",
-      "sha256": "3c1a0a6e42135d5c25df4c79dba59e36e5cf8893f51874b2b01904f8923513e3"
+      "path": "experiments/tworoom/scripts/ablations/run_success_rate_latent_kmeanspp_step_routing_longrange_all_outer.sh",
+      "sha256": "4c77c52a373f98f3f1288706292baaecb1bc7b1f98654d18b926acdb6982e322"
     },
     {
-      "bytes": 2174,
+      "bytes": 769,
       "origin": "generated_for_lap",
-      "path": "experiments/tworoom/scripts/run_tworoom_main_matrix.sh",
-      "sha256": "863b08252feeaf7f9efa3c191150c1e43d7d05ee853e4caf7ed6327158f49c70"
+      "path": "experiments/tworoom/scripts/ablations/run_tworoom_manual_epoch_ablations.sh",
+      "sha256": "09d2a3c085666d75fd989bdb2e503c2239b920360b28845353d763c4df6f581c"
     },
     {
-      "bytes": 706,
+      "bytes": 256,
       "origin": "generated_for_lap",
-      "path": "experiments/tworoom/scripts/run_tworoom_manual_epoch_ablations.sh",
-      "sha256": "05f79c64cd046ac883f36c28619090c1f56be1e82d59685b6a8d55aa23f0b05c"
+      "path": "experiments/tworoom/scripts/analysis/README.md",
+      "sha256": "af6d4af3898467be7705125a1d0c3ce6e60d9d8d6c869d0234154405ac5ddcb1"
     },
     {
-      "bytes": 514,
+      "bytes": 5980,
       "origin": "generated_for_lap",
-      "path": "experiments/tworoom/scripts/run_tworoom_partition_stability.sh",
-      "sha256": "b42a739235e104e8b51b1adbcc912177e1b15668f30cb7057caf161f289f91d4"
+      "path": "experiments/tworoom/scripts/analysis/plot_long_horizon_success.R",
+      "sha256": "ba4545ad68342fc50ab45f7614a08bf7cfecce1906ed82feb70caa9a66c4a65f"
+    },
+    {
+      "bytes": 6751,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/analysis/plot_real_gauge_drift_metrics.R",
+      "sha256": "0f05f3e5fab9395c1e2e0f7a36fe746f8a81ccf67ca973125985fd468db5d642"
+    },
+    {
+      "bytes": 6027,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/analysis/plot_short_horizon_success.R",
+      "sha256": "a9311f8c401a8eae604443e500b214792fca8a5e9e1b6d3233b59438b394905d"
+    },
+    {
+      "bytes": 3630,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/analysis/plot_single_replan_latency.R",
+      "sha256": "e77b0ee79832907499ee633a4427c4a6325558df30e570e95a14ca30c33cfca5"
+    },
+    {
+      "bytes": 6571,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/analysis/plot_tworoom_geometry_regions.R",
+      "sha256": "3141eadc33f97506897d2f2124549c9091b5571ceb7eb9c5b816521d5db27cf8"
+    },
+    {
+      "bytes": 1304,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/analysis/run_geometry_latent_probe_priority5.sh",
+      "sha256": "bdd5e90582f3fd715cdf344acff08d59728e6fd5471ca5864b139e477f3b7021"
+    },
+    {
+      "bytes": 1102,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/analysis/run_geometry_latent_probe_priority5_multiseed.sh",
+      "sha256": "49bffe2675febdb14856e3ed3399e7a2f7a1cce1843ba6fb19ce78f8f941a8c5"
+    },
+    {
+      "bytes": 1090,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/analysis/run_geometry_latent_probe_rooms3_multiseed.sh",
+      "sha256": "121203fb32fd47cb6fc130cdbf521b78731b5d40c11480018326f6d0b9d46816"
+    },
+    {
+      "bytes": 1246,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/analysis/run_geometry_latent_svm_rooms3.sh",
+      "sha256": "8e3d50fdb66d362a9e3d897a088936ce0ceaac197238e13e5ba6ca4ed5507811"
+    },
+    {
+      "bytes": 1156,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/analysis/run_geometry_region_predictors.sh",
+      "sha256": "5b5d06143075098a77fadca0329c94231f0f382f9404c0e3d879d61c4e68e1a1"
+    },
+    {
+      "bytes": 2078,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/analysis/run_geometry_train_trajectory_deviation_exp5.sh",
+      "sha256": "d220642a38274659ed2a5f3f80d110b53e5a561aa1d7b21dc706ebf90b1c8f5e"
+    },
+    {
+      "bytes": 1547,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/analysis/run_geometry_trajectory_deviation.sh",
+      "sha256": "740c47468ab7582e179bbf10dbc41533b668469b8a29c9cd402cc23a709ad215"
+    },
+    {
+      "bytes": 709,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/analysis/run_latent_kmeanspp_multirestart.sh",
+      "sha256": "123b5af8a2fe18bc851adf1584e2098374fb21504933902fc4570b666a66c599"
+    },
+    {
+      "bytes": 2740,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/analysis/run_latent_landmark_spectral.sh",
+      "sha256": "9e6f01ea2287a4e148d4974e2c447b13ce13d12c8e8a54f1bf1bf1dbb50ee1f8"
+    },
+    {
+      "bytes": 736,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/analysis/run_latent_preprocess_convergence.sh",
+      "sha256": "3df2f82481fa979c35d0a68e14464ee49c2585b7475e18744af44de3177d1de9"
+    },
+    {
+      "bytes": 741,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/analysis/run_latent_preprocess_stability.sh",
+      "sha256": "6ce503606444799f9e18de9d5ad6ad72b5814227131b1cd858c2521396f7b7c1"
+    },
+    {
+      "bytes": 889,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/analysis/run_latent_unsup_cluster_faiss_3seed.sh",
+      "sha256": "84ac9e786cdbcd2d9e91606ea77a3abce330e82b154cd951c5eda09e8d5b7370"
+    },
+    {
+      "bytes": 1000,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/analysis/run_trajectory_switch_rollout_4way.sh",
+      "sha256": "6747a931b5730161f248a45ac440444c67acfa64df5523359fce33556c3cdbd6"
+    },
+    {
+      "bytes": 562,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/analysis/run_tworoom_partition_stability.sh",
+      "sha256": "741ffc891c4542a4c6d66c99f9047ddb537a26869e193562131a18a61af84837"
+    },
+    {
+      "bytes": 367,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/canonical/README.md",
+      "sha256": "8e3a2c23afd207879143b17d6594a72730f07eee34a7c91ce4766cbf7acc334b"
+    },
+    {
+      "bytes": 3394,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/canonical/run_tworoom_human_rooms3_matrix.sh",
+      "sha256": "4ea4816e4f9ebcc966eed523ac130e05716134194c0bce73a1003c1210920881"
+    },
+    {
+      "bytes": 2187,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/canonical/run_tworoom_main_matrix.sh",
+      "sha256": "39e86bba1d8df59c1337eb3b77a18c30738ff0d22e3eea5fd5131735a1c1da81"
+    },
+    {
+      "bytes": 272,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/internal/README.md",
+      "sha256": "2a9c70886e9c0d8617fa18b04c6c97758f8174a0e7fb145425ec4747cef23bdf"
+    },
+    {
+      "bytes": 2688,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/internal/prepare_tworoom_spectral_inputs.sh",
+      "sha256": "940db576b59338dd01181485c817a40069350ae086619c9f336b77663e08da4b"
+    },
+    {
+      "bytes": 487,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/internal/run_geometry_train_global_ft_50ep.sh",
+      "sha256": "24f14ef5cddfc2a75fd771de3d93369afa2f48b9d34624cf422e7db93b87fbfc"
+    },
+    {
+      "bytes": 3815,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/internal/run_geometry_train_one_region.sh",
+      "sha256": "dd8ee4228d4dce233d0190ef147e6184d201fc8abd13b079f9813bcce727d79e"
+    },
+    {
+      "bytes": 1123,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/internal/run_joint_continue_tworoom_3ep.sh",
+      "sha256": "87a34ee339f9894819f6138556fab60c081c0ca9179ed88d844fd36022eb304f"
+    },
+    {
+      "bytes": 1592,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/internal/run_latent_cluster_train_predictors_50ep.sh",
+      "sha256": "f9a5cc01f7092b81009491cd291d107fa44b43488642cf30cad4dc9aa84b8f5b"
+    },
+    {
+      "bytes": 2438,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/internal/run_latent_kmeanspp_train_predictors_50ep.sh",
+      "sha256": "a38543617b7517b550f04306e372e36b31346bec638133e01a8fac9458369442"
+    },
+    {
+      "bytes": 3428,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/internal/run_latent_spectral_train_predictors_50ep.sh",
+      "sha256": "0e2b21bc90b2045e03506fb8da63839d064b75b7f2990d531047c37aa0f93caf"
+    },
+    {
+      "bytes": 2705,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/internal/run_random_voronoi_eval.sh",
+      "sha256": "59f124e76d3b34929ca7f3946bc9b163546e0404134f9a64d77d889e92f2016d"
+    },
+    {
+      "bytes": 692,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/internal/run_random_voronoi_k3.sh",
+      "sha256": "213cadd8259656b0f90916c5bb3698cf1f4136661b6b07c8e5a05d544bba0818"
+    },
+    {
+      "bytes": 2172,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/internal/run_random_voronoi_train_predictors_50ep.sh",
+      "sha256": "453810455117cdbc3ad6eaba4cdffea438e136feb1fa4abad8fd90c5028ae10e"
+    },
+    {
+      "bytes": 3130,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/internal/run_success_rate_5seed_latent_cluster3_longrange.sh",
+      "sha256": "7b000745b4e428449978319403994661a13b1afb5a92a75c64a91d63a2e51621"
+    },
+    {
+      "bytes": 3271,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/internal/run_success_rate_5seed_latent_kmeanspp_longrange.sh",
+      "sha256": "a7d440e4ab123e8b3c224f76fc93821a3a5ca83d5c0de755b30859c26a6c19b3"
+    },
+    {
+      "bytes": 4693,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/internal/run_success_rate_5seed_latent_spectral_longrange.sh",
+      "sha256": "f3d644ea26f06f344e598d7d12e361589772d40b9580c0d00f32618aef6d0cd0"
+    },
+    {
+      "bytes": 806,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/README.md",
+      "sha256": "3de5816661bee3a9aeb11dee0921b2c0c6c7194ddcb9f2f0274f7aae64f706c1"
+    },
+    {
+      "bytes": 1568,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/archive_aborted_training.sh",
+      "sha256": "f7c929774bf63171d81b3b025d6a127191c5c37c2df57c0edccb9052d6a90f7b"
+    },
+    {
+      "bytes": 6271,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/dispatch_geometry_retrain.sh",
+      "sha256": "d644aff6085015cb502aadbf630a8a013d6cf8bfdb663d050c4e5d6246ad0517"
+    },
+    {
+      "bytes": 2010,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/launch_joint_continue_tworoom_3seed_3ep_long.sh",
+      "sha256": "da7b7c60099fe4aa2f06a7bff6aad1899456d1adea6fcce07b3c9e2e4d87dadc"
+    },
+    {
+      "bytes": 3122,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/queue_latent_kmeanspp_step_routing_when_gpus_free.sh",
+      "sha256": "744b8ac8b29f520d74e213b703250fd311b73204a112c8e34b92a1e5a71384ed"
+    },
+    {
+      "bytes": 2596,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/queue_tworoom_control_baselines.sh",
+      "sha256": "8cd61d45c8b82393017568128bc388c7c130827765f0df0184ec6623478077ae"
+    },
+    {
+      "bytes": 1113,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/run_dispatch_geometry_retrain_nohup.sh",
+      "sha256": "af73379a03e0e900650d84415582110cfee16c875fec39d50446d3b1b53c7e16"
+    },
+    {
+      "bytes": 955,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/run_geometry_train_global_ft_50ep_nohup.sh",
+      "sha256": "cb3530cc164b13d78511f019e7da066348b765a45a46de85a89c29df2b413b58"
+    },
+    {
+      "bytes": 1027,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/run_geometry_train_global_ft_65ep_nohup.sh",
+      "sha256": "8f5f3ec015b4ec2809f4663a7d8c2d16e2de148e590de6f5827870688616262a"
+    },
+    {
+      "bytes": 983,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/run_latent_kmeanspp_train_cluster2_outer0_nohup.sh",
+      "sha256": "a8a800eb0127ee0de68ff5571bd37fa11601b735c29ca44976a0b4c4569f1064"
+    },
+    {
+      "bytes": 1606,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/run_latent_spectral_all_trainseed_eval_rerun.sh",
+      "sha256": "e741cd52e916a481b0a5b821b74dedc6999e9588f9761e246beebe1b063e4d7d"
+    },
+    {
+      "bytes": 4449,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/run_latent_spectral_k3_50_fair_eval_after_train.sh",
+      "sha256": "e410ad994964b2d1d1c409b5cd6e44274e0b73dd26c80e5587410ab9b429929a"
+    },
+    {
+      "bytes": 4641,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/run_latent_spectral_seed_eval_after_train.sh",
+      "sha256": "ab287d0af5e9ac9ab4fb4837ff36166c457c6c2e2bb8f219c4a133d556948434"
+    },
+    {
+      "bytes": 3803,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/run_latent_spectral_trainseed625_after_seed42.sh",
+      "sha256": "789d04c0d64bb538380addfbbd90b32792facb3c11c6344f6c3d8e506e2b6d40"
+    },
+    {
+      "bytes": 4516,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/run_retrain_all_multipredictor_seed42.sh",
+      "sha256": "9b3afb5b3668a39eca52c2696149134e0724ef08f5350cd5ffd06c0808204aa8"
+    },
+    {
+      "bytes": 7762,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/run_retrain_all_multipredictor_seed42_parallel.sh",
+      "sha256": "a62ad51928a4b9bedb70cbb3943239cffff58b4111bba40c30dccdb520e90f36"
+    },
+    {
+      "bytes": 827,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/run_success_rate_5seed_30ep_rooms3_priority5_nohup.sh",
+      "sha256": "f14bd2b12b5f3b248475d5c8468545aeddbe61a6f3e15c54e00692774f1d13c8"
+    },
+    {
+      "bytes": 1382,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/run_success_rate_exp7_goal100_parallel_nohup.sh",
+      "sha256": "459a4df7f8080ac3b68bc4f940b0fcf5db64357884a01909869ef315b722a0f6"
+    },
+    {
+      "bytes": 805,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/run_success_rate_global_ft_50ep_longrange_nohup.sh",
+      "sha256": "5818e943fcd3baa7715916c65354381332a166c31e00d35ed3c5cd90dda3f444"
+    },
+    {
+      "bytes": 853,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/run_success_rate_latent_kmeanspp_longrange_all_outer_nohup.sh",
+      "sha256": "6a875db7971c1285b266dc73e9ebe599bdc9456a61f7a8ab9ba6377ec4fce98e"
+    },
+    {
+      "bytes": 1103,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/run_success_rate_latent_kmeanspp_step_routing_parallel.sh",
+      "sha256": "3fcb45b9028a62b0046e0988af3708a8bb41dad247b92c6f5e8604cdb3b948e3"
+    },
+    {
+      "bytes": 4143,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/run_success_rate_remaining_seed42.sh",
+      "sha256": "4d4d5b1afc55fb984ca47f5b2b30e65a827b15c3cd3363837f2f78e28972935a"
+    },
+    {
+      "bytes": 797,
+      "origin": "generated_for_lap",
+      "path": "experiments/tworoom/scripts/legacy/run_success_rate_remaining_seed42_nohup.sh",
+      "sha256": "48396b46e3023df833d81a587682fc589da397c5492a84f0d17457ba688facfa"
     },
     {
       "bytes": 9919,
@@ -21257,10 +21049,10 @@
       "sha256": "a9e9829203e61aa54770d9946eaf76d682fde871d90cf5c5ae89c8756ac30665"
     },
     {
-      "bytes": 5378,
+      "bytes": 5379,
       "origin": "generated_for_lap",
       "path": "scripts/validate_repository.py",
-      "sha256": "db35422e6b80fc45ab373aaafd236dbf96dd1b2512a28d0be42b951197293128"
+      "sha256": "09d4859021fbcdaa1df3a113a2ad640084573e22bad90eb1757d569cc23ad27f"
     },
     {
       "bytes": 31,
@@ -21305,10 +21097,10 @@
       "sha256": "383f7f06788f57539ec1036f5d0d694b919538f27448f13b8b7120a82eb65ec6"
     },
     {
-      "bytes": 1523,
+      "bytes": 2409,
       "origin": "generated_for_lap",
       "path": "tests/test_tworoom_reproduction_registry.py",
-      "sha256": "5abe64759d56f76a9ca0a0fc22f9cea2312dc16d603f480074bcf0aaa1f55788"
+      "sha256": "65eb644e9454a5de82eb15f80f7b59b237e98f5c203483ba635a3e18031bdd5f"
     },
     {
       "bytes": 163,
@@ -21323,7 +21115,7 @@
       "sha256": "62ad56c6c5c1ad68b4fa44f14e28938ec12b0b95e948a25c7e42a0799e039189"
     }
   ],
-  "generated_at_utc": "2026-07-30T10:22:03.216773+00:00",
+  "generated_at_utc": "2026-07-30T10:55:14.914505+00:00",
   "migration_scope": {
     "readme_start_heading": "trajectory deviation experiment",
     "readme_start_line": 410,
@@ -21478,7 +21270,7 @@
   ],
   "repair_revision": {
     "purpose": "close independent-repository end-to-end reproducibility gaps",
-    "changed_existing_files": 9,
-    "new_files": 718
+    "changed_existing_files": 8,
+    "new_files": 90
   }
 }

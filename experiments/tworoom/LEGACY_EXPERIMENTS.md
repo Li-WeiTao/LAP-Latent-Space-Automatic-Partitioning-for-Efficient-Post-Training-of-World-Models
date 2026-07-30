@@ -1,7 +1,7 @@
 # 轨迹偏差实验
 
 > 历史说明：本文档保留开发期命令和结果解释。原先位于 `scripts/` 的
-> queue、nohup、恢复和局部重跑脚本已移至 `legacy/orchestration/`，不再是
+> queue、nohup、恢复和局部重跑脚本已移至 `scripts/legacy/`，不再是
 > 正式复现入口。正式实验集合与统一入口以 `reproduction_manifest.json`
 > 和 `python experiments/tworoom/reproduce.py list` 为准。
 
@@ -9,7 +9,7 @@
 
 ## 准备工作
 
-1. 数据集划分：取 train global 作 reference。下方表格为 **legacy quantile** 全数据 region predictor；新实验见 `scripts/run_geometry_*.sh`。
+1. 数据集划分：取 train global 作 reference。下方表格为 **legacy quantile** 全数据 region predictor；新实验见 `scripts/analysis/run_geometry_*.sh` 与 `scripts/ablations/run_geometry_*.sh`。
 2. 模型训练：在下载好的 LeJEPA 权重上，对每个 natural region 冻结 encoder、只 finetune predictor。训练脚本见 `trajectory.py`；统一配置为 `epochs=30, lr=5e-5, batch_size=128, weight_decay=1e-3, history_size=3`。
 
 ### 全局 baseline
@@ -171,24 +171,24 @@ experiments/tworoom/cache/tworoom_trajectory_test_full_transitions.npz
 
    - 多 region **不能**共写同一 `OUT_DIR`（会竞争 `manifest.json` / `train_global_reference_starts.npy` / 阈值文件）。
    - 使用 `run_geometry_train_one_region.sh`：每 job 写入 `MAIN_DIR/_work/${REGION}_${EPOCHS}ep_seed${SEED}/`，结束后仅把 `P_train_{region}*` checkpoint **汇总**到 `MAIN_DIR`。
-   - latent kmeanspp 并行须显式传 GPU：`GPU=1 OUTER_SEED=1 bash scripts/run_latent_kmeanspp_train_predictors_50ep.sh`（内层脚本 `GPU` 为必填）。
-   - 中断/半成品用 `scripts/archive_aborted_training.sh` 归档为 `*_aborted_*`，**勿与正式结果混用**；embedding 缓存在 `tworoom_geometry_train_region_predictors/` 保留复用。
+   - latent kmeanspp 并行须显式传 GPU：`GPU=1 OUTER_SEED=1 bash scripts/internal/run_latent_kmeanspp_train_predictors_50ep.sh`（内层脚本 `GPU` 为必填）。
+   - 中断/半成品用 `scripts/legacy/archive_aborted_training.sh` 归档为 `*_aborted_*`，**勿与正式结果混用**；embedding 缓存在 `tworoom_geometry_train_region_predictors/` 保留复用。
 
    单 job 示例：
 
    ```bash
-   GPU=0 REGION=common EPOCHS=30 bash experiments/tworoom/scripts/run_geometry_train_one_region.sh
-   GPU=1 REGION=left_room EPOCHS=50 SELECT_BEST=1 SAVE_EPOCHS=20,30,40,50 bash experiments/tworoom/scripts/run_geometry_train_one_region.sh
-   GPU=0 OUTER_SEED=0 bash experiments/tworoom/scripts/run_latent_kmeanspp_train_predictors_50ep.sh
-   GPU=1 OUTER_SEED=1 bash experiments/tworoom/scripts/run_latent_kmeanspp_train_predictors_50ep.sh
-   GPU=2 OUTER_SEED=2 bash experiments/tworoom/scripts/run_latent_kmeanspp_train_predictors_50ep.sh
+   GPU=0 REGION=common EPOCHS=30 bash experiments/tworoom/scripts/internal/run_geometry_train_one_region.sh
+   GPU=1 REGION=left_room EPOCHS=50 SELECT_BEST=1 SAVE_EPOCHS=20,30,40,50 bash experiments/tworoom/scripts/internal/run_geometry_train_one_region.sh
+   GPU=0 OUTER_SEED=0 bash experiments/tworoom/scripts/internal/run_latent_kmeanspp_train_predictors_50ep.sh
+   GPU=1 OUTER_SEED=1 bash experiments/tworoom/scripts/internal/run_latent_kmeanspp_train_predictors_50ep.sh
+   GPU=2 OUTER_SEED=2 bash experiments/tworoom/scripts/internal/run_latent_kmeanspp_train_predictors_50ep.sh
    ```
 
    批量分发（GPU 池，有空卡即提交下一 job；**脱离 Cursor**）：
 
    ```bash
-   bash experiments/tworoom/scripts/run_dispatch_geometry_retrain_nohup.sh
-   # 或直接：scripts/dispatch_geometry_retrain.sh（须 setsid/nohup，勿挂 IDE 终端）
+   bash experiments/tworoom/scripts/legacy/run_dispatch_geometry_retrain_nohup.sh
+   # 或直接：scripts/legacy/dispatch_geometry_retrain.sh（须 setsid/nohup，勿挂 IDE 终端）
    ```
 
    > **版本说明（2026-07-13）**：**FT 训练表**、**轨迹偏差 eval 表**、**成功率 eval（实验 1–8）**、**latent kmeanspp predictor FT** 与 **latent kmeanspp 长程成功率 eval** 均为 **`split_seed=3072` + `seed=42`** 正式结果。
@@ -197,13 +197,13 @@ experiments/tworoom/cache/tworoom_trajectory_test_full_transitions.npz
 
 ```bash
 # train ∩ geometry region predictors
-bash experiments/tworoom/scripts/run_geometry_train_region_predictors.sh
+bash experiments/tworoom/scripts/ablations/run_geometry_train_region_predictors.sh
 
 # 可选：全数据 geometry region predictors（轨迹偏差对照）
-bash experiments/tworoom/scripts/run_geometry_region_predictors.sh
+bash experiments/tworoom/scripts/analysis/run_geometry_region_predictors.sh
 
 # 五个 region vs P_train_global（需先训好 region predictors + test cache）
-bash experiments/tworoom/scripts/run_geometry_trajectory_deviation.sh
+bash experiments/tworoom/scripts/analysis/run_geometry_trajectory_deviation.sh
 ```
 
 等价单条命令：
@@ -283,7 +283,7 @@ experiments/tworoom/results/tworoom_geometry_trajectory_predictors/
 与前文 quantile-region 总表同协议：完整 test pool（32517 条），max_steps=10，encoder 用全局权重。predictor 用实验 5 配置：`common`/`near_wall` 30ep、`left_room`/`right_room` 50ep best、`doorway_corridor` 80ep best（`seed=42` FT 权重）。
 
 ```bash
-bash experiments/tworoom/scripts/run_geometry_train_trajectory_deviation_exp5.sh
+bash experiments/tworoom/scripts/analysis/run_geometry_train_trajectory_deviation_exp5.sh
 ```
 
 结果目录：`experiments/tworoom/results/tworoom_geometry_train_trajectory_deviation_{region}_vs_train_exp5/`
@@ -331,7 +331,7 @@ bash experiments/tworoom/scripts/run_geometry_train_trajectory_deviation_exp5.sh
 **协议说明**：下表由旧实现生成，`history=3` 时按 `history-1` 路由，与用户指定的 rollout 起点 index 0 不一致，因此只保留作历史诊断，不能作为修复后最终对比。当前代码已统一为：`mpc` 固定使用窗口 index 0；`step` 第一次使用 index 0，之后只使用上一时刻模型预测的 latent；未来 GT 仅允许在显式 `oracle_gt_step` 模式中使用。区域分层也改为 index 0。修复后的四模型表需要重新运行后再替换下列数字。
 
 ```bash
-bash experiments/tworoom/scripts/run_trajectory_switch_rollout_4way.sh
+bash experiments/tworoom/scripts/analysis/run_trajectory_switch_rollout_4way.sh
 ```
 
 汇总：`results/tworoom_trajectory_switch_rollout_4way/rollout_mse_4way.csv`、`.json`、`rollout_mse_delta_vs_global_ft_50ep.csv`
@@ -388,8 +388,8 @@ step10 轨迹级：rooms3 57.4% 样本 MSE 低于 Global-FT，latent 45.6%（其
    重复实验 2、3（rooms3 / priority5），5 seeds，复用各 seed baseline 的 eval 起点（`seed=42` ckpt，2026-07-13）。
 
    ```bash
-   bash experiments/tworoom/scripts/run_geometry_train_region_predictors_50ep_best.sh
-   bash experiments/tworoom/scripts/run_success_rate_5seed_50ep_rooms3_priority5.sh
+   bash experiments/tworoom/scripts/ablations/run_geometry_train_region_predictors_50ep_best.sh
+   bash experiments/tworoom/scripts/ablations/run_success_rate_5seed_50ep_rooms3_priority5.sh
    ```
 
    汇总：`experiments/tworoom/results/tworoom_success_rate_50ep_5seed_summary.csv`、`.json`
@@ -398,7 +398,7 @@ step10 轨迹级：rooms3 57.4% 样本 MSE 低于 Global-FT，latent 45.6%（其
   在实验4的基础上替换 P_train_doorway_corridor，进行成功率评估（rooms3 + priority5，5 seeds）（`seed=42` ckpt，2026-07-13）。
 
   ```bash
-  bash experiments/tworoom/scripts/run_success_rate_5seed_exp5_priority5.sh
+  bash experiments/tworoom/scripts/ablations/run_success_rate_5seed_exp5_priority5.sh
   ```
 
   汇总：`experiments/tworoom/results/tworoom_success_rate_exp5_5seed_summary.csv`、`.json`
@@ -407,8 +407,8 @@ step10 轨迹级：rooms3 57.4% 样本 MSE 低于 Global-FT，latent 45.6%（其
   baseline 用 goal_offset=50 重新采样各 seed 的 `eval_start_indices`；其余配置复用同 seed 的 exp6 baseline 起点。30ep 使用 `P_train_*_epoch30`（doorway/left/right）；50ep 使用 geometry_train 目录 best；实验5 额外替换 80ep doorway。
 
   ```bash
-  bash experiments/tworoom/scripts/run_success_rate_5seed_exp6_longrange.sh
-  bash experiments/tworoom/scripts/run_success_rate_5seed_exp6_longrange_30ep_50ep.sh
+  bash experiments/tworoom/scripts/ablations/run_success_rate_5seed_exp6_longrange.sh
+  bash experiments/tworoom/scripts/ablations/run_success_rate_5seed_exp6_longrange_30ep_50ep.sh
   ```
 
   汇总：`tworoom_success_rate_exp6_5seed_summary.csv`（baseline + 实验5）、`tworoom_success_rate_exp6_30ep_50ep_5seed_summary.csv`（实验2/4）
@@ -447,7 +447,7 @@ step10 轨迹级：rooms3 57.4% 样本 MSE 低于 Global-FT，latent 45.6%（其
 评估协议：`config/eval/tworoom.yaml`（50 episodes，`goal_offset=25`，`eval_budget=50`，CEM）；seeds `0–4`；每个 seed 的实验 2/3/4/5 复用同 seed baseline 的 `eval_start_indices`。实验 2/3 短程 30ep 使用显式 `P_train_*_epoch30_object.ckpt` override。
 
 ```bash
-bash experiments/tworoom/scripts/run_success_rate_5seed.sh
+bash experiments/tworoom/scripts/ablations/run_success_rate_5seed.sh
 ```
 
 汇总：`experiments/tworoom/results/tworoom_success_rate_5seed_summary.csv`、`tworoom_success_rate_5seed_summary.json`（30ep 见 `tworoom_success_rate_30ep_5seed_summary.csv`）
@@ -472,13 +472,13 @@ bash experiments/tworoom/scripts/run_success_rate_5seed.sh
 
    ```bash
    # 1) 训练 Global-FT（~1.5h，可 detached）
-   bash experiments/tworoom/scripts/run_geometry_train_global_ft_65ep_nohup.sh
+   bash experiments/tworoom/scripts/legacy/run_geometry_train_global_ft_65ep_nohup.sh
 
    # 2) 短程成功率（goal_offset=25，5 seeds，复用 baseline eval_start_indices）
-   bash experiments/tworoom/scripts/run_success_rate_5seed_exp8_global_ft.sh
+   bash experiments/tworoom/scripts/ablations/run_success_rate_5seed_exp8_global_ft.sh
 
    # 3) 长程成功率（goal_offset=50，5 seeds，复用 exp6 baseline eval_start_indices）
-   bash experiments/tworoom/scripts/run_success_rate_5seed_exp8_global_ft_longrange.sh
+   bash experiments/tworoom/scripts/ablations/run_success_rate_5seed_exp8_global_ft_longrange.sh
    ```
 
    **训练完成**（693,728 transitions，best epoch=**64**/65，best eval_loss=**0.000371**，`seed=42`）  
@@ -589,7 +589,7 @@ bash experiments/tworoom/scripts/run_success_rate_5seed.sh
 | **RFF-RBF Probe** | Random Fourier Features（RBF 核近似）+ 线性 softmax 分类头（PyTorch GPU） |
 
 ```bash
-bash experiments/tworoom/scripts/run_geometry_latent_svm_rooms3.sh
+bash experiments/tworoom/scripts/analysis/run_geometry_latent_svm_rooms3.sh
 ```
 
 脚本：`experiments/tworoom/geometry_latent_svm_rooms3.py`（历史文件名保留 `svm` 字样）  
@@ -612,7 +612,7 @@ bash experiments/tworoom/scripts/run_geometry_latent_svm_rooms3.sh
 | **RFF-RBF Probe** | Random Fourier Features（RBF 核近似）+ 线性 softmax 分类头（PyTorch GPU） |
 
 ```bash
-bash experiments/tworoom/scripts/run_geometry_latent_probe_priority5.sh
+bash experiments/tworoom/scripts/analysis/run_geometry_latent_probe_priority5.sh
 ```
 
 脚本：`experiments/tworoom/geometry_latent_svm_rooms3.py --partition priority5`  
@@ -648,7 +648,7 @@ bash experiments/tworoom/scripts/run_geometry_latent_probe_priority5.sh
 三类随机性由**同一 seed** 联合控制：episode 划分、Linear Probe 初始化/minibatch 顺序、RFF 随机傅里叶特征 \(\omega_i,b_i\)。同一 seed 下 Linear 与 RFF-RBF 使用完全相同的 episode split。
 
 ```bash
-bash experiments/tworoom/scripts/run_geometry_latent_probe_priority5_multiseed.sh
+bash experiments/tworoom/scripts/analysis/run_geometry_latent_probe_priority5_multiseed.sh
 ```
 
 日志：`results/geometry_latent_probe_priority5_multiseed/run_multiseed.log`（5 seeds × 2 probes，~239s）
@@ -705,30 +705,30 @@ bash experiments/tworoom/scripts/run_geometry_latent_probe_priority5_multiseed.s
 # Step 1: 聚类已完成 → results/latent_kmeanspp_multirestart_k3/
 
 # Step 2: 每类 predictor 微调 50ep（每个 outer seed 各跑一次；GPU 必填）
-GPU=0 OUTER_SEED=0 bash experiments/tworoom/scripts/run_latent_kmeanspp_train_predictors_50ep.sh
-GPU=1 OUTER_SEED=1 bash experiments/tworoom/scripts/run_latent_kmeanspp_train_predictors_50ep.sh
-GPU=2 OUTER_SEED=2 bash experiments/tworoom/scripts/run_latent_kmeanspp_train_predictors_50ep.sh
+GPU=0 OUTER_SEED=0 bash experiments/tworoom/scripts/internal/run_latent_kmeanspp_train_predictors_50ep.sh
+GPU=1 OUTER_SEED=1 bash experiments/tworoom/scripts/internal/run_latent_kmeanspp_train_predictors_50ep.sh
+GPU=2 OUTER_SEED=2 bash experiments/tworoom/scripts/internal/run_latent_kmeanspp_train_predictors_50ep.sh
 
 # Step 2b: Global-FT 50ep 强 baseline（单 predictor，与 cluster 50ep 轮次对齐）
-bash experiments/tworoom/scripts/run_geometry_train_global_ft_50ep_nohup.sh
-# 或：GPU=0 bash experiments/tworoom/scripts/run_geometry_train_global_ft_50ep.sh
+bash experiments/tworoom/scripts/legacy/run_geometry_train_global_ft_50ep_nohup.sh
+# 或：GPU=0 bash experiments/tworoom/scripts/internal/run_geometry_train_global_ft_50ep.sh
 
 # Step 3a: 历史逐 MPC 路由，长程成功率 5-seed eval（每个 outer seed）
-OUTER_SEED=0 bash experiments/tworoom/scripts/run_success_rate_5seed_latent_kmeanspp_longrange.sh
-OUTER_SEED=1 bash experiments/tworoom/scripts/run_success_rate_5seed_latent_kmeanspp_longrange.sh
-OUTER_SEED=2 bash experiments/tworoom/scripts/run_success_rate_5seed_latent_kmeanspp_longrange.sh
+OUTER_SEED=0 bash experiments/tworoom/scripts/internal/run_success_rate_5seed_latent_kmeanspp_longrange.sh
+OUTER_SEED=1 bash experiments/tworoom/scripts/internal/run_success_rate_5seed_latent_kmeanspp_longrange.sh
+OUTER_SEED=2 bash experiments/tworoom/scripts/internal/run_success_rate_5seed_latent_kmeanspp_longrange.sh
 # 或一次跑完 outer 0/1/2（脱离 Cursor）：
-bash experiments/tworoom/scripts/run_success_rate_latent_kmeanspp_longrange_all_outer_nohup.sh
+bash experiments/tworoom/scripts/legacy/run_success_rate_latent_kmeanspp_longrange_all_outer_nohup.sh
 
 # Step 3b: rollout 内逐预测步动态路由（每个 outer 5 eval seeds）
-OUTER_SEED=0 bash experiments/tworoom/scripts/run_success_rate_5seed_latent_kmeanspp_step_routing_longrange.sh
-OUTER_SEED=1 bash experiments/tworoom/scripts/run_success_rate_5seed_latent_kmeanspp_step_routing_longrange.sh
-OUTER_SEED=2 bash experiments/tworoom/scripts/run_success_rate_5seed_latent_kmeanspp_step_routing_longrange.sh
+OUTER_SEED=0 bash experiments/tworoom/scripts/ablations/run_success_rate_5seed_latent_kmeanspp_step_routing_longrange.sh
+OUTER_SEED=1 bash experiments/tworoom/scripts/ablations/run_success_rate_5seed_latent_kmeanspp_step_routing_longrange.sh
+OUTER_SEED=2 bash experiments/tworoom/scripts/ablations/run_success_rate_5seed_latent_kmeanspp_step_routing_longrange.sh
 # 三个 outer 并行（GPU 编号可覆盖）：
-GPU0=0 GPU1=1 GPU2=2 bash experiments/tworoom/scripts/run_success_rate_latent_kmeanspp_step_routing_parallel.sh
+GPU0=0 GPU1=1 GPU2=2 bash experiments/tworoom/scripts/legacy/run_success_rate_latent_kmeanspp_step_routing_parallel.sh
 
 # Step 3c: Global-FT 50ep 长程 eval（5 seeds，复用 exp6 baseline starts）
-bash experiments/tworoom/scripts/run_success_rate_global_ft_50ep_longrange_nohup.sh
+bash experiments/tworoom/scripts/legacy/run_success_rate_global_ft_50ep_longrange_nohup.sh
 ```
 
 ### 历史对照：逐 MPC latent 路由
@@ -811,9 +811,9 @@ bash experiments/tworoom/scripts/run_success_rate_global_ft_50ep_longrange_nohup
 历史 FAISS 三步命令（对照）：
 
 ```bash
-bash experiments/tworoom/scripts/run_latent_unsup_cluster_faiss_3seed.sh
-CLUSTER_SEED=0 bash experiments/tworoom/scripts/run_latent_cluster_train_predictors_50ep.sh
-CLUSTER_SEED=0 bash experiments/tworoom/scripts/run_success_rate_5seed_latent_cluster3_longrange.sh
+bash experiments/tworoom/scripts/analysis/run_latent_unsup_cluster_faiss_3seed.sh
+CLUSTER_SEED=0 bash experiments/tworoom/scripts/internal/run_latent_cluster_train_predictors_50ep.sh
+CLUSTER_SEED=0 bash experiments/tworoom/scripts/internal/run_success_rate_5seed_latent_cluster3_longrange.sh
 ```
 
 依赖：`faiss-cpu`。**官方协议为 CPU FAISS**（`--device cpu`，默认）；`--device cuda` 可走 PyTorch 全量数据 fit（非官方协议，仅作对照）。
@@ -869,7 +869,7 @@ Centroid 最优对齐后平均余弦相似度：0↔1 **0.59**，0↔2 **0.47**�
 **7 种预处理**：`raw_l2`（V0）、`center_l2`（V1）、`zscore_l2`（V2）、`pca64_l2` / `pca128_l2`（V3–V4）、`pca128_shrink001_l2` / `pca192_shrink001_l2`（V5–V6，\(\alpha=0.01\)）。PCA 对 \(192\times192\) 协方差做确定性 `eigh`。
 
 ```bash
-bash experiments/tworoom/scripts/run_latent_preprocess_stability.sh
+bash experiments/tworoom/scripts/analysis/run_latent_preprocess_stability.sh
 ```
 
 脚本：`latent_preprocess_stability.py`（7×20=140 次聚类）。输出：`results/latent_preprocess_stability_k3/`（`per_run_metrics.csv`、`pairwise_stability.csv`、`stability_summary.csv`、`labels/`、`figures/`）。
@@ -904,7 +904,7 @@ bash experiments/tworoom/scripts/run_latent_preprocess_stability.sh
 仅保留 **raw_l2 / center_l2 / zscore_l2**；K-means 改为 `max_iter=1000`、相对 objective 变化 \(<10^{-7}\) 且连续 10 轮满足才停止；记录标签变化比例；相同 20 seeds。
 
 ```bash
-bash experiments/tworoom/scripts/run_latent_preprocess_convergence.sh
+bash experiments/tworoom/scripts/analysis/run_latent_preprocess_convergence.sh
 ```
 
 输出：`results/latent_preprocess_convergence_k3/`（脚本 `latent_preprocess_convergence.py`）。
@@ -922,7 +922,7 @@ bash experiments/tworoom/scripts/run_latent_preprocess_convergence.sh
 协议：Z-score 预处理；outer seeds 0–19；每 outer seed 内 50 次 K-means++（\(p_i \propto 1-\max_c\cos(x_i,c)\)）；完全收敛；从同一批 inner run 考察 \(R\in\{1,5,10,20,50\}\) 取 objective 最优。
 
 ```bash
-bash experiments/tworoom/scripts/run_latent_kmeanspp_multirestart.sh
+bash experiments/tworoom/scripts/analysis/run_latent_kmeanspp_multirestart.sh
 # 若 inner_run_metrics.csv 已存在，仅补汇总：
 python experiments/tworoom/latent_kmeanspp_multirestart.py --summary-only --device cuda
 ```
@@ -992,10 +992,10 @@ select = maximum objective
 实现文件：
 
 - `latent_landmark_spectral.py`
-- `scripts/run_latent_landmark_spectral.sh`
-- `scripts/run_latent_spectral_train_predictors_50ep.sh`
-- `scripts/run_success_rate_5seed_latent_spectral_longrange.sh`
-- `scripts/run_latent_spectral_short_horizon.sh`
+- `scripts/analysis/run_latent_landmark_spectral.sh`
+- `scripts/internal/run_latent_spectral_train_predictors_50ep.sh`
+- `scripts/internal/run_success_rate_5seed_latent_spectral_longrange.sh`
+- `scripts/ablations/run_latent_spectral_short_horizon.sh`
 - `test_latent_landmark_spectral.py`
 - `tests/test_spectral_manifest_contract.py`
 - `tests/test_latent_cluster_step_routing.py`
@@ -1005,30 +1005,30 @@ select = maximum objective
 
 ```bash
 # 单 seed 快速产生一个可训练 artifact
-GPU=0 SEEDS=0 bash experiments/tworoom/scripts/run_latent_landmark_spectral.sh
+GPU=0 SEEDS=0 bash experiments/tworoom/scripts/analysis/run_latent_landmark_spectral.sh
 
 # 正式稳定性检查（共享一次数据加载）
-GPU=0 SEEDS=0,1,2 bash experiments/tworoom/scripts/run_latent_landmark_spectral.sh
+GPU=0 SEEDS=0,1,2 bash experiments/tworoom/scripts/analysis/run_latent_landmark_spectral.sh
 
 # 可选 auto-K 诊断；不是当前 TwoRoom 主配置
 GPU=0 SEEDS=0 AUTO_K=1 AUTO_K_MIN=2 AUTO_K_MAX=6 \
-  bash experiments/tworoom/scripts/run_latent_landmark_spectral.sh
+  bash experiments/tworoom/scripts/analysis/run_latent_landmark_spectral.sh
 
 # 下游 predictor（尚未启动）
 GPU=0 SPECTRAL_SEED=0 TRAIN_SEED=42 \
-  bash experiments/tworoom/scripts/run_latent_spectral_train_predictors_50ep.sh
+  bash experiments/tworoom/scripts/internal/run_latent_spectral_train_predictors_50ep.sh
 
 # 长程评测；LATENT_ROUTING 可设为 mpc 或 step
 GPU=0 SPECTRAL_SEED=0 TRAIN_SEED=42 LATENT_ROUTING=mpc \
-  bash experiments/tworoom/scripts/run_success_rate_5seed_latent_spectral_longrange.sh
+  bash experiments/tworoom/scripts/internal/run_success_rate_5seed_latent_spectral_longrange.sh
 
 # 同一 artifact/predictor 的短程 rollout；LATENT_ROUTING 可设为 mpc/step/oracle_gt_step
 GPU=0 SPECTRAL_SEED=0 TRAIN_SEED=42 LATENT_ROUTING=mpc \
-  bash experiments/tworoom/scripts/run_latent_spectral_short_horizon.sh
+  bash experiments/tworoom/scripts/ablations/run_latent_spectral_short_horizon.sh
 
 # K-means++ 保持部署匹配的 transition-start anchor（offset=0）
 GPU=0 OUTER_SEED=0 ROUTE_LABEL_OFFSET_STEPS=0 \
-  bash experiments/tworoom/scripts/run_latent_kmeanspp_train_predictors_50ep.sh
+  bash experiments/tworoom/scripts/internal/run_latent_kmeanspp_train_predictors_50ep.sh
 ```
 
 固定 K 输出目录使用配置指纹：`results/latent_landmark_spectral_k<K>/spectral_cfg<fingerprint>_K<K>_M20000_k30_P<P>_seed<seed>/`；auto-K 单独写入 `results/latent_landmark_spectral_auto_k/`，不会改写 K=3 的 latest summary。旧的 `spectral_M20000_k30_P16_seed*` 仍可读取。`stability_summary.json` 是带 `artifacts_by_seed` 的 latest alias，同时保留不可覆盖的 `stability_summary_cfg<fingerprint>.json`。下游脚本优先从 summary 解析 artifact，也允许显式设置 `SPECTRAL_ROOT` / `ARTIFACT_DIR`；无 summary 时只有唯一候选才会继续，不能再静默硬编码 P16。predictor、长程和短程默认输出目录都包含 artifact basename，防止不同谱配置互相覆盖。每个 artifact 包含全量 `cluster_labels.npz`、routing prototypes/owners、Z-score 参数、landmark 诊断和 `cluster_meta.json`。
@@ -1103,8 +1103,8 @@ Spectral predictor 输出：
 
 新增调度入口：
 
-- `scripts/run_latent_spectral_trainseed625_after_seed42.sh`：等待 seed 42 的三个 predictor manifest；对 seed 625 执行串行缓存加载、三 GPU 并行训练；全部训练结束后依次评测 train seeds 42/625。
-- `scripts/run_latent_spectral_seed_eval_after_train.sh`：适用于任意 predictor train seed；等待三个 predictor manifest 后运行 3 partition-seed × 5 eval-seed 的逐 MPC 长程评测，并与相同 train seed 的 K-means++ R50 结果汇总比较。三个评测进程错峰 20 秒启动。
+- `scripts/legacy/run_latent_spectral_trainseed625_after_seed42.sh`：等待 seed 42 的三个 predictor manifest；对 seed 625 执行串行缓存加载、三 GPU 并行训练；全部训练结束后依次评测 train seeds 42/625。
+- `scripts/legacy/run_latent_spectral_seed_eval_after_train.sh`：适用于任意 predictor train seed；等待三个 predictor manifest 后运行 3 partition-seed × 5 eval-seed 的逐 MPC 长程评测，并与相同 train seed 的 K-means++ R50 结果汇总比较。三个评测进程错峰 20 秒启动。
 - train seed 0 使用同一通用评测入口，在训练完成后于 GPU 3/4/6 自动评测；所有失败均停止并记录，不自动重试。
 
 #### Inference-tensor 路由缓存修复与评测重启（2026-07-17）
@@ -1117,7 +1117,7 @@ Spectral predictor 输出：
 
 - `test_latent_cluster_step_routing.py`：5/5 通过，新增 inference tensor identity 回归测试；
 - 真实 spectral seed 0 / train seed 42 checkpoint 的 1-episode smoke test：退出码 0，成功完成控制评测；路由缓存 `2 misses / 58 hits`；
-- 正式重启入口：`scripts/run_latent_spectral_all_trainseed_eval_rerun.sh`。先在 GPU 0/1/2 与 3/4/6 并行评测 train seeds 42/0，成功后再在 GPU 0/1/2 评测 train seed 625；每个进程限制 4 个 CPU 线程，单组硬超时 2 小时，失败不再自动重试。
+- 正式重启入口：`scripts/legacy/run_latent_spectral_all_trainseed_eval_rerun.sh`。先在 GPU 0/1/2 与 3/4/6 并行评测 train seeds 42/0，成功后再在 GPU 0/1/2 评测 train seed 625；每个进程限制 4 个 CPU 线程，单组硬超时 2 小时，失败不再自动重试。
 
 首次重启中，train seeds 0/42 的 30 次控制评测均成功完成；seed 0 仅在后处理汇总阶段因历史 K-means++ CSV 使用 `eval_seed` 而新 CSV 使用 `seed` 触发 `KeyError`。`aggregate_partition_seed_success.py` 已兼容两种 schema，直接复用完成的控制结果，没有重跑；随后 seed 625 的 15 次评测全部成功。最终共 **45/45** 个结果文件完整生成，未再出现 inference-tensor 异常。
 
@@ -1160,7 +1160,7 @@ Spectral predictor 输出：
 1. **Joint-Continue 1ep**：从官方 `lewm_object.ckpt` 出发，对 encoder、projector、action encoder、predictor 与 pred-proj 做一次完整训练数据遍历；目标函数保持官方 `prediction loss + 0.09 * SIGReg`，数据窗口、90/10 split、batch size 128、学习率 `5e-5`、weight decay `1e-3` 与官方配置一致。官方发布物只有模型参数，没有 optimizer/scheduler state，因此该对照使用 fresh AdamW、无 scheduler；论文中必须写成“released-checkpoint joint continuation with a fresh optimizer”，不能声称精确恢复原训练 optimizer trajectory，也暂不称为 compute-matched。
 2. **Random-K3 / Random-Voronoi K3-50**：复用 K-means++ 的训练集 Z-score + L2 预处理；每个 partition seed 从训练潜向量均匀无放回抽取 3 个原型，不做 K-means、restart 或目标选择，再用 maximum-cosine Voronoi rule 给所有 transition 分区。这样测试时仍可只根据当前 latent 路由；K=3、3 个 predictor、50 epochs、总 transition-updates、base checkpoint、optimizer recipe 与 K-means++/Spectral 完全一致。它是无学习分区结构的多 predictor 容量控制，而不是无法对新状态路由的独立随机 transition 标签。
 
-**精度与硬件对齐（canonical policy）**：Spectral 的 latent cache、谱分区输入和 K3-50 predictor 微调均为 FP32，因此 Joint-Continue 的 canonical 对照也固定为 FP32。`joint_continue_tworoom.py` 新增 `--precision {fp32,bf16-mixed}` 且默认 `fp32`，`scripts/run_joint_continue_tworoom_1ep.sh` 显式传 `--precision fp32`；manifest 必须记录 `config.precision=fp32`。两者均使用单张 RTX 4090、batch size 128、`OMP/MKL/OPENBLAS_NUM_THREADS=4` 和 `nice=10`；Joint 的原始图像 DataLoader 使用 4 workers。此前的 BF16 Joint checkpoint、训练日志和长短程结果已移至 `results/archive/joint_continue_bf16_trainseed42_20260717/`，不得进入主表或 FP32 耗时比较；FP32 checkpoint 完成后须重新跑完全相同的 5-seed short/long 评测并覆盖 canonical 汇总。
+**精度与硬件对齐（canonical policy）**：Spectral 的 latent cache、谱分区输入和 K3-50 predictor 微调均为 FP32，因此 Joint-Continue 的 canonical 对照也固定为 FP32。`joint_continue_tworoom.py` 新增 `--precision {fp32,bf16-mixed}` 且默认 `fp32`，`scripts/ablations/run_joint_continue_tworoom_1ep.sh` 显式传 `--precision fp32`；manifest 必须记录 `config.precision=fp32`。两者均使用单张 RTX 4090、batch size 128、`OMP/MKL/OPENBLAS_NUM_THREADS=4` 和 `nice=10`；Joint 的原始图像 DataLoader 使用 4 workers。此前的 BF16 Joint checkpoint、训练日志和长短程结果已移至 `results/archive/joint_continue_bf16_trainseed42_20260717/`，不得进入主表或 FP32 耗时比较；FP32 checkpoint 完成后须重新跑完全相同的 5-seed short/long 评测并覆盖 canonical 汇总。
 
 三个 Random-Voronoi artifacts 已生成并通过 schema-v2 artifact/manifest dry-run，693,728 个训练 transition 全部覆盖：
 
@@ -1188,12 +1188,12 @@ Joint-Continue 的 canonical FP32 训练已在相同硬件限制下重新启动�
 
 - `latent_random_voronoi.py`
 - `joint_continue_tworoom.py`
-- `scripts/run_random_voronoi_k3.sh`
-- `scripts/run_random_voronoi_train_predictors_50ep.sh`
-- `scripts/run_random_voronoi_eval.sh`
-- `scripts/run_joint_continue_tworoom_1ep.sh`
-- `scripts/run_joint_continue_tworoom_eval.sh`
-- `scripts/queue_tworoom_control_baselines.sh`
+- `scripts/internal/run_random_voronoi_k3.sh`
+- `scripts/internal/run_random_voronoi_train_predictors_50ep.sh`
+- `scripts/internal/run_random_voronoi_eval.sh`
+- `scripts/ablations/run_joint_continue_tworoom_1ep.sh`
+- `scripts/ablations/run_joint_continue_tworoom_eval.sh`
+- `scripts/legacy/queue_tworoom_control_baselines.sh`
 
 队列状态：`results/tworoom_control_baselines_queue/queue.log`。CPU smoke test 已验证 Joint-Continue 的官方数据变换、联合反传、checkpoint 原子保存和 manifest；该 smoke 使用 `max_batches=1`、`sigreg_num_proj=8` 且标记 `formal_full_epoch=false`，不得纳入论文结果。正式结果完成后再补 predictor train seeds `0/625`，并按现有约定先对每个 train seed 的 5 个 eval seeds 求均值，再以 train seed 为统计单位报告 mean ± sample SD。
 
@@ -1201,7 +1201,7 @@ Joint-Continue 的 canonical FP32 训练已在相同硬件限制下重新启动�
 
 自动评测与公平汇总由以下两个新增入口完成：
 
-- `scripts/run_latent_spectral_k3_50_fair_eval_after_train.sh`：最多等待 4 小时；只有三个 schema-v2 predictor manifest 全部原子提交后，才在 GPU 0/1/2 并行启动三个 partition seed 的 5-seed 长程评测。若训练进程提前退出或评测失败，只记录错误，不自动重试。
+- `scripts/legacy/run_latent_spectral_k3_50_fair_eval_after_train.sh`：最多等待 4 小时；只有三个 schema-v2 predictor manifest 全部原子提交后，才在 GPU 0/1/2 并行启动三个 partition seed 的 5-seed 长程评测。若训练进程提前退出或评测失败，只记录错误，不自动重试。
 - `aggregate_partition_seed_success.py`：同时读取 Spectral 3×5 与现有 K-means++ R50 3×5 summary；报告每个 partition 的 5-seed 均值、partition-seed SD、15-run grand mean，以及先对三个 partition 取均值后按相同 eval seed 配对的差值。该差值只作描述性比较，不作为五个 seed 的显著性检验。
 
 最终比较输出：
@@ -1253,7 +1253,7 @@ Step 1–3、逐预测步动态路由补测与 Global-FT 50ep 强 baseline（训
 协议与 priority5 相同：每个 seed 联合控制 episode 划分、Linear Probe 初始化/minibatch、RFF 随机特征；同一 seed 下两种探针共享 episode split。
 
 ```bash
-bash experiments/tworoom/scripts/run_geometry_latent_probe_rooms3_multiseed.sh
+bash experiments/tworoom/scripts/analysis/run_geometry_latent_probe_rooms3_multiseed.sh
 ```
 
 日志：`results/geometry_latent_probe_rooms3_multiseed/run_multiseed.log`（5 seeds × 2 probes，~236s）

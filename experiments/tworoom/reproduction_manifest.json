@@ -39,7 +39,7 @@
       "id": "main_matrix",
       "tier": "canonical",
       "description": "Official, Joint-Continue 3ep, Global-FT50, Random-Voronoi K3-50, K-means++ K3-50, Spectral K3-50, and human rooms3-50.",
-      "command": "bash experiments/tworoom/scripts/run_tworoom_main_matrix.sh",
+      "command": "bash experiments/tworoom/scripts/canonical/run_tworoom_main_matrix.sh",
       "required_env": ["LAP_TWOROOM_DATA", "LAP_LEWM_CHECKPOINT", "GPU"],
       "outputs": [
         "experiments/tworoom/matrix/tworoom_main_summary.json",
@@ -50,7 +50,7 @@
       "id": "trajectory_deviation",
       "tier": "analysis",
       "description": "Regional versus global open-loop latent trajectory deviation.",
-      "command": "bash experiments/tworoom/scripts/run_geometry_trajectory_deviation.sh",
+      "command": "bash experiments/tworoom/scripts/analysis/run_geometry_trajectory_deviation.sh",
       "required_env": ["LAP_LEWM_CHECKPOINT", "GPU"],
       "outputs": ["experiments/tworoom/results/tworoom_geometry_trajectory_deviation_*/*"]
     },
@@ -58,7 +58,7 @@
       "id": "trajectory_switch",
       "tier": "analysis",
       "description": "Four-way predictor-switch rollout analysis.",
-      "command": "bash experiments/tworoom/scripts/run_trajectory_switch_rollout_4way.sh",
+      "command": "bash experiments/tworoom/scripts/analysis/run_trajectory_switch_rollout_4way.sh",
       "required_env": ["LAP_LEWM_CHECKPOINT", "GPU"],
       "outputs": ["experiments/tworoom/results/tworoom_trajectory_switch_rollout_4way/*"]
     },
@@ -66,7 +66,7 @@
       "id": "probe_rooms3",
       "tier": "analysis",
       "description": "Five-seed linear and RFF probe for rooms3 latent separability.",
-      "command": "bash experiments/tworoom/scripts/run_geometry_latent_probe_rooms3_multiseed.sh",
+      "command": "bash experiments/tworoom/scripts/analysis/run_geometry_latent_probe_rooms3_multiseed.sh",
       "required_env": ["GPU"],
       "outputs": ["experiments/tworoom/results/geometry_latent_probe_rooms3_multiseed/*"]
     },
@@ -74,7 +74,7 @@
       "id": "probe_priority5",
       "tier": "analysis",
       "description": "Five-seed linear and RFF probe for priority5 latent separability.",
-      "command": "bash experiments/tworoom/scripts/run_geometry_latent_probe_priority5_multiseed.sh",
+      "command": "bash experiments/tworoom/scripts/analysis/run_geometry_latent_probe_priority5_multiseed.sh",
       "required_env": ["GPU"],
       "outputs": ["experiments/tworoom/results/geometry_latent_probe_priority5_multiseed/*"]
     },
@@ -82,7 +82,7 @@
       "id": "partition_stability",
       "tier": "analysis",
       "description": "Preprocessing, K-means++ restart, Random-Voronoi, and landmark spectral stability studies.",
-      "command": "bash experiments/tworoom/scripts/run_tworoom_partition_stability.sh",
+      "command": "bash experiments/tworoom/scripts/analysis/run_tworoom_partition_stability.sh",
       "required_env": ["GPU"],
       "outputs": [
         "experiments/tworoom/results/latent_kmeanspp_multirestart_k3/*",
@@ -94,7 +94,7 @@
       "id": "manual_epoch_sweep",
       "tier": "ablation",
       "description": "rooms3/priority5 30/50/80-epoch and doorway-specific manual-partition ablations.",
-      "command": "bash experiments/tworoom/scripts/run_tworoom_manual_epoch_ablations.sh",
+      "command": "bash experiments/tworoom/scripts/ablations/run_tworoom_manual_epoch_ablations.sh",
       "required_env": ["LAP_LEWM_CHECKPOINT", "GPU"],
       "outputs": ["experiments/tworoom/results/tworoom_success_rate_*ep_*"]
     },
@@ -102,7 +102,7 @@
       "id": "step_routing",
       "tier": "ablation",
       "description": "Per-imagined-step routing compared with the main per-MPC routing protocol.",
-      "command": "bash experiments/tworoom/scripts/run_success_rate_latent_kmeanspp_step_routing_longrange_all_outer.sh",
+      "command": "bash experiments/tworoom/scripts/ablations/run_success_rate_latent_kmeanspp_step_routing_longrange_all_outer.sh",
       "required_env": ["LAP_LEWM_CHECKPOINT", "GPU"],
       "outputs": ["experiments/tworoom/results/*step_routing*"]
     },

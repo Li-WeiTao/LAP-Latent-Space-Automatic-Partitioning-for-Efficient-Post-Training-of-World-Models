@@ -30,7 +30,7 @@ def validate_python_syntax() -> list[str]:
 
 def validate_shell_syntax() -> list[str]:
     failures: list[str] = []
-    for path in (ROOT / "experiments" / "tworoom" / "scripts").glob("*.sh"):
+    for path in (ROOT / "experiments" / "tworoom" / "scripts").rglob("*.sh"):
         result = subprocess.run(
             ["bash", "-n", str(path)],
             capture_output=True,

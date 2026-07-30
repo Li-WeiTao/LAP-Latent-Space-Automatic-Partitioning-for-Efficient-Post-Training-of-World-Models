@@ -33,7 +33,7 @@ From the repository root, after setting `LAP_TWOROOM_DATA`,
 `LAP_LEWM_CHECKPOINT`, and `GPU`, run:
 
 ```bash
-bash experiments/tworoom/scripts/prepare_tworoom_spectral_inputs.sh
+bash experiments/tworoom/scripts/internal/prepare_tworoom_spectral_inputs.sh
 ```
 
 The wrapper regenerates the episode-level training starts and invokes the
