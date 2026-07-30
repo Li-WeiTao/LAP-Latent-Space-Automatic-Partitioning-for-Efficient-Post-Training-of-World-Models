@@ -8,7 +8,10 @@ DATASET_NAME=${DATASET_NAME:-pusht}
 DATA_FILE=${DATA_FILE:?set DATA_FILE to the task HDF5 file}
 CHECKPOINT=${CHECKPOINT:?set CHECKPOINT to the official LeWM object checkpoint}
 EVAL_CONFIG=${EVAL_CONFIG:-pusht}
-CACHE_DIR=${CACHE_DIR:-$(dirname "$DATA_FILE")}
+EVAL_DATASET_NAME=${EVAL_DATASET_NAME:-pusht_expert_train}
+# stable_worldmodel interprets this as a cache root and appends
+# datasets/<eval.dataset_name>.h5; it is not the HDF5 file's parent directory.
+CACHE_DIR=${CACHE_DIR:-$HOME/.stable_worldmodel}
 WORK_ROOT=${WORK_ROOT:-experiments/${DATASET_NAME}/matrix}
 PHASE=${PHASE:-all}
 GPU_ID=${GPU_ID:-0}
@@ -32,6 +35,14 @@ LATENT_CACHE="$WORK_ROOT/${DATASET_NAME}_lewm_train_latent_cache.npz"
 
 prepare() {
   mkdir -p "$PREP"
+  local eval_dataset_path="$CACHE_DIR/datasets/$EVAL_DATASET_NAME.h5"
+  mkdir -p "$(dirname "$eval_dataset_path")"
+  if [[ ! -e "$eval_dataset_path" ]]; then
+    ln -s "$(realpath "$DATA_FILE")" "$eval_dataset_path"
+  elif [[ "$(realpath "$eval_dataset_path")" != "$(realpath "$DATA_FILE")" ]]; then
+    echo "evaluation dataset path already resolves to another file: $eval_dataset_path" >&2
+    exit 1
+  fi
   if [[ ! -f "$STARTS" ]]; then
     "$PYTHON" experiments/tworoom/trajectory.py \
       --dataset "$DATASET_NAME" \
