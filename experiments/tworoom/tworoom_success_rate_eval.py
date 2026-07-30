@@ -1145,7 +1145,7 @@ def run_eval(
         if col != "action":
             process[f"goal_{col}"] = processor
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device(str(cfg.solver.device))
     model, model_meta = resolve_model(
         experiment_mode, checkpoint, device, process["proprio"],
         region_ckpt_overrides=region_ckpt_overrides,
@@ -1327,6 +1327,12 @@ def parse_args() -> argparse.Namespace:
         help="Directory containing <eval.dataset_name>.h5.",
     )
     parser.add_argument(
+        "--device",
+        choices=("auto", "cuda", "cpu"),
+        default="auto",
+        help="Model and solver device; auto selects CUDA when available.",
+    )
+    parser.add_argument(
         "--goal-offset",
         type=int,
         default=None,
@@ -1444,6 +1450,9 @@ def main() -> None:
     cfg.seed = args.seed
     if args.cache_dir is not None:
         cfg.cache_dir = str(args.cache_dir.resolve(strict=True))
+    cfg.solver.device = (
+        "cuda" if torch.cuda.is_available() else "cpu"
+    ) if args.device == "auto" else args.device
     if args.goal_offset is not None:
         cfg.eval.goal_offset_steps = args.goal_offset
     if args.eval_budget is not None:
