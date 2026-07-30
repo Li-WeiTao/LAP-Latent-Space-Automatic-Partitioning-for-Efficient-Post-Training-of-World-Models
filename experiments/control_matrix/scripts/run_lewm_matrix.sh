@@ -14,14 +14,16 @@ EVAL_DATASET_NAME=${EVAL_DATASET_NAME:-pusht_expert_train}
 CACHE_DIR=${CACHE_DIR:-$HOME/.stable_worldmodel}
 WORK_ROOT=${WORK_ROOT:-experiments/${DATASET_NAME}/matrix}
 PHASE=${PHASE:-all}
-GPU_ID=${GPU_ID:-0}
+GPU_ID=${GPU_ID:-}
 TRAIN_SEEDS=${TRAIN_SEEDS:-0,42,625}
 PARTITION_SEEDS=${PARTITION_SEEDS:-0,1,2}
 EVAL_SEEDS=${EVAL_SEEDS:-0,1,2,3,4}
 METHODS=${METHODS:-random_voronoi,kmeanspp,spectral}
 
 PYTHON=${PYTHON:-python}
-export CUDA_VISIBLE_DEVICES=$GPU_ID
+if [[ -n "$GPU_ID" ]]; then
+  export CUDA_VISIBLE_DEVICES=$GPU_ID
+fi
 mkdir -p "$WORK_ROOT"
 
 IFS=, read -r -a train_seeds <<< "$TRAIN_SEEDS"
