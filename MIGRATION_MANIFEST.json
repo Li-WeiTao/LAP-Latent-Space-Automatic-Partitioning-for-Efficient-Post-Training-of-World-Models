@@ -47,10 +47,10 @@
       "source_sha256": "0e66685ed351839b0baf614c4207aa2c5e6ab9dbe419aac9c38d0998a000200c"
     },
     {
-      "bytes": 18827,
+      "bytes": 18772,
       "origin": "generated_for_lap",
       "path": "README.md",
-      "sha256": "7a0cc1054415622cdf03123f3dfc57bebf1c00b8f2d5292c015622d0659046a1"
+      "sha256": "604bbf0b2427ce4208413dacf6da186f09262196044c03e7c58ca60c65abf59f"
     },
     {
       "bytes": 7279,
@@ -223,16 +223,22 @@
       "sha256": "e518fd5667da4e2784b2d793fee35465b705f0a7df48bd178365468c2eb429d8"
     },
     {
-      "bytes": 13820,
+      "bytes": 13624,
       "origin": "generated_for_lap",
       "path": "experiments/control_matrix/fit_partition.py",
-      "sha256": "af462c426f3fb8ffaaf16fac6749cc1bcbbf05f64cf74cc69b5ab3304dc1a3b8"
+      "sha256": "422ac3b66dc702b02f2462753e44dd40dea4b93f94c8392634bdf4d044facf18"
     },
     {
-      "bytes": 7587,
+      "bytes": 9202,
       "origin": "generated_for_lap",
       "path": "experiments/control_matrix/scripts/run_lewm_matrix.sh",
-      "sha256": "ad470c3e0999548e3f13cd8a7f0a223b06d30b2abedb27453bab6df60fea2a6b"
+      "sha256": "b5ca1d7bca776e0d9b8ed6c0be8c58015d46665b42c757ce4e2ec38febeee4d9"
+    },
+    {
+      "bytes": 5603,
+      "origin": "generated_for_lap",
+      "path": "experiments/control_matrix/scripts/run_lewm_matrix_parallel.sh",
+      "sha256": "fbf6ea770f6a98e472fe0bf87eb55ebd6c667c338f088c894d4655f4d2d643bd"
     },
     {
       "bytes": 1880,
@@ -241,16 +247,16 @@
       "sha256": "a6dcfac0420a33b97da88d8243cd115f38046c4fa28f5312a633fced1f964b0f"
     },
     {
-      "bytes": 5260,
+      "bytes": 5503,
       "origin": "generated_for_lap",
       "path": "experiments/control_matrix/train_predictors.py",
-      "sha256": "1592459add4f6a8b1f8256b99ed95bfea5cb2b0bd2b5a8b41cd26cfdef1180aa"
+      "sha256": "5ef4ca8ecf6386f7521a5a7579a987cacf4aac14b2bbe00b5a9c674fa269a223"
     },
     {
-      "bytes": 3775,
+      "bytes": 4491,
       "origin": "generated_for_lap",
       "path": "experiments/pusht/README.md",
-      "sha256": "acdea0942b500eb9df294343681ee970edebfee4c535e2070c6ce36f3a8c95d1"
+      "sha256": "77839f4b2e9003a1b6497254f5460074d092513dbd39a3451af6a0bc2359c475"
     },
     {
       "bytes": 3843,
@@ -21073,10 +21079,10 @@
       "sha256": "f5faa3b0b7681a2f3a127986234b936d61e4239e8574d1532c42179681583809"
     },
     {
-      "bytes": 988,
+      "bytes": 2403,
       "origin": "generated_for_lap",
       "path": "tests/test_control_matrix.py",
-      "sha256": "2f0c4b5bb8a10e26ab546f6ac5a77e7c263176b098216068b9b59522f3a0d65d"
+      "sha256": "1e8ab4e9123ab1522601424be5bf5c62a77e410b0a734bc543dbac3b86454d96"
     },
     {
       "bytes": 4279,
@@ -21121,7 +21127,7 @@
       "sha256": "62ad56c6c5c1ad68b4fa44f14e28938ec12b0b95e948a25c7e42a0799e039189"
     }
   ],
-  "generated_at_utc": "2026-07-30T12:48:37.835837+00:00",
+  "generated_at_utc": "2026-07-30T13:14:02.325478+00:00",
   "migration_scope": {
     "readme_start_heading": "trajectory deviation experiment",
     "readme_start_line": 410,
@@ -21276,7 +21282,7 @@
   ],
   "repair_revision": {
     "purpose": "close independent-repository end-to-end reproducibility gaps",
-    "changed_existing_files": 1,
-    "new_files": 0
+    "changed_existing_files": 6,
+    "new_files": 1
   }
 }

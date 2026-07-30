@@ -19,6 +19,7 @@ TRAIN_SEEDS=${TRAIN_SEEDS:-0,42,625}
 PARTITION_SEEDS=${PARTITION_SEEDS:-0,1,2}
 EVAL_SEEDS=${EVAL_SEEDS:-0,1,2,3,4}
 METHODS=${METHODS:-random_voronoi,kmeanspp,spectral}
+CPU_THREADS=${CPU_THREADS:-4}
 
 PYTHON=${PYTHON:-python}
 if [[ -n "$GPU_ID" ]]; then
@@ -80,14 +81,17 @@ prepare() {
   fi
 }
 
-partition() {
+partition_global() {
   local global_dir="$WORK_ROOT/partitions/global/seed0"
   if [[ ! -f "$global_dir/manifest.json" ]]; then
     "$PYTHON" experiments/control_matrix/fit_partition.py \
       --method global --dataset-name "$DATASET_NAME" \
       --latent-cache "$LATENT_CACHE" --frameskip 5 \
-      --out-dir "$global_dir"
+      --cpu-threads "$CPU_THREADS" --out-dir "$global_dir"
   fi
+}
+
+partition_regions() {
   for method in "${methods[@]}"; do
     for pseed in "${partition_seeds[@]}"; do
       local out="$WORK_ROOT/partitions/$method/seed$pseed"
@@ -96,12 +100,17 @@ partition() {
         --method "$method" --dataset-name "$DATASET_NAME" \
         --data-file "$DATA_FILE" --latent-cache "$LATENT_CACHE" \
         --frameskip 5 --num-clusters 3 --seed "$pseed" \
-        --gpu-id 0 --out-dir "$out"
+        --gpu-id 0 --cpu-threads "$CPU_THREADS" --out-dir "$out"
     done
   done
 }
 
-train() {
+partition() {
+  partition_global
+  partition_regions
+}
+
+train_joint() {
   for tseed in "${train_seeds[@]}"; do
     local joint="$WORK_ROOT/training/joint/train$tseed"
     if [[ ! -f "$joint/manifest.json" ]]; then
@@ -109,16 +118,28 @@ train() {
         --dataset-name "$DATASET_NAME" --data-file "$DATA_FILE" \
         --checkpoint "$CHECKPOINT" --out-dir "$joint" \
         --seed "$tseed" --epochs 3 --precision fp32 \
-        --frameskip 5 --num-workers 4 --cpu-threads 4
+        --frameskip 5 --num-workers "$CPU_THREADS" \
+        --cpu-threads "$CPU_THREADS"
     fi
+  done
+}
+
+train_global() {
+  for tseed in "${train_seeds[@]}"; do
     local global="$WORK_ROOT/training/global/train$tseed"
     if [[ ! -f "$global/manifest.json" ]]; then
       "$PYTHON" experiments/control_matrix/train_predictors.py \
         --dataset-name "$DATASET_NAME" --latent-cache "$LATENT_CACHE" \
         --pretrained-model "$CHECKPOINT" \
         --partition-dir "$WORK_ROOT/partitions/global/seed0" \
-        --out-dir "$global" --train-seed "$tseed" --epochs 50
+        --out-dir "$global" --train-seed "$tseed" --epochs 50 \
+        --cpu-threads "$CPU_THREADS"
     fi
+  done
+}
+
+train_regions() {
+  for tseed in "${train_seeds[@]}"; do
     for method in "${methods[@]}"; do
       for pseed in "${partition_seeds[@]}"; do
         local out="$WORK_ROOT/training/$method/partition${pseed}_train$tseed"
@@ -127,10 +148,17 @@ train() {
           --dataset-name "$DATASET_NAME" --latent-cache "$LATENT_CACHE" \
           --pretrained-model "$CHECKPOINT" \
           --partition-dir "$WORK_ROOT/partitions/$method/seed$pseed" \
-          --out-dir "$out" --train-seed "$tseed" --epochs 50
+          --out-dir "$out" --train-seed "$tseed" --epochs 50 \
+          --cpu-threads "$CPU_THREADS"
       done
     done
   done
+}
+
+train() {
+  train_joint
+  train_global
+  train_regions
 }
 
 eval_one() {
@@ -146,13 +174,19 @@ eval_one() {
   "$PYTHON" experiments/tworoom/tworoom_success_rate_eval.py "${args[@]}"
 }
 
-evaluate() {
+evaluate_official() {
   for eseed in "${eval_seeds[@]}"; do
     local baseline="$WORK_ROOT/eval/official/eval$eseed"
     if [[ ! -f "$baseline/results.json" ]]; then
       eval_one baseline "$CHECKPOINT" "" "$baseline" "$eseed" ""
     fi
-    local starts="$baseline/results.json"
+  done
+}
+
+evaluate_joint() {
+  for eseed in "${eval_seeds[@]}"; do
+    local starts="$WORK_ROOT/eval/official/eval$eseed/results.json"
+    [[ -f "$starts" ]] || { echo "missing paired starts: $starts" >&2; exit 1; }
     for tseed in "${train_seeds[@]}"; do
       local joint="$WORK_ROOT/eval/joint/train$tseed/eval$eseed"
       if [[ ! -f "$joint/results.json" ]]; then
@@ -160,12 +194,30 @@ evaluate() {
           "$WORK_ROOT/training/joint/train$tseed/joint_continue_object.ckpt" \
           "" "$joint" "$eseed" "$starts"
       fi
+    done
+  done
+}
+
+evaluate_global() {
+  for eseed in "${eval_seeds[@]}"; do
+    local starts="$WORK_ROOT/eval/official/eval$eseed/results.json"
+    [[ -f "$starts" ]] || { echo "missing paired starts: $starts" >&2; exit 1; }
+    for tseed in "${train_seeds[@]}"; do
       local global="$WORK_ROOT/eval/global/train$tseed/eval$eseed"
       if [[ ! -f "$global/results.json" ]]; then
         eval_one baseline \
           "$WORK_ROOT/training/global/train$tseed/P_train_cluster0_object.ckpt" \
           "" "$global" "$eseed" "$starts"
       fi
+    done
+  done
+}
+
+evaluate_regions() {
+  for eseed in "${eval_seeds[@]}"; do
+    local starts="$WORK_ROOT/eval/official/eval$eseed/results.json"
+    [[ -f "$starts" ]] || { echo "missing paired starts: $starts" >&2; exit 1; }
+    for tseed in "${train_seeds[@]}"; do
       for method in "${methods[@]}"; do
         for pseed in "${partition_seeds[@]}"; do
           local run="$WORK_ROOT/training/$method/partition${pseed}_train$tseed"
@@ -178,6 +230,13 @@ evaluate() {
   done
 }
 
+evaluate() {
+  evaluate_official
+  evaluate_joint
+  evaluate_global
+  evaluate_regions
+}
+
 aggregate() {
   "$PYTHON" experiments/control_matrix/aggregate_matrix.py \
     --root "$WORK_ROOT" --dataset-name "$DATASET_NAME" \
@@ -187,8 +246,17 @@ aggregate() {
 
 case "$PHASE" in
   prepare) prepare ;;
+  partition_global) partition_global ;;
+  partition_regions) partition_regions ;;
   partition) partition ;;
+  train_joint) train_joint ;;
+  train_global) train_global ;;
+  train_regions) train_regions ;;
   train) train ;;
+  eval_official) evaluate_official ;;
+  eval_joint) evaluate_joint ;;
+  eval_global) evaluate_global ;;
+  eval_regions) evaluate_regions ;;
   eval) evaluate ;;
   aggregate) aggregate ;;
   all) prepare; partition; train; evaluate; aggregate ;;

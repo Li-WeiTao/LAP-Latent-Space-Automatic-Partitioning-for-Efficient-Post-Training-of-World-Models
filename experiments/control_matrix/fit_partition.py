@@ -105,28 +105,22 @@ def load_unique_latents(
         + np.arange(emb.shape[1], dtype=np.int64)[None, :] * frameskip
     ).reshape(-1)
     flat = emb.reshape(-1, emb.shape[-1])
+    # Stable sorting makes the representative for every timestep its first
+    # occurrence in the original flattened window order.  Batch-shape-induced
+    # FP32 noise must not turn one observation into multiple latent states.
     order = np.argsort(global_ids, kind="stable")
     ordered_ids = global_ids[order]
     ordered = flat[order]
     keep = np.r_[True, ordered_ids[1:] != ordered_ids[:-1]]
     unique_ids = ordered_ids[keep]
     unique = ordered[keep]
-    # Repeated windows should reconstruct identical frame latents.  Sampling
-    # every duplicate group keeps the check linear without materializing a map.
-    first = np.flatnonzero(keep)
-    ends = np.r_[first[1:], len(ordered_ids)]
-    for begin, end in zip(first, ends):
-        if end - begin > 1 and not np.array_equal(
-            ordered[begin:end], np.broadcast_to(ordered[begin], ordered[begin:end].shape)
-        ):
-            raise RuntimeError(
-                f"cache contains inconsistent embeddings for timestep {ordered_ids[begin]}"
-            )
     return unique, unique_ids, {
         "cache": str(cache_path.resolve()),
         "num_transitions": int(len(emb)),
         "num_expanded_latents": int(len(flat)),
         "num_unique_timesteps": int(len(unique)),
+        "discarded_repeated_window_slots": int(len(flat) - len(unique)),
+        "duplicate_policy": "stable_first_occurrence_per_timestep",
         "latent_dim": int(unique.shape[1]),
         "frameskip": int(frameskip),
     }

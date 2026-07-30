@@ -40,6 +40,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--min-region-samples", type=int, default=256)
     parser.add_argument("--history-size", type=int, default=3)
     parser.add_argument("--num-preds", type=int, default=1)
+    parser.add_argument("--cpu-threads", type=int, default=4)
     parser.add_argument("--device", default="cuda")
     return parser.parse_args()
 
@@ -61,6 +62,9 @@ def load_model(path: str | Path) -> torch.nn.Module:
 
 def main() -> None:
     args = parse_args()
+    if args.cpu_threads < 1:
+        raise ValueError("--cpu-threads must be positive")
+    torch.set_num_threads(args.cpu_threads)
     cache_path = args.latent_cache.resolve(strict=True)
     model_path = args.pretrained_model.resolve(strict=True)
     partition_run = args.partition_dir.resolve(strict=True)
@@ -115,6 +119,7 @@ def main() -> None:
                 "weight_decay": args.weight_decay,
                 "history_size": args.history_size,
                 "num_preds": args.num_preds,
+                "cpu_threads": args.cpu_threads,
                 "precision": "fp32",
                 "checkpoint_selection": "minimum loss on same-region training cache",
             },
