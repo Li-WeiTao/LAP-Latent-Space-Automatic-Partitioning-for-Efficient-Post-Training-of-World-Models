@@ -1,0 +1,19 @@
+[stage] partition tasks=10 workers=8
+[start] stage=partition task=global gpu=0 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_20260730T132000Z/partition/global.log
+[start] stage=partition task=random_voronoi_p0 gpu=1 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_20260730T132000Z/partition/random_voronoi_p0.log
+[start] stage=partition task=random_voronoi_p1 gpu=2 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_20260730T132000Z/partition/random_voronoi_p1.log
+[start] stage=partition task=random_voronoi_p2 gpu=3 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_20260730T132000Z/partition/random_voronoi_p2.log
+[start] stage=partition task=kmeanspp_p0 gpu=4 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_20260730T132000Z/partition/kmeanspp_p0.log
+[start] stage=partition task=kmeanspp_p1 gpu=5 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_20260730T132000Z/partition/kmeanspp_p1.log
+[start] stage=partition task=kmeanspp_p2 gpu=6 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_20260730T132000Z/partition/kmeanspp_p2.log
+[start] stage=partition task=spectral_p0 gpu=7 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_20260730T132000Z/partition/spectral_p0.log
+[done] stage=partition task=random_voronoi_p0 gpu=1
+[start] stage=partition task=spectral_p2 gpu=1 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_20260730T132000Z/partition/spectral_p2.log
+[done] stage=partition task=random_voronoi_p1 gpu=2
+[done] stage=partition task=random_voronoi_p2 gpu=3
+[done] stage=partition task=spectral_p0 gpu=7
+[done] stage=partition task=spectral_p2 gpu=1
+[done] stage=partition task=kmeanspp_p1 gpu=5
+[done] stage=partition task=kmeanspp_p0 gpu=4
+[done] stage=partition task=kmeanspp_p2 gpu=6
+stage failed: partition; inspect experiments/pusht/matrix/logs/parallel_pusht8gpu_20260730T132000Z/partition

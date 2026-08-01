@@ -1,0 +1,33 @@
+{
+  "mode": "prepare_starts_only",
+  "dataset": "pusht",
+  "data_file": "/data/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/lewm_object.ckpt",
+  "train_config": {
+    "history_size": 3,
+    "num_preds": 1,
+    "frameskip": 5,
+    "img_size": 224,
+    "train_fraction": 0.9,
+    "split_seed": 3072,
+    "seed": 42,
+    "max_starts": 0,
+    "min_region_samples": 256,
+    "batch_size": 128,
+    "epochs": 30,
+    "lr": 5e-05,
+    "weight_decay": 0.001
+  },
+  "num_all_starts": 2056461,
+  "num_train_global_reference_starts": 1850815,
+  "training_data": "train_split_intersection",
+  "predictor_prefix": "train_",
+  "region_split_mode": "quantile",
+  "region_thresholds": null,
+  "regions": {
+    "common": {
+      "num_starts": 492637,
+      "starts_file": "experiments/pusht/matrix/preparation/P_train_common_starts.npy"
+    }
+  }
+}

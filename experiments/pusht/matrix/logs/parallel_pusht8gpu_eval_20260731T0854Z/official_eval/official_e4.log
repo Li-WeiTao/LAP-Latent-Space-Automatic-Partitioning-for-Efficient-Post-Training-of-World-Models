@@ -1,0 +1,126 @@
+08:54:42 | INFO  | __init__.py | JAX version 0.6.2 available.
+08:54:45 | INFO  | atomic_chec~| [atomic_save] installed crash-safe checkpoint plugin (write to sibling .tmp + fsync + atomic rename)
+08:54:45 | INFO  | __init__.py | Cached 'action' from '/data/sicong/weitao/.stable_worldmodel/datasets/pusht_expert_train.h5'
+08:54:45 | INFO  | __init__.py | Cached 'proprio' from '/data/sicong/weitao/.stable_worldmodel/datasets/pusht_expert_train.h5'
+08:54:45 | INFO  | __init__.py | Cached 'state' from '/data/sicong/weitao/.stable_worldmodel/datasets/pusht_expert_train.h5'
+1869611 valid starting points found for evaluation.
+[ 142173  189978  211480  317422  332078  410218  417463  486404  513286
+  659557  710204  789623  865286  881743  955817 1009849 1061867 1087921
+ 1117678 1169543 1201684 1224426 1275791 1343821 1360841 1380086 1419769
+ 1423008 1464014 1554067 1578066 1645666 1693454 1707896 1839280 1869588
+ 2033690 2054175 2093719 2104390 2169154 2170931 2194685 2200569 2201151
+ 2249338 2259236 2262314 2276952 2296837]
+/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/gymnasium/spaces/box.py:415: UserWarning: [33mWARN: Casting input x to numpy array.[0m
+  gym.logger.warn("Casting input x to numpy array.")
+CEM solve time: 39.4282 seconds
+/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/gymnasium/utils/passive_env_checker.py:157: UserWarning: [33mWARN: The obs returned by the `step()` method is not within the observation space.[0m
+  logger.warn(f"{pre} is not within the observation space.")
+CEM solve time: 10.9443 seconds
+/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/lance/__init__.py:320: UserWarning: lance is not fork-safe. If you are using multiprocessing, use spawn or forkserver instead.
+  warnings.warn(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+/data/sicong/anaconda3/lib/python3.10/subprocess.py:1780: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = _posixsubprocess.fork_exec(
+{'success_rate': 82.0, 'episode_successes': array([ True, False,  True,  True, False,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True, False,  True, False, False,  True,  True,
+        True,  True,  True,  True,  True,  True,  True, False,  True,
+        True,  True,  True, False, False,  True,  True,  True, False,
+        True,  True,  True,  True,  True]), 'seeds': None}

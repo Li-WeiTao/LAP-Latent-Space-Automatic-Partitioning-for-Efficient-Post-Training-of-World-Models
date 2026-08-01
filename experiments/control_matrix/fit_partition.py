@@ -25,7 +25,11 @@ TWOROOM_DIR = PROJECT_ROOT / "experiments" / "tworoom"
 sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(TWOROOM_DIR))
 
-from lap.partition import PartitionArtifact  # noqa: E402
+from lap.partition import (  # noqa: E402
+    GatedSpectralPartitioner,
+    PartitionArtifact,
+    SpectralGateConfig,
+)
 from lap.partition.landmark import (  # noqa: E402
     LandmarkSpectralConfig,
     LandmarkSpectralPartitioner,
@@ -40,12 +44,19 @@ from latent_spherical_kmeans_lib import (  # noqa: E402
 EPS = np.float32(1e-6)
 
 
+def comma_separated_ints(text: str) -> tuple[int, ...]:
+    values = tuple(int(value.strip()) for value in text.split(",") if value.strip())
+    if not values or len(values) != len(set(values)):
+        raise argparse.ArgumentTypeError("expected unique comma-separated integers")
+    return values
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--method",
         required=True,
-        choices=("global", "random_voronoi", "kmeanspp", "spectral"),
+        choices=("global", "random_voronoi", "kmeanspp", "spectral", "auto"),
     )
     parser.add_argument("--latent-cache", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, required=True)
@@ -71,6 +82,23 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--prototypes-per-cluster", type=int, default=16)
     parser.add_argument("--spectral-n-init", type=int, default=20)
     parser.add_argument("--prototype-n-init", type=int, default=5)
+    parser.add_argument(
+        "--diagnostic-seeds",
+        type=comma_separated_ints,
+        default=comma_separated_ints("0,1,2"),
+        help="At least three predeclared landmark draws for the auto gate.",
+    )
+    parser.add_argument("--deployment-seed", type=int, default=0)
+    parser.add_argument(
+        "--perturb-knn",
+        type=comma_separated_ints,
+        default=comma_separated_ints("27,33"),
+    )
+    parser.add_argument("--gate-perturbation-multiplier", type=float, default=2.0)
+    parser.add_argument("--gate-retention-threshold", type=float, default=0.5)
+    parser.add_argument("--gate-background-gap-count", type=int, default=10)
+    parser.add_argument("--gate-background-mad-multiplier", type=float, default=3.0)
+    parser.add_argument("--gate-epsilon", type=float, default=1e-8)
     parser.add_argument("--query-chunk", type=int, default=2048)
     parser.add_argument("--cpu-threads", type=int, default=4)
     parser.add_argument("--overwrite", action="store_true")
@@ -291,6 +319,68 @@ def build_spectral(
     return result.artifact, result.labels, result.metadata
 
 
+def build_auto(
+    raw: np.ndarray,
+    sample_ids: np.ndarray,
+    groups: np.ndarray,
+    args: argparse.Namespace,
+) -> tuple[PartitionArtifact, np.ndarray, dict]:
+    search = None
+    if args.device == "cuda":
+        search = lambda values, max_k: exact_cosine_knn_torch(
+            values,
+            max_k,
+            gpu_id=args.gpu_id,
+            query_chunk=args.query_chunk,
+        )
+    gate_config = SpectralGateConfig(
+        num_regions=args.num_clusters,
+        num_landmarks=min(args.num_landmarks, len(raw)),
+        nominal_knn=args.knn,
+        perturb_knn=args.perturb_knn,
+        diagnostic_seeds=args.diagnostic_seeds,
+        deployment_seed=args.deployment_seed,
+        perturbation_multiplier=args.gate_perturbation_multiplier,
+        retention_threshold=args.gate_retention_threshold,
+        background_gap_count=args.gate_background_gap_count,
+        background_mad_multiplier=args.gate_background_mad_multiplier,
+        epsilon=args.gate_epsilon,
+        eig_tol=1e-4,
+        eig_maxiter=20_000,
+        cpu_threads=args.cpu_threads,
+    )
+    partition_config = LandmarkSpectralConfig(
+        num_regions=args.num_clusters,
+        num_landmarks=min(args.num_landmarks, len(raw)),
+        knn=args.knn,
+        prototypes_per_region=args.prototypes_per_cluster,
+        seed=args.deployment_seed,
+        spectral_n_init=args.spectral_n_init,
+        prototype_n_init=args.prototype_n_init,
+        cpu_threads=args.cpu_threads,
+    )
+    partitioner = GatedSpectralPartitioner(
+        gate_config,
+        partition_config,
+        **({} if search is None else {"neighbor_search": search}),
+    )
+    result = partitioner.fit(raw, sample_ids=sample_ids, group_ids=groups)
+    gate = result.metadata["automatic_gate"]
+    method_metadata = {
+        "algorithm": "automatic_spectral_degeneracy_gate",
+        "selected_method": gate["selected_method"],
+        "selected_post_training": result.metadata["selected_post_training"],
+        "deployment_seed": gate["deployment_seed"],
+        "automatic_gate": gate,
+        "deployed_partition": {
+            key: value
+            for key, value in result.metadata.items()
+            if key not in {"automatic_gate", "selected_post_training"}
+        },
+    }
+    return result.artifact, result.labels, method_metadata
+
+
 def main() -> None:
     args = parse_args()
     if args.frameskip < 1 or (
@@ -322,13 +412,20 @@ def main() -> None:
         artifact, labels, method_meta = build_kmeans(
             transformed, mean, scale, args
         )
-    else:
+    elif args.method == "spectral":
         if args.data_file is None:
             raise ValueError("--data-file is required for spectral episode sampling")
         groups = episode_ids(
             args.data_file.resolve(strict=True), sample_ids, args.episode_key
         )
         artifact, labels, method_meta = build_spectral(raw, groups, args)
+    else:
+        if args.data_file is None:
+            raise ValueError("--data-file is required for automatic spectral gating")
+        groups = episode_ids(
+            args.data_file.resolve(strict=True), sample_ids, args.episode_key
+        )
+        artifact, labels, method_meta = build_auto(raw, sample_ids, groups, args)
 
     artifact.validate()
     labels = np.asarray(labels, dtype=np.int64)
@@ -355,7 +452,8 @@ def main() -> None:
         "schema_version": 1,
         "dataset": args.dataset_name,
         "method": args.method,
-        "partition_seed": args.seed,
+        "selected_method": method_meta.get("selected_method", args.method),
+        "partition_seed": method_meta.get("deployment_seed", args.seed),
         "num_clusters": artifact.num_regions,
         "cluster_counts": counts.tolist(),
         "cluster_fractions": (counts / len(labels)).tolist(),

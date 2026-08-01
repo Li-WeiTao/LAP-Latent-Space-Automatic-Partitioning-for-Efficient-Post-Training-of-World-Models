@@ -1,0 +1,167 @@
+[stage] partition tasks=10 workers=8
+[start] stage=partition task=global gpu=0 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/partition/global.log
+[start] stage=partition task=random_voronoi_p0 gpu=1 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/partition/random_voronoi_p0.log
+[start] stage=partition task=random_voronoi_p1 gpu=2 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/partition/random_voronoi_p1.log
+[start] stage=partition task=random_voronoi_p2 gpu=3 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/partition/random_voronoi_p2.log
+[start] stage=partition task=kmeanspp_p0 gpu=4 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/partition/kmeanspp_p0.log
+[start] stage=partition task=kmeanspp_p1 gpu=5 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/partition/kmeanspp_p1.log
+[start] stage=partition task=kmeanspp_p2 gpu=6 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/partition/kmeanspp_p2.log
+[start] stage=partition task=spectral_p0 gpu=7 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/partition/spectral_p0.log
+[done] stage=partition task=random_voronoi_p0 gpu=1
+[start] stage=partition task=spectral_p2 gpu=1 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/partition/spectral_p2.log
+[done] stage=partition task=global gpu=0
+[start] stage=partition task=spectral_p1 gpu=0 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/partition/spectral_p1.log
+[done] stage=partition task=random_voronoi_p1 gpu=2
+[done] stage=partition task=kmeanspp_p0 gpu=4
+[done] stage=partition task=random_voronoi_p2 gpu=3
+[done] stage=partition task=kmeanspp_p2 gpu=6
+[done] stage=partition task=spectral_p0 gpu=7
+[done] stage=partition task=kmeanspp_p1 gpu=5
+[done] stage=partition task=spectral_p2 gpu=1
+[done] stage=partition task=spectral_p1 gpu=0
+[stage] training tasks=33 workers=8
+[start] stage=training task=joint_t0 gpu=0 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/joint_t0.log
+[start] stage=training task=random_voronoi_p0_t0 gpu=2 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/random_voronoi_p0_t0.log
+[start] stage=training task=global_t0 gpu=1 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/global_t0.log
+[start] stage=training task=random_voronoi_p1_t0 gpu=3 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/random_voronoi_p1_t0.log
+[start] stage=training task=random_voronoi_p2_t0 gpu=4 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/random_voronoi_p2_t0.log
+[start] stage=training task=kmeanspp_p1_t0 gpu=6 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/kmeanspp_p1_t0.log
+[start] stage=training task=kmeanspp_p2_t0 gpu=7 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/kmeanspp_p2_t0.log
+[start] stage=training task=kmeanspp_p0_t0 gpu=5 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/kmeanspp_p0_t0.log
+[done] stage=training task=random_voronoi_p0_t0 gpu=2
+[start] stage=training task=spectral_p2_t0 gpu=2 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/spectral_p2_t0.log
+[done] stage=training task=global_t0 gpu=1
+[start] stage=training task=spectral_p1_t0 gpu=1 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/spectral_p1_t0.log
+[done] stage=training task=random_voronoi_p1_t0 gpu=3
+[start] stage=training task=joint_t42 gpu=3 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/joint_t42.log
+[done] stage=training task=kmeanspp_p1_t0 gpu=6
+[start] stage=training task=random_voronoi_p1_t42 gpu=6 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/random_voronoi_p1_t42.log
+[done] stage=training task=kmeanspp_p2_t0 gpu=7
+[start] stage=training task=random_voronoi_p2_t42 gpu=7 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/random_voronoi_p2_t42.log
+[done] stage=training task=random_voronoi_p2_t0 gpu=4
+[start] stage=training task=global_t42 gpu=4 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/global_t42.log
+[done] stage=training task=kmeanspp_p0_t0 gpu=5
+[start] stage=training task=random_voronoi_p0_t42 gpu=5 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/random_voronoi_p0_t42.log
+[done] stage=training task=joint_t0 gpu=0
+[start] stage=training task=spectral_p0_t0 gpu=0 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/spectral_p0_t0.log
+[done] stage=training task=spectral_p2_t0 gpu=2
+[start] stage=training task=kmeanspp_p2_t42 gpu=2 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/kmeanspp_p2_t42.log
+[done] stage=training task=random_voronoi_p2_t42 gpu=7
+[start] stage=training task=global_t625 gpu=7 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/global_t625.log
+[done] stage=training task=random_voronoi_p1_t42 gpu=6
+[start] stage=training task=joint_t625 gpu=6 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/joint_t625.log
+[done] stage=training task=joint_t42 gpu=3
+[start] stage=training task=spectral_p0_t42 gpu=3 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/spectral_p0_t42.log
+[done] stage=training task=spectral_p1_t0 gpu=1
+[start] stage=training task=kmeanspp_p1_t42 gpu=1 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/kmeanspp_p1_t42.log
+[done] stage=training task=spectral_p0_t0 gpu=0
+[start] stage=training task=kmeanspp_p0_t42 gpu=0 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/kmeanspp_p0_t42.log
+[done] stage=training task=random_voronoi_p0_t42 gpu=5
+[start] stage=training task=spectral_p2_t42 gpu=5 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/spectral_p2_t42.log
+[done] stage=training task=kmeanspp_p2_t42 gpu=2
+[start] stage=training task=random_voronoi_p2_t625 gpu=2 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/random_voronoi_p2_t625.log
+[done] stage=training task=global_t625 gpu=7
+[start] stage=training task=spectral_p1_t625 gpu=7 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/spectral_p1_t625.log
+[done] stage=training task=global_t42 gpu=4
+[start] stage=training task=spectral_p1_t42 gpu=4 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/spectral_p1_t42.log
+[done] stage=training task=joint_t625 gpu=6
+[start] stage=training task=spectral_p0_t625 gpu=6 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/spectral_p0_t625.log
+[done] stage=training task=spectral_p0_t42 gpu=3
+[start] stage=training task=kmeanspp_p0_t625 gpu=3 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/kmeanspp_p0_t625.log
+[done] stage=training task=kmeanspp_p0_t42 gpu=0
+[start] stage=training task=random_voronoi_p0_t625 gpu=0 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/random_voronoi_p0_t625.log
+[done] stage=training task=kmeanspp_p1_t42 gpu=1
+[start] stage=training task=random_voronoi_p1_t625 gpu=1 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/random_voronoi_p1_t625.log
+[done] stage=training task=spectral_p2_t42 gpu=5
+[start] stage=training task=kmeanspp_p2_t625 gpu=5 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/kmeanspp_p2_t625.log
+[done] stage=training task=spectral_p1_t42 gpu=4
+[start] stage=training task=kmeanspp_p1_t625 gpu=4 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/kmeanspp_p1_t625.log
+[done] stage=training task=random_voronoi_p2_t625 gpu=2
+[done] stage=training task=spectral_p1_t625 gpu=7
+[done] stage=training task=spectral_p0_t625 gpu=6
+[done] stage=training task=kmeanspp_p0_t625 gpu=3
+[done] stage=training task=random_voronoi_p0_t625 gpu=0
+[done] stage=training task=random_voronoi_p1_t625 gpu=1
+[start] stage=training task=spectral_p2_t625 gpu=0 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/training/spectral_p2_t625.log
+[done] stage=training task=kmeanspp_p1_t625 gpu=4
+[done] stage=training task=kmeanspp_p2_t625 gpu=5
+[done] stage=training task=spectral_p2_t625 gpu=0
+[stage] official_eval tasks=5 workers=8
+[start] stage=official_eval task=official_e0 gpu=0 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/official_eval/official_e0.log
+[start] stage=official_eval task=official_e1 gpu=1 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/official_eval/official_e1.log
+[start] stage=official_eval task=official_e4 gpu=4 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/official_eval/official_e4.log
+[start] stage=official_eval task=official_e2 gpu=2 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/official_eval/official_e2.log
+[start] stage=official_eval task=official_e3 gpu=3 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/official_eval/official_e3.log
+[done] stage=official_eval task=official_e3 gpu=3
+[done] stage=official_eval task=official_e0 gpu=0
+[done] stage=official_eval task=official_e1 gpu=1
+[done] stage=official_eval task=official_e4 gpu=4
+[done] stage=official_eval task=official_e2 gpu=2
+[stage] model_eval tasks=33 workers=8
+[start] stage=model_eval task=joint_t0 gpu=0 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/joint_t0.log
+[start] stage=model_eval task=global_t0 gpu=1 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/global_t0.log
+[start] stage=model_eval task=random_voronoi_p1_t0 gpu=3 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/random_voronoi_p1_t0.log
+[start] stage=model_eval task=random_voronoi_p0_t0 gpu=2 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/random_voronoi_p0_t0.log
+[start] stage=model_eval task=random_voronoi_p2_t0 gpu=4 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/random_voronoi_p2_t0.log
+[start] stage=model_eval task=kmeanspp_p0_t0 gpu=5 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/kmeanspp_p0_t0.log
+[start] stage=model_eval task=kmeanspp_p1_t0 gpu=6 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/kmeanspp_p1_t0.log
+[start] stage=model_eval task=kmeanspp_p2_t0 gpu=7 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/kmeanspp_p2_t0.log
+[done] stage=model_eval task=random_voronoi_p1_t0 gpu=3
+[start] stage=model_eval task=joint_t42 gpu=3 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/joint_t42.log
+[done] stage=model_eval task=kmeanspp_p1_t0 gpu=6
+[start] stage=model_eval task=random_voronoi_p1_t42 gpu=6 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/random_voronoi_p1_t42.log
+[done] stage=model_eval task=global_t0 gpu=1
+[start] stage=model_eval task=spectral_p1_t0 gpu=1 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/spectral_p1_t0.log
+[done] stage=model_eval task=joint_t0 gpu=0
+[start] stage=model_eval task=spectral_p0_t0 gpu=0 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/spectral_p0_t0.log
+[done] stage=model_eval task=joint_t42 gpu=3
+[start] stage=model_eval task=spectral_p0_t42 gpu=3 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/spectral_p0_t42.log
+[done] stage=model_eval task=kmeanspp_p2_t0 gpu=7
+[start] stage=model_eval task=random_voronoi_p2_t42 gpu=7 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/random_voronoi_p2_t42.log
+[done] stage=model_eval task=kmeanspp_p0_t0 gpu=5
+[start] stage=model_eval task=random_voronoi_p0_t42 gpu=5 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/random_voronoi_p0_t42.log
+[done] stage=model_eval task=random_voronoi_p2_t0 gpu=4
+[start] stage=model_eval task=global_t42 gpu=4 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/global_t42.log
+[done] stage=model_eval task=random_voronoi_p1_t42 gpu=6
+[start] stage=model_eval task=joint_t625 gpu=6 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/joint_t625.log
+[done] stage=model_eval task=random_voronoi_p0_t0 gpu=2
+[start] stage=model_eval task=spectral_p2_t0 gpu=2 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/spectral_p2_t0.log
+[done] stage=model_eval task=spectral_p0_t42 gpu=3
+[start] stage=model_eval task=kmeanspp_p0_t625 gpu=3 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/kmeanspp_p0_t625.log
+[done] stage=model_eval task=joint_t625 gpu=6
+[start] stage=model_eval task=spectral_p0_t625 gpu=6 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/spectral_p0_t625.log
+[done] stage=model_eval task=spectral_p1_t0 gpu=1
+[start] stage=model_eval task=kmeanspp_p1_t42 gpu=1 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/kmeanspp_p1_t42.log
+[done] stage=model_eval task=global_t42 gpu=4
+[start] stage=model_eval task=spectral_p1_t42 gpu=4 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/spectral_p1_t42.log
+[done] stage=model_eval task=spectral_p0_t0 gpu=0
+[start] stage=model_eval task=kmeanspp_p0_t42 gpu=0 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/kmeanspp_p0_t42.log
+[done] stage=model_eval task=kmeanspp_p0_t625 gpu=3
+[done] stage=model_eval task=spectral_p0_t625 gpu=6
+[done] stage=model_eval task=random_voronoi_p0_t42 gpu=5
+[start] stage=model_eval task=spectral_p2_t42 gpu=5 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/spectral_p2_t42.log
+[done] stage=model_eval task=random_voronoi_p2_t42 gpu=7
+[start] stage=model_eval task=global_t625 gpu=7 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/global_t625.log
+[done] stage=model_eval task=spectral_p2_t0 gpu=2
+[start] stage=model_eval task=kmeanspp_p2_t42 gpu=2 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/kmeanspp_p2_t42.log
+[done] stage=model_eval task=kmeanspp_p1_t42 gpu=1
+[start] stage=model_eval task=random_voronoi_p1_t625 gpu=1 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/random_voronoi_p1_t625.log
+[done] stage=model_eval task=kmeanspp_p0_t42 gpu=0
+[start] stage=model_eval task=random_voronoi_p0_t625 gpu=0 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/random_voronoi_p0_t625.log
+[done] stage=model_eval task=global_t625 gpu=7
+[start] stage=model_eval task=spectral_p1_t625 gpu=7 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/spectral_p1_t625.log
+[done] stage=model_eval task=spectral_p1_t42 gpu=4
+[start] stage=model_eval task=kmeanspp_p1_t625 gpu=4 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/kmeanspp_p1_t625.log
+[done] stage=model_eval task=spectral_p2_t42 gpu=5
+[start] stage=model_eval task=kmeanspp_p2_t625 gpu=5 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/kmeanspp_p2_t625.log
+[done] stage=model_eval task=kmeanspp_p2_t42 gpu=2
+[start] stage=model_eval task=random_voronoi_p2_t625 gpu=2 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/random_voronoi_p2_t625.log
+[done] stage=model_eval task=random_voronoi_p1_t625 gpu=1
+[done] stage=model_eval task=random_voronoi_p0_t625 gpu=0
+[start] stage=model_eval task=spectral_p2_t625 gpu=0 log=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z/model_eval/spectral_p2_t625.log
+[done] stage=model_eval task=spectral_p1_t625 gpu=7
+[done] stage=model_eval task=kmeanspp_p1_t625 gpu=4
+[done] stage=model_eval task=kmeanspp_p2_t625 gpu=5
+[done] stage=model_eval task=random_voronoi_p2_t625 gpu=2
+[done] stage=model_eval task=spectral_p2_t625 gpu=0
+[complete] run_id=pusht8gpu_eval_20260731T0854Z logs=experiments/pusht/matrix/logs/parallel_pusht8gpu_eval_20260731T0854Z

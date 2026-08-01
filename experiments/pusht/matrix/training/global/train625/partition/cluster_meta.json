@@ -1,0 +1,5 @@
+{
+  "algorithm": "global_single_region",
+  "num_clusters": 1,
+  "routing": "constant_region_0"
+}

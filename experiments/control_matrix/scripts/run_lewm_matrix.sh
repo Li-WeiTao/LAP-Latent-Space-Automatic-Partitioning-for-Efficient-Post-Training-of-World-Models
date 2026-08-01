@@ -20,6 +20,19 @@ PARTITION_SEEDS=${PARTITION_SEEDS:-0,1,2}
 EVAL_SEEDS=${EVAL_SEEDS:-0,1,2,3,4}
 METHODS=${METHODS:-random_voronoi,kmeanspp,spectral}
 CPU_THREADS=${CPU_THREADS:-4}
+NUM_CLUSTERS=${NUM_CLUSTERS:-3}
+GATE_DIAGNOSTIC_SEEDS=${GATE_DIAGNOSTIC_SEEDS:-0,1,2}
+GATE_DEPLOYMENT_SEED=${GATE_DEPLOYMENT_SEED:-0}
+GATE_NUM_LANDMARKS=${GATE_NUM_LANDMARKS:-20000}
+GATE_NOMINAL_KNN=${GATE_NOMINAL_KNN:-30}
+GATE_PERTURB_KNN=${GATE_PERTURB_KNN:-27,33}
+GATE_PERTURBATION_MULTIPLIER=${GATE_PERTURBATION_MULTIPLIER:-2.0}
+GATE_RETENTION_THRESHOLD=${GATE_RETENTION_THRESHOLD:-0.5}
+GATE_BACKGROUND_GAP_COUNT=${GATE_BACKGROUND_GAP_COUNT:-10}
+GATE_BACKGROUND_MAD_MULTIPLIER=${GATE_BACKGROUND_MAD_MULTIPLIER:-3.0}
+GATE_EPSILON=${GATE_EPSILON:-1e-8}
+GOAL_OFFSET=${GOAL_OFFSET:-}
+EVAL_BUDGET=${EVAL_BUDGET:-}
 
 PYTHON=${PYTHON:-python}
 if [[ -n "$GPU_ID" ]]; then
@@ -110,6 +123,40 @@ partition() {
   partition_regions
 }
 
+partition_auto() {
+  local out="$WORK_ROOT/auto/partition"
+  if [[ ! -f "$out/manifest.json" ]]; then
+    "$PYTHON" experiments/control_matrix/fit_partition.py \
+      --method auto --dataset-name "$DATASET_NAME" \
+      --data-file "$DATA_FILE" --latent-cache "$LATENT_CACHE" \
+      --frameskip 5 --num-clusters "$NUM_CLUSTERS" \
+      --num-landmarks "$GATE_NUM_LANDMARKS" --knn "$GATE_NOMINAL_KNN" \
+      --perturb-knn "$GATE_PERTURB_KNN" \
+      --diagnostic-seeds "$GATE_DIAGNOSTIC_SEEDS" \
+      --deployment-seed "$GATE_DEPLOYMENT_SEED" \
+      --gate-perturbation-multiplier "$GATE_PERTURBATION_MULTIPLIER" \
+      --gate-retention-threshold "$GATE_RETENTION_THRESHOLD" \
+      --gate-background-gap-count "$GATE_BACKGROUND_GAP_COUNT" \
+      --gate-background-mad-multiplier "$GATE_BACKGROUND_MAD_MULTIPLIER" \
+      --gate-epsilon "$GATE_EPSILON" \
+      --gpu-id 0 --cpu-threads "$CPU_THREADS" --out-dir "$out"
+  fi
+  "$PYTHON" - "$out/manifest.json" <<'PY'
+import json
+import sys
+manifest = json.load(open(sys.argv[1], encoding="utf-8"))
+gate = manifest["method_metadata"]["automatic_gate"]
+print(
+    "[auto-gate] selected_method=" + gate["selected_method"]
+    + " reason=" + gate["reason"]
+    + " S=" + str(gate["retained_safety_fraction"])
+    + " R=" + str(gate["robust_residual_gap"])
+    + " T_bg=" + str(gate["background_threshold"]),
+    flush=True,
+)
+PY
+}
+
 train_joint() {
   for tseed in "${train_seeds[@]}"; do
     local joint="$WORK_ROOT/training/joint/train$tseed"
@@ -161,6 +208,20 @@ train() {
   train_regions
 }
 
+train_auto() {
+  [[ -f "$WORK_ROOT/auto/partition/manifest.json" ]] || partition_auto
+  for tseed in "${train_seeds[@]}"; do
+    local out="$WORK_ROOT/auto/training/train$tseed"
+    [[ -f "$out/manifest.json" ]] && continue
+    "$PYTHON" experiments/control_matrix/train_predictors.py \
+      --dataset-name "$DATASET_NAME" --latent-cache "$LATENT_CACHE" \
+      --pretrained-model "$CHECKPOINT" \
+      --partition-dir "$WORK_ROOT/auto/partition" \
+      --out-dir "$out" --train-seed "$tseed" --epochs 50 \
+      --cpu-threads "$CPU_THREADS"
+  done
+}
+
 eval_one() {
   local mode=$1 checkpoint=$2 lap_run=$3 out=$4 eval_seed=$5 starts=$6
   local args=(
@@ -168,6 +229,8 @@ eval_one() {
     --config-name "$EVAL_CONFIG" --dataset-tag "$DATASET_NAME"
     --cache-dir "$CACHE_DIR" --out-dir "$out" --num-eval 50
   )
+  [[ -n "$GOAL_OFFSET" ]] && args+=(--goal-offset "$GOAL_OFFSET")
+  [[ -n "$EVAL_BUDGET" ]] && args+=(--eval-budget "$EVAL_BUDGET")
   [[ -n "$lap_run" ]] && args+=(--lap-run-dir "$lap_run" --latent-routing mpc)
   [[ -n "$starts" ]] && args+=(--eval-start-indices "$starts")
   [[ -z "$starts" ]] && args+=(--sample-eval-starts)
@@ -237,6 +300,25 @@ evaluate() {
   evaluate_regions
 }
 
+evaluate_auto() {
+  for eseed in "${eval_seeds[@]}"; do
+    local starts="$WORK_ROOT/eval/official/eval$eseed/results.json"
+    [[ -f "$starts" ]] || { echo "missing paired starts: $starts" >&2; exit 1; }
+    for tseed in "${train_seeds[@]}"; do
+      local run="$WORK_ROOT/auto/training/train$tseed"
+      local out="$WORK_ROOT/auto/eval/train$tseed/eval$eseed"
+      [[ -f "$out/results.json" ]] && continue
+      eval_one lap "$CHECKPOINT" "$run" "$out" "$eseed" "$starts"
+    done
+  done
+}
+
+auto_posttrain() {
+  prepare
+  partition_auto
+  train_auto
+}
+
 aggregate() {
   "$PYTHON" experiments/control_matrix/aggregate_matrix.py \
     --root "$WORK_ROOT" --dataset-name "$DATASET_NAME" \
@@ -249,15 +331,19 @@ case "$PHASE" in
   partition_global) partition_global ;;
   partition_regions) partition_regions ;;
   partition) partition ;;
+  partition_auto) partition_auto ;;
   train_joint) train_joint ;;
   train_global) train_global ;;
   train_regions) train_regions ;;
   train) train ;;
+  train_auto) train_auto ;;
   eval_official) evaluate_official ;;
   eval_joint) evaluate_joint ;;
   eval_global) evaluate_global ;;
   eval_regions) evaluate_regions ;;
   eval) evaluate ;;
+  eval_auto) evaluate_auto ;;
+  auto_posttrain) auto_posttrain ;;
   aggregate) aggregate ;;
   all) prepare; partition; train; evaluate; aggregate ;;
   *) echo "unknown PHASE=$PHASE" >&2; exit 2 ;;

@@ -1,0 +1,1 @@
+[gate] task=pusht selected=global reason=safety_and_background_checks_failed S=0.012014851003384286 R=0.0017087646139298807 T_bg=0.22395176859263868 -> experiments/control_matrix/results/paper_gate_v1/pusht.json

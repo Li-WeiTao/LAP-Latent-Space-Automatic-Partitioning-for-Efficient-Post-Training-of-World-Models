@@ -1,0 +1,80 @@
+{
+  "method": "joint_continue",
+  "dataset": "pusht",
+  "description": "All JEPA modules jointly optimized from the released checkpoint with the original LeWM loss. Optimizer state is fresh because the released checkpoint contains model weights only.",
+  "formal_full_epoch": true,
+  "input_checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/lewm_object.ckpt",
+  "input_checkpoint_sha256": "e727d64a8b3535c3152dc72688bb7565c536c1b1317c56d04072cf7cc1183cc2",
+  "output_checkpoint": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix/training/joint/train0/joint_continue_object.ckpt",
+  "output_checkpoint_sha256": "deb3ee2ed033232acfeb8923f98cb0f2fc9f78972dcbb79dd617997b3b16e83b",
+  "data_file": "/data/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+  "dataset_num_windows": 1981721,
+  "train_num_windows": 1783549,
+  "validation_num_windows_unused": 198172,
+  "train_subset_indices_sha256": "13ae8fc2a9a24d4c9ebfc417275fbdf31e84df277d8da4e7399a4f5dbf381c43",
+  "processed_samples": 5350272,
+  "component_parameter_counts": {
+    "encoder": 5501376,
+    "projector": 792768,
+    "predictor": 10791360,
+    "pred_proj": 792768,
+    "action_encoder": 156206
+  },
+  "total_trainable_parameters": 18034478,
+  "config": {
+    "seed": 0,
+    "split_seed": 3072,
+    "epochs": 3,
+    "batch_size": 128,
+    "num_workers": 4,
+    "cpu_threads": 4,
+    "lr": 5e-05,
+    "weight_decay": 0.001,
+    "optimizer": "AdamW (fresh state)",
+    "scheduler": null,
+    "gradient_clip_val": 1.0,
+    "sigreg_weight": 0.09,
+    "sigreg_knots": 17,
+    "sigreg_num_proj": 1024,
+    "history_size": 3,
+    "num_preds": 1,
+    "frameskip": 5,
+    "img_size": 224,
+    "train_fraction": 0.9,
+    "max_batches": 0,
+    "precision": "fp32"
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "num_steps": 13933,
+      "processed_samples": 1783424,
+      "pred_loss_mean": 0.01101300388306961,
+      "sigreg_loss_mean": 0.8923290724012708,
+      "total_loss_mean": 0.09132262387613141,
+      "elapsed_sec": 4798.837888829992
+    },
+    {
+      "epoch": 2,
+      "num_steps": 13933,
+      "processed_samples": 1783424,
+      "pred_loss_mean": 0.009985832688080152,
+      "sigreg_loss_mean": 0.8680854398025423,
+      "total_loss_mean": 0.08811352565870686,
+      "elapsed_sec": 4804.272774468001
+    },
+    {
+      "epoch": 3,
+      "num_steps": 13933,
+      "processed_samples": 1783424,
+      "pred_loss_mean": 0.009243379868802278,
+      "sigreg_loss_mean": 0.8510808254369734,
+      "total_loss_mean": 0.0858406574582109,
+      "elapsed_sec": 4807.7987342249835
+    }
+  ],
+  "timing_sec": {
+    "dataset_load_and_setup": 0.3976638489984907,
+    "training": 14410.909412203997
+  }
+}

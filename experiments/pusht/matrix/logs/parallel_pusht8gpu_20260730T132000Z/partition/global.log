@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/fit_partition.py", line 377, in <module>
+    main()
+  File "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/fit_partition.py", line 306, in main
+    args.out_dir.mkdir(parents=True)
+  File "/data/sicong/anaconda3/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+FileExistsError: [Errno 17] File exists: 'experiments/pusht/matrix/partitions/global/seed0'

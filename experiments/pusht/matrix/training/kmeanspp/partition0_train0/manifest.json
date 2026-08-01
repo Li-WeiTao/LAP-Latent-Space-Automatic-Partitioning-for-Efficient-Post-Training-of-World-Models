@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "method": "LAP",
+  "pretrained_model": "/data/sicong/weitao/.stable_worldmodel/pusht/lewm_object.ckpt",
+  "num_transitions": 1850815,
+  "num_regions": 3,
+  "partition_metadata": {
+    "mode": "indexed_assignment_replay"
+  },
+  "cache_metadata": {
+    "source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix/pusht_lewm_train_latent_cache.npz",
+    "encoding": "lossless_precomputed",
+    "route_index": 0
+  },
+  "regions": {
+    "cluster0": {
+      "num_samples": 655115,
+      "checkpoint": "experiments/pusht/matrix/training/kmeanspp/partition0_train0/P_train_cluster0_object.ckpt",
+      "metrics": "experiments/pusht/matrix/training/kmeanspp/partition0_train0/P_train_cluster0_metrics.json"
+    },
+    "cluster1": {
+      "num_samples": 589702,
+      "checkpoint": "experiments/pusht/matrix/training/kmeanspp/partition0_train0/P_train_cluster1_object.ckpt",
+      "metrics": "experiments/pusht/matrix/training/kmeanspp/partition0_train0/P_train_cluster1_metrics.json"
+    },
+    "cluster2": {
+      "num_samples": 605998,
+      "checkpoint": "experiments/pusht/matrix/training/kmeanspp/partition0_train0/P_train_cluster2_object.ckpt",
+      "metrics": "experiments/pusht/matrix/training/kmeanspp/partition0_train0/P_train_cluster2_metrics.json"
+    }
+  },
+  "dataset": "pusht",
+  "partition_source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix/partitions/kmeanspp/seed0",
+  "partition_source_manifest_sha256": "58add75f7ef5126b850c8194faf4e2c98b08c30ba6264cbda98976c3c0feed14",
+  "latent_cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix/pusht_lewm_train_latent_cache.npz",
+  "latent_cache_sha256": "e9a90dee8d9b01561f1f64a8abd55861689eed6d6202b525eae6468b9f5fe407",
+  "pretrained_model_sha256": "e727d64a8b3535c3152dc72688bb7565c536c1b1317c56d04072cf7cc1183cc2",
+  "train_seed": 0,
+  "training_config": {
+    "epochs": 50,
+    "batch_size": 128,
+    "learning_rate": 5e-05,
+    "weight_decay": 0.001,
+    "history_size": 3,
+    "num_preds": 1,
+    "cpu_threads": 4,
+    "precision": "fp32",
+    "checkpoint_selection": "minimum loss on same-region training cache"
+  },
+  "predictor_checkpoint_sha256": {
+    "cluster0": "f7a0cb2f58761f13f48d71462f16be7f04e07c87f9996725dbf1f835a9aa2ade",
+    "cluster1": "0a3e86bc844993a00aaa0b55aeec73d8c2bfd5028b07d0a88ed81aad19572d80",
+    "cluster2": "d3173c18c2682cfeb6f3ac625a0bf3cabd3c22de2e709f14a9536be2a8349012"
+  }
+}

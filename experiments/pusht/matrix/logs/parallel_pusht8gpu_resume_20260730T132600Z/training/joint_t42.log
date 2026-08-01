@@ -1,0 +1,153 @@
+16:43:54 | INFO  | __init__.py | JAX version 0.6.2 available.
+16:43:56 | INFO  | atomic_chec~| [atomic_save] installed crash-safe checkpoint plugin (write to sibling .tmp + fsync + atomic rename)
+16:43:57 | INFO  | __init__.py | Cached 'action' from '/data/sicong/weitao/datasets/lewm/pusht_expert_train.h5'
+16:43:57 | INFO  | __init__.py | Cached 'proprio' from '/data/sicong/weitao/datasets/lewm/pusht_expert_train.h5'
+/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/lance/__init__.py:320: UserWarning: lance is not fork-safe. If you are using multiprocessing, use spawn or forkserver instead.
+  warnings.warn(
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+16:44:01 | ERROR | richuru.py  | Exception:
+Traceback (most recent call last):
+
+> File "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/joint_continue_tworoom.py", line 367, in <module>
+    main()
+    └ <function main at 0x7895a6d42e60>
+
+  File "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/joint_continue_tworoom.py", line 250, in main
+    output = model.encode(batch)
+             │     │      └ {'pixels': tensor([[[[[2.2489, 2.2318, 2.2318,  ..., 2.2489, 2.2489, 2.2489],
+             │     │                   [2.2489, 2.2147, 1.5639,  ..., 1.546...
+             │     └ <function LeWM.encode at 0x7895f0dce0e0>
+             └ LeWM(
+                 (encoder): ViTModel(
+                   (embeddings): ViTEmbeddings(
+                     (patch_embeddings): ViTPatchEmbeddings(
+                       (projecti...
+
+  File "/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/stable_worldmodel/wm/lewm/lewm.py", line 34, in encode
+    output = self.encoder(pixels, interpolate_pos_encoding=True)
+             │            └ tensor([[[[2.2489, 2.2318, 2.2318,  ..., 2.2489, 2.2489, 2.2489],
+             │                        [2.2489, 2.2147, 1.5639,  ..., 1.5468, 2.2147, 2....
+             └ LeWM(
+                 (encoder): ViTModel(
+                   (embeddings): ViTEmbeddings(
+                     (patch_embeddings): ViTPatchEmbeddings(
+                       (projecti...
+  File "/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           │    │           │       └ {'interpolate_pos_encoding': True}
+           │    │           └ (tensor([[[[2.2489, 2.2318, 2.2318,  ..., 2.2489, 2.2489, 2.2489],
+           │    │                       [2.2489, 2.2147, 1.5639,  ..., 1.5468, 2.2147, 2...
+           │    └ <function Module._call_impl at 0x789698134940>
+           └ ViTModel(
+               (embeddings): ViTEmbeddings(
+                 (patch_embeddings): ViTPatchEmbeddings(
+                   (projection): Conv2d(3, 192, kerne...
+  File "/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           │             │       └ {'interpolate_pos_encoding': True}
+           │             └ (tensor([[[[2.2489, 2.2318, 2.2318,  ..., 2.2489, 2.2489, 2.2489],
+           │                         [2.2489, 2.2147, 1.5639,  ..., 1.5468, 2.2147, 2...
+           └ <bound method ViTModel.forward of ViTModel(
+               (embeddings): ViTEmbeddings(
+                 (patch_embeddings): ViTPatchEmbeddings(
+                   ...
+  File "/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/transformers/utils/generic.py", line 1036, in wrapper
+    output = func(self, *args, **kwargs)
+             │    │      │       └ {'interpolate_pos_encoding': True}
+             │    │      └ (tensor([[[[2.2489, 2.2318, 2.2318,  ..., 2.2489, 2.2489, 2.2489],
+             │    │                  [2.2489, 2.2147, 1.5639,  ..., 1.5468, 2.2147, 2...
+             │    └ ViTModel(
+             │        (embeddings): ViTEmbeddings(
+             │          (patch_embeddings): ViTPatchEmbeddings(
+             │            (projection): Conv2d(3, 192, kerne...
+             └ <function ViTModel.forward at 0x7895b2321ab0>
+  File "/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/transformers/utils/output_capturing.py", line 252, in wrapper
+    outputs = func(self, *args, **kwargs)
+              │    │      │       └ {'interpolate_pos_encoding': True}
+              │    │      └ (tensor([[[[2.2489, 2.2318, 2.2318,  ..., 2.2489, 2.2489, 2.2489],
+              │    │                  [2.2489, 2.2147, 1.5639,  ..., 1.5468, 2.2147, 2...
+              │    └ ViTModel(
+              │        (embeddings): ViTEmbeddings(
+              │          (patch_embeddings): ViTPatchEmbeddings(
+              │            (projection): Conv2d(3, 192, kerne...
+              └ <function ViTModel.forward at 0x7895b2321a20>
+  File "/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/transformers/models/vit/modeling_vit.py", line 383, in forward
+    hidden_states = layer(hidden_states, attention_mask, **kwargs)
+                    │     │              │                 └ {}
+                    │     │              └ None
+                    │     └ tensor([[[-0.1926,  0.1508,  0.6305,  ..., -0.9545,  0.0539,  0.2880],
+                    │                [ 0.1379,  2.5005,  0.3460,  ...,  1.2295,  0...
+                    └ ViTLayer(
+                        (attention): ViTAttention(
+                          (q_proj): Linear(in_features=192, out_features=192, bias=True)
+                          (k_proj): Linea...
+  File "/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/transformers/modeling_layers.py", line 93, in __call__
+    return super().__call__(*args, **kwargs)
+                             │       └ {}
+                             └ (tensor([[[-0.1926,  0.1508,  0.6305,  ..., -0.9545,  0.0539,  0.2880],
+                                        [ 0.1379,  2.5005,  0.3460,  ...,  1.2295,  ...
+  File "/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           │    │           │       └ {}
+           │    │           └ (tensor([[[-0.1926,  0.1508,  0.6305,  ..., -0.9545,  0.0539,  0.2880],
+           │    │                      [ 0.1379,  2.5005,  0.3460,  ...,  1.2295,  ...
+           │    └ <function Module._call_impl at 0x789698134940>
+           └ ViTLayer(
+               (attention): ViTAttention(
+                 (q_proj): Linear(in_features=192, out_features=192, bias=True)
+                 (k_proj): Linea...
+  File "/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           │             │       └ {}
+           │             └ (tensor([[[-0.1926,  0.1508,  0.6305,  ..., -0.9545,  0.0539,  0.2880],
+           │                        [ 0.1379,  2.5005,  0.3460,  ...,  1.2295,  ...
+           └ <bound method ViTLayer.forward of ViTLayer(
+               (attention): ViTAttention(
+                 (q_proj): Linear(in_features=192, out_features=1...
+  File "/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/transformers/models/vit/modeling_vit.py", line 275, in forward
+    hidden_states, _ = self.attention(hidden_states, attention_mask, **kwargs)
+    │                  │              │              │                 └ {}
+    │                  │              │              └ None
+    │                  │              └ tensor([[[-0.4793,  0.3237,  1.4391,  ..., -2.2422,  0.1116,  0.6659],
+    │                  │                         [ 0.1158,  2.8339,  0.3663,  ...,  1.3983,  0...
+    │                  └ ViTLayer(
+    │                      (attention): ViTAttention(
+    │                        (q_proj): Linear(in_features=192, out_features=192, bias=True)
+    │                        (k_proj): Linea...
+    └ tensor([[[-0.4793,  0.3237,  1.4391,  ..., -2.2422,  0.1116,  0.6659],
+               [ 0.1158,  2.8339,  0.3663,  ...,  1.3983,  0...
+  File "/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           │    │           │       └ {}
+           │    │           └ (tensor([[[-0.4793,  0.3237,  1.4391,  ..., -2.2422,  0.1116,  0.6659],
+           │    │                      [ 0.1158,  2.8339,  0.3663,  ...,  1.3983,  ...
+           │    └ <function Module._call_impl at 0x789698134940>
+           └ ViTAttention(
+               (q_proj): Linear(in_features=192, out_features=192, bias=True)
+               (k_proj): Linear(in_features=192, out_featur...
+  File "/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           │             │       └ {}
+           │             └ (tensor([[[-0.4793,  0.3237,  1.4391,  ..., -2.2422,  0.1116,  0.6659],
+           │                        [ 0.1158,  2.8339,  0.3663,  ...,  1.3983,  ...
+           └ <bound method ViTAttention.forward of ViTAttention(
+               (q_proj): Linear(in_features=192, out_features=192, bias=True)
+               (k_pro...
+  File "/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/transformers/models/vit/modeling_vit.py", line 224, in forward
+    attn_output, attn_weights = attention_interface(
+                                └ <function sdpa_attention_forward at 0x7895b2547490>
+  File "/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/transformers/integrations/sdpa_attention.py", line 92, in sdpa_attention_forward
+    attn_output = torch.nn.functional.scaled_dot_product_attention(
+                  │     │  │          └ <built-in function scaled_dot_product_attention>
+                  │     │  └ <module 'torch.nn.functional' from '/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/torch/nn/functional.py'>
+                  │     └ <module 'torch.nn' from '/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/torch/nn/__init__.py'>
+                  └ <module 'torch' from '/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/torch/__init__.py'>
+
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 98.00 MiB. GPU 0 has a total capacity of 23.52 GiB of which 36.19 MiB is free. Process 1132124 has 9.88 GiB memory in use. Including non-PyTorch memory, this process has 13.58 GiB memory in use. Of the allocated memory 12.94 GiB is allocated by PyTorch, and 173.85 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)

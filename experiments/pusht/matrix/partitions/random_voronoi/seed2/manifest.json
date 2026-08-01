@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "dataset": "pusht",
+  "method": "random_voronoi",
+  "partition_seed": 2,
+  "num_clusters": 3,
+  "cluster_counts": [
+    787778,
+    785074,
+    742819
+  ],
+  "cluster_fractions": [
+    0.3401942676658299,
+    0.3390265715639225,
+    0.3207791607702476
+  ],
+  "cache_stats": {
+    "cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix/pusht_lewm_train_latent_cache.npz",
+    "num_transitions": 1850815,
+    "num_expanded_latents": 7403260,
+    "num_unique_timesteps": 2315671,
+    "discarded_repeated_window_slots": 5087589,
+    "duplicate_policy": "stable_first_occurrence_per_timestep",
+    "latent_dim": 192,
+    "frameskip": 5
+  },
+  "latent_cache_sha256": "e9a90dee8d9b01561f1f64a8abd55861689eed6d6202b525eae6468b9f5fe407",
+  "data_file": "/data/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+  "method_metadata": {
+    "algorithm": "random_voronoi",
+    "num_clusters": 3,
+    "seed": 2,
+    "prototype_rows": [
+      605807,
+      253115,
+      1939547
+    ],
+    "optimized": false,
+    "routing": "zscore_l2_spherical_voronoi"
+  },
+  "elapsed_sec": 33.598023123980965
+}

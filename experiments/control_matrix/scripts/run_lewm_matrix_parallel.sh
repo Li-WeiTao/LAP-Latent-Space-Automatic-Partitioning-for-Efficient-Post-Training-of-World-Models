@@ -17,6 +17,8 @@ EVAL_SEEDS=${EVAL_SEEDS:-0,1,2,3,4}
 METHODS=${METHODS:-random_voronoi,kmeanspp,spectral}
 GPU_IDS=${GPU_IDS:-0,1,2,3,4,5,6,7}
 CPU_THREADS=${CPU_THREADS:-4}
+GOAL_OFFSET=${GOAL_OFFSET:-}
+EVAL_BUDGET=${EVAL_BUDGET:-}
 PYTHON=${PYTHON:-python}
 RUN_ID=${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ)}
 
@@ -43,6 +45,8 @@ common_env=(
   CACHE_DIR="$CACHE_DIR"
   WORK_ROOT="$WORK_ROOT"
   CPU_THREADS="$CPU_THREADS"
+  GOAL_OFFSET="$GOAL_OFFSET"
+  EVAL_BUDGET="$EVAL_BUDGET"
   PYTHON="$PYTHON"
   OMP_NUM_THREADS="$CPU_THREADS"
   MKL_NUM_THREADS="$CPU_THREADS"
@@ -124,6 +128,8 @@ run_stage() {
   echo "partition_seeds=$PARTITION_SEEDS"
   echo "eval_seeds=$EVAL_SEEDS"
   echo "methods=$METHODS"
+  echo "goal_offset=${GOAL_OFFSET:-config_default}"
+  echo "eval_budget=${EVAL_BUDGET:-config_default}"
   echo "git_commit=$(git rev-parse HEAD)"
 } >"$LOG_ROOT/run.env"
 echo "$$" >"$LOG_ROOT/controller.pid"

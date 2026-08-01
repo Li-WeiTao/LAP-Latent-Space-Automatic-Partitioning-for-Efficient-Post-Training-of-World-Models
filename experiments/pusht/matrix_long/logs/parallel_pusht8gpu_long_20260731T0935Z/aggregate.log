@@ -1,0 +1,6 @@
+Official baseline: 37.20%
+Joint-Continue 3ep: 36.53% ± 0.46%
+Global-FT50: 40.40% ± 0.40%
+Random-Voronoi: 39.60% ± 0.35%
+K-means++: 39.42% ± 0.73%
+Spectral: 38.58% ± 1.15%

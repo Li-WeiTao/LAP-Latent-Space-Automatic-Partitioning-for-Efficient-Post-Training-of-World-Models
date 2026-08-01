@@ -1,0 +1,250 @@
+{
+  "schema": "lap_empirical_spectral_degeneracy_gate_v1",
+  "task_name": "pusht",
+  "input": {
+    "source_format": "unified_cache",
+    "latent_cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix/pusht_lewm_train_latent_cache.npz",
+    "latent_cache_sha256": "e9a90dee8d9b01561f1f64a8abd55861689eed6d6202b525eae6468b9f5fe407",
+    "embed_dir": null,
+    "data_file": "/data/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+    "data_file_sha256": "b6ebd9ac94bbe9e383f6e7a9cd92d74e9aa665ea57b758ed3717b0ee7df8d4fb",
+    "frameskip": 5,
+    "num_unique_samples": 2315671,
+    "cache_stats": {
+      "cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix/pusht_lewm_train_latent_cache.npz",
+      "num_transitions": 1850815,
+      "num_expanded_latents": 7403260,
+      "num_unique_timesteps": 2315671,
+      "discarded_repeated_window_slots": 5087589,
+      "duplicate_policy": "stable_first_occurrence_per_timestep",
+      "latent_dim": 192,
+      "frameskip": 5
+    }
+  },
+  "gate": {
+    "use_partition": false,
+    "selected_method": "global",
+    "reason": "safety_and_background_checks_failed",
+    "deployment_seed": 0,
+    "candidate_gap_min": 0.14222104073105607,
+    "perturbation_threshold_max": 0.1405122761171262,
+    "retained_safety_fraction": 0.012014851003384286,
+    "robust_residual_gap": 0.0017087646139298807,
+    "background_threshold": 0.22395176859263868,
+    "draw_results": [
+      {
+        "seed": 0,
+        "candidate_relative_gap_by_knn": {
+          "27": 0.15664595633350742,
+          "30": 0.16200180563531724,
+          "33": 0.1735579055577819
+        },
+        "nominal_candidate_relative_gap": 0.16200180563531724,
+        "max_candidate_gap_perturbation": 0.011556099922464647,
+        "background_by_knn": {
+          "27": {
+            "relative_gaps": [
+              0.09448570945351195,
+              0.10901093514009581,
+              0.02426728728385092,
+              0.06264675274702791,
+              0.04123135700060304,
+              0.08649744839303088,
+              0.010700002762829015,
+              0.09858096878095307,
+              0.08037064596567207,
+              0.033630960944587264
+            ],
+            "median": 0.07150869935634999,
+            "scaled_mad": 0.04251326721277347,
+            "threshold": 0.1990485009946704
+          },
+          "30": {
+            "relative_gaps": [
+              0.1288300101910799,
+              0.11079379243415109,
+              0.045289877339523714,
+              0.04108921887714349,
+              0.06186653497813156,
+              0.034480998961188225,
+              0.03139757623364532,
+              0.11413082060666735,
+              0.06668119011754045,
+              0.03053018092594764
+            ],
+            "median": 0.053578206158827635,
+            "scaled_mad": 0.030599260659147743,
+            "threshold": 0.14537598813627087
+          },
+          "33": {
+            "relative_gaps": [
+              0.1296269037478055,
+              0.1115370725987775,
+              0.0741795717307971,
+              0.01955974599425545,
+              0.07271464793622685,
+              0.021491530563738565,
+              0.04013734864932765,
+              0.11426496666996887,
+              0.05238689591945298,
+              0.046700086758975246
+            ],
+            "median": 0.06255077192783992,
+            "scaled_mad": 0.04705228629956948,
+            "threshold": 0.20370763082654836
+          }
+        }
+      },
+      {
+        "seed": 1,
+        "candidate_relative_gap_by_knn": {
+          "27": 0.12066825595664123,
+          "30": 0.14222104073105607,
+          "33": 0.15022812396171384
+        },
+        "nominal_candidate_relative_gap": 0.14222104073105607,
+        "max_candidate_gap_perturbation": 0.021552784774414843,
+        "background_by_knn": {
+          "27": {
+            "relative_gaps": [
+              0.1569370452517579,
+              0.13400358764761566,
+              0.06612967710195906,
+              0.06066205381928908,
+              0.03811570607215007,
+              0.016913328776456155,
+              0.0815225933045718,
+              0.029868964172170925,
+              0.045291264184653,
+              0.035842410414846516
+            ],
+            "median": 0.052976659001971044,
+            "scaled_mad": 0.029831352654966243,
+            "threshold": 0.14247071696686978
+          },
+          "30": {
+            "relative_gaps": [
+              0.14446242917926827,
+              0.14248411804901598,
+              0.06410256703146265,
+              0.09736487447453619,
+              0.007440193731113808,
+              0.014063893578107093,
+              0.08174487378700551,
+              0.037126328619657346,
+              0.05657038254662533,
+              0.023793538621487628
+            ],
+            "median": 0.06033647478904399,
+            "scaled_mad": 0.054538431267864895,
+            "threshold": 0.22395176859263868
+          },
+          "33": {
+            "relative_gaps": [
+              0.14076956200666804,
+              0.14946425443981431,
+              0.06532790335008658,
+              0.09537995203735367,
+              0.023463287728278503,
+              0.03005245089451549,
+              0.04878995664622073,
+              0.05195610153056928,
+              0.06084119296060125,
+              0.014898722470574282
+            ],
+            "median": 0.056398647245585264,
+            "scaled_mad": 0.04394541736522752,
+            "threshold": 0.18823489934126783
+          }
+        }
+      },
+      {
+        "seed": 2,
+        "candidate_relative_gap_by_knn": {
+          "27": 0.22204554876688273,
+          "30": 0.15178941070831964,
+          "33": 0.12862564112931427
+        },
+        "nominal_candidate_relative_gap": 0.15178941070831964,
+        "max_candidate_gap_perturbation": 0.0702561380585631,
+        "background_by_knn": {
+          "27": {
+            "relative_gaps": [
+              0.19439498230742613,
+              0.16460356373008592,
+              0.07925270103626642,
+              0.07489524559121567,
+              0.0052087100946475616,
+              0.07072649601785296,
+              0.013487933426804988,
+              0.030054226502479468,
+              0.0612187810400533,
+              0.058755103667547603
+            ],
+            "median": 0.06597263852895313,
+            "scaled_mad": 0.036470829171896264,
+            "threshold": 0.17538512604464193
+          },
+          "30": {
+            "relative_gaps": [
+              0.18499534427115366,
+              0.19078859025822698,
+              0.07167075772796144,
+              0.0812103109370077,
+              0.01742788828167641,
+              0.0632735993408605,
+              0.014646906497160888,
+              0.03730187276086886,
+              0.056685894974619934,
+              0.056066381069507565
+            ],
+            "median": 0.059979747157740224,
+            "scaled_mad": 0.03254932521997172,
+            "threshold": 0.15762772281765536
+          },
+          "33": {
+            "relative_gaps": [
+              0.17358466998209696,
+              0.217786591543958,
+              0.07390158847228533,
+              0.07998705149942788,
+              0.05672973542584743,
+              0.019901488059447848,
+              0.01948895897646449,
+              0.054493297178038205,
+              0.06374217543873904,
+              0.02803713025790763
+            ],
+            "median": 0.06023595543229324,
+            "scaled_mad": 0.038510476616338954,
+            "threshold": 0.17576738528131008
+          }
+        }
+      }
+    ],
+    "configuration": {
+      "num_regions": 3,
+      "num_landmarks": 20000,
+      "nominal_knn": 30,
+      "perturb_knn": [
+        27,
+        33
+      ],
+      "diagnostic_seeds": [
+        0,
+        1,
+        2
+      ],
+      "deployment_seed": 0,
+      "perturbation_multiplier": 2.0,
+      "retention_threshold": 0.5,
+      "background_gap_count": 10,
+      "background_mad_multiplier": 3.0,
+      "epsilon": 1e-08,
+      "eig_tol": 0.0001,
+      "eig_maxiter": 20000,
+      "cpu_threads": 4
+    },
+    "elapsed_sec": 72.52092049701605
+  }
+}

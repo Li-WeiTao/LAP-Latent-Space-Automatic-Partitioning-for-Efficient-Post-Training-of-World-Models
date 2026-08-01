@@ -19,11 +19,14 @@ the LAP method boundary:
 
 1. Use a backend-specific fast encoder, or an official release, to prepare a
    frozen-encoder latent transition cache.
-2. Give that latent cache and the pretrained world model to LAP. LAP
-   automatically partitions the latent space; the main method uses lightweight
-   landmark spectral partitioning.
-3. Fine-tune one dynamics predictor on each partition while keeping the encoder
-   frozen.
+2. Give that latent cache and the pretrained world model to LAP. Before any
+   predictor is trained, LAP runs the label-free empirical spectral-degeneracy
+   gate using at least three predeclared landmark draws.
+3. If the candidate low-frequency eigengap is stable and remains above the
+   task-specific spectral background, LAP performs landmark spectral
+   partitioning and fine-tunes one dynamics predictor per region. Otherwise it
+   creates a one-region partition and automatically falls back to Global-FT.
+   The encoder remains frozen in either branch.
 4. At each MPC replanning step, route the current latent state to one regional
    predictor and keep that predictor for the current candidate rollout.
 
@@ -31,6 +34,31 @@ The deployed spectral router is a small spherical Voronoi lookup: normalize the
 current latent, choose the nearest prototype, and use that prototype's owner
 cluster. Candidate actions, goals, task IDs, and future observations are not
 router inputs.
+
+### Automatic post-training entrypoint
+
+The dataset/model-parameterized LeWM experiment adapter exposes the complete
+cache-to-decision-to-training pipeline as one command:
+
+```bash
+PHASE=auto_posttrain \
+DATASET_NAME="$TASK" \
+DATA_FILE="/absolute/path/to/task.h5" \
+CHECKPOINT="/absolute/path/to/pretrained_world_model.ckpt" \
+WORK_ROOT="experiments/$TASK/auto_run" \
+bash experiments/control_matrix/scripts/run_lewm_matrix.sh
+```
+
+`prepare` creates the accelerated latent cache only when it is absent;
+`partition_auto` evaluates the predeclared diagnostic seeds (default
+`0,1,2`) and records the full decision manifest; `train_auto` then trains either
+the regional predictors selected by the spectral partition or the single
+Global-FT predictor. The diagnostic seeds are used to form a worst-case
+envelope, not an error bar, and a passing task deploys only the partition seed
+declared in advance (default `0`). Intermediate latent caches and predictor
+checkpoints are intentionally excluded from Git; committed result JSON/CSV,
+logs, plots, and partition/router artifacts retain the evidence needed to audit
+the reported experiments.
 
 ## Interface boundary
 

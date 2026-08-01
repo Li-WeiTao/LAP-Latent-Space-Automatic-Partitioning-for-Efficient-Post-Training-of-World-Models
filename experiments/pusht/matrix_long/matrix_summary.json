@@ -1,0 +1,77 @@
+{
+  "dataset": "pusht",
+  "train_seeds": [
+    0,
+    42,
+    625
+  ],
+  "partition_seeds": [
+    0,
+    1,
+    2
+  ],
+  "eval_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "primary_error_bar": "sample SD across fine-tuning seeds after averaging partition and evaluation seeds",
+  "rows": [
+    {
+      "method": "Official baseline",
+      "mean_percent": 37.2,
+      "sd_across_finetuning_seeds_percent": null,
+      "num_finetuning_seeds": 0,
+      "num_partition_seeds": 0,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 9.338094023943002
+    },
+    {
+      "method": "Joint-Continue 3ep",
+      "mean_percent": 36.53333333333333,
+      "sd_across_finetuning_seeds_percent": 0.461880215351699,
+      "num_finetuning_seeds": 3,
+      "num_partition_seeds": 0,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 7.30818197703942
+    },
+    {
+      "method": "Global-FT50",
+      "mean_percent": 40.4,
+      "sd_across_finetuning_seeds_percent": 0.3999999999999986,
+      "num_finetuning_seeds": 3,
+      "num_partition_seeds": 0,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 8.356349168660405
+    },
+    {
+      "method": "Random-Voronoi",
+      "mean_percent": 39.6,
+      "sd_across_finetuning_seeds_percent": 0.3527668414752775,
+      "num_finetuning_seeds": 3,
+      "num_partition_seeds": 3,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 8.230762695246082
+    },
+    {
+      "method": "K-means++",
+      "mean_percent": 39.422222222222224,
+      "sd_across_finetuning_seeds_percent": 0.7343427396381467,
+      "num_finetuning_seeds": 3,
+      "num_partition_seeds": 3,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 8.745099637898226
+    },
+    {
+      "method": "Spectral",
+      "mean_percent": 38.577777777777776,
+      "sd_across_finetuning_seeds_percent": 1.1495570805668935,
+      "num_finetuning_seeds": 3,
+      "num_partition_seeds": 3,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 7.834912800143891
+    }
+  ]
+}

@@ -14,12 +14,17 @@ from .interfaces import (
 )
 from .partition import (
     ArtifactPartitioner,
+    GatedSpectralPartitioner,
+    GlobalPartitioner,
     IndexedPartitioner,
     LandmarkSpectralConfig,
     LandmarkSpectralPartitioner,
     LatentPartitioner,
     PartitionArtifact,
     PartitionResult,
+    SpectralDegeneracyGate,
+    SpectralGateConfig,
+    SpectralGateResult,
 )
 from .pipeline import LAP, LAPConfig, LAPFitResult
 from .routing.voronoi import VoronoiRouter, ZScoreL2Transform
@@ -28,6 +33,8 @@ __all__ = [
     "ArtifactPartitioner",
     "EncodedTransitions",
     "FrozenWorldModelBackend",
+    "GatedSpectralPartitioner",
+    "GlobalPartitioner",
     "IndexedPartitioner",
     "InMemoryLatentCache",
     "LAP",
@@ -43,6 +50,9 @@ __all__ = [
     "PredictorTrainingResult",
     "RegionalPredictorTrainer",
     "RegionalTrainingConfig",
+    "SpectralDegeneracyGate",
+    "SpectralGateConfig",
+    "SpectralGateResult",
     "VoronoiRouter",
     "WorldModelBackend",
     "WorldModelBackendFactory",

@@ -1,0 +1,3 @@
+[gpu-queue] no free GPU at poll 1; sleeping 60s
+[gpu-queue] no free GPU at poll 10; sleeping 60s
+[gpu-queue] no free GPU at poll 20; sleeping 60s

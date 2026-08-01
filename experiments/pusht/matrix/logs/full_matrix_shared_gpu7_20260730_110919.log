@@ -1,0 +1,127 @@
+[index] samples=1850815 frame_slots=7403260 unique_frames=2315671 encoded_keys=2315686
+[batch-shape] batch=252 keys=83
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+[frames] batch 1/1 (83/83)
+[batch-shape] batch=512 keys=2315603
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+[frames] batch 50/4523 (25600/2315603)
+[frames] batch 100/4523 (51200/2315603)
+[frames] batch 150/4523 (76800/2315603)
+[frames] batch 200/4523 (102400/2315603)
+[frames] batch 250/4523 (128000/2315603)
+[frames] batch 300/4523 (153600/2315603)
+[frames] batch 350/4523 (179200/2315603)
+[frames] batch 400/4523 (204800/2315603)
+[frames] batch 450/4523 (230400/2315603)
+[frames] batch 500/4523 (256000/2315603)
+[frames] batch 550/4523 (281600/2315603)
+[frames] batch 600/4523 (307200/2315603)
+[frames] batch 650/4523 (332800/2315603)
+[frames] batch 700/4523 (358400/2315603)
+[frames] batch 750/4523 (384000/2315603)
+[frames] batch 800/4523 (409600/2315603)
+[frames] batch 850/4523 (435200/2315603)
+[frames] batch 900/4523 (460800/2315603)
+[frames] batch 950/4523 (486400/2315603)
+[frames] batch 1000/4523 (512000/2315603)
+[frames] batch 1050/4523 (537600/2315603)
+[frames] batch 1100/4523 (563200/2315603)
+[frames] batch 1150/4523 (588800/2315603)
+[frames] batch 1200/4523 (614400/2315603)
+[frames] batch 1250/4523 (640000/2315603)
+[frames] batch 1300/4523 (665600/2315603)
+[frames] batch 1350/4523 (691200/2315603)
+[frames] batch 1400/4523 (716800/2315603)
+[frames] batch 1450/4523 (742400/2315603)
+[frames] batch 1500/4523 (768000/2315603)
+[frames] batch 1550/4523 (793600/2315603)
+[frames] batch 1600/4523 (819200/2315603)
+[frames] batch 1650/4523 (844800/2315603)
+[frames] batch 1700/4523 (870400/2315603)
+[frames] batch 1750/4523 (896000/2315603)
+[frames] batch 1800/4523 (921600/2315603)
+[frames] batch 1850/4523 (947200/2315603)
+[frames] batch 1900/4523 (972800/2315603)
+[frames] batch 1950/4523 (998400/2315603)
+[frames] batch 2000/4523 (1024000/2315603)
+[frames] batch 2050/4523 (1049600/2315603)
+[frames] batch 2100/4523 (1075200/2315603)
+[frames] batch 2150/4523 (1100800/2315603)
+[frames] batch 2200/4523 (1126400/2315603)
+[frames] batch 2250/4523 (1152000/2315603)
+[frames] batch 2300/4523 (1177600/2315603)
+[frames] batch 2350/4523 (1203200/2315603)
+[frames] batch 2400/4523 (1228800/2315603)
+[frames] batch 2450/4523 (1254400/2315603)
+[frames] batch 2500/4523 (1280000/2315603)
+[frames] batch 2550/4523 (1305600/2315603)
+[frames] batch 2600/4523 (1331200/2315603)
+[frames] batch 2650/4523 (1356800/2315603)
+[frames] batch 2700/4523 (1382400/2315603)
+[frames] batch 2750/4523 (1408000/2315603)
+[frames] batch 2800/4523 (1433600/2315603)
+[frames] batch 2850/4523 (1459200/2315603)
+[frames] batch 2900/4523 (1484800/2315603)
+[frames] batch 2950/4523 (1510400/2315603)
+[frames] batch 3000/4523 (1536000/2315603)
+[frames] batch 3050/4523 (1561600/2315603)
+[frames] batch 3100/4523 (1587200/2315603)
+[frames] batch 3150/4523 (1612800/2315603)
+[frames] batch 3200/4523 (1638400/2315603)
+[frames] batch 3250/4523 (1664000/2315603)
+[frames] batch 3300/4523 (1689600/2315603)
+[frames] batch 3350/4523 (1715200/2315603)
+[frames] batch 3400/4523 (1740800/2315603)
+[frames] batch 3450/4523 (1766400/2315603)
+[frames] batch 3500/4523 (1792000/2315603)
+[frames] batch 3550/4523 (1817600/2315603)
+[frames] batch 3600/4523 (1843200/2315603)
+[frames] batch 3650/4523 (1868800/2315603)
+[frames] batch 3700/4523 (1894400/2315603)
+[frames] batch 3750/4523 (1920000/2315603)
+[frames] batch 3800/4523 (1945600/2315603)
+[frames] batch 3850/4523 (1971200/2315603)
+[frames] batch 3900/4523 (1996800/2315603)
+[frames] batch 3950/4523 (2022400/2315603)
+[frames] batch 4000/4523 (2048000/2315603)
+[frames] batch 4050/4523 (2073600/2315603)
+[frames] batch 4100/4523 (2099200/2315603)
+[frames] batch 4150/4523 (2124800/2315603)
+[frames] batch 4200/4523 (2150400/2315603)
+[frames] batch 4250/4523 (2176000/2315603)
+[frames] batch 4300/4523 (2201600/2315603)
+[frames] batch 4350/4523 (2227200/2315603)
+[frames] batch 4400/4523 (2252800/2315603)
+[frames] batch 4450/4523 (2278400/2315603)
+[frames] batch 4500/4523 (2304000/2315603)
+[frames] batch 4523/4523 (2315603/2315603)
+[saved] cache=experiments/pusht/matrix/pusht_lewm_train_latent_cache.npz
+[saved] report=experiments/pusht/matrix/pusht_lewm_train_latent_cache.npz.report.json
+ok: True
+output: experiments/pusht/matrix/pusht_lewm_train_latent_cache.npz
+report: experiments/pusht/matrix/pusht_lewm_train_latent_cache.npz.report.json
+samples: 1850815
+actual_speedup: 3.1965330298252006
+validation_passed: None
+Traceback (most recent call last):
+  File "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/fit_partition.py", line 383, in <module>
+    main()
+  File "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/fit_partition.py", line 315, in main
+    raw, sample_ids, cache_stats = load_unique_latents(
+  File "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/fit_partition.py", line 122, in load_unique_latents
+    raise RuntimeError(
+RuntimeError: cache contains inconsistent embeddings for timestep 2336652
