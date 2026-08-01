@@ -37,6 +37,8 @@ from experiments.control_matrix.region_risk_lib import (
     audit_cache_starts_exact,
     audit_formal_posttraining,
     audit_partition_train_contract,
+    FORMAL_BASE_PRETRAINING_EPISODE_DISJOINT,
+    FORMAL_CLAIM_SCOPE,
     runtime_provenance,
     sha256_file,
 )
@@ -52,6 +54,13 @@ class FormalRegionRiskPipelineTest(unittest.TestCase):
         self.assertEqual(payload["python_executable"], "/tmp/test-python")
         self.assertIn("torch_version", payload)
         self.assertIn("git_commit", payload)
+
+    def test_formal_claim_scope_constants(self) -> None:
+        self.assertEqual(
+            FORMAL_CLAIM_SCOPE,
+            "held_out_from_LAP_partition_and_posttraining",
+        )
+        self.assertFalse(FORMAL_BASE_PRETRAINING_EPISODE_DISJOINT)
 
     def test_split_is_reproducible_and_episode_disjoint(self) -> None:
         data_file = Path("/data/sicong/weitao/datasets/lewm/pusht_expert_train.h5")

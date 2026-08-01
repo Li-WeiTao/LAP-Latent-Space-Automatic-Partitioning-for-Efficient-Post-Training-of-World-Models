@@ -58,6 +58,9 @@ def main() -> None:
         assert split_manifest_is_unsubsampled(split), split
 
     assert audit.get("posttraining_train_only_valid") is True, audit
+    if audit.get("formal"):
+        assert audit.get("claim_scope") == "held_out_from_LAP_partition_and_posttraining", audit
+        assert audit.get("base_pretraining_episode_disjoint") is False, audit
     assert audit.get("split_manifest_unsubsampled_valid") is (not args.expect_smoke), audit
     for key in (
         "auto_gate_train_only_valid",

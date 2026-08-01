@@ -40,6 +40,8 @@ from experiments.control_matrix.region_risk_lib import (  # noqa: E402
     audit_partition_train_contract,
     collect_rollout_anchors,
     episode_ids_at_starts,
+    FORMAL_BASE_PRETRAINING_EPISODE_DISJOINT,
+    FORMAL_CLAIM_SCOPE,
     git_commit,
     load_cache_contract,
     load_lewm_cache,
@@ -1123,6 +1125,10 @@ def main() -> None:
             posttraining_train_only_valid=formal_audit.get(
                 "posttraining_train_only_valid", False
             ),
+        ),
+        "claim_scope": FORMAL_CLAIM_SCOPE if args.formal else None,
+        "base_pretraining_episode_disjoint": (
+            FORMAL_BASE_PRETRAINING_EPISODE_DISJOINT if args.formal else None
         ),
         "split_manifest_unsubsampled_valid": (
             split_manifest_payload is not None

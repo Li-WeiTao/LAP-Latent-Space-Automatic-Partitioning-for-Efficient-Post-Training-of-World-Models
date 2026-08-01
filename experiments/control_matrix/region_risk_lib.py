@@ -24,6 +24,11 @@ try:
 except ImportError:
     pass
 
+# Formal region-risk runs hold out episodes from LAP partition/post-training only.
+# The shared official LeWM checkpoint may have seen all dataset episodes at pretraining.
+FORMAL_CLAIM_SCOPE = "held_out_from_LAP_partition_and_posttraining"
+FORMAL_BASE_PRETRAINING_EPISODE_DISJOINT = False
+
 
 @dataclass(frozen=True)
 class CacheContract:
