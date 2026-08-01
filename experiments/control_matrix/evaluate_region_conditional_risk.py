@@ -31,8 +31,10 @@ from experiments.control_matrix.episode_split import (  # noqa: E402
 )
 from experiments.control_matrix.region_risk_lib import (  # noqa: E402
     ExpertBundle,
+    MultiHorizonRolloutLosses,
     aggregate_region_metrics,
     atomic_write_json,
+    audit_cache_starts_exact,
     audit_episode_disjointness,
     audit_formal_posttraining,
     audit_partition_train_contract,
@@ -42,9 +44,9 @@ from experiments.control_matrix.region_risk_lib import (  # noqa: E402
     load_cache_contract,
     load_lewm_cache,
     load_model,
+    multi_horizon_open_loop_rollout_losses,
     nested_paired_bootstrap_ci,
     one_step_losses,
-    open_loop_rollout_losses,
     resolve_action_norm_starts,
     route_regions_from_cache,
     sha256_file,
@@ -63,6 +65,14 @@ try:
     import hdf5plugin  # noqa: F401
 except ImportError:
     pass
+
+
+FORMAL_REGIONAL_RUN_PATTERNS = (
+    "train{seed}",
+    "tworoom_latent_spectral_spectral_M20000_k30_P16_seed0_trainseed{seed}",
+    "partition0_train{seed}",
+    "trainseed{seed}",
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -134,8 +144,17 @@ def parse_args() -> argparse.Namespace:
         "--audit-partition-dir",
         type=Path,
         default=None,
-        help="Partition manifest used for gate/partition train-only audit.",
+        help="Auto-gate partition manifest used for gate/partition train-only audit.",
     )
+    parser.add_argument(
+        "--forced-spectral-partition-dir",
+        type=Path,
+        default=None,
+        help="Forced-spectral partition manifest used for routing audit.",
+    )
+    parser.add_argument("--rollout-batch-size", type=int, default=512)
+    parser.add_argument("--smoke-only", action="store_true")
+    parser.add_argument("--paper-eligible", action="store_true")
     return parser.parse_args()
 
 
@@ -466,6 +485,8 @@ def plot_region_risk(
     for row in bootstrap_rows:
         if row["metric"] != "correct_minus_global":
             continue
+        if row.get("loss_kind", "mean_trajectory") != "mean_trajectory":
+            continue
         estimate = -row["estimate"]
         low = -row["ci_high"]
         high = -row["ci_low"]
@@ -612,6 +633,47 @@ def main() -> None:
         nominal_train_episode_ids=nominal_train_episodes,
         require_train_only=args.formal or not args.allow_in_cache,
     )
+    forced_spectral_partition_dir = (
+        args.forced_spectral_partition_dir or args.partition_dir
+    ).resolve()
+    forced_spectral_contract = audit_partition_train_contract(
+        data_file=args.data_file.resolve(strict=True),
+        train_starts=train_cache.sample_ids,
+        eval_starts=eval_cache.sample_ids,
+        train_cache_hash=train_cache_hash,
+        partition_manifest_path=_resolve_partition_manifest(forced_spectral_partition_dir),
+        nominal_train_episode_ids=nominal_train_episodes,
+        require_train_only=args.formal or not args.allow_in_cache,
+    )
+    global_partition_contract = audit_partition_train_contract(
+        data_file=args.data_file.resolve(strict=True),
+        train_starts=train_cache.sample_ids,
+        eval_starts=eval_cache.sample_ids,
+        train_cache_hash=train_cache_hash,
+        partition_manifest_path=_resolve_partition_manifest(global_partition_run),
+        nominal_train_episode_ids=nominal_train_episodes,
+        require_train_only=args.formal or not args.allow_in_cache,
+    )
+    partition_contracts = {
+        "auto": partition_contract,
+        "forced_spectral": forced_spectral_contract,
+        "global": global_partition_contract,
+    }
+    cache_start_audits: dict[str, dict[str, Any]] = {}
+    if split_manifest_payload is not None:
+        split_paths = split_paths_from_manifest(split_manifest_payload)
+        cache_start_audits["train"] = audit_cache_starts_exact(
+            cache_starts=train_cache.sample_ids,
+            expected_starts=np.load(split_paths["train_starts"]),
+            label="train_cache",
+            require_exact=args.formal,
+        )
+        cache_start_audits["eval"] = audit_cache_starts_exact(
+            cache_starts=eval_cache.sample_ids,
+            expected_starts=np.load(split_paths["eval_starts"]),
+            label="eval_cache",
+            require_exact=args.formal,
+        )
 
     eval_regions = route_regions_from_cache(
         eval_cache, artifact, device=device, batch_size=args.batch_size
@@ -636,11 +698,7 @@ def main() -> None:
         regional_run = resolve_run_dir(
             args.regional_runs,
             train_seed,
-            patterns=(
-                "tworoom_latent_spectral_spectral_M20000_k30_P16_seed0_trainseed{seed}",
-                "partition0_train{seed}",
-                "trainseed{seed}",
-            ),
+            patterns=FORMAL_REGIONAL_RUN_PATTERNS,
         )
         global_run = resolve_run_dir(
             args.global_runs,
@@ -675,27 +733,48 @@ def main() -> None:
             bundle.regional_models[region] for region in range(artifact.num_regions)
         ]
 
-        for horizon in horizons:
-            anchors = collect_rollout_anchors(
-                eval_cache.sample_ids,
-                horizon=horizon,
-                frameskip=contract.frameskip,
-                history_size=contract.history_size,
-                start_map=eval_start_map,
-                episode_lookup=episode_lookup,
+        anchor_horizon = max(horizons)
+        anchors = collect_rollout_anchors(
+            eval_cache.sample_ids,
+            horizon=anchor_horizon,
+            frameskip=contract.frameskip,
+            history_size=contract.history_size,
+            start_map=eval_start_map,
+            episode_lookup=episode_lookup,
+        )
+        if args.max_anchors > 0:
+            anchors = anchors[: args.max_anchors]
+        if args.max_episodes > 0:
+            anchors = limit_episodes(
+                anchors,
+                np.asarray([episode_lookup[int(start)] for start in anchors], dtype=np.int64),
+                max_episodes=args.max_episodes,
             )
-            if args.max_anchors > 0:
-                anchors = anchors[: args.max_anchors]
-            if args.max_episodes > 0:
-                anchors = limit_episodes(
-                    anchors,
-                    np.asarray([episode_lookup[int(start)] for start in anchors], dtype=np.int64),
-                    max_episodes=args.max_episodes,
-                )
+        if len(anchors) == 0:
+            continue
 
-            if len(anchors) == 0:
-                continue
+        multi_horizons = [horizon for horizon in horizons if horizon > 1]
+        multi_rollout: MultiHorizonRolloutLosses | None = None
+        if multi_horizons:
+            multi_rollout = multi_horizon_open_loop_rollout_losses(
+                models,
+                eval_cache,
+                anchors,
+                horizons=multi_horizons,
+                contract=contract,
+                start_map=eval_start_map,
+                device=device,
+                batch_size=args.rollout_batch_size,
+            )
 
+        anchor_regions = np.asarray(
+            [eval_regions[eval_start_map[int(start)]] for start in anchors], dtype=np.int64
+        )
+        anchor_episodes = np.asarray(
+            [episode_lookup[int(start)] for start in anchors], dtype=np.int64
+        )
+
+        for horizon in horizons:
             if horizon == 1:
                 rows = np.asarray([eval_start_map[int(start)] for start in anchors], dtype=np.int64)
                 mean_traj_matrix = one_step_losses(
@@ -709,24 +788,11 @@ def main() -> None:
                 )
                 terminal_matrix = mean_traj_matrix
             else:
-                rollout = open_loop_rollout_losses(
-                    models,
-                    eval_cache,
-                    anchors,
-                    horizon=horizon,
-                    contract=contract,
-                    start_map=eval_start_map,
-                    device=device,
-                )
+                assert multi_rollout is not None
+                rollout = multi_rollout.by_horizon[horizon]
                 terminal_matrix = rollout.terminal_mse
                 mean_traj_matrix = rollout.mean_trajectory_mse
 
-            anchor_regions = np.asarray(
-                [eval_regions[eval_start_map[int(start)]] for start in anchors], dtype=np.int64
-            )
-            anchor_episodes = np.asarray(
-                [episode_lookup[int(start)] for start in anchors], dtype=np.int64
-            )
             global_loss, correct_loss, wrong_mean, wrong_best = expert_losses_from_matrix(
                 mean_traj_matrix,
                 anchor_regions,
@@ -746,10 +812,15 @@ def main() -> None:
             seed_blocks.append(
                 {
                     "horizon": horizon,
+                    "train_seed": train_seed,
                     "global": global_loss,
                     "correct": correct_loss,
                     "wrong_mean": wrong_mean,
                     "wrong_best": wrong_best,
+                    "terminal_global": terminal_global_loss,
+                    "terminal_correct": terminal_correct_loss,
+                    "terminal_wrong_mean": terminal_wrong_mean,
+                    "terminal_wrong_best": terminal_wrong_best,
                     "episode_ids": anchor_episodes,
                 }
             )
@@ -840,6 +911,26 @@ def main() -> None:
                 blocks,
                 reps=args.bootstrap_reps,
                 seed=args.bootstrap_seed + horizon,
+                metric_label="mean_trajectory",
+            )
+        )
+        bootstrap_rows.extend(
+            nested_paired_bootstrap_ci(
+                blocks,
+                reps=args.bootstrap_reps,
+                seed=args.bootstrap_seed + horizon + 1000,
+                metric_keys=(
+                    "terminal_global",
+                    "terminal_correct",
+                    "terminal_wrong_mean",
+                    "terminal_wrong_best",
+                ),
+                metric_label="terminal",
+                pairs=(
+                    ("correct_minus_global", "terminal_correct", "terminal_global"),
+                    ("correct_minus_wrong_mean", "terminal_correct", "terminal_wrong_mean"),
+                    ("correct_minus_wrong_best", "terminal_correct", "terminal_wrong_best"),
+                ),
             )
         )
 
@@ -849,25 +940,35 @@ def main() -> None:
             raise ValueError("--formal requires --split-manifest")
         formal_audit = audit_formal_posttraining(
             episode_audit=audit,
-            partition_contract=partition_contract,
+            partition_contracts=partition_contracts,
             split_manifest=split_manifest_payload,
             split_manifest_sha256=split_manifest_hash,
             train_cache_hash=train_cache_hash,
             eval_cache_hash=eval_cache_hash,
             action_norm_starts_hash=action_norm_starts_hash,
+            cache_start_audits=cache_start_audits,
             checkpoint_manifests=checkpoint_manifests,
             require_valid=True,
         )
 
     audit_payload = {
         **audit,
-        **partition_contract,
         **formal_audit,
+        **cache_start_audits.get("train", {}),
+        **cache_start_audits.get("eval", {}),
         "task": args.task,
         "formal": args.formal,
+        "smoke_only": args.smoke_only,
+        "paper_eligible": args.paper_eligible and not args.smoke_only,
         "formal_episode_disjoint_valid": audit.get("episode_disjoint", False)
         and audit.get("region_start_disjoint", False),
-        "formal_train_only_valid": partition_contract.get(
+        "auto_gate_train_only_valid": partition_contracts["auto"].get(
+            "gate_partition_train_only_valid", False
+        ),
+        "forced_spectral_train_only_valid": partition_contracts["forced_spectral"].get(
+            "gate_partition_train_only_valid", False
+        ),
+        "global_partition_train_only_valid": partition_contracts["global"].get(
             "gate_partition_train_only_valid", False
         ),
         "train_fraction": args.train_fraction,
@@ -912,6 +1013,18 @@ def main() -> None:
         ),
         wrong_best_loss=np.asarray(
             [row["wrong_best_loss"] for row in sample_records], dtype=np.float64
+        ),
+        terminal_global_loss=np.asarray(
+            [row["terminal_global_loss"] for row in sample_records], dtype=np.float64
+        ),
+        terminal_correct_loss=np.asarray(
+            [row["terminal_correct_loss"] for row in sample_records], dtype=np.float64
+        ),
+        terminal_wrong_mean_loss=np.asarray(
+            [row["terminal_wrong_mean_loss"] for row in sample_records], dtype=np.float64
+        ),
+        terminal_wrong_best_loss=np.asarray(
+            [row["terminal_wrong_best_loss"] for row in sample_records], dtype=np.float64
         ),
     )
     write_csv(out_dir / "episode_metrics.csv", episode_records)

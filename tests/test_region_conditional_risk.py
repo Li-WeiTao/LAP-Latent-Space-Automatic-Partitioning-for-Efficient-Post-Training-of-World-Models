@@ -16,10 +16,12 @@ from backends.lewm.routing import route_voronoi_torch
 from experiments.control_matrix.region_risk_lib import (
     aggregate_region_metrics,
     anchor_in_same_episode,
+    audit_cache_starts_exact,
     audit_episode_disjointness,
     audit_partition_train_contract,
     collect_rollout_anchors,
     load_cache_contract,
+    multi_horizon_open_loop_rollout_losses,
     nested_paired_bootstrap_ci,
     one_step_losses,
     open_loop_rollout_losses,
@@ -388,6 +390,98 @@ class RegionConditionalRiskTest(unittest.TestCase):
             batch_size=1,
         )[0, 0]
         self.assertAlmostEqual(manual, auto)
+
+    def test_multi_horizon_rollout_matches_single_horizon(self) -> None:
+        emb = torch.tensor(
+            [
+                [[0.0, 0.0], [1.0, 0.0], [2.0, 0.0], [3.0, 0.0], [4.0, 0.0], [5.0, 0.0]],
+                [[1.0, 0.0], [2.0, 0.0], [3.0, 0.0], [4.0, 0.0], [5.0, 0.0], [6.0, 0.0]],
+                [[2.0, 0.0], [3.0, 0.0], [4.0, 0.0], [5.0, 0.0], [6.0, 0.0], [7.0, 0.0]],
+                [[3.0, 0.0], [4.0, 0.0], [5.0, 0.0], [6.0, 0.0], [7.0, 0.0], [8.0, 0.0]],
+            ],
+            dtype=torch.float32,
+        )
+        act_emb = emb.clone()
+        cache = LeWMLatentCache(
+            emb,
+            act_emb,
+            np.asarray([0, 1, 2, 3], dtype=np.int64),
+            route_index=0,
+        )
+        contract = load_cache_contract(
+            cache, history_size=3, num_preds=3, frameskip=1
+        )
+        models = [StepPredictor(1.0), StepPredictor(2.0)]
+        anchors = np.asarray([0, 1], dtype=np.int64)
+        start_map = start_index_map(cache.sample_ids)
+        multi = multi_horizon_open_loop_rollout_losses(
+            models,
+            cache,
+            anchors,
+            horizons=[2, 3],
+            contract=contract,
+            start_map=start_map,
+            device=torch.device("cpu"),
+            batch_size=2,
+        )
+        for horizon in (2, 3):
+            single = open_loop_rollout_losses(
+                models,
+                cache,
+                anchors,
+                horizon=horizon,
+                contract=contract,
+                start_map=start_map,
+                device=torch.device("cpu"),
+                batch_size=2,
+            )
+            np.testing.assert_allclose(
+                multi.by_horizon[horizon].terminal_mse,
+                single.terminal_mse,
+            )
+            np.testing.assert_allclose(
+                multi.by_horizon[horizon].mean_trajectory_mse,
+                single.mean_trajectory_mse,
+            )
+
+    def test_cache_starts_exact_audit(self) -> None:
+        exact = audit_cache_starts_exact(
+            cache_starts=np.asarray([1, 2, 3], dtype=np.int64),
+            expected_starts=np.asarray([1, 2, 3], dtype=np.int64),
+            label="train_cache",
+        )
+        self.assertTrue(exact["train_cache_starts_exact_match"])
+        with self.assertRaises(RuntimeError):
+            audit_cache_starts_exact(
+                cache_starts=np.asarray([1, 2], dtype=np.int64),
+                expected_starts=np.asarray([1, 2, 3], dtype=np.int64),
+                label="train_cache",
+                require_exact=True,
+            )
+
+    def test_nested_bootstrap_uses_shared_episode_draws(self) -> None:
+        blocks = [
+            {
+                "global": np.asarray([1.0, 2.0, 3.0]),
+                "correct": np.asarray([0.5, 1.5, 2.5]),
+                "wrong_mean": np.asarray([1.2, 2.2, 3.2]),
+                "wrong_best": np.asarray([1.1, 2.1, 3.1]),
+                "episode_ids": np.asarray([10, 11, 12], dtype=np.int64),
+            },
+            {
+                "global": np.asarray([4.0, 5.0, 6.0]),
+                "correct": np.asarray([3.5, 4.5, 5.5]),
+                "wrong_mean": np.asarray([4.2, 5.2, 6.2]),
+                "wrong_best": np.asarray([4.1, 5.1, 6.1]),
+                "episode_ids": np.asarray([10, 11, 13], dtype=np.int64),
+            },
+        ]
+        first = nested_paired_bootstrap_ci(blocks, reps=200, seed=11)
+        second = nested_paired_bootstrap_ci(blocks, reps=200, seed=11)
+        self.assertEqual(
+            [(row["metric"], row["estimate"]) for row in first],
+            [(row["metric"], row["estimate"]) for row in second],
+        )
 
 
 if __name__ == "__main__":

@@ -48,6 +48,11 @@ class RolloutLosses:
     mean_trajectory_mse: np.ndarray
 
 
+@dataclass(frozen=True)
+class MultiHorizonRolloutLosses:
+    by_horizon: dict[int, RolloutLosses]
+
+
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -268,6 +273,28 @@ def audit_partition_train_contract(
     return result
 
 
+def audit_cache_starts_exact(
+    *,
+    cache_starts: np.ndarray,
+    expected_starts: np.ndarray,
+    label: str,
+    require_exact: bool = False,
+) -> dict[str, Any]:
+    cache_starts = np.asarray(cache_starts, dtype=np.int64)
+    expected_starts = np.asarray(expected_starts, dtype=np.int64)
+    exact_match = bool(np.array_equal(cache_starts, expected_starts))
+    result = {
+        f"{label}_starts_exact_match": exact_match,
+        f"{label}_starts_expected_count": int(len(expected_starts)),
+        f"{label}_starts_actual_count": int(len(cache_starts)),
+    }
+    if require_exact and not exact_match:
+        raise RuntimeError(
+            f"{label}_cache_starts_mismatch: cache sample_ids do not exactly match split manifest"
+        )
+    return result
+
+
 def route_regions_from_cache(
     cache: LeWMLatentCache,
     artifact: PartitionArtifact,
@@ -404,6 +431,66 @@ def collect_rollout_anchors(
 
 
 @torch.inference_mode()
+def multi_horizon_open_loop_rollout_losses(
+    models: Sequence[torch.nn.Module],
+    cache: LeWMLatentCache,
+    anchors: np.ndarray,
+    *,
+    horizons: Sequence[int],
+    contract: CacheContract,
+    start_map: Mapping[int, int],
+    device: torch.device,
+    batch_size: int = 512,
+) -> MultiHorizonRolloutLosses:
+    horizon_values = sorted({int(value) for value in horizons if int(value) > 1})
+    if not horizon_values:
+        raise ValueError("horizons must include at least one value > 1")
+    max_horizon = max(horizon_values)
+    history = contract.history_size
+    fs = contract.frameskip
+    num_models = len(models)
+    num_anchors = len(anchors)
+    step_losses = np.full((max_horizon, num_anchors, num_models), np.nan, dtype=np.float64)
+
+    for begin in range(0, num_anchors, batch_size):
+        end = min(begin + batch_size, num_anchors)
+        batch_anchors = np.asarray(anchors[begin:end], dtype=np.int64)
+        init_rows = torch.as_tensor(
+            [start_map[int(start)] for start in batch_anchors], dtype=torch.long
+        )
+        ctx_z_init = cache.emb.index_select(0, init_rows)[:, :history].clone()
+
+        for model_index, model in enumerate(models):
+            ctx_z = ctx_z_init.clone().to(device=device, dtype=torch.float32)
+            for step in range(max_horizon):
+                row_starts = batch_anchors + step * fs
+                rows = torch.as_tensor(
+                    [start_map[int(start)] for start in row_starts], dtype=torch.long
+                )
+                ctx_a = cache.act_emb.index_select(0, rows)[:, :history].to(
+                    device=device, dtype=torch.float32
+                )
+                target = cache.emb.index_select(0, rows)[:, history].to(
+                    device=device, dtype=torch.float32
+                )
+                pred = model.predict(ctx_z, ctx_a)
+                z_hat = pred[:, -1]
+                mse = (z_hat - target).pow(2).mean(dim=-1)
+                step_losses[step, begin:end, model_index] = mse.detach().cpu().numpy()
+                if step + 1 < max_horizon:
+                    ctx_z = torch.cat([ctx_z[:, 1:], z_hat.unsqueeze(1)], dim=1)
+
+    by_horizon: dict[int, RolloutLosses] = {}
+    for horizon in horizon_values:
+        block = step_losses[:horizon]
+        by_horizon[horizon] = RolloutLosses(
+            terminal_mse=block[-1],
+            mean_trajectory_mse=np.mean(block, axis=0),
+        )
+    return MultiHorizonRolloutLosses(by_horizon=by_horizon)
+
+
+@torch.inference_mode()
 def open_loop_rollout_losses(
     models: Sequence[torch.nn.Module],
     cache: LeWMLatentCache,
@@ -413,6 +500,7 @@ def open_loop_rollout_losses(
     contract: CacheContract,
     start_map: Mapping[int, int],
     device: torch.device,
+    batch_size: int = 512,
 ) -> RolloutLosses:
     if horizon < 1:
         raise ValueError("horizon must be positive")
@@ -427,41 +515,21 @@ def open_loop_rollout_losses(
             history_size=contract.history_size,
             num_preds=contract.num_preds,
             device=device,
-            batch_size=max(1, len(rows)),
+            batch_size=max(batch_size, len(rows)),
         )
         return RolloutLosses(terminal_mse=one_step, mean_trajectory_mse=one_step)
 
-    terminal = np.full((len(anchors), len(models)), np.nan, dtype=np.float64)
-    mean_traj = np.full((len(anchors), len(models)), np.nan, dtype=np.float64)
-    history = contract.history_size
-    fs = contract.frameskip
-    for anchor_index, anchor_start in enumerate(anchors):
-        anchor_start = int(anchor_start)
-        ctx_z_init = cache.emb[start_map[anchor_start], :history].clone().unsqueeze(0)
-        for model_index, model in enumerate(models):
-            ctx_z = ctx_z_init.clone()
-            step_losses: list[float] = []
-            for step in range(horizon):
-                row_start = anchor_start + step * fs
-                row = start_map[row_start]
-                ctx_a = cache.act_emb[row : row + 1, :history].to(
-                    device=device, dtype=torch.float32
-                )
-                target = cache.emb[row, history].to(device=device, dtype=torch.float32)
-                pred = model.predict(
-                    ctx_z.to(device=device, dtype=torch.float32),
-                    ctx_a,
-                )
-                z_hat = pred[:, -1]
-                step_losses.append(
-                    float(((z_hat - target.unsqueeze(0)).pow(2).mean()).item())
-                )
-                if step + 1 < horizon:
-                    ctx_z = torch.cat([ctx_z[:, 1:], z_hat[:, None, :]], dim=1)
-            step_arr = np.asarray(step_losses, dtype=np.float64)
-            terminal[anchor_index, model_index] = step_arr[-1]
-            mean_traj[anchor_index, model_index] = float(np.mean(step_arr))
-    return RolloutLosses(terminal_mse=terminal, mean_trajectory_mse=mean_traj)
+    multi = multi_horizon_open_loop_rollout_losses(
+        models,
+        cache,
+        anchors,
+        horizons=[horizon],
+        contract=contract,
+        start_map=start_map,
+        device=device,
+        batch_size=batch_size,
+    )
+    return multi.by_horizon[horizon]
 
 
 def aggregate_region_metrics(
@@ -612,40 +680,58 @@ def nested_paired_bootstrap_ci(
     *,
     reps: int,
     seed: int,
+    metric_keys: Sequence[str] = ("global", "correct", "wrong_mean", "wrong_best"),
+    metric_label: str = "mean_trajectory",
+    pairs: Sequence[tuple[str, str, str]] | None = None,
 ) -> list[dict[str, Any]]:
     rng = np.random.default_rng(seed)
-    keys = ["global", "correct", "wrong_mean", "wrong_best"]
+    keys = list(metric_keys)
     draws = {key: [] for key in keys}
+    if not seed_losses:
+        return []
     for _ in range(reps):
         chosen_seeds = rng.choice(len(seed_losses), size=len(seed_losses), replace=True)
+        episode_universe = np.unique(
+            np.concatenate(
+                [np.asarray(seed_losses[int(index)]["episode_ids"], dtype=np.int64) for index in chosen_seeds]
+            )
+        )
+        chosen_episodes = rng.choice(episode_universe, size=len(episode_universe), replace=True)
         per_key_values = {key: [] for key in keys}
+        replicate_valid = False
         for seed_index in chosen_seeds:
             block = seed_losses[int(seed_index)]
             episode_ids = np.asarray(block["episode_ids"], dtype=np.int64)
-            episodes = np.unique(episode_ids)
-            chosen_episodes = rng.choice(episodes, size=len(episodes), replace=True)
             row_indices: list[int] = []
             for episode in chosen_episodes:
                 row_indices.extend(np.flatnonzero(episode_ids == episode).tolist())
+            if not row_indices:
+                continue
+            replicate_valid = True
             for key in keys:
                 per_key_values[key].append(float(np.mean(block[key][row_indices])))
+        if not replicate_valid:
+            continue
         for key in keys:
-            draws[key].append(float(np.mean(per_key_values[key])))
+            if per_key_values[key]:
+                draws[key].append(float(np.mean(per_key_values[key])))
     estimates = {
         key: float(np.mean([np.mean(block[key]) for block in seed_losses])) for key in keys
     }
     rows: list[dict[str, Any]] = []
-    for label, left, right in [
+    pair_specs = pairs or [
         ("correct_minus_global", "correct", "global"),
         ("correct_minus_wrong_mean", "correct", "wrong_mean"),
         ("correct_minus_wrong_best", "correct", "wrong_best"),
-    ]:
+    ]
+    for label, left, right in pair_specs:
         delta = np.asarray(draws[left], dtype=np.float64) - np.asarray(
             draws[right], dtype=np.float64
         )
         rows.append(
             {
                 "metric": label,
+                "loss_kind": metric_label,
                 "estimate": estimates[left] - estimates[right],
                 "ci_low": float(np.quantile(delta, 0.025)),
                 "ci_high": float(np.quantile(delta, 0.975)),
@@ -694,12 +780,13 @@ def validate_manifest(
 def audit_formal_posttraining(
     *,
     episode_audit: Mapping[str, Any],
-    partition_contract: Mapping[str, Any],
+    partition_contracts: Mapping[str, Mapping[str, Any]],
     split_manifest: Mapping[str, Any],
     split_manifest_sha256: str,
     train_cache_hash: str,
     eval_cache_hash: str,
     action_norm_starts_hash: str,
+    cache_start_audits: Mapping[str, Mapping[str, Any]],
     checkpoint_manifests: Sequence[Mapping[str, Any]],
     require_valid: bool = True,
 ) -> dict[str, Any]:
@@ -715,17 +802,37 @@ def audit_formal_posttraining(
             checkpoint_provenance_valid = False
             checkpoint_issues.append(f"manifest[{index}] split_manifest_sha256 mismatch")
 
+    auto_gate_train_only_valid = bool(
+        partition_contracts.get("auto", {}).get("gate_partition_train_only_valid")
+    )
+    forced_spectral_train_only_valid = bool(
+        partition_contracts.get("forced_spectral", {}).get("gate_partition_train_only_valid")
+    )
+    global_partition_train_only_valid = bool(
+        partition_contracts.get("global", {}).get("gate_partition_train_only_valid")
+    )
+    cache_starts_exact_valid = all(
+        any(bool(value) for key, value in audit.items() if key.endswith("_starts_exact_match"))
+        for audit in cache_start_audits.values()
+    )
+
     posttraining_train_only_valid = (
         bool(episode_audit.get("episode_disjoint"))
         and bool(episode_audit.get("region_start_disjoint"))
-        and bool(partition_contract.get("gate_partition_train_only_valid"))
+        and auto_gate_train_only_valid
+        and forced_spectral_train_only_valid
+        and global_partition_train_only_valid
         and bool(split_manifest.get("train_eval_episode_disjoint"))
-        and partition_contract.get("partition_latent_cache_hash_match") is True
         and action_norm_hash_match
+        and cache_starts_exact_valid
         and checkpoint_provenance_valid
     )
     result = {
         "posttraining_train_only_valid": posttraining_train_only_valid,
+        "auto_gate_train_only_valid": auto_gate_train_only_valid,
+        "forced_spectral_train_only_valid": forced_spectral_train_only_valid,
+        "global_partition_train_only_valid": global_partition_train_only_valid,
+        "cache_starts_exact_valid": cache_starts_exact_valid,
         "action_norm_starts_hash_match": action_norm_hash_match,
         "checkpoint_provenance_valid": checkpoint_provenance_valid,
         "checkpoint_provenance_issues": checkpoint_issues[:10],
@@ -734,12 +841,22 @@ def audit_formal_posttraining(
         "split_manifest_sha256": split_manifest_sha256,
         "paper_claim": "held out from LAP partition fitting and post-training",
     }
+    result.update(
+        {
+            f"partition_{name}": contract
+            for name, contract in partition_contracts.items()
+        }
+    )
+    result.update(
+        {key: value for audit in cache_start_audits.values() for key, value in audit.items()}
+    )
     if require_valid and not posttraining_train_only_valid:
         raise RuntimeError(
             "formal_posttraining_audit_failed: "
-            f"episode_disjoint={episode_audit.get('episode_disjoint')} "
-            f"gate_partition_train_only_valid="
-            f"{partition_contract.get('gate_partition_train_only_valid')} "
+            f"auto={auto_gate_train_only_valid} "
+            f"forced_spectral={forced_spectral_train_only_valid} "
+            f"global={global_partition_train_only_valid} "
+            f"cache_starts_exact={cache_starts_exact_valid} "
             f"action_norm_hash_match={action_norm_hash_match} "
             f"checkpoint_provenance_valid={checkpoint_provenance_valid}"
         )

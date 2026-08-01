@@ -338,6 +338,8 @@ def train_command(
         str(paths.split_manifest),
         "--training-role",
         training_role,
+        "--device",
+        args.device,
     ]
     return command
 
@@ -406,6 +408,8 @@ def evaluate_command(
         str(paths.partition_forced_spectral),
         "--audit-partition-dir",
         str(paths.partition_auto),
+        "--forced-spectral-partition-dir",
+        str(paths.partition_forced_spectral),
         "--global-partition-dir",
         str(paths.partition_global),
         "--regional-runs",
@@ -444,6 +448,8 @@ def evaluate_command(
         command.extend(["--max-anchors", str(args.max_anchors)])
     if args.max_episodes > 0:
         command.extend(["--max-episodes", str(args.max_episodes)])
+    if args.phase == "smoke":
+        command.extend(["--smoke-only"])
     return command
 
 

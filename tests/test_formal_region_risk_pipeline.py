@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import argparse
 import json
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -16,7 +18,18 @@ from experiments.control_matrix.episode_split import (
     load_split_manifest,
     write_split_artifacts,
 )
+from experiments.control_matrix.evaluate_region_conditional_risk import (  # noqa: E402
+    FORMAL_REGIONAL_RUN_PATTERNS,
+    resolve_run_dir,
+)
+from experiments.control_matrix.formal_region_risk_pipeline import (  # noqa: E402
+    DEFAULT_TASKS,
+    PipelinePaths,
+    evaluate_command,
+    train_command,
+)
 from experiments.control_matrix.region_risk_lib import (
+    audit_cache_starts_exact,
     audit_formal_posttraining,
     audit_partition_train_contract,
     sha256_file,
@@ -74,36 +87,144 @@ class FormalRegionRiskPipelineTest(unittest.TestCase):
             "train_eval_episode_disjoint": True,
             "sha256": {"action_norm_starts": "abc"},
         }
+        partition_contracts = {
+            "auto": {"gate_partition_train_only_valid": True},
+            "forced_spectral": {"gate_partition_train_only_valid": True},
+            "global": {"gate_partition_train_only_valid": True},
+        }
+        cache_start_audits = {
+            "train": {"train_cache_starts_exact_match": True},
+            "eval": {"eval_cache_starts_exact_match": True},
+        }
         audit = audit_formal_posttraining(
             episode_audit={"episode_disjoint": True, "region_start_disjoint": True},
-            partition_contract={"gate_partition_train_only_valid": True, "partition_latent_cache_hash_match": True},
+            partition_contracts=partition_contracts,
             split_manifest=split_manifest,
             split_manifest_sha256="split",
             train_cache_hash="train",
             eval_cache_hash="eval",
             action_norm_starts_hash="abc",
+            cache_start_audits=cache_start_audits,
             checkpoint_manifests=[
                 {"latent_cache_sha256": "train", "split_manifest_sha256": "split"}
             ],
             require_valid=True,
         )
         self.assertTrue(audit["posttraining_train_only_valid"])
+        self.assertTrue(audit["auto_gate_train_only_valid"])
+        self.assertTrue(audit["forced_spectral_train_only_valid"])
 
     def test_formal_posttraining_audit_fails_on_action_norm_mismatch(self) -> None:
         with self.assertRaises(RuntimeError):
             audit_formal_posttraining(
                 episode_audit={"episode_disjoint": True, "region_start_disjoint": True},
-                partition_contract={"gate_partition_train_only_valid": True, "partition_latent_cache_hash_match": True},
+                partition_contracts={
+                    "auto": {"gate_partition_train_only_valid": True},
+                    "forced_spectral": {"gate_partition_train_only_valid": True},
+                    "global": {"gate_partition_train_only_valid": True},
+                },
                 split_manifest={"train_eval_episode_disjoint": True, "sha256": {"action_norm_starts": "abc"}},
                 split_manifest_sha256="split",
                 train_cache_hash="train",
                 eval_cache_hash="eval",
                 action_norm_starts_hash="wrong",
+                cache_start_audits={
+                    "train": {"train_cache_starts_exact_match": True},
+                    "eval": {"eval_cache_starts_exact_match": True},
+                },
                 checkpoint_manifests=[
                     {"latent_cache_sha256": "train", "split_manifest_sha256": "split"}
                 ],
                 require_valid=True,
             )
+
+    def test_formal_posttraining_audit_fails_when_forced_spectral_invalid(self) -> None:
+        with self.assertRaises(RuntimeError):
+            audit_formal_posttraining(
+                episode_audit={"episode_disjoint": True, "region_start_disjoint": True},
+                partition_contracts={
+                    "auto": {"gate_partition_train_only_valid": True},
+                    "forced_spectral": {"gate_partition_train_only_valid": False},
+                    "global": {"gate_partition_train_only_valid": True},
+                },
+                split_manifest={"train_eval_episode_disjoint": True, "sha256": {"action_norm_starts": "abc"}},
+                split_manifest_sha256="split",
+                train_cache_hash="train",
+                eval_cache_hash="eval",
+                action_norm_starts_hash="abc",
+                cache_start_audits={
+                    "train": {"train_cache_starts_exact_match": True},
+                    "eval": {"eval_cache_starts_exact_match": True},
+                },
+                checkpoint_manifests=[
+                    {"latent_cache_sha256": "train", "split_manifest_sha256": "split"}
+                ],
+                require_valid=True,
+            )
+
+    def test_orchestrator_regional_run_dir_resolves_train_seed_pattern(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "training" / "forced_spectral_negative_control"
+            run_dir = root / "train42"
+            run_dir.mkdir(parents=True)
+            resolved = resolve_run_dir(root, 42, patterns=FORMAL_REGIONAL_RUN_PATTERNS)
+            self.assertEqual(resolved, run_dir)
+
+    def test_evaluate_command_includes_forced_spectral_audit_dir(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "formal"
+            paths = PipelinePaths.from_root(root)
+            paths.root.mkdir(parents=True)
+            split_manifest = {
+                "schema_version": 1,
+                "train_episode_ids": [0],
+                "eval_episode_ids": [1],
+                "sha256": {},
+                "paths": {
+                    "train_starts": str(paths.root / "train_starts.npy"),
+                    "eval_starts": str(paths.root / "eval_starts.npy"),
+                    "action_norm_starts": str(paths.root / "action_norm_starts.npy"),
+                },
+            }
+            (paths.root / "split_manifest.json").write_text(
+                json.dumps(split_manifest), encoding="utf-8"
+            )
+            for name in ("train_starts.npy", "eval_starts.npy", "action_norm_starts.npy"):
+                np.save(paths.root / name, np.asarray([0], dtype=np.int64))
+            args = argparse.Namespace(
+                python=sys.executable,
+                task="pusht",
+                train_seeds="0",
+                bootstrap_reps=100,
+                encoding_batch_size=128,
+                device="cuda",
+                phase="smoke",
+                max_anchors=0,
+                max_episodes=0,
+            )
+            command = evaluate_command(args, DEFAULT_TASKS["pusht"], paths)
+            self.assertIn("--forced-spectral-partition-dir", command)
+            self.assertIn(str(paths.partition_forced_spectral), command)
+            self.assertIn("--smoke-only", command)
+
+    def test_train_command_includes_device(self) -> None:
+        args = argparse.Namespace(
+            python=sys.executable,
+            epochs=1,
+            device="cpu",
+        )
+        paths = PipelinePaths.from_root(Path("/tmp/unused"))
+        command = train_command(
+            args,
+            DEFAULT_TASKS["pusht"],
+            paths,
+            partition_dir=paths.partition_global,
+            out_dir=Path("/tmp/out"),
+            train_seed=0,
+            training_role="global",
+        )
+        self.assertIn("--device", command)
+        self.assertIn("cpu", command)
 
     def test_partition_provenance_audit(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
