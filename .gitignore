@@ -47,6 +47,9 @@ checkpoints/
 nohup.out
 wandb/
 runs/
+experiments/**/matrix/logs/
+experiments/**/matrix/training/
+experiments/**/matrix_long/
 
 # Generated qualitative rollouts
 *.mp4

@@ -2,6 +2,18 @@
 
 suppressPackageStartupMessages(library(ggplot2))
 
+write_csv_lf <- function(data, path) {
+  connection <- file(path, open = "wb")
+  on.exit(close(connection), add = TRUE)
+  write.csv(data, connection, row.names = FALSE)
+}
+
+write_lines_lf <- function(lines, path) {
+  connection <- file(path, open = "wb")
+  on.exit(close(connection), add = TRUE)
+  writeLines(sub("[[:space:]]+$", "", lines), connection, useBytes = TRUE)
+}
+
 script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
 script_path <- if (length(script_arg) == 1) {
   normalizePath(sub("^--file=", "", script_arg), winslash = "/")
@@ -10,8 +22,12 @@ script_path <- if (length(script_arg) == 1) {
 }
 args <- commandArgs(trailingOnly = TRUE)
 horizon <- if (length(args) >= 1) args[[1]] else "long"
+deployment_seed <- if (length(args) >= 2) suppressWarnings(as.integer(args[[2]])) else 0L
 if (!horizon %in% c("short", "long")) {
-  stop("Usage: plot_tworoom_main.R [short|long]")
+  stop("Usage: plot_tworoom_main.R [short|long] [deployment_seed]")
+}
+if (is.na(deployment_seed) || !deployment_seed %in% 0:2) {
+  stop("deployment_seed must be one of 0, 1, or 2")
 }
 assets_root <- dirname(dirname(script_path))
 out_dir <- file.path(assets_root, paste0(horizon, "_horizon_metrics"))
@@ -19,10 +35,21 @@ stem <- paste0("tworoom_", horizon, "_horizon")
 input_csv <- file.path(out_dir, paste0(stem, "_method_seeds.csv"))
 
 raw <- read.csv(input_csv, check.names = FALSE, stringsAsFactors = FALSE)
+auto_lap_scope <- unique(raw$source_scope[raw$method_id == "autolap"])
+expected_seed_text <- paste0("preset deployment seed ", deployment_seed, ";")
+if (
+  length(auto_lap_scope) != 1 ||
+  !grepl(expected_seed_text, auto_lap_scope, fixed = TRUE)
+) {
+  stop(
+    "Auto-LAP source scope in ", input_csv,
+    " does not match deployment seed ", deployment_seed
+  )
+}
 
 method_order <- c(
   "baseline", "joint3", "globalft50", "random",
-  "kmeans", "spectral", "rooms3"
+  "kmeans", "spectral", "rooms3", "autolap"
 )
 label_order <- c(
   "Official\nbaseline",
@@ -31,7 +58,8 @@ label_order <- c(
   "Random-Voronoi\nK3-50",
   "K-means++\nK3-50",
   "Spectral\nK3-50",
-  "Human partition\nrooms3-50"
+  "Human partition\nrooms3-50",
+  "Auto-LAP"
 )
 label_by_id <- setNames(label_order, method_order)
 
@@ -71,10 +99,9 @@ summary_df$value_label <- ifelse(
   sprintf("%.1f \u00B1 %.1f%%", summary_df$mean_percent, summary_df$sd_percent)
 )
 
-write.csv(
+write_csv_lf(
   summary_df,
-  file.path(out_dir, paste0(stem, "_method_summary.csv")),
-  row.names = FALSE
+  file.path(out_dir, paste0(stem, "_method_summary.csv"))
 )
 
 method_colors <- c(
@@ -84,7 +111,8 @@ method_colors <- c(
   random = "#56B4E9",
   kmeans = "#0072B2",
   spectral = "#D55E00",
-  rooms3 = "#CC79A7"
+  rooms3 = "#CC79A7",
+  autolap = "#6A3D9A"
 )
 method_shapes <- c(
   baseline = 18,
@@ -93,7 +121,8 @@ method_shapes <- c(
   random = 24,
   kmeans = 21,
   spectral = 8,
-  rooms3 = 25
+  rooms3 = 25,
+  autolap = 15
 )
 
 baseline_value <- summary_df$mean_percent[summary_df$method_id == "baseline"]
@@ -165,6 +194,11 @@ p <- ggplot(
       "Mean ± SD across three method seeds; Random uses partition seeds; ",
       "baseline has no error bar"
     ),
+    caption = paste0(
+      "Auto-LAP = Spectral K3-50 with preset deployment seed ",
+      deployment_seed,
+      "."
+    ),
     x = "Post-training method",
     y = "Task success rate"
   ) +
@@ -186,6 +220,12 @@ p <- ggplot(
   theme(
     plot.title = element_text(size = 20, face = "bold", hjust = 0),
     plot.subtitle = element_text(size = 12.2, color = "#485464", margin = margin(b = 13)),
+    plot.caption = element_text(
+      size = 11.2,
+      color = "#485464",
+      hjust = 0,
+      margin = margin(t = 10)
+    ),
     axis.title.x = element_text(size = 14.2, margin = margin(t = 14)),
     axis.title.y = element_text(size = 14.2, margin = margin(r = 10)),
     axis.text.x = element_text(size = 11.2, lineheight = 0.95, color = "#1F2933"),
@@ -217,7 +257,7 @@ ggsave(
   png_path,
   plot = p,
   width = 13.4,
-  height = 7.35,
+  height = 7.8,
   units = "in",
   dpi = 300,
   bg = "white"
@@ -226,12 +266,15 @@ ggsave(
   pdf_path,
   plot = p,
   width = 13.4,
-  height = 7.35,
+  height = 7.8,
   units = "in",
   device = grDevices::cairo_pdf,
   bg = "white"
 )
 
-capture.output(sessionInfo(), file = file.path(out_dir, "R_sessionInfo.txt"))
+write_lines_lf(
+  capture.output(sessionInfo()),
+  file.path(out_dir, "R_sessionInfo.txt")
+)
 message("Wrote: ", png_path)
 message("Wrote: ", pdf_path)

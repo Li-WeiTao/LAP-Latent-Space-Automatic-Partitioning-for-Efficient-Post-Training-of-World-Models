@@ -1,6 +1,6 @@
 {
-  "files_read": 185,
-  "expected_files": 185,
+  "files_read": 200,
+  "expected_files": 200,
   "train_seeds": [
     0,
     42,
@@ -29,6 +29,12 @@
   "horizon": "short",
   "goal_offset_steps": 25,
   "partition_method_inner_average": "3 partition seeds x 5 eval seeds",
+  "auto_lap": {
+    "selected_method": "spectral",
+    "configuration": "K3-50",
+    "deployment_seed": 0,
+    "inner_average": "5 eval seeds"
+  },
   "spectral_artifact_tags": null,
   "summary": [
     {
@@ -86,6 +92,14 @@
       "n_method_seeds": 3,
       "mean_percent": 91.86666666666666,
       "sd_percent": 0.8326663997864513
+    },
+    {
+      "method_id": "autolap",
+      "method_label": "Auto-LAP",
+      "seed_type": "fine_tuning",
+      "n_method_seeds": 3,
+      "mean_percent": 91.46666666666667,
+      "sd_percent": 0.23094010767584539
     }
   ]
 }

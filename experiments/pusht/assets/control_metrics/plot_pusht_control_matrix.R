@@ -2,6 +2,18 @@
 
 suppressPackageStartupMessages(library(ggplot2))
 
+write_csv_lf <- function(data, path) {
+  connection <- file(path, open = "wb")
+  on.exit(close(connection), add = TRUE)
+  write.csv(data, connection, row.names = FALSE)
+}
+
+write_lines_lf <- function(lines, path) {
+  connection <- file(path, open = "wb")
+  on.exit(close(connection), add = TRUE)
+  writeLines(sub("[[:space:]]+$", "", lines), connection, useBytes = TRUE)
+}
+
 script_arg <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
 script_path <- if (length(script_arg) == 1) {
   normalizePath(sub("^--file=", "", script_arg), winslash = "/")
@@ -26,7 +38,7 @@ inputs <- data.frame(
 )
 
 method_order <- c(
-  "baseline", "joint3", "globalft50", "random", "kmeans", "spectral"
+  "baseline", "joint3", "globalft50", "random", "kmeans", "spectral", "autolap"
 )
 source_names <- c(
   baseline = "Official baseline",
@@ -34,15 +46,17 @@ source_names <- c(
   globalft50 = "Global-FT50",
   random = "Random-Voronoi",
   kmeans = "K-means++",
-  spectral = "Spectral"
+  spectral = "Spectral",
+  autolap = "Global-FT50"
 )
 label_order <- c(
   "Official\nbaseline",
   "Joint-Continue\n3ep",
-  "Global-FT (LAP)\n50ep",
+  "Global-FT\n50ep",
   "Random-Voronoi\nK3-50",
   "K-means++\nK3-50",
-  "Spectral\nK3-50"
+  "Spectral\nK3-50",
+  "Auto-LAP"
 )
 label_by_id <- setNames(label_order, method_order)
 
@@ -79,10 +93,9 @@ summary_df$x_position <- match(as.character(summary_df$method_id), method_order)
 summary_df$lower <- summary_df$mean_percent - summary_df$sd_percent
 summary_df$upper <- summary_df$mean_percent + summary_df$sd_percent
 
-write.csv(
+write_csv_lf(
   summary_df,
-  file.path(out_dir, "pusht_control_method_summary.csv"),
-  row.names = FALSE
+  file.path(out_dir, "pusht_control_method_summary.csv")
 )
 
 method_colors <- c(
@@ -91,7 +104,8 @@ method_colors <- c(
   globalft50 = "#009E73",
   random = "#56B4E9",
   kmeans = "#0072B2",
-  spectral = "#D55E00"
+  spectral = "#D55E00",
+  autolap = "#6A3D9A"
 )
 method_shapes <- c(
   baseline = 18,
@@ -99,7 +113,8 @@ method_shapes <- c(
   globalft50 = 22,
   random = 24,
   kmeans = 21,
-  spectral = 8
+  spectral = 8,
+  autolap = 15
 )
 
 make_plot <- function(horizon, title, y_limits, y_breaks, label_offset, stem) {
@@ -183,6 +198,7 @@ make_plot <- function(horizon, title, y_limits, y_breaks, label_offset, stem) {
         "Mean \u00B1 SD across three fine-tuning seeds; ",
         "baseline has no error bar"
       ),
+      caption = "Auto-LAP = Global-FT (the gate-selected fallback).",
       x = "Post-training method",
       y = "Task success rate"
     ) +
@@ -207,6 +223,12 @@ make_plot <- function(horizon, title, y_limits, y_breaks, label_offset, stem) {
         size = 12.2,
         color = "#485464",
         margin = margin(b = 13)
+      ),
+      plot.caption = element_text(
+        size = 11.2,
+        color = "#485464",
+        hjust = 0,
+        margin = margin(t = 10)
       ),
       axis.title.x = element_text(size = 14.2, margin = margin(t = 14)),
       axis.title.y = element_text(size = 14.2, margin = margin(r = 10)),
@@ -233,7 +255,7 @@ make_plot <- function(horizon, title, y_limits, y_breaks, label_offset, stem) {
     file.path(out_dir, paste0(stem, ".png")),
     plot = p,
     width = 13.4,
-    height = 7.35,
+    height = 7.8,
     units = "in",
     dpi = 300,
     bg = "white"
@@ -242,7 +264,7 @@ make_plot <- function(horizon, title, y_limits, y_breaks, label_offset, stem) {
     file.path(out_dir, paste0(stem, ".pdf")),
     plot = p,
     width = 13.4,
-    height = 7.35,
+    height = 7.8,
     units = "in",
     device = grDevices::cairo_pdf,
     bg = "white"
@@ -267,5 +289,8 @@ make_plot(
   stem = "pusht_long_horizon_main"
 )
 
-capture.output(sessionInfo(), file = file.path(out_dir, "R_sessionInfo.txt"))
+write_lines_lf(
+  capture.output(sessionInfo()),
+  file.path(out_dir, "R_sessionInfo.txt")
+)
 message("Wrote PushT short- and long-horizon figures to: ", out_dir)

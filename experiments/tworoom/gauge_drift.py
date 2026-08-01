@@ -285,6 +285,15 @@ def pusht_splits(cols: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
     return splits
 
 
+def reacher_splits(cols: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
+    # Matrix protocol parity with PushT: no manually designed partition, only
+    # the "common" region needed to seed the global training-start pool.
+    state = get_first_available(cols, ("observation", "qpos", "finger_pos"))
+    if state is None:
+        return {}
+    return {"common": np.ones(state.shape[0], dtype=bool)}
+
+
 DATASETS = {
     "tworoom": DatasetSpec(
         name="tworoom",
@@ -299,6 +308,13 @@ DATASETS = {
         pixel_key="pixels",
         state_keys=("state", "proprio"),
         split_fn=pusht_splits,
+    ),
+    "reacher": DatasetSpec(
+        name="reacher",
+        default_file="reacher.h5",
+        pixel_key="pixels",
+        state_keys=("observation", "qpos", "finger_pos"),
+        split_fn=reacher_splits,
     ),
 }
 

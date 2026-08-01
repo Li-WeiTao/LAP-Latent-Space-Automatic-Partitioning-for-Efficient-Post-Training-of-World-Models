@@ -60,6 +60,27 @@ checkpoints are intentionally excluded from Git; committed result JSON/CSV,
 logs, plots, and partition/router artifacts retain the evidence needed to audit
 the reported experiments.
 
+### Complete Auto-LAP gate diagnostics (K=3)
+
+The table below is read directly from the fresh `partition_auto` manifests. Each
+task uses diagnostic seeds `0,1,2`, kNN values `27,30,33`, deployment seed `0`,
+and 20,000 landmarks. The implementation requests 14 smallest eigenvalues for
+every seed/kNN graph (the candidate gap plus 10 background gaps).
+
+| Task | E_min | T_max^E | S | R | T_bg | Safety pass | Background pass | Selected branch |
+|---|---:|---:|---:|---:|---:|:---:|:---:|---|
+| TwoRoom | 0.5735326623517215 | 0.0028767691857112254 | 0.9949841231815547 | 0.5706558931660103 | 0.3357849035836455 | Yes | Yes | `spectral` -> `regional_predictors` |
+| PushT | 0.14222104073161526 | 0.14051227611834044 | 0.01201485099873112 | 0.0017087646132748213 | 0.22395176859263535 | No | No | `global` -> `global_predictor` |
+
+The complete machine-readable results are available in
+[`gate_summary.csv`](experiments/control_matrix/assets/auto_gate/gate_summary.csv),
+[`gate_draws.csv`](experiments/control_matrix/assets/auto_gate/gate_draws.csv),
+and
+[`gate_summary.json`](experiments/control_matrix/assets/auto_gate/gate_summary.json).
+The source manifests remain under
+`experiments/tworoom/results/auto_gate_complete_k3/auto/partition/` and
+`experiments/pusht/results/auto_gate_complete_k3/auto/partition/`.
+
 ## Interface boundary
 
 LAP exposes two composable interfaces. Humans and coding agents can use this

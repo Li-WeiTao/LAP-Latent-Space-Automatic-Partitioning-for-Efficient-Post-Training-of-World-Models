@@ -2,7 +2,9 @@
 """Rebuild the TwoRoom main-table inputs from committed per-run results.
 
 The aggregation unit is the predictor fine-tuning seed.  For partitioned
-methods, each fine-tuning-seed value first averages the 3 partition seeds x 5
+comparison methods, each fine-tuning-seed value first averages the 3 partition
+seeds x 5 paired evaluation seeds.  Auto-LAP uses the gate-selected Spectral
+K3-50 method with one preset deployment seed (default: 0), averaged over the 5
 paired evaluation seeds.  The plotted error bar is then the sample standard
 deviation across fine-tuning seeds 0, 42, and 625.
 """
@@ -42,6 +44,11 @@ METHODS = (
     Method("kmeans", r"K-means++\nK3-50", "Mean over 3 outer seeds x 5 eval seeds"),
     Method("spectral", r"Spectral\nK3-50", "Mean over 3 partition seeds x 5 eval seeds"),
     Method("rooms3", r"Human partition\nrooms3-50", "Mean over eval seeds 0-4"),
+    Method(
+        "autolap",
+        r"Auto-LAP",
+        "Spectral K3-50 with a preset deployment seed; mean over eval seeds 0-4",
+    ),
 )
 
 
@@ -52,6 +59,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--seed-csv", type=Path, default=None)
     parser.add_argument("--summary-csv", type=Path, default=None)
     parser.add_argument("--audit-json", type=Path, default=None)
+    parser.add_argument(
+        "--deployment-seed",
+        type=int,
+        choices=PARTITION_SEEDS,
+        default=0,
+        help="Preset Spectral K3-50 partition seed used by Auto-LAP (default: 0).",
+    )
     parser.add_argument(
         "--check-existing",
         action="store_true",
@@ -128,7 +142,7 @@ def path_for(
                 if train_seed == 42
                 else f"{prefix}_trainseed{train_seed}_evalseed{eval_seed}"
             )
-    elif method == "spectral":
+    elif method in {"spectral", "autolap"}:
         tag = (
             spectral_tags[int(partition_seed)]
             if spectral_tags is not None
@@ -197,6 +211,7 @@ def collect_rows(
     results: Path,
     horizon: str,
     spectral_tags: dict[int, str] | None = None,
+    deployment_seed: int = 0,
 ) -> tuple[list[dict[str, object]], dict[str, object]]:
     rows: list[dict[str, object]] = []
     pairing: dict[int, set[str]] = {seed: set() for seed in EVAL_SEEDS}
@@ -227,11 +242,12 @@ def collect_rows(
     for method in METHODS[1:]:
         for train_seed in TRAIN_SEEDS:
             values = []
-            partition_seeds: tuple[int | None, ...] = (
-                PARTITION_SEEDS
-                if method.method_id in {"random", "kmeans", "spectral"}
-                else (None,)
-            )
+            if method.method_id == "autolap":
+                partition_seeds: tuple[int | None, ...] = (deployment_seed,)
+            elif method.method_id in {"random", "kmeans", "spectral"}:
+                partition_seeds = PARTITION_SEEDS
+            else:
+                partition_seeds = (None,)
             for partition_seed in partition_seeds:
                 for eval_seed in EVAL_SEEDS:
                     path = path_for(
@@ -254,7 +270,12 @@ def collect_rows(
                     "seed_type": "fine_tuning",
                     "seed": train_seed,
                     "value_percent": statistics.mean(values),
-                    "source_scope": method.source_scope,
+                    "source_scope": (
+                        f"Spectral K3-50; preset deployment seed {deployment_seed}; "
+                        "mean over eval seeds 0-4"
+                        if method.method_id == "autolap"
+                        else method.source_scope
+                    ),
                 }
             )
 
@@ -270,7 +291,7 @@ def collect_rows(
         )
     audit = {
         "files_read": files_read,
-        "expected_files": 185,
+        "expected_files": 200,
         "train_seeds": list(TRAIN_SEEDS),
         "partition_seeds": list(PARTITION_SEEDS),
         "eval_seeds": list(EVAL_SEEDS),
@@ -281,10 +302,16 @@ def collect_rows(
         "horizon": horizon,
         "goal_offset_steps": 25 if horizon == "short" else 50,
         "partition_method_inner_average": "3 partition seeds x 5 eval seeds",
+        "auto_lap": {
+            "selected_method": "spectral",
+            "configuration": "K3-50",
+            "deployment_seed": deployment_seed,
+            "inner_average": "5 eval seeds",
+        },
         "spectral_artifact_tags": spectral_tags,
     }
     if files_read != audit["expected_files"]:
-        raise AssertionError(f"Expected 185 result files, read {files_read}")
+        raise AssertionError(f"Expected 200 result files, read {files_read}")
     return rows, audit
 
 
@@ -353,6 +380,7 @@ def main() -> None:
         args.results_root,
         args.horizon,
         spectral_tags=load_spectral_tags(args.spectral_summary),
+        deployment_seed=args.deployment_seed,
     )
     summaries = summary_rows(rows)
     audit["summary"] = summaries

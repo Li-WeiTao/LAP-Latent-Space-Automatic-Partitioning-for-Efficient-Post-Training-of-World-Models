@@ -30,7 +30,9 @@ PROJECT_ROOT = THIS_DIR.parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(THIS_DIR))
 
-from gauge_drift import load_encoder
+import h5py
+
+from gauge_drift import DATASETS, choose_state_key, load_encoder
 from module import SIGReg
 from utils import get_column_normalizer, get_img_preprocessor
 
@@ -125,21 +127,39 @@ def atomic_write_json(path: Path, value: dict) -> None:
             tmp.unlink()
 
 
+def resolve_state_key(data_file: Path, dataset_name: str) -> str | None:
+    with h5py.File(data_file, "r") as handle:
+        spec = DATASETS.get(dataset_name)
+        if spec is not None:
+            return choose_state_key(handle, spec, None)
+        for key in ("proprio", "state", "observation"):
+            if key in handle:
+                return key
+    return None
+
+
 def prepare_dataset(args: argparse.Namespace):
+    data_file = args.data_file.resolve(strict=True)
+    state_key = resolve_state_key(data_file, args.dataset_name)
+    keys_to_load = ["pixels", "action"]
+    keys_to_cache = ["action"]
+    if state_key is not None:
+        keys_to_load.append(state_key)
+        keys_to_cache.append(state_key)
     dataset = swm.data.load_dataset(
-        str(args.data_file.resolve(strict=True)),
+        str(data_file),
         transform=None,
         num_steps=args.history_size + args.num_preds,
         frameskip=args.frameskip,
-        keys_to_load=["pixels", "action", "proprio"],
-        keys_to_cache=["action", "proprio"],
+        keys_to_load=keys_to_load,
+        keys_to_cache=keys_to_cache,
     )
     transforms = [
         get_img_preprocessor(
             source="pixels", target="pixels", img_size=args.img_size
         )
     ]
-    for col in ("action", "proprio"):
+    for col in keys_to_cache:
         transforms.append(get_column_normalizer(dataset, col, col))
     dataset.transform = spt.data.transforms.Compose(*transforms)
     return dataset

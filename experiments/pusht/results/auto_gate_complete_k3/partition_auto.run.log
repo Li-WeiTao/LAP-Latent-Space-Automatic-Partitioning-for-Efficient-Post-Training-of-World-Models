@@ -1,0 +1,2 @@
+[done] auto seed=0 counts=[2315671] elapsed=118.38s -> experiments/pusht/results/auto_gate_complete_k3/auto/partition
+[auto-gate] selected_method=global reason=safety_and_background_checks_failed S=0.01201485099873112 R=0.0017087646132748213 T_bg=0.22395176859263535

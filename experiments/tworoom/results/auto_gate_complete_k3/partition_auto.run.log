@@ -1,0 +1,2 @@
+[done] auto seed=0 counts=[328947, 296723, 284053] elapsed=45.27s -> experiments/tworoom/results/auto_gate_complete_k3/auto/partition
+[auto-gate] selected_method=spectral reason=spectrally_nondegenerate S=0.9949841231815547 R=0.5706558931660103 T_bg=0.3357849035836455

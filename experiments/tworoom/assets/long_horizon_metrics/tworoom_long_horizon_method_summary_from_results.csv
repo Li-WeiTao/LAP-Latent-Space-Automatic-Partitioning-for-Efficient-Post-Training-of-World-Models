@@ -6,3 +6,4 @@ random,Random-Voronoi\nK3-50,fine_tuning,3,59.333333333333336,0.5811865258054235
 kmeans,K-means++\nK3-50,fine_tuning,3,58.44444444444444,1.0777205024873013
 spectral,Spectral\nK3-50,fine_tuning,3,61.37777777777778,0.6301087501670162
 rooms3,Human partition\nrooms3-50,fine_tuning,3,59.86666666666667,1.5143755588800758
+autolap,Auto-LAP,fine_tuning,3,61.6,0.6928203230275505

@@ -18,3 +18,6 @@ spectral,Spectral\nK3-50,fine_tuning,625,60.666666666666664,Mean over 3 partitio
 rooms3,Human partition\nrooms3-50,fine_tuning,0,58.8,Mean over eval seeds 0-4
 rooms3,Human partition\nrooms3-50,fine_tuning,42,59.199999999999996,Mean over eval seeds 0-4
 rooms3,Human partition\nrooms3-50,fine_tuning,625,61.6,Mean over eval seeds 0-4
+autolap,Auto-LAP,fine_tuning,0,62.4,Spectral K3-50; preset deployment seed 0; mean over eval seeds 0-4
+autolap,Auto-LAP,fine_tuning,42,61.2,Spectral K3-50; preset deployment seed 0; mean over eval seeds 0-4
+autolap,Auto-LAP,fine_tuning,625,61.199999999999996,Spectral K3-50; preset deployment seed 0; mean over eval seeds 0-4
