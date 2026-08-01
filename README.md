@@ -252,6 +252,33 @@ Use `python experiments/tworoom/reproduce.py list --profile full` to see every
 retained analysis, ablation, and validation family. The registry deliberately
 excludes development-time queue, `nohup`, recovery, and partial-rerun launchers.
 
+## PushT result snapshot
+
+PushT uses the same three predictor fine-tuning seeds (`0`, `42`, and `625`),
+three partition seeds for partitioned methods, and five paired evaluation
+seeds. Values below are the mean and sample standard deviation across predictor
+fine-tuning seeds; the official checkpoint has no post-training error bar.
+
+| Method | Short horizon | Long horizon |
+|---|---:|---:|
+| Official baseline | 86.00% | 37.20% |
+| Joint-Continue FP32, 3 epochs | 89.07 ± 1.01% | 36.53 ± 0.46% |
+| **Global-FT (LAP), 50 epochs** | **93.73 ± 0.46%** | **40.40 ± 0.40%** |
+| Random-Voronoi K3, 50 epochs | 92.80 ± 0.13% | 39.60 ± 0.35% |
+| K-means++ K3, 50 epochs | 93.47 ± 0.13% | 39.42 ± 0.73% |
+| Spectral K3, 50 epochs | 93.47 ± 0.53% | 38.58 ± 1.15% |
+
+![PushT short-horizon results](experiments/pusht/assets/control_metrics/pusht_short_horizon_main.png)
+
+![PushT long-horizon results](experiments/pusht/assets/control_metrics/pusht_long_horizon_main.png)
+
+Unlike TwoRoom, PushT does not benefit from the tested hard latent partition.
+The label-free gate detects this case before predictor training: its retained
+safety fraction is `0.0120`, so the automatic LAP pipeline selects the
+one-region Global-FT branch. The plotted values, underlying seed-level results,
+gate manifests, and plotting source are committed under `experiments/pusht/`.
+See `experiments/pusht/README.md` for the exact protocols and interpretation.
+
 ## Repository layout
 
 ```text
