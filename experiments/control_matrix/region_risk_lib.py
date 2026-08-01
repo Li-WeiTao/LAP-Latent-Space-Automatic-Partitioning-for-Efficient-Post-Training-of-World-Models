@@ -663,6 +663,7 @@ def validate_manifest(
     latent_cache_hash: str,
     pretrained_hash: str,
     partition_hash: str,
+    split_manifest_hash: str | None = None,
 ) -> None:
     manifest_seed = manifest.get("train_seed", manifest.get("seed"))
     if manifest_seed is not None and int(manifest_seed) != train_seed:
@@ -684,6 +685,65 @@ def validate_manifest(
         manifest["partition_source_manifest_sha256"] != partition_hash
     ):
         raise ValueError("checkpoint manifest partition hash mismatch")
+    if split_manifest_hash and manifest.get("split_manifest_sha256") and (
+        manifest["split_manifest_sha256"] != split_manifest_hash
+    ):
+        raise ValueError("checkpoint manifest split_manifest hash mismatch")
+
+
+def audit_formal_posttraining(
+    *,
+    episode_audit: Mapping[str, Any],
+    partition_contract: Mapping[str, Any],
+    split_manifest: Mapping[str, Any],
+    split_manifest_sha256: str,
+    train_cache_hash: str,
+    eval_cache_hash: str,
+    action_norm_starts_hash: str,
+    checkpoint_manifests: Sequence[Mapping[str, Any]],
+    require_valid: bool = True,
+) -> dict[str, Any]:
+    split_hashes = split_manifest.get("sha256", {})
+    action_norm_hash_match = action_norm_starts_hash == split_hashes.get("action_norm_starts")
+    checkpoint_provenance_valid = True
+    checkpoint_issues: list[str] = []
+    for index, manifest in enumerate(checkpoint_manifests):
+        if manifest.get("latent_cache_sha256") != train_cache_hash:
+            checkpoint_provenance_valid = False
+            checkpoint_issues.append(f"manifest[{index}] latent_cache_sha256 mismatch")
+        if manifest.get("split_manifest_sha256") != split_manifest_sha256:
+            checkpoint_provenance_valid = False
+            checkpoint_issues.append(f"manifest[{index}] split_manifest_sha256 mismatch")
+
+    posttraining_train_only_valid = (
+        bool(episode_audit.get("episode_disjoint"))
+        and bool(episode_audit.get("region_start_disjoint"))
+        and bool(partition_contract.get("gate_partition_train_only_valid"))
+        and bool(split_manifest.get("train_eval_episode_disjoint"))
+        and partition_contract.get("partition_latent_cache_hash_match") is True
+        and action_norm_hash_match
+        and checkpoint_provenance_valid
+    )
+    result = {
+        "posttraining_train_only_valid": posttraining_train_only_valid,
+        "action_norm_starts_hash_match": action_norm_hash_match,
+        "checkpoint_provenance_valid": checkpoint_provenance_valid,
+        "checkpoint_provenance_issues": checkpoint_issues[:10],
+        "eval_cache_sha256": eval_cache_hash,
+        "train_cache_sha256": train_cache_hash,
+        "split_manifest_sha256": split_manifest_sha256,
+        "paper_claim": "held out from LAP partition fitting and post-training",
+    }
+    if require_valid and not posttraining_train_only_valid:
+        raise RuntimeError(
+            "formal_posttraining_audit_failed: "
+            f"episode_disjoint={episode_audit.get('episode_disjoint')} "
+            f"gate_partition_train_only_valid="
+            f"{partition_contract.get('gate_partition_train_only_valid')} "
+            f"action_norm_hash_match={action_norm_hash_match} "
+            f"checkpoint_provenance_valid={checkpoint_provenance_valid}"
+        )
+    return result
 
 
 def atomic_write_json(path: Path, payload: Mapping[str, Any]) -> None:

@@ -42,6 +42,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--num-preds", type=int, default=1)
     parser.add_argument("--cpu-threads", type=int, default=4)
     parser.add_argument("--device", default="cuda")
+    parser.add_argument(
+        "--split-manifest",
+        type=Path,
+        default=None,
+        help="Formal split manifest for checkpoint provenance.",
+    )
+    parser.add_argument(
+        "--training-role",
+        default="standard",
+        choices=("standard", "global", "forced_spectral_negative_control"),
+    )
     return parser.parse_args()
 
 
@@ -100,9 +111,15 @@ def main() -> None:
 
     manifest_path = args.out_dir / "manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    split_manifest_hash = (
+        sha256_file(args.split_manifest.resolve(strict=True))
+        if args.split_manifest is not None
+        else None
+    )
     manifest.update(
         {
             "dataset": args.dataset_name,
+            "training_role": args.training_role,
             "partition_source": str(partition_run),
             "partition_source_manifest_sha256": sha256_file(
                 partition_run / "manifest.json"
@@ -112,6 +129,10 @@ def main() -> None:
             "pretrained_model": str(model_path),
             "pretrained_model_sha256": sha256_file(model_path),
             "train_seed": args.train_seed,
+            "split_manifest": str(args.split_manifest.resolve())
+            if args.split_manifest is not None
+            else None,
+            "split_manifest_sha256": split_manifest_hash,
             "training_config": {
                 "epochs": args.epochs,
                 "batch_size": args.batch_size,

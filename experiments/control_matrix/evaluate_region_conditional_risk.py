@@ -25,11 +25,16 @@ from backends.lewm.encoding import LeWMEncoderAdapter, make_hdf5_transition_data
 from lap.encoding.fast import FastEncodingConfig, FastLatentCacheEncoder  # noqa: E402
 from lap.partition import PartitionArtifact  # noqa: E402
 
+from experiments.control_matrix.episode_split import (  # noqa: E402
+    load_split_manifest,
+    split_paths_from_manifest,
+)
 from experiments.control_matrix.region_risk_lib import (  # noqa: E402
     ExpertBundle,
     aggregate_region_metrics,
     atomic_write_json,
     audit_episode_disjointness,
+    audit_formal_posttraining,
     audit_partition_train_contract,
     collect_rollout_anchors,
     episode_ids_at_starts,
@@ -77,7 +82,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--frameskip", type=int, default=5)
     parser.add_argument("--route-index", type=int, default=0)
     parser.add_argument("--train-fraction", type=float, default=0.9)
-    parser.add_argument("--split-seed", type=int, default=3072)
+    parser.add_argument("--split-seed", type=int, default=20260801)
     parser.add_argument("--bootstrap-reps", type=int, default=50000)
     parser.add_argument("--bootstrap-seed", type=int, default=20260801)
     parser.add_argument("--batch-size", type=int, default=512)
@@ -101,6 +106,35 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=128,
         help="Transition batch size for eval-cache encoding (match train cache report).",
+    )
+    parser.add_argument(
+        "--split-manifest",
+        type=Path,
+        default=None,
+        help="Formal split manifest produced by formal_region_risk_pipeline.py.",
+    )
+    parser.add_argument(
+        "--formal",
+        action="store_true",
+        help="Require held-out post-training audits; incompatible with --allow-in-cache.",
+    )
+    parser.add_argument(
+        "--gate-summary",
+        type=Path,
+        default=None,
+        help="Optional gate summary JSON to copy into the evaluation output directory.",
+    )
+    parser.add_argument(
+        "--global-partition-dir",
+        type=Path,
+        default=None,
+        help="Partition directory used for global predictor provenance checks.",
+    )
+    parser.add_argument(
+        "--audit-partition-dir",
+        type=Path,
+        default=None,
+        help="Partition manifest used for gate/partition train-only audit.",
     )
     return parser.parse_args()
 
@@ -258,6 +292,17 @@ def resolve_run_dir(root: Path, train_seed: int, *, patterns: tuple[str, ...]) -
     raise FileNotFoundError(f"no run directory for train_seed={train_seed} under {root}")
 
 
+def _resolve_partition_manifest(partition_dir: Path) -> Path | None:
+    partition_dir = partition_dir.resolve()
+    manifest = partition_dir / "manifest.json"
+    if manifest.exists():
+        return manifest
+    parent_manifest = partition_dir.parent / "manifest.json"
+    if parent_manifest.exists():
+        return parent_manifest
+    return None
+
+
 def resolve_global_checkpoint(run_dir: Path, name: str) -> Path:
     if name == "auto":
         for candidate in (
@@ -284,6 +329,8 @@ def load_expert_bundle(
     latent_cache_hash: str,
     pretrained_hash: str,
     partition_hash: str,
+    global_partition_hash: str | None = None,
+    split_manifest_hash: str | None = None,
     device: torch.device,
 ) -> ExpertBundle:
     manifest_path = regional_run / "manifest.json"
@@ -296,6 +343,7 @@ def load_expert_bundle(
         latent_cache_hash=latent_cache_hash,
         pretrained_hash=pretrained_hash,
         partition_hash=partition_hash,
+        split_manifest_hash=split_manifest_hash,
     )
     global_manifest_path = global_run / "manifest.json"
     global_manifest: dict[str, Any] | None = None
@@ -308,7 +356,8 @@ def load_expert_bundle(
             num_preds=num_preds,
             latent_cache_hash=latent_cache_hash,
             pretrained_hash=pretrained_hash,
-            partition_hash=partition_hash,
+            partition_hash=global_partition_hash or partition_hash,
+            split_manifest_hash=split_manifest_hash,
         )
     global_ckpt = resolve_global_checkpoint(global_run, global_name)
     checkpoint_hashes = {"global": sha256_file(global_ckpt)}
@@ -432,6 +481,8 @@ def plot_region_risk(
 
 def main() -> None:
     args = parse_args()
+    if args.formal and args.allow_in_cache:
+        raise ValueError("--formal cannot be combined with --allow-in-cache")
     device = resolve_device(args.device)
     train_seeds = [int(value) for value in args.train_seeds.split(",") if value]
     horizons = [int(value) for value in args.horizons.split(",") if value]
@@ -448,6 +499,19 @@ def main() -> None:
     if not partition_manifest.exists() and (partition_run.parent / "manifest.json").exists():
         partition_manifest = partition_run.parent / "manifest.json"
     partition_hash = sha256_file(partition_manifest) if partition_manifest.exists() else ""
+    global_partition_run = (
+        args.global_partition_dir.resolve()
+        if args.global_partition_dir is not None
+        else partition_run
+    )
+    global_partition_manifest = global_partition_run / "manifest.json"
+    if not global_partition_manifest.exists() and (
+        global_partition_run.parent / "manifest.json"
+    ).exists():
+        global_partition_manifest = global_partition_run.parent / "manifest.json"
+    global_partition_hash = (
+        sha256_file(global_partition_manifest) if global_partition_manifest.exists() else ""
+    )
 
     train_cache = load_lewm_cache(args.train_latent_cache, route_index=args.route_index)
     contract = load_cache_contract(
@@ -458,6 +522,11 @@ def main() -> None:
     )
 
     train_cache_hash = sha256_file(args.train_latent_cache.resolve(strict=True))
+    split_manifest_payload: dict[str, Any] | None = None
+    split_manifest_hash = ""
+    if args.split_manifest is not None:
+        split_manifest_payload = load_split_manifest(args.split_manifest)
+        split_manifest_hash = sha256_file(args.split_manifest.resolve(strict=True))
     action_norm_starts = resolve_action_norm_starts(
         args.train_latent_cache.resolve(strict=True),
         override=args.action_norm_starts,
@@ -465,16 +534,20 @@ def main() -> None:
 
     eval_cache_path = args.eval_latent_cache.resolve()
     if args.build_eval_cache or not eval_cache_path.exists():
-        test_starts = episode_level_test_starts(
-            args.data_file.resolve(strict=True),
-            args.task,
-            history_size=args.history_size,
-            num_preds=args.num_preds,
-            frameskip=args.frameskip,
-            train_fraction=args.train_fraction,
-            split_seed=args.split_seed,
-            seed=0,
-        )
+        if split_manifest_payload is not None:
+            split_paths = split_paths_from_manifest(split_manifest_payload)
+            test_starts = np.load(split_paths["eval_starts"])
+        else:
+            test_starts = episode_level_test_starts(
+                args.data_file.resolve(strict=True),
+                args.task,
+                history_size=args.history_size,
+                num_preds=args.num_preds,
+                frameskip=args.frameskip,
+                train_fraction=args.train_fraction,
+                split_seed=args.split_seed,
+                seed=0,
+            )
         if args.max_eval_starts > 0 and len(test_starts) > args.max_eval_starts:
             test_starts = test_starts[: args.max_eval_starts]
         encode_eval_cache(
@@ -503,34 +576,41 @@ def main() -> None:
         data_file=args.data_file.resolve(strict=True),
         train_starts=train_cache.sample_ids,
         eval_starts=eval_cache.sample_ids,
-        require_disjoint=not args.allow_in_cache,
+        require_disjoint=args.formal or not args.allow_in_cache,
     )
-    if not audit["episode_disjoint"] and args.allow_in_cache:
+    if args.formal:
+        audit["mode"] = "formal_held_out_posttraining"
+    elif not audit["episode_disjoint"] and args.allow_in_cache:
         audit["mode"] = "descriptive_in_cache"
     else:
         audit["mode"] = "episode_disjoint_held_out"
 
     pretrained_hash = sha256_file(args.pretrained_model.resolve(strict=True))
-    train_cache_hash = sha256_file(args.train_latent_cache.resolve(strict=True))
     action_norm_starts_hash = sha256_file(action_norm_starts)
-    nominal_train_episodes, _holdout_episodes = episode_level_split_episodes(
-        args.data_file.resolve(strict=True),
-        args.task,
-        history_size=args.history_size,
-        num_preds=args.num_preds,
-        frameskip=args.frameskip,
-        train_fraction=args.train_fraction,
-        split_seed=args.split_seed,
-        seed=0,
-    )
+    if split_manifest_payload is not None:
+        nominal_train_episodes = set(map(int, split_manifest_payload["train_episode_ids"]))
+        _holdout_episodes = set(map(int, split_manifest_payload["eval_episode_ids"]))
+    else:
+        nominal_train_episodes, _holdout_episodes = episode_level_split_episodes(
+            args.data_file.resolve(strict=True),
+            args.task,
+            history_size=args.history_size,
+            num_preds=args.num_preds,
+            frameskip=args.frameskip,
+            train_fraction=args.train_fraction,
+            split_seed=args.split_seed,
+            seed=0,
+        )
     partition_contract = audit_partition_train_contract(
         data_file=args.data_file.resolve(strict=True),
         train_starts=train_cache.sample_ids,
         eval_starts=eval_cache.sample_ids,
         train_cache_hash=train_cache_hash,
-        partition_manifest_path=partition_manifest if partition_manifest.exists() else None,
+        partition_manifest_path=_resolve_partition_manifest(
+            args.audit_partition_dir or args.partition_dir
+        ),
         nominal_train_episode_ids=nominal_train_episodes,
-        require_train_only=not args.allow_in_cache,
+        require_train_only=args.formal or not args.allow_in_cache,
     )
 
     eval_regions = route_regions_from_cache(
@@ -550,6 +630,7 @@ def main() -> None:
     region_summary_rows: list[dict[str, Any]] = []
     weighted_rows: list[dict[str, Any]] = []
     seed_blocks: list[dict[str, Any]] = []
+    checkpoint_manifests: list[dict[str, Any]] = []
 
     for train_seed in train_seeds:
         regional_run = resolve_run_dir(
@@ -583,8 +664,13 @@ def main() -> None:
             latent_cache_hash=train_cache_hash,
             pretrained_hash=pretrained_hash,
             partition_hash=partition_hash,
+            global_partition_hash=global_partition_hash,
+            split_manifest_hash=split_manifest_hash or None,
             device=device,
         )
+        checkpoint_manifests.append(bundle.manifest)
+        if bundle.global_manifest is not None:
+            checkpoint_manifests.append(bundle.global_manifest)
         models = [bundle.global_model] + [
             bundle.regional_models[region] for region in range(artifact.num_regions)
         ]
@@ -757,10 +843,28 @@ def main() -> None:
             )
         )
 
+    formal_audit: dict[str, Any] = {}
+    if args.formal:
+        if split_manifest_payload is None:
+            raise ValueError("--formal requires --split-manifest")
+        formal_audit = audit_formal_posttraining(
+            episode_audit=audit,
+            partition_contract=partition_contract,
+            split_manifest=split_manifest_payload,
+            split_manifest_sha256=split_manifest_hash,
+            train_cache_hash=train_cache_hash,
+            eval_cache_hash=eval_cache_hash,
+            action_norm_starts_hash=action_norm_starts_hash,
+            checkpoint_manifests=checkpoint_manifests,
+            require_valid=True,
+        )
+
     audit_payload = {
         **audit,
         **partition_contract,
+        **formal_audit,
         "task": args.task,
+        "formal": args.formal,
         "formal_episode_disjoint_valid": audit.get("episode_disjoint", False)
         and audit.get("region_start_disjoint", False),
         "formal_train_only_valid": partition_contract.get(
@@ -768,6 +872,8 @@ def main() -> None:
         ),
         "train_fraction": args.train_fraction,
         "split_seed": args.split_seed,
+        "split_manifest": str(args.split_manifest.resolve()) if args.split_manifest else None,
+        "split_manifest_sha256": split_manifest_hash or None,
         "nominal_train_num_episodes": len(nominal_train_episodes),
         "nominal_holdout_num_episodes": len(_holdout_episodes),
         "train_cache": str(args.train_latent_cache.resolve()),
@@ -786,6 +892,11 @@ def main() -> None:
         "route_index": contract.route_index,
     }
     atomic_write_json(out_dir / "audit.json", audit_payload)
+    if args.gate_summary is not None and args.gate_summary.exists():
+        atomic_write_json(
+            out_dir / "gate_summary.json",
+            json.loads(args.gate_summary.read_text(encoding="utf-8")),
+        )
 
     np.savez_compressed(
         out_dir / "sample_metrics.npz",
