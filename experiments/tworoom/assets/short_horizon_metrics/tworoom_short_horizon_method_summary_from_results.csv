@@ -1,0 +1,8 @@
+method_id,method_label,seed_type,n_method_seeds,mean_percent,sd_percent
+baseline,Official\nbaseline,official,1,90.4,
+joint3,Joint-Continue\n3ep,fine_tuning,3,90.93333333333334,0.6110100926607734
+globalft50,Global-FT\n50ep,fine_tuning,3,90.13333333333334,1.0066445913694335
+random,Random-Voronoi\nK3-50,fine_tuning,3,91.46666666666667,1.0583005244258379
+kmeans,K-means++\nK3-50,fine_tuning,3,91.5111111111111,0.38490017945975324
+spectral,Spectral\nK3-50,fine_tuning,3,91.42222222222222,0.2775554665954845
+rooms3,Human partition\nrooms3-50,fine_tuning,3,91.86666666666666,0.8326663997864513

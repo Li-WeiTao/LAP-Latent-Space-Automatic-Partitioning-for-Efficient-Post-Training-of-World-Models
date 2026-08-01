@@ -8,8 +8,15 @@ script_path <- if (length(script_arg) == 1) {
 } else {
   normalizePath("plot_tworoom_main.R", winslash = "/")
 }
-out_dir <- dirname(script_path)
-input_csv <- file.path(out_dir, "tworoom_long_horizon_method_seeds.csv")
+args <- commandArgs(trailingOnly = TRUE)
+horizon <- if (length(args) >= 1) args[[1]] else "long"
+if (!horizon %in% c("short", "long")) {
+  stop("Usage: plot_tworoom_main.R [short|long]")
+}
+assets_root <- dirname(dirname(script_path))
+out_dir <- file.path(assets_root, paste0(horizon, "_horizon_metrics"))
+stem <- paste0("tworoom_", horizon, "_horizon")
+input_csv <- file.path(out_dir, paste0(stem, "_method_seeds.csv"))
 
 raw <- read.csv(input_csv, check.names = FALSE, stringsAsFactors = FALSE)
 
@@ -47,10 +54,11 @@ summary_df$method_label <- factor(summary_df$method_label, levels = label_order)
 summary_df$x_position <- match(as.character(summary_df$method_id), method_order)
 summary_df$lower <- summary_df$mean_percent - summary_df$sd_percent
 summary_df$upper <- summary_df$mean_percent + summary_df$sd_percent
+label_offset <- if (horizon == "short") 0.34 else 0.72
 summary_df$label_y <- ifelse(
   is.na(summary_df$sd_percent),
-  summary_df$mean_percent + 0.70,
-  summary_df$upper + 0.72
+  summary_df$mean_percent + label_offset,
+  summary_df$upper + label_offset
 )
 summary_df$value_label <- ifelse(
   is.na(summary_df$sd_percent),
@@ -65,7 +73,7 @@ summary_df$value_label <- ifelse(
 
 write.csv(
   summary_df,
-  file.path(out_dir, "tworoom_long_horizon_method_summary.csv"),
+  file.path(out_dir, paste0(stem, "_method_summary.csv")),
   row.names = FALSE
 )
 
@@ -146,13 +154,13 @@ p <- ggplot(
     expand = expansion(add = 0.34)
   ) +
   scale_y_continuous(
-    limits = c(43.2, 66.4),
-    breaks = seq(44, 64, by = 4),
+    limits = if (horizon == "short") c(88.4, 94.2) else c(43.2, 66.4),
+    breaks = if (horizon == "short") seq(89, 94, by = 1) else seq(44, 64, by = 4),
     labels = function(x) paste0(x, "%"),
     expand = expansion(mult = c(0, 0))
   ) +
   labs(
-    title = "TwoRoom: long-horizon task success rate",
+    title = paste0("TwoRoom: ", horizon, "-horizon task success rate"),
     subtitle = paste0(
       "Mean ± SD across three method seeds; Random uses partition seeds; ",
       "baseline has no error bar"
@@ -202,8 +210,8 @@ p <- p + labs(
   )
 )
 
-png_path <- file.path(out_dir, "tworoom_long_horizon_main.png")
-pdf_path <- file.path(out_dir, "tworoom_long_horizon_main.pdf")
+png_path <- file.path(out_dir, paste0(stem, "_main.png"))
+pdf_path <- file.path(out_dir, paste0(stem, "_main.pdf"))
 
 ggsave(
   png_path,

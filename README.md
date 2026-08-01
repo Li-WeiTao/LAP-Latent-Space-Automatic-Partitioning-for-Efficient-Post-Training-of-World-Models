@@ -218,11 +218,23 @@ unchanged.
 
 ## TwoRoom result snapshot
 
-Long-horizon success rates use predictor fine-tuning seeds 0, 42, and 625. For
-partitioned methods, each fine-tuning-seed value is first averaged over three
-partition seeds and five paired evaluation seeds; the error bar is then the
-sample standard deviation across the three fine-tuning seeds. The official
-checkpoint has no post-training seed and therefore no error bar.
+Short- and long-horizon success rates use predictor fine-tuning seeds 0, 42,
+and 625. For partitioned methods, each fine-tuning-seed value is first averaged
+over three partition seeds and five paired evaluation seeds; the error bar is
+then the sample standard deviation across the three fine-tuning seeds. The
+official checkpoint has no post-training seed and therefore no error bar.
+
+| Method | Short-horizon success rate |
+|---|---:|
+| Official baseline | 90.40% |
+| Joint-Continue FP32, 3 epochs | 90.93 ± 0.61% |
+| Global-FT, 50 epochs | 90.13 ± 1.01% |
+| Random-Voronoi K3, 50 epochs | 91.47 ± 1.06% |
+| K-means++ K3, 50 epochs | 91.51 ± 0.38% |
+| **LAP (Spectral K3), 50 epochs** | **91.42 ± 0.28%** |
+| Human rooms3 partition, 50 epochs | 91.87 ± 0.83% |
+
+![TwoRoom short-horizon results](experiments/tworoom/assets/short_horizon_metrics/tworoom_short_horizon_main.png)
 
 | Method | Long-horizon success rate |
 |---|---:|
@@ -236,9 +248,10 @@ checkpoint has no post-training seed and therefore no error bar.
 
 ![TwoRoom long-horizon results](experiments/tworoom/assets/long_horizon_metrics/tworoom_long_horizon_main.png)
 
-The table is not hand-entered: 185 committed `results.json` files reproduce its
-seed-level CSV, and all methods use identical evaluation starts for each of the
-five evaluation seeds. The supported clean-run entrypoint is:
+Each horizon is independently reconstructed from 185 committed `results.json`
+files. The audits verify `seed`, `num_eval`, `goal_offset_steps`, and
+`eval_budget`, and confirm identical evaluation starts across methods for each
+of the five evaluation seeds. The supported clean-run entrypoint is:
 
 ```bash
 export LAP_TWOROOM_DATA=/absolute/path/to/tworoom.h5
@@ -335,20 +348,22 @@ The official checkpoint used by the committed experiments has SHA-256
 This path needs neither the dataset nor a GPU:
 
 ```bash
-python experiments/tworoom/aggregate_tworoom_main.py --check-existing
+python experiments/tworoom/aggregate_tworoom_main.py --horizon short --check-existing
+python experiments/tworoom/aggregate_tworoom_main.py --horizon long --check-existing
 python scripts/validate_repository.py
 python -m pytest
 ```
 
-The first command independently reads all 185 main-comparison result files,
-checks `seed`, `num_eval`, `goal_offset_steps`, and `eval_budget`, verifies
-paired evaluation starts, and compares the recomputed fine-tuning-seed values
-against the plotted CSV.
+Each aggregation command independently reads all 185 main-comparison result
+files for its horizon, checks `seed`, `num_eval`, `goal_offset_steps`, and
+`eval_budget`, verifies paired evaluation starts, and compares the recomputed
+fine-tuning-seed values against the plotted CSV.
 
 To rebuild the main figure from that CSV:
 
 ```bash
-Rscript experiments/tworoom/assets/long_horizon_metrics/plot_tworoom_main.R
+Rscript experiments/tworoom/assets/long_horizon_metrics/plot_tworoom_main.R short
+Rscript experiments/tworoom/assets/long_horizon_metrics/plot_tworoom_main.R long
 ```
 
 The recorded figure environment is R 4.6.1 with ggplot2 4.0.3; see

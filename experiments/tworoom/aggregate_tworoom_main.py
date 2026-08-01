@@ -22,7 +22,6 @@ from typing import Iterable
 
 THIS_DIR = Path(__file__).resolve().parent
 DEFAULT_RESULTS = THIS_DIR / "results"
-DEFAULT_ASSETS = THIS_DIR / "assets" / "long_horizon_metrics"
 TRAIN_SEEDS = (0, 42, 625)
 PARTITION_SEEDS = (0, 1, 2)
 EVAL_SEEDS = (0, 1, 2, 3, 4)
@@ -48,22 +47,11 @@ METHODS = (
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--horizon", choices=("short", "long"), default="long")
     parser.add_argument("--results-root", type=Path, default=DEFAULT_RESULTS)
-    parser.add_argument(
-        "--seed-csv",
-        type=Path,
-        default=DEFAULT_ASSETS / "tworoom_long_horizon_method_seeds.csv",
-    )
-    parser.add_argument(
-        "--summary-csv",
-        type=Path,
-        default=DEFAULT_ASSETS / "tworoom_long_horizon_method_summary_from_results.csv",
-    )
-    parser.add_argument(
-        "--audit-json",
-        type=Path,
-        default=DEFAULT_ASSETS / "tworoom_long_horizon_result_audit.json",
-    )
+    parser.add_argument("--seed-csv", type=Path, default=None)
+    parser.add_argument("--summary-csv", type=Path, default=None)
+    parser.add_argument("--audit-json", type=Path, default=None)
     parser.add_argument(
         "--check-existing",
         action="store_true",
@@ -78,27 +66,45 @@ def parse_args() -> argparse.Namespace:
             "artifact basenames replace the migrated canonical spectral tags."
         ),
     )
-    return parser.parse_args()
+    args = parser.parse_args()
+    asset_dir = THIS_DIR / "assets" / f"{args.horizon}_horizon_metrics"
+    stem = f"tworoom_{args.horizon}_horizon"
+    args.seed_csv = args.seed_csv or asset_dir / f"{stem}_method_seeds.csv"
+    args.summary_csv = args.summary_csv or asset_dir / f"{stem}_method_summary_from_results.csv"
+    args.audit_json = args.audit_json or asset_dir / f"{stem}_result_audit.json"
+    return args
 
 
 def path_for(
     results: Path,
+    horizon: str,
     method: str,
     train_seed: int | None,
     eval_seed: int,
     partition_seed: int | None = None,
     spectral_tags: dict[int, str] | None = None,
 ) -> Path:
+    if horizon not in {"short", "long"}:
+        raise ValueError(horizon)
     if method == "baseline":
-        name = f"tworoom_success_rate_baseline_exp6_seed{eval_seed}"
+        name = (
+            f"tworoom_success_rate_baseline_seed{eval_seed}"
+            if horizon == "short"
+            else f"tworoom_success_rate_baseline_exp6_seed{eval_seed}"
+        )
     elif method == "joint3":
         name = (
             f"tworoom_success_rate_joint_continue_3ep_trainseed{train_seed}_"
-            f"long_evalseed{eval_seed}"
+            f"{horizon}_evalseed{eval_seed}"
         )
     elif method == "globalft50":
-        if train_seed == 42:
+        if horizon == "long" and train_seed == 42:
             name = f"tworoom_success_rate_global_ft_50ep_exp6_seed{eval_seed}"
+        elif horizon == "short":
+            name = (
+                f"tworoom_success_rate_global_ft_50ep_trainseed{train_seed}_"
+                f"short_evalseed{eval_seed}"
+            )
         else:
             name = (
                 f"tworoom_success_rate_global_ft_50ep_trainseed{train_seed}_"
@@ -107,18 +113,21 @@ def path_for(
     elif method == "random":
         name = (
             f"tworoom_success_rate_random_voronoi_k3_seed{partition_seed}_"
-            f"trainseed{train_seed}_long_evalseed{eval_seed}"
+            f"trainseed{train_seed}_{horizon}_evalseed{eval_seed}"
         )
     elif method == "kmeans":
         prefix = (
             f"tworoom_success_rate_latent_kmeanspp_kmeanspp_R50_"
             f"outer{partition_seed}"
         )
-        name = (
-            f"{prefix}_seed{eval_seed}"
-            if train_seed == 42
-            else f"{prefix}_trainseed{train_seed}_evalseed{eval_seed}"
-        )
+        if horizon == "short":
+            name = f"{prefix}_trainseed{train_seed}_short_evalseed{eval_seed}"
+        else:
+            name = (
+                f"{prefix}_seed{eval_seed}"
+                if train_seed == 42
+                else f"{prefix}_trainseed{train_seed}_evalseed{eval_seed}"
+            )
     elif method == "spectral":
         tag = (
             spectral_tags[int(partition_seed)]
@@ -128,15 +137,18 @@ def path_for(
         name = (
             "tworoom_success_rate_latent_spectral_"
             f"{tag}_"
-            f"trainseed{train_seed}_mpc_evalseed{eval_seed}"
+            f"trainseed{train_seed}_mpc_"
+            f"{'short_' if horizon == 'short' else ''}evalseed{eval_seed}"
         )
     elif method == "rooms3":
-        if train_seed == 42:
+        if horizon == "short" and train_seed == 42:
+            name = f"tworoom_success_rate_rooms3_50ep_seed{eval_seed}"
+        elif train_seed == 42:
             name = f"tworoom_success_rate_rooms3_exp6_50ep_seed{eval_seed}"
         else:
             name = (
                 f"tworoom_success_rate_trainseed{train_seed}_rooms3_50ep_"
-                f"long_evalseed{eval_seed}"
+                f"{horizon}_evalseed{eval_seed}"
             )
     else:  # pragma: no cover - guarded by the fixed method table
         raise KeyError(method)
@@ -148,14 +160,14 @@ def starts_sha256(starts: Iterable[int]) -> str:
     return hashlib.sha256(payload.encode("ascii")).hexdigest()
 
 
-def load_run(path: Path, eval_seed: int) -> tuple[float, str]:
+def load_run(path: Path, eval_seed: int, horizon: str) -> tuple[float, str]:
     if not path.is_file():
         raise FileNotFoundError(path)
     payload = json.loads(path.read_text(encoding="utf-8"))
     expected = {
         "seed": eval_seed,
         "num_eval": 50,
-        "goal_offset_steps": 50,
+        "goal_offset_steps": 25 if horizon == "short" else 50,
         "eval_budget": 50,
     }
     for key, value in expected.items():
@@ -183,6 +195,7 @@ def load_spectral_tags(summary_path: Path | None) -> dict[int, str] | None:
 
 def collect_rows(
     results: Path,
+    horizon: str,
     spectral_tags: dict[int, str] | None = None,
 ) -> tuple[list[dict[str, object]], dict[str, object]]:
     rows: list[dict[str, object]] = []
@@ -191,7 +204,11 @@ def collect_rows(
 
     baseline_values = []
     for eval_seed in EVAL_SEEDS:
-        rate, digest = load_run(path_for(results, "baseline", None, eval_seed), eval_seed)
+        rate, digest = load_run(
+            path_for(results, horizon, "baseline", None, eval_seed),
+            eval_seed,
+            horizon,
+        )
         baseline_values.append(rate)
         pairing[eval_seed].add(digest)
         files_read += 1
@@ -219,13 +236,14 @@ def collect_rows(
                 for eval_seed in EVAL_SEEDS:
                     path = path_for(
                         results,
+                        horizon,
                         method.method_id,
                         train_seed,
                         eval_seed,
                         partition_seed,
                         spectral_tags,
                     )
-                    rate, digest = load_run(path, eval_seed)
+                    rate, digest = load_run(path, eval_seed, horizon)
                     values.append(rate)
                     pairing[eval_seed].add(digest)
                     files_read += 1
@@ -260,6 +278,8 @@ def collect_rows(
             str(seed): next(iter(pairing[seed])) for seed in EVAL_SEEDS
         },
         "aggregation_unit": "fine_tuning_seed",
+        "horizon": horizon,
+        "goal_offset_steps": 25 if horizon == "short" else 50,
         "partition_method_inner_average": "3 partition seeds x 5 eval seeds",
         "spectral_artifact_tags": spectral_tags,
     }
@@ -331,6 +351,7 @@ def main() -> None:
     args = parse_args()
     rows, audit = collect_rows(
         args.results_root,
+        args.horizon,
         spectral_tags=load_spectral_tags(args.spectral_summary),
     )
     summaries = summary_rows(rows)

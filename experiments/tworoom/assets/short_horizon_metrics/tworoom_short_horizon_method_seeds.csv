@@ -1,0 +1,20 @@
+method_id,method_label,seed_type,seed,value_percent,source_scope
+baseline,Official\nbaseline,official,official,90.4,Original LeWM baseline; no post-training seed
+joint3,Joint-Continue\n3ep,fine_tuning,0,91.6,Mean over eval seeds 0-4
+joint3,Joint-Continue\n3ep,fine_tuning,42,90.8,Mean over eval seeds 0-4
+joint3,Joint-Continue\n3ep,fine_tuning,625,90.4,Mean over eval seeds 0-4
+globalft50,Global-FT\n50ep,fine_tuning,0,91.2,Mean over eval seeds 0-4
+globalft50,Global-FT\n50ep,fine_tuning,42,90.0,Mean over eval seeds 0-4
+globalft50,Global-FT\n50ep,fine_tuning,625,89.2,Mean over eval seeds 0-4
+random,Random-Voronoi\nK3-50,fine_tuning,0,92.66666666666667,Mean over 3 partition seeds x 5 eval seeds
+random,Random-Voronoi\nK3-50,fine_tuning,42,91.06666666666666,Mean over 3 partition seeds x 5 eval seeds
+random,Random-Voronoi\nK3-50,fine_tuning,625,90.66666666666667,Mean over 3 partition seeds x 5 eval seeds
+kmeans,K-means++\nK3-50,fine_tuning,0,91.73333333333333,Mean over 3 outer seeds x 5 eval seeds
+kmeans,K-means++\nK3-50,fine_tuning,42,91.73333333333333,Mean over 3 outer seeds x 5 eval seeds
+kmeans,K-means++\nK3-50,fine_tuning,625,91.06666666666666,Mean over 3 outer seeds x 5 eval seeds
+spectral,Spectral\nK3-50,fine_tuning,0,91.73333333333333,Mean over 3 partition seeds x 5 eval seeds
+spectral,Spectral\nK3-50,fine_tuning,42,91.2,Mean over 3 partition seeds x 5 eval seeds
+spectral,Spectral\nK3-50,fine_tuning,625,91.33333333333333,Mean over 3 partition seeds x 5 eval seeds
+rooms3,Human partition\nrooms3-50,fine_tuning,0,91.6,Mean over eval seeds 0-4
+rooms3,Human partition\nrooms3-50,fine_tuning,42,92.8,Mean over eval seeds 0-4
+rooms3,Human partition\nrooms3-50,fine_tuning,625,91.2,Mean over eval seeds 0-4
