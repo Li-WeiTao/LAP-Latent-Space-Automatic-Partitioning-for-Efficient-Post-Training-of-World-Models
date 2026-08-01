@@ -1,0 +1,4 @@
+task,train_seed,horizon,region,num_episodes,num_anchors,region_weight,global_mse,correct_mse,wrong_mean_mse,wrong_best_mse,global_minus_correct,relative_gain,wrong_penalty,low_support
+pusht,0,1,0,0,0,0.0,nan,nan,nan,nan,nan,nan,nan,True
+pusht,0,1,1,11,100,1.0,0.10461141945794225,0.09923313356935978,0.18917028455995022,0.10408679170534015,0.005378285888582468,0.05141203433096272,0.08993715099059044,True
+pusht,0,1,2,0,0,0.0,nan,nan,nan,nan,nan,nan,nan,True

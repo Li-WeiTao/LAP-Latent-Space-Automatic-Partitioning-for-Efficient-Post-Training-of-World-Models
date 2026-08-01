@@ -1,0 +1,2 @@
+task,train_seed,horizon,global_mse,correct_mse,wrong_mean_mse,wrong_best_mse,global_minus_correct,relative_gain,wrong_penalty
+pusht,0,1,nan,nan,nan,nan,nan,nan,nan
