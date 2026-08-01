@@ -25,7 +25,9 @@ from experiments.control_matrix.evaluate_region_conditional_risk import (  # noq
     resolve_run_dir,
 )
 from experiments.control_matrix.formal_region_risk_pipeline import (  # noqa: E402
+    DEFAULT_PYTHON,
     DEFAULT_TASKS,
+    LEWM_VENV_PYTHON,
     PipelinePaths,
     evaluate_command,
     is_full_formal_run,
@@ -35,11 +37,22 @@ from experiments.control_matrix.region_risk_lib import (
     audit_cache_starts_exact,
     audit_formal_posttraining,
     audit_partition_train_contract,
+    runtime_provenance,
     sha256_file,
 )
 
 
 class FormalRegionRiskPipelineTest(unittest.TestCase):
+    def test_default_python_points_to_lewm_venv_when_present(self) -> None:
+        if LEWM_VENV_PYTHON.exists():
+            self.assertEqual(DEFAULT_PYTHON, str(LEWM_VENV_PYTHON))
+
+    def test_runtime_provenance_includes_python_executable(self) -> None:
+        payload = runtime_provenance(python_executable="/tmp/test-python")
+        self.assertEqual(payload["python_executable"], "/tmp/test-python")
+        self.assertIn("torch_version", payload)
+        self.assertIn("git_commit", payload)
+
     def test_split_is_reproducible_and_episode_disjoint(self) -> None:
         data_file = Path("/data/sicong/weitao/datasets/lewm/pusht_expert_train.h5")
         if not data_file.exists():
@@ -114,14 +127,14 @@ class FormalRegionRiskPipelineTest(unittest.TestCase):
 
     def test_is_full_formal_run(self) -> None:
         full = argparse.Namespace(
-            phase="all",
+            smoke_only=False,
             max_train_starts=0,
             max_eval_starts=0,
             max_anchors=0,
             max_episodes=0,
         )
         smoke = argparse.Namespace(
-            phase="smoke",
+            smoke_only=True,
             max_train_starts=4096,
             max_eval_starts=512,
             max_anchors=32,
@@ -142,7 +155,7 @@ class FormalRegionRiskPipelineTest(unittest.TestCase):
             "written_eval_num_transitions": 1,
         }
         evaluate_full = argparse.Namespace(
-            phase="evaluate",
+            smoke_only=False,
             max_train_starts=0,
             max_eval_starts=0,
             max_anchors=0,
@@ -312,7 +325,9 @@ class FormalRegionRiskPipelineTest(unittest.TestCase):
                 bootstrap_reps=100,
                 encoding_batch_size=128,
                 device="cuda",
-                phase="smoke",
+                smoke_only=True,
+                max_train_starts=4096,
+                max_eval_starts=512,
                 max_anchors=0,
                 max_episodes=0,
             )
@@ -354,7 +369,7 @@ class FormalRegionRiskPipelineTest(unittest.TestCase):
                 bootstrap_reps=50000,
                 encoding_batch_size=128,
                 device="cuda",
-                phase="all",
+                smoke_only=False,
                 max_train_starts=0,
                 max_eval_starts=0,
                 max_anchors=0,
@@ -397,7 +412,7 @@ class FormalRegionRiskPipelineTest(unittest.TestCase):
                 bootstrap_reps=50000,
                 encoding_batch_size=128,
                 device="cuda",
-                phase="evaluate",
+                smoke_only=False,
                 max_train_starts=0,
                 max_eval_starts=0,
                 max_anchors=0,

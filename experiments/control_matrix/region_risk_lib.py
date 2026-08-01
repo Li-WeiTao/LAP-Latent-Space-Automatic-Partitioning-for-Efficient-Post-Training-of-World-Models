@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -71,6 +73,29 @@ def git_commit() -> str | None:
     except (subprocess.CalledProcessError, FileNotFoundError):
         return None
     return output.strip() or None
+
+
+def runtime_provenance(*, python_executable: str | None = None) -> dict[str, Any]:
+    executable = python_executable or sys.executable
+    cuda_available = bool(torch.cuda.is_available())
+    cuda_version = torch.version.cuda
+    stable_worldmodel_version: str | None = None
+    try:
+        import stable_worldmodel as stable_wm
+
+        stable_worldmodel_version = getattr(stable_wm, "__version__", stable_wm.__file__)
+    except ImportError:
+        stable_worldmodel_version = None
+    return {
+        "python_executable": str(executable),
+        "torch_version": torch.__version__,
+        "cuda_available": cuda_available,
+        "cuda_version": cuda_version,
+        "cuda_device_name": torch.cuda.get_device_name(0) if cuda_available else None,
+        "cuda_visible_devices": os.environ.get("CUDA_VISIBLE_DEVICES"),
+        "stable_worldmodel_version": stable_worldmodel_version,
+        "git_commit": git_commit(),
+    }
 
 
 def load_model(path: str | Path) -> torch.nn.Module:

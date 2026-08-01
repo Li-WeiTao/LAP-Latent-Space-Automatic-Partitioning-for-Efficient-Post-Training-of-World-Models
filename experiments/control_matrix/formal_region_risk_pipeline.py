@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import shlex
+import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -15,6 +16,8 @@ from typing import Any, Mapping, Sequence
 import numpy as np
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+LEWM_VENV_PYTHON = PROJECT_ROOT.parent / "le-wm" / ".venv" / "bin" / "python"
+DEFAULT_PYTHON = str(LEWM_VENV_PYTHON) if LEWM_VENV_PYTHON.exists() else sys.executable
 sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(PROJECT_ROOT / "experiments" / "tworoom"))
 
@@ -29,7 +32,12 @@ from experiments.control_matrix.episode_split import (  # noqa: E402
     split_paths_from_manifest,
     write_split_artifacts,
 )
-from experiments.control_matrix.region_risk_lib import atomic_write_json, sha256_file  # noqa: E402
+from experiments.control_matrix.region_risk_lib import (  # noqa: E402
+    atomic_write_json,
+    git_commit,
+    runtime_provenance,
+    sha256_file,
+)
 from lap.encoding.fast import FastEncodingConfig, FastLatentCacheEncoder  # noqa: E402
 
 
@@ -88,11 +96,30 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--phase",
         required=True,
-        choices=("split", "encode", "partition", "train", "evaluate", "smoke", "dry-run", "all"),
+        choices=(
+            "split",
+            "encode-train",
+            "encode-eval",
+            "encode-finalize",
+            "partition-auto",
+            "partition-global",
+            "partition-forced-spectral",
+            "partition-finalize",
+            "train-one",
+            "evaluate",
+            "finalize",
+            "dry-run",
+        ),
     )
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--encoding-batch-size", type=int, default=128)
     parser.add_argument("--train-seeds", default="0,42,625")
+    parser.add_argument("--train-seed", type=int, default=None)
+    parser.add_argument(
+        "--training-role",
+        choices=("global", "forced_spectral_negative_control"),
+        default=None,
+    )
     parser.add_argument("--epochs", type=int, default=50)
     parser.add_argument("--bootstrap-reps", type=int, default=50000)
     parser.add_argument("--max-train-starts", type=int, default=0)
@@ -100,7 +127,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-anchors", type=int, default=0)
     parser.add_argument("--max-episodes", type=int, default=0)
     parser.add_argument("--overwrite", action="store_true")
-    parser.add_argument("--python", default=sys.executable)
+    parser.add_argument("--smoke-only", action="store_true")
+    parser.add_argument("--python", default=DEFAULT_PYTHON)
     return parser.parse_args()
 
 
@@ -130,9 +158,15 @@ def encode_latent_cache(
     output: Path,
     device: str,
     batch_size: int,
+    overwrite: bool = False,
 ) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
+    report_path = output.with_suffix(output.suffix + ".report.json")
     starts_path = output.with_suffix(".starts.npy")
+    if overwrite:
+        for path in (output, report_path, starts_path):
+            if path.exists():
+                path.unlink()
     np.save(starts_path, starts)
     dataset = make_hdf5_transition_dataset(
         data_file=str(data_file),
@@ -229,7 +263,9 @@ def phase_split(args: argparse.Namespace, paths: PipelinePaths, cfg: dict[str, s
     )
 
 
-def phase_encode(args: argparse.Namespace, paths: PipelinePaths, cfg: dict[str, str]) -> None:
+def _load_split_starts(
+    args: argparse.Namespace, paths: PipelinePaths
+) -> tuple[np.ndarray, np.ndarray, dict[str, Path]]:
     manifest = load_split_manifest(paths.split_manifest)
     split_paths = split_paths_from_manifest(manifest)
     train_starts = np.load(split_paths["train_starts"])
@@ -238,30 +274,25 @@ def phase_encode(args: argparse.Namespace, paths: PipelinePaths, cfg: dict[str, 
         train_starts = train_starts[: args.max_train_starts]
     if args.max_eval_starts > 0:
         eval_starts = eval_starts[: args.max_eval_starts]
-    encode_latent_cache(
-        data_file=Path(cfg["data_file"]),
-        starts=train_starts,
-        action_norm_starts=split_paths["action_norm_starts"],
-        pretrained_model=Path(cfg["pretrained_model"]),
-        output=paths.train_cache,
-        device=args.device,
-        batch_size=args.encoding_batch_size,
-    )
-    encode_latent_cache(
-        data_file=Path(cfg["data_file"]),
-        starts=eval_starts,
-        action_norm_starts=split_paths["action_norm_starts"],
-        pretrained_model=Path(cfg["pretrained_model"]),
-        output=paths.eval_cache,
-        device=args.device,
-        batch_size=args.encoding_batch_size,
-    )
+    return train_starts, eval_starts, split_paths
+
+
+def write_encoding_manifest(
+    args: argparse.Namespace,
+    paths: PipelinePaths,
+    cfg: dict[str, str],
+    *,
+    split_paths: dict[str, Path],
+) -> None:
     atomic_write_json(
         paths.root / "encoding_manifest.json",
         {
             "train_cache": str(paths.train_cache),
             "eval_cache": str(paths.eval_cache),
             "action_norm_starts": str(split_paths["action_norm_starts"]),
+            "pretrained_model": cfg["pretrained_model"],
+            "pretrained_model_sha256": sha256_file(Path(cfg["pretrained_model"])),
+            "runtime": runtime_provenance(python_executable=args.python),
             "sha256": {
                 "train_cache": sha256_file(paths.train_cache),
                 "eval_cache": sha256_file(paths.eval_cache),
@@ -271,27 +302,42 @@ def phase_encode(args: argparse.Namespace, paths: PipelinePaths, cfg: dict[str, 
     )
 
 
-def phase_partition(
-    args: argparse.Namespace,
-    paths: PipelinePaths,
-    cfg: dict[str, str],
-    *,
-    dry_run: bool,
-) -> None:
-    for method, out_dir, seed in (
-        ("auto", paths.partition_auto, 0),
-        ("global", paths.partition_global, 0),
-        ("spectral", paths.partition_forced_spectral, 0),
-    ):
-        if out_dir.exists() and any(out_dir.iterdir()) and not args.overwrite:
-            print(f"[skip] partition exists: {out_dir}", flush=True)
-            continue
-        run_command(
-            fit_partition_command(args, cfg, paths, method=method, out_dir=out_dir, seed=seed),
-            dry_run=dry_run,
-        )
-    if dry_run:
-        return
+def phase_encode_train(args: argparse.Namespace, paths: PipelinePaths, cfg: dict[str, str]) -> None:
+    train_starts, _eval_starts, split_paths = _load_split_starts(args, paths)
+    encode_latent_cache(
+        data_file=Path(cfg["data_file"]),
+        starts=train_starts,
+        action_norm_starts=split_paths["action_norm_starts"],
+        pretrained_model=Path(cfg["pretrained_model"]),
+        output=paths.train_cache,
+        device=args.device,
+        batch_size=args.encoding_batch_size,
+        overwrite=args.overwrite,
+    )
+
+
+def phase_encode_eval(args: argparse.Namespace, paths: PipelinePaths, cfg: dict[str, str]) -> None:
+    _train_starts, eval_starts, split_paths = _load_split_starts(args, paths)
+    encode_latent_cache(
+        data_file=Path(cfg["data_file"]),
+        starts=eval_starts,
+        action_norm_starts=split_paths["action_norm_starts"],
+        pretrained_model=Path(cfg["pretrained_model"]),
+        output=paths.eval_cache,
+        device=args.device,
+        batch_size=args.encoding_batch_size,
+        overwrite=args.overwrite,
+    )
+
+
+def phase_encode_finalize(args: argparse.Namespace, paths: PipelinePaths, cfg: dict[str, str]) -> None:
+    _train_starts, _eval_starts, split_paths = _load_split_starts(args, paths)
+    if not paths.train_cache.exists() or not paths.eval_cache.exists():
+        raise FileNotFoundError("train/eval latent caches must exist before encode-finalize")
+    write_encoding_manifest(args, paths, cfg, split_paths=split_paths)
+
+
+def write_gate_summary(args: argparse.Namespace, paths: PipelinePaths) -> None:
     auto_manifest = json.loads((paths.partition_auto / "manifest.json").read_text(encoding="utf-8"))
     gate = auto_manifest.get("method_metadata", {}).get("automatic_gate", {})
     atomic_write_json(
@@ -306,6 +352,55 @@ def phase_partition(
             "partition_latent_cache_sha256": auto_manifest.get("latent_cache_sha256"),
         },
     )
+
+
+def phase_partition_one(
+    args: argparse.Namespace,
+    paths: PipelinePaths,
+    cfg: dict[str, str],
+    *,
+    method: str,
+    out_dir: Path,
+    dry_run: bool,
+) -> None:
+    if out_dir.exists() and any(out_dir.iterdir()) and not args.overwrite:
+        print(f"[skip] partition exists: {out_dir}", flush=True)
+        return
+    run_command(
+        fit_partition_command(args, cfg, paths, method=method, out_dir=out_dir, seed=0),
+        dry_run=dry_run,
+    )
+
+
+def phase_partition_finalize(args: argparse.Namespace, paths: PipelinePaths) -> None:
+    for required in (paths.partition_auto, paths.partition_global, paths.partition_forced_spectral):
+        if not (required / "manifest.json").exists():
+            raise FileNotFoundError(f"missing partition manifest: {required}")
+    write_gate_summary(args, paths)
+
+
+def phase_encode(args: argparse.Namespace, paths: PipelinePaths, cfg: dict[str, str]) -> None:
+    phase_encode_train(args, paths, cfg)
+    phase_encode_eval(args, paths, cfg)
+    phase_encode_finalize(args, paths, cfg)
+
+
+def phase_partition(
+    args: argparse.Namespace,
+    paths: PipelinePaths,
+    cfg: dict[str, str],
+    *,
+    dry_run: bool,
+) -> None:
+    for method, out_dir in (
+        ("auto", paths.partition_auto),
+        ("global", paths.partition_global),
+        ("spectral", paths.partition_forced_spectral),
+    ):
+        phase_partition_one(args, paths, cfg, method=method, out_dir=out_dir, dry_run=dry_run)
+    if dry_run:
+        return
+    write_gate_summary(args, paths)
 
 
 def train_command(
@@ -343,6 +438,40 @@ def train_command(
         args.device,
     ]
     return command
+
+
+def phase_train_one(
+    args: argparse.Namespace,
+    paths: PipelinePaths,
+    cfg: dict[str, str],
+    *,
+    dry_run: bool,
+) -> None:
+    if args.train_seed is None or args.training_role is None:
+        raise ValueError("--train-one requires --train-seed and --training-role")
+    if args.training_role == "global":
+        partition_dir = paths.partition_global
+        out_dir = paths.training_global / f"train{args.train_seed}"
+    else:
+        partition_dir = paths.partition_forced_spectral
+        out_dir = paths.training_forced_spectral / f"train{args.train_seed}"
+    if (out_dir / "manifest.json").exists() and not args.overwrite:
+        print(f"[skip] training exists: {out_dir}", flush=True)
+        return
+    if args.overwrite and out_dir.exists():
+        shutil.rmtree(out_dir)
+    run_command(
+        train_command(
+            args,
+            cfg,
+            paths,
+            partition_dir=partition_dir,
+            out_dir=out_dir,
+            train_seed=args.train_seed,
+            training_role=args.training_role,
+        ),
+        dry_run=dry_run,
+    )
 
 
 def phase_train(
@@ -394,7 +523,7 @@ def is_full_formal_run(
     split_manifest: Mapping[str, Any] | None = None,
 ) -> bool:
     cli_untruncated = (
-        args.phase in {"all", "evaluate"}
+        not args.smoke_only
         and args.max_train_starts <= 0
         and args.max_eval_starts <= 0
         and args.max_anchors <= 0
@@ -403,7 +532,7 @@ def is_full_formal_run(
     if not cli_untruncated:
         return False
     if split_manifest is None:
-        return args.phase == "all"
+        return True
     return split_manifest_is_unsubsampled(split_manifest)
 
 
@@ -469,7 +598,7 @@ def evaluate_command(
         command.extend(["--max-anchors", str(args.max_anchors)])
     if args.max_episodes > 0:
         command.extend(["--max-episodes", str(args.max_episodes)])
-    if args.phase == "smoke":
+    if args.smoke_only:
         command.extend(["--smoke-only"])
     elif is_full_formal_run(args, split_manifest=split_manifest):
         command.extend(["--paper-eligible"])
@@ -486,6 +615,31 @@ def phase_evaluate(
     run_command(evaluate_command(args, cfg, paths), dry_run=dry_run)
 
 
+def write_pipeline_manifest(
+    args: argparse.Namespace,
+    paths: PipelinePaths,
+    cfg: dict[str, str],
+) -> None:
+    pretrained = Path(cfg["pretrained_model"])
+    atomic_write_json(
+        paths.root / "pipeline_manifest.json",
+        {
+            "task": args.task,
+            "phase": args.phase,
+            "work_root": str(paths.root.resolve()),
+            "data_file": cfg["data_file"],
+            "pretrained_model": cfg["pretrained_model"],
+            "pretrained_model_sha256": sha256_file(pretrained) if pretrained.exists() else None,
+            "train_seeds": args.train_seeds,
+            "epochs": args.epochs,
+            "bootstrap_reps": args.bootstrap_reps,
+            "device": args.device,
+            "runtime": runtime_provenance(python_executable=args.python),
+            "git_commit": git_commit(),
+        },
+    )
+
+
 def main() -> None:
     args = parse_args()
     cfg = task_config(args)
@@ -493,20 +647,45 @@ def main() -> None:
     paths.root.mkdir(parents=True, exist_ok=True)
     dry_run = args.phase == "dry-run"
 
-    if args.phase in {"split", "smoke", "all"}:
+    if args.phase == "split":
         phase_split(args, paths, cfg)
-    if args.phase in {"encode", "smoke", "all"}:
-        phase_encode(args, paths, cfg)
-    if args.phase in {"partition", "smoke", "all"}:
-        phase_partition(args, paths, cfg, dry_run=dry_run)
-    if args.phase in {"train", "smoke", "all"}:
-        phase_train(args, paths, cfg, dry_run=dry_run)
-    if args.phase in {"evaluate", "smoke", "all"}:
-        phase_evaluate(args, paths, cfg, dry_run=dry_run)
-    if args.phase == "dry-run":
+    elif args.phase == "encode-train":
+        phase_encode_train(args, paths, cfg)
+    elif args.phase == "encode-eval":
+        phase_encode_eval(args, paths, cfg)
+    elif args.phase == "encode-finalize":
+        phase_encode_finalize(args, paths, cfg)
+    elif args.phase == "partition-auto":
+        phase_partition_one(
+            args, paths, cfg, method="auto", out_dir=paths.partition_auto, dry_run=False
+        )
+    elif args.phase == "partition-global":
+        phase_partition_one(
+            args, paths, cfg, method="global", out_dir=paths.partition_global, dry_run=False
+        )
+    elif args.phase == "partition-forced-spectral":
+        phase_partition_one(
+            args,
+            paths,
+            cfg,
+            method="spectral",
+            out_dir=paths.partition_forced_spectral,
+            dry_run=False,
+        )
+    elif args.phase == "partition-finalize":
+        phase_partition_finalize(args, paths)
+    elif args.phase == "train-one":
+        phase_train_one(args, paths, cfg, dry_run=False)
+    elif args.phase == "evaluate":
+        phase_evaluate(args, paths, cfg, dry_run=False)
+    elif args.phase == "finalize":
+        write_pipeline_manifest(args, paths, cfg)
+    elif args.phase == "dry-run":
         phase_partition(args, paths, cfg, dry_run=True)
         phase_train(args, paths, cfg, dry_run=True)
         phase_evaluate(args, paths, cfg, dry_run=True)
+    else:
+        raise ValueError(f"unsupported phase: {args.phase}")
     print(f"[done] phase={args.phase} work_root={paths.root}", flush=True)
 
 
