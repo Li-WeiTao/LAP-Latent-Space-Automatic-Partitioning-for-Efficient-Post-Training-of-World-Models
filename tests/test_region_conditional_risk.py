@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -22,6 +23,7 @@ from experiments.control_matrix.region_risk_lib import (
     one_step_losses,
     open_loop_rollout_losses,
     paired_bootstrap_ci,
+    resolve_action_norm_starts,
     start_index_map,
     weighted_summary,
     wrong_expert_losses,
@@ -36,6 +38,17 @@ class MockPredictor(nn.Module):
 
     def predict(self, emb: torch.Tensor, act_emb: torch.Tensor) -> torch.Tensor:
         return emb + self.shift
+
+
+class StepPredictor(nn.Module):
+    def __init__(self, delta: float) -> None:
+        super().__init__()
+        self.delta = delta
+
+    def predict(self, emb: torch.Tensor, act_emb: torch.Tensor) -> torch.Tensor:
+        out = emb.clone()
+        out[:, -1] = emb[:, -1] + self.delta
+        return out
 
 
 class RegionConditionalRiskTest(unittest.TestCase):
@@ -92,7 +105,8 @@ class RegionConditionalRiskTest(unittest.TestCase):
             start_map=start_index_map(cache.sample_ids),
             device=torch.device("cpu"),
         )
-        np.testing.assert_allclose(one_step, rollout, rtol=1e-6, atol=1e-6)
+        np.testing.assert_allclose(one_step, rollout.mean_trajectory_mse, rtol=1e-6, atol=1e-6)
+        np.testing.assert_allclose(one_step, rollout.terminal_mse, rtol=1e-6, atol=1e-6)
 
     def test_open_loop_does_not_write_back_ground_truth(self) -> None:
         model = MockPredictor(100.0)
@@ -119,7 +133,125 @@ class RegionConditionalRiskTest(unittest.TestCase):
             start_map=start_map,
             device=torch.device("cpu"),
         )
-        self.assertGreater(float(losses[0, 0]), 1.0)
+        self.assertGreater(float(losses.mean_trajectory_mse[0, 0]), 1.0)
+        self.assertGreater(float(losses.terminal_mse[0, 0]), 1.0)
+
+    def test_open_loop_models_are_independent(self) -> None:
+        emb = torch.zeros((3, 4, 2), dtype=torch.float32)
+        emb[0, 3] = torch.tensor([1.0, 0.0])
+        emb[1, 3] = torch.tensor([2.0, 0.0])
+        emb[2, 3] = torch.tensor([3.0, 0.0])
+        act_emb = emb.clone()
+        cache = LeWMLatentCache(
+            emb,
+            act_emb,
+            np.asarray([0, 1, 2], dtype=np.int64),
+            route_index=0,
+        )
+        contract = load_cache_contract(
+            cache, history_size=3, num_preds=1, frameskip=1
+        )
+        start_map = start_index_map(cache.sample_ids)
+        models = [StepPredictor(1.0), StepPredictor(10.0), StepPredictor(100.0)]
+        joint = open_loop_rollout_losses(
+            models,
+            cache,
+            np.asarray([0], dtype=np.int64),
+            horizon=2,
+            contract=contract,
+            start_map=start_map,
+            device=torch.device("cpu"),
+        )
+        for model_index, model in enumerate(models):
+            solo = open_loop_rollout_losses(
+                [model],
+                cache,
+                np.asarray([0], dtype=np.int64),
+                horizon=2,
+                contract=contract,
+                start_map=start_map,
+                device=torch.device("cpu"),
+            )
+            self.assertAlmostEqual(
+                float(joint.terminal_mse[0, model_index]),
+                float(solo.terminal_mse[0, 0]),
+                places=6,
+            )
+            self.assertAlmostEqual(
+                float(joint.mean_trajectory_mse[0, model_index]),
+                float(solo.mean_trajectory_mse[0, 0]),
+                places=6,
+            )
+
+    def test_open_loop_model_order_only_permutates_columns(self) -> None:
+        emb = torch.zeros((3, 4, 2), dtype=torch.float32)
+        emb[0, 3] = torch.tensor([1.0, 0.0])
+        emb[1, 3] = torch.tensor([2.0, 0.0])
+        emb[2, 3] = torch.tensor([3.0, 0.0])
+        act_emb = emb.clone()
+        cache = LeWMLatentCache(
+            emb,
+            act_emb,
+            np.asarray([0, 1, 2], dtype=np.int64),
+            route_index=0,
+        )
+        contract = load_cache_contract(
+            cache, history_size=3, num_preds=1, frameskip=1
+        )
+        start_map = start_index_map(cache.sample_ids)
+        models_a = [StepPredictor(1.0), StepPredictor(10.0), StepPredictor(100.0)]
+        models_b = [models_a[2], models_a[0], models_a[1]]
+        losses_a = open_loop_rollout_losses(
+            models_a,
+            cache,
+            np.asarray([0], dtype=np.int64),
+            horizon=2,
+            contract=contract,
+            start_map=start_map,
+            device=torch.device("cpu"),
+        )
+        losses_b = open_loop_rollout_losses(
+            models_b,
+            cache,
+            np.asarray([0], dtype=np.int64),
+            horizon=2,
+            contract=contract,
+            start_map=start_map,
+            device=torch.device("cpu"),
+        )
+        for perm_index, source_index in enumerate((2, 0, 1)):
+            np.testing.assert_allclose(
+                losses_a.terminal_mse[:, source_index],
+                losses_b.terminal_mse[:, perm_index],
+                rtol=1e-6,
+                atol=1e-6,
+            )
+            np.testing.assert_allclose(
+                losses_a.mean_trajectory_mse[:, source_index],
+                losses_b.mean_trajectory_mse[:, perm_index],
+                rtol=1e-6,
+                atol=1e-6,
+            )
+
+    def test_resolve_action_norm_starts_from_report(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            starts = root / "train_starts.npy"
+            np.save(starts, np.asarray([0, 5, 10], dtype=np.int64))
+            cache_path = root / "cache.npz"
+            np.savez_compressed(
+                cache_path,
+                emb=np.zeros((3, 4, 2), dtype=np.float32),
+                act_emb=np.zeros((3, 4, 2), dtype=np.float32),
+                region_starts=np.asarray([0, 5, 10], dtype=np.int64),
+            )
+            report_path = Path(f"{cache_path}.report.json")
+            report_path.write_text(
+                json.dumps({"selection": {"starts_source": str(starts)}}),
+                encoding="utf-8",
+            )
+            resolved = resolve_action_norm_starts(cache_path)
+            self.assertEqual(resolved, starts.resolve())
 
     def test_rollout_anchor_respects_episode_boundary(self) -> None:
         start_map = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5}

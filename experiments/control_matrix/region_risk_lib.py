@@ -39,6 +39,13 @@ class ExpertBundle:
     regional_models: dict[int, torch.nn.Module]
     checkpoint_hashes: dict[str, str]
     manifest: dict[str, Any]
+    global_manifest: dict[str, Any] | None = None
+
+
+@dataclass(frozen=True)
+class RolloutLosses:
+    terminal_mse: np.ndarray
+    mean_trajectory_mse: np.ndarray
 
 
 def sha256_file(path: Path) -> str:
@@ -116,6 +123,30 @@ def load_cache_contract(
         route_index=cache.route_index,
         latent_dim=latent_dim,
     )
+
+
+def resolve_action_norm_starts(
+    train_latent_cache: Path,
+    *,
+    override: Path | None = None,
+) -> Path:
+    if override is not None:
+        return override.expanduser().resolve(strict=True)
+    report_path = Path(f"{train_latent_cache.resolve()}.report.json")
+    if report_path.is_file():
+        payload = json.loads(report_path.read_text(encoding="utf-8"))
+        starts_source = payload.get("selection", {}).get("starts_source")
+        if starts_source:
+            candidate = Path(starts_source).expanduser()
+            if candidate.is_file():
+                return candidate.resolve(strict=True)
+    sidecar = train_latent_cache.with_name(
+        f"{train_latent_cache.stem}_action_norm_starts.npy"
+    )
+    if not sidecar.is_file():
+        cache = load_lewm_cache(train_latent_cache)
+        np.save(sidecar, cache.sample_ids)
+    return sidecar.resolve(strict=True)
 
 
 def load_lewm_cache(
@@ -316,14 +347,14 @@ def open_loop_rollout_losses(
     contract: CacheContract,
     start_map: Mapping[int, int],
     device: torch.device,
-) -> np.ndarray:
+) -> RolloutLosses:
     if horizon < 1:
         raise ValueError("horizon must be positive")
     if horizon == 1:
         emb = cache.emb
         act_emb = cache.act_emb
         rows = np.asarray([start_map[int(start)] for start in anchors], dtype=np.int64)
-        return one_step_losses(
+        one_step = one_step_losses(
             models,
             emb[rows],
             act_emb[rows],
@@ -332,34 +363,39 @@ def open_loop_rollout_losses(
             device=device,
             batch_size=max(1, len(rows)),
         )
+        return RolloutLosses(terminal_mse=one_step, mean_trajectory_mse=one_step)
 
-    losses = np.full((len(anchors), len(models)), np.nan, dtype=np.float64)
+    terminal = np.full((len(anchors), len(models)), np.nan, dtype=np.float64)
+    mean_traj = np.full((len(anchors), len(models)), np.nan, dtype=np.float64)
     history = contract.history_size
     fs = contract.frameskip
     for anchor_index, anchor_start in enumerate(anchors):
         anchor_start = int(anchor_start)
-        ctx_z = cache.emb[start_map[anchor_start], :history].clone().unsqueeze(0)
-        step_losses = np.full((horizon, len(models)), np.nan, dtype=np.float64)
-        for step in range(horizon):
-            row_start = anchor_start + step * fs
-            row = start_map[row_start]
-            ctx_a = cache.act_emb[row : row + 1, :history].to(
-                device=device, dtype=torch.float32
-            )
-            target = cache.emb[row, history].to(device=device, dtype=torch.float32)
-            for model_index, model in enumerate(models):
+        ctx_z_init = cache.emb[start_map[anchor_start], :history].clone().unsqueeze(0)
+        for model_index, model in enumerate(models):
+            ctx_z = ctx_z_init.clone()
+            step_losses: list[float] = []
+            for step in range(horizon):
+                row_start = anchor_start + step * fs
+                row = start_map[row_start]
+                ctx_a = cache.act_emb[row : row + 1, :history].to(
+                    device=device, dtype=torch.float32
+                )
+                target = cache.emb[row, history].to(device=device, dtype=torch.float32)
                 pred = model.predict(
                     ctx_z.to(device=device, dtype=torch.float32),
                     ctx_a,
                 )
                 z_hat = pred[:, -1]
-                step_losses[step, model_index] = float(
-                    ((z_hat - target.unsqueeze(0)).pow(2).mean()).item()
+                step_losses.append(
+                    float(((z_hat - target.unsqueeze(0)).pow(2).mean()).item())
                 )
                 if step + 1 < horizon:
                     ctx_z = torch.cat([ctx_z[:, 1:], z_hat[:, None, :]], dim=1)
-        losses[anchor_index] = np.nanmean(step_losses, axis=0)
-    return losses
+            step_arr = np.asarray(step_losses, dtype=np.float64)
+            terminal[anchor_index, model_index] = step_arr[-1]
+            mean_traj[anchor_index, model_index] = float(np.mean(step_arr))
+    return RolloutLosses(terminal_mse=terminal, mean_trajectory_mse=mean_traj)
 
 
 def aggregate_region_metrics(
@@ -374,6 +410,10 @@ def aggregate_region_metrics(
     wrong_mean_loss: np.ndarray,
     wrong_best_loss: np.ndarray,
     num_regions: int,
+    terminal_global_loss: np.ndarray | None = None,
+    terminal_correct_loss: np.ndarray | None = None,
+    terminal_wrong_mean_loss: np.ndarray | None = None,
+    terminal_wrong_best_loss: np.ndarray | None = None,
 ) -> list[dict[str, Any]]:
     total = len(regions)
     rows: list[dict[str, Any]] = []
@@ -389,25 +429,41 @@ def aggregate_region_metrics(
         gain = global_mse - correct_mse
         relative_gain = gain / global_mse if global_mse > 0 else float("nan")
         wrong_penalty = wrong_mean_mse - correct_mse
-        rows.append(
-            {
-                "task": task,
-                "train_seed": train_seed,
-                "horizon": horizon,
-                "region": region,
-                "num_episodes": int(len(episodes)),
-                "num_anchors": count,
-                "region_weight": weight,
-                "global_mse": global_mse,
-                "correct_mse": correct_mse,
-                "wrong_mean_mse": wrong_mean_mse,
-                "wrong_best_mse": wrong_best_mse,
-                "global_minus_correct": gain,
-                "relative_gain": relative_gain,
-                "wrong_penalty": wrong_penalty,
-                "low_support": len(episodes) < 5 or count < 1000,
-            }
-        )
+        row = {
+            "task": task,
+            "train_seed": train_seed,
+            "horizon": horizon,
+            "region": region,
+            "num_episodes": int(len(episodes)),
+            "num_anchors": count,
+            "region_weight": weight,
+            "global_mse": global_mse,
+            "correct_mse": correct_mse,
+            "wrong_mean_mse": wrong_mean_mse,
+            "wrong_best_mse": wrong_best_mse,
+            "global_minus_correct": gain,
+            "relative_gain": relative_gain,
+            "wrong_penalty": wrong_penalty,
+            "mean_trajectory_global_mse": global_mse,
+            "mean_trajectory_correct_mse": correct_mse,
+            "mean_trajectory_wrong_mean_mse": wrong_mean_mse,
+            "mean_trajectory_wrong_best_mse": wrong_best_mse,
+            "low_support": len(episodes) < 5 or count < 1000,
+        }
+        if terminal_global_loss is not None:
+            row["terminal_global_mse"] = (
+                float(terminal_global_loss[mask].mean()) if count else float("nan")
+            )
+            row["terminal_correct_mse"] = (
+                float(terminal_correct_loss[mask].mean()) if count else float("nan")
+            )
+            row["terminal_wrong_mean_mse"] = (
+                float(terminal_wrong_mean_loss[mask].mean()) if count else float("nan")
+            )
+            row["terminal_wrong_best_mse"] = (
+                float(terminal_wrong_best_loss[mask].mean()) if count else float("nan")
+            )
+        rows.append(row)
     return rows
 
 

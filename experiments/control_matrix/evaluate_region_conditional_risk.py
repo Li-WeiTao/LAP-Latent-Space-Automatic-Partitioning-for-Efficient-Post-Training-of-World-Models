@@ -39,6 +39,7 @@ from experiments.control_matrix.region_risk_lib import (  # noqa: E402
     nested_paired_bootstrap_ci,
     one_step_losses,
     open_loop_rollout_losses,
+    resolve_action_norm_starts,
     route_regions_from_cache,
     sha256_file,
     start_index_map,
@@ -88,6 +89,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-eval-starts", type=int, default=0)
     parser.add_argument("--global-checkpoint-name", default="auto")
     parser.add_argument("--regional-checkpoint-template", default="P_train_cluster{region}_object.ckpt")
+    parser.add_argument(
+        "--action-norm-starts",
+        type=Path,
+        default=None,
+        help="Starts used for action mean/std; defaults to the train cache encoding report.",
+    )
+    parser.add_argument(
+        "--encoding-batch-size",
+        type=int,
+        default=128,
+        help="Transition batch size for eval-cache encoding (match train cache report).",
+    )
     return parser.parse_args()
 
 
@@ -135,6 +148,7 @@ def encode_eval_cache(
     *,
     data_file: Path,
     starts: np.ndarray,
+    action_norm_starts: Path,
     pretrained_model: Path,
     output: Path,
     history_size: int,
@@ -149,7 +163,7 @@ def encode_eval_cache(
     dataset = make_hdf5_transition_dataset(
         data_file=str(data_file),
         starts=str(starts_path),
-        action_norm_starts=str(starts_path),
+        action_norm_starts=str(action_norm_starts),
         history_size=history_size,
         num_preds=num_preds,
         frameskip=0,
@@ -163,7 +177,7 @@ def encode_eval_cache(
         device=device,
         transition_batch_size=batch_size,
         frame_batch_size=512,
-        exact_batch_shapes=False,
+        exact_batch_shapes=True,
         num_workers=2,
         cpu_threads=4,
     )
@@ -222,6 +236,19 @@ def load_expert_bundle(
         pretrained_hash=pretrained_hash,
         partition_hash=partition_hash,
     )
+    global_manifest_path = global_run / "manifest.json"
+    global_manifest: dict[str, Any] | None = None
+    if global_manifest_path.exists():
+        global_manifest = json.loads(global_manifest_path.read_text(encoding="utf-8"))
+        validate_manifest(
+            global_manifest,
+            train_seed=train_seed,
+            history_size=history_size,
+            num_preds=num_preds,
+            latent_cache_hash=latent_cache_hash,
+            pretrained_hash=pretrained_hash,
+            partition_hash=partition_hash,
+        )
     global_ckpt = resolve_global_checkpoint(global_run, global_name)
     checkpoint_hashes = {"global": sha256_file(global_ckpt)}
     for region in range(num_regions):
@@ -238,6 +265,7 @@ def load_expert_bundle(
         },
         checkpoint_hashes=checkpoint_hashes,
         manifest=manifest,
+        global_manifest=global_manifest,
     )
 
 
@@ -258,6 +286,24 @@ def limit_episodes(
             seen.add(int(episode))
         keep.append(int(start))
     return np.asarray(keep, dtype=np.int64)
+
+
+def expert_losses_from_matrix(
+    loss_matrix: np.ndarray,
+    anchor_regions: np.ndarray,
+    num_regions: int,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    global_loss = loss_matrix[:, 0]
+    correct_loss = np.asarray(
+        [loss_matrix[row, 1 + anchor_regions[row]] for row in range(len(anchor_regions))],
+        dtype=np.float64,
+    )
+    wrong_mean, wrong_best = wrong_expert_losses(
+        loss_matrix[:, 1:],
+        anchor_regions,
+        num_regions,
+    )
+    return global_loss, correct_loss, wrong_mean, wrong_best
 
 
 def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
@@ -350,6 +396,12 @@ def main() -> None:
         frameskip=args.frameskip,
     )
 
+    train_cache_hash = sha256_file(args.train_latent_cache.resolve(strict=True))
+    action_norm_starts = resolve_action_norm_starts(
+        args.train_latent_cache.resolve(strict=True),
+        override=args.action_norm_starts,
+    )
+
     eval_cache_path = args.eval_latent_cache.resolve()
     if args.build_eval_cache or not eval_cache_path.exists():
         test_starts = episode_level_test_starts(
@@ -367,13 +419,14 @@ def main() -> None:
         encode_eval_cache(
             data_file=args.data_file.resolve(strict=True),
             starts=test_starts,
+            action_norm_starts=action_norm_starts,
             pretrained_model=args.pretrained_model.resolve(strict=True),
             output=eval_cache_path,
             history_size=args.history_size,
             num_preds=args.num_preds,
             frameskip=args.frameskip,
             device=str(device),
-            batch_size=args.batch_size,
+            batch_size=args.encoding_batch_size,
         )
 
     eval_cache = load_lewm_cache(eval_cache_path, route_index=args.route_index)
@@ -383,6 +436,7 @@ def main() -> None:
         num_preds=args.num_preds,
         frameskip=args.frameskip,
     )
+    eval_cache_hash = sha256_file(eval_cache_path)
 
     audit = audit_episode_disjointness(
         data_file=args.data_file.resolve(strict=True),
@@ -478,7 +532,7 @@ def main() -> None:
 
             if horizon == 1:
                 rows = np.asarray([eval_start_map[int(start)] for start in anchors], dtype=np.int64)
-                loss_matrix = one_step_losses(
+                mean_traj_matrix = one_step_losses(
                     models,
                     eval_cache.emb[rows],
                     eval_cache.act_emb[rows],
@@ -487,8 +541,9 @@ def main() -> None:
                     device=device,
                     batch_size=args.batch_size,
                 )
+                terminal_matrix = mean_traj_matrix
             else:
-                loss_matrix = open_loop_rollout_losses(
+                rollout = open_loop_rollout_losses(
                     models,
                     eval_cache,
                     anchors,
@@ -497,6 +552,8 @@ def main() -> None:
                     start_map=eval_start_map,
                     device=device,
                 )
+                terminal_matrix = rollout.terminal_mse
+                mean_traj_matrix = rollout.mean_trajectory_mse
 
             anchor_regions = np.asarray(
                 [eval_regions[eval_start_map[int(start)]] for start in anchors], dtype=np.int64
@@ -504,13 +561,18 @@ def main() -> None:
             anchor_episodes = np.asarray(
                 [episode_lookup[int(start)] for start in anchors], dtype=np.int64
             )
-            global_loss = loss_matrix[:, 0]
-            correct_loss = np.asarray(
-                [loss_matrix[row, 1 + anchor_regions[row]] for row in range(len(anchors))],
-                dtype=np.float64,
+            global_loss, correct_loss, wrong_mean, wrong_best = expert_losses_from_matrix(
+                mean_traj_matrix,
+                anchor_regions,
+                artifact.num_regions,
             )
-            wrong_mean, wrong_best = wrong_expert_losses(
-                loss_matrix[:, 1:],
+            (
+                terminal_global_loss,
+                terminal_correct_loss,
+                terminal_wrong_mean,
+                terminal_wrong_best,
+            ) = expert_losses_from_matrix(
+                terminal_matrix,
                 anchor_regions,
                 artifact.num_regions,
             )
@@ -539,6 +601,14 @@ def main() -> None:
                         "correct_loss": float(correct_loss[index]),
                         "wrong_mean_loss": float(wrong_mean[index]),
                         "wrong_best_loss": float(wrong_best[index]),
+                        "terminal_global_loss": float(terminal_global_loss[index]),
+                        "terminal_correct_loss": float(terminal_correct_loss[index]),
+                        "terminal_wrong_mean_loss": float(terminal_wrong_mean[index]),
+                        "terminal_wrong_best_loss": float(terminal_wrong_best[index]),
+                        "mean_trajectory_global_loss": float(global_loss[index]),
+                        "mean_trajectory_correct_loss": float(correct_loss[index]),
+                        "mean_trajectory_wrong_mean_loss": float(wrong_mean[index]),
+                        "mean_trajectory_wrong_best_loss": float(wrong_best[index]),
                     }
                 )
 
@@ -555,6 +625,14 @@ def main() -> None:
                         "correct_mse": float(correct_loss[mask].mean()),
                         "wrong_mean_mse": float(wrong_mean[mask].mean()),
                         "wrong_best_mse": float(wrong_best[mask].mean()),
+                        "terminal_global_mse": float(terminal_global_loss[mask].mean()),
+                        "terminal_correct_mse": float(terminal_correct_loss[mask].mean()),
+                        "terminal_wrong_mean_mse": float(terminal_wrong_mean[mask].mean()),
+                        "terminal_wrong_best_mse": float(terminal_wrong_best[mask].mean()),
+                        "mean_trajectory_global_mse": float(global_loss[mask].mean()),
+                        "mean_trajectory_correct_mse": float(correct_loss[mask].mean()),
+                        "mean_trajectory_wrong_mean_mse": float(wrong_mean[mask].mean()),
+                        "mean_trajectory_wrong_best_mse": float(wrong_best[mask].mean()),
                     }
                 )
 
@@ -569,6 +647,10 @@ def main() -> None:
                 wrong_mean_loss=wrong_mean,
                 wrong_best_loss=wrong_best,
                 num_regions=artifact.num_regions,
+                terminal_global_loss=terminal_global_loss,
+                terminal_correct_loss=terminal_correct_loss,
+                terminal_wrong_mean_loss=terminal_wrong_mean,
+                terminal_wrong_best_loss=terminal_wrong_best,
             )
             if not region_rows or not any(row["num_anchors"] > 0 for row in region_rows):
                 continue
@@ -607,6 +689,7 @@ def main() -> None:
         "partition_dir": str(partition_run),
         "partition_sha256": partition_hash,
         "pretrained_model_sha256": pretrained_hash,
+        "action_norm_starts": str(action_norm_starts),
         "git_commit": git_commit(),
         "command": " ".join(sys.argv),
         "frameskip": contract.frameskip,

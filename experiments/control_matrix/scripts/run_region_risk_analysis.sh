@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Descriptive-only launcher: --allow-in-cache is intentional because current
+# checkpoints and train caches were fit on overlapping episodes. Full paper-grade
+# runs require a fresh 90/10 split with predictor-only retraining on the 90%.
+
 ROOT="/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models"
 cd "$ROOT"
 PYTHON="${PYTHON:-/data/sicong/weitao/le-wm/.venv/bin/python}"
