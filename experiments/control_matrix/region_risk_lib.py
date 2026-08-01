@@ -202,6 +202,72 @@ def audit_episode_disjointness(
     return result
 
 
+def audit_partition_train_contract(
+    *,
+    data_file: Path,
+    train_starts: np.ndarray,
+    eval_starts: np.ndarray,
+    train_cache_hash: str,
+    partition_manifest_path: Path | None,
+    nominal_train_episode_ids: set[int] | None = None,
+    require_train_only: bool = False,
+) -> dict[str, Any]:
+    train_starts = np.asarray(train_starts, dtype=np.int64)
+    eval_starts = np.asarray(eval_starts, dtype=np.int64)
+    train_episodes = set(map(int, np.unique(episode_ids_at_starts(data_file, train_starts))))
+    eval_episodes = set(map(int, np.unique(episode_ids_at_starts(data_file, eval_starts))))
+    episode_overlap = sorted(train_episodes.intersection(eval_episodes))
+
+    manifest_payload: dict[str, Any] | None = None
+    manifest_latent_cache_sha256: str | None = None
+    if partition_manifest_path is not None and partition_manifest_path.is_file():
+        manifest_payload = json.loads(partition_manifest_path.read_text(encoding="utf-8"))
+        manifest_latent_cache_sha256 = manifest_payload.get("latent_cache_sha256")
+
+    partition_latent_cache_hash_match = (
+        manifest_latent_cache_sha256 == train_cache_hash
+        if manifest_latent_cache_sha256
+        else None
+    )
+    train_cache_within_nominal_train: bool | None = None
+    eval_episodes_within_holdout: bool | None = None
+    if nominal_train_episode_ids is not None:
+        train_cache_within_nominal_train = train_episodes.issubset(nominal_train_episode_ids)
+        holdout_episodes = set(nominal_train_episode_ids)
+        # nominal_train_episode_ids is the 90% train set; holdout is complement checked via eval.
+        eval_episodes_within_holdout = eval_episodes.isdisjoint(nominal_train_episode_ids)
+
+    gate_partition_train_only_valid = (
+        len(episode_overlap) == 0
+        and partition_latent_cache_hash_match is True
+        and (train_cache_within_nominal_train is not False)
+        and (eval_episodes_within_holdout is not False)
+    )
+
+    result = {
+        "partition_manifest": str(partition_manifest_path) if partition_manifest_path else None,
+        "partition_manifest_latent_cache_sha256": manifest_latent_cache_sha256,
+        "train_cache_sha256": train_cache_hash,
+        "partition_latent_cache_hash_match": partition_latent_cache_hash_match,
+        "train_cache_num_episodes": len(train_episodes),
+        "eval_cache_num_episodes": len(eval_episodes),
+        "train_eval_episode_overlap_count": len(episode_overlap),
+        "train_eval_episode_overlap_ids": episode_overlap[:20],
+        "train_cache_within_nominal_train_split": train_cache_within_nominal_train,
+        "eval_episodes_disjoint_from_nominal_train_split": eval_episodes_within_holdout,
+        "gate_partition_train_only_valid": gate_partition_train_only_valid,
+    }
+    if require_train_only and not gate_partition_train_only_valid:
+        raise RuntimeError(
+            "train_only_partition_contract_failed: gate/partition must use the same "
+            f"train-only latent cache as predictors partition_hash_match="
+            f"{partition_latent_cache_hash_match} train_within_split="
+            f"{train_cache_within_nominal_train} eval_holdout="
+            f"{eval_episodes_within_holdout} episode_overlap={len(episode_overlap)}"
+        )
+    return result
+
+
 def route_regions_from_cache(
     cache: LeWMLatentCache,
     artifact: PartitionArtifact,

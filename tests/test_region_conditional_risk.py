@@ -17,6 +17,7 @@ from experiments.control_matrix.region_risk_lib import (
     aggregate_region_metrics,
     anchor_in_same_episode,
     audit_episode_disjointness,
+    audit_partition_train_contract,
     collect_rollout_anchors,
     load_cache_contract,
     nested_paired_bootstrap_ci,
@@ -252,6 +253,30 @@ class RegionConditionalRiskTest(unittest.TestCase):
             )
             resolved = resolve_action_norm_starts(cache_path)
             self.assertEqual(resolved, starts.resolve())
+
+    def test_partition_train_contract_flags_full_train_cache(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "data.h5"
+            with h5py.File(path, "w") as handle:
+                handle.create_dataset("ep_offset", data=np.asarray([0, 5, 10], dtype=np.int64))
+                handle.create_dataset("ep_len", data=np.asarray([5, 5, 5], dtype=np.int64))
+            manifest = Path(directory) / "partition_manifest.json"
+            manifest.write_text(
+                json.dumps({"latent_cache_sha256": "abc123"}),
+                encoding="utf-8",
+            )
+            result = audit_partition_train_contract(
+                data_file=path,
+                train_starts=np.asarray([0, 1, 5, 6, 10, 11], dtype=np.int64),
+                eval_starts=np.asarray([12], dtype=np.int64),
+                train_cache_hash="abc123",
+                partition_manifest_path=manifest,
+                nominal_train_episode_ids={0, 1},
+                require_train_only=False,
+            )
+            self.assertTrue(result["partition_latent_cache_hash_match"])
+            self.assertFalse(result["train_cache_within_nominal_train_split"])
+            self.assertFalse(result["gate_partition_train_only_valid"])
 
     def test_rollout_anchor_respects_episode_boundary(self) -> None:
         start_map = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5}

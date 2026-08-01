@@ -19,6 +19,8 @@ COMMON=(
   --batch-size 256
   --device cuda
   --allow-in-cache
+  # Formal runs: drop --allow-in-cache and pass explicit train action-norm starts, e.g.
+  # --action-norm-starts experiments/pusht/matrix/preparation/train_global_reference_starts.npy
 )
 
 echo "[region-risk] PushT eval cache + analysis"

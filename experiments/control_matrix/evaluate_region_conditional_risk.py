@@ -30,6 +30,7 @@ from experiments.control_matrix.region_risk_lib import (  # noqa: E402
     aggregate_region_metrics,
     atomic_write_json,
     audit_episode_disjointness,
+    audit_partition_train_contract,
     collect_rollout_anchors,
     episode_ids_at_starts,
     git_commit,
@@ -121,6 +122,38 @@ def episode_level_test_starts(
     split_seed: int,
     seed: int,
 ) -> np.ndarray:
+    train_episodes, _holdout = episode_level_split_episodes(
+        data_file,
+        dataset_name,
+        history_size=history_size,
+        num_preds=num_preds,
+        frameskip=frameskip,
+        train_fraction=train_fraction,
+        split_seed=split_seed,
+        seed=seed,
+    )
+    return _starts_for_episodes(
+        data_file,
+        dataset_name,
+        history_size=history_size,
+        num_preds=num_preds,
+        frameskip=frameskip,
+        seed=seed,
+        episode_ids=set(_holdout),
+    )
+
+
+def episode_level_split_episodes(
+    data_file: Path,
+    dataset_name: str,
+    *,
+    history_size: int,
+    num_preds: int,
+    frameskip: int,
+    train_fraction: float,
+    split_seed: int,
+    seed: int,
+) -> tuple[set[int], set[int]]:
     spec = DATASETS[dataset_name]
     seq_len = history_size + num_preds
     with h5py.File(data_file, "r") as handle:
@@ -139,8 +172,36 @@ def episode_level_test_starts(
     rng = np.random.default_rng(split_seed)
     perm = rng.permutation(unique_episodes)
     train_n = int(round(len(perm) * train_fraction))
-    test_episodes = set(map(int, perm[train_n:]))
-    mask = np.asarray([int(ep) in test_episodes for ep in episode_ids], dtype=bool)
+    train_episodes = set(map(int, perm[:train_n]))
+    holdout_episodes = set(map(int, perm[train_n:]))
+    return train_episodes, holdout_episodes
+
+
+def _starts_for_episodes(
+    data_file: Path,
+    dataset_name: str,
+    *,
+    history_size: int,
+    num_preds: int,
+    frameskip: int,
+    seed: int,
+    episode_ids: set[int],
+) -> np.ndarray:
+    spec = DATASETS[dataset_name]
+    seq_len = history_size + num_preds
+    with h5py.File(data_file, "r") as handle:
+        state_key = choose_state_key(handle, spec, None)
+        all_starts = valid_transition_starts(
+            handle,
+            spec,
+            state_key,
+            seq_len,
+            frameskip,
+            0,
+            seed,
+        )
+        starts_episode_ids = episode_ids_at_starts(data_file, all_starts)
+    mask = np.asarray([int(ep) in episode_ids for ep in starts_episode_ids], dtype=bool)
     return np.sort(all_starts[mask].astype(np.int64))
 
 
@@ -451,7 +512,26 @@ def main() -> None:
 
     pretrained_hash = sha256_file(args.pretrained_model.resolve(strict=True))
     train_cache_hash = sha256_file(args.train_latent_cache.resolve(strict=True))
-    eval_cache_hash = sha256_file(eval_cache_path)
+    action_norm_starts_hash = sha256_file(action_norm_starts)
+    nominal_train_episodes, _holdout_episodes = episode_level_split_episodes(
+        args.data_file.resolve(strict=True),
+        args.task,
+        history_size=args.history_size,
+        num_preds=args.num_preds,
+        frameskip=args.frameskip,
+        train_fraction=args.train_fraction,
+        split_seed=args.split_seed,
+        seed=0,
+    )
+    partition_contract = audit_partition_train_contract(
+        data_file=args.data_file.resolve(strict=True),
+        train_starts=train_cache.sample_ids,
+        eval_starts=eval_cache.sample_ids,
+        train_cache_hash=train_cache_hash,
+        partition_manifest_path=partition_manifest if partition_manifest.exists() else None,
+        nominal_train_episode_ids=nominal_train_episodes,
+        require_train_only=not args.allow_in_cache,
+    )
 
     eval_regions = route_regions_from_cache(
         eval_cache, artifact, device=device, batch_size=args.batch_size
@@ -679,9 +759,17 @@ def main() -> None:
 
     audit_payload = {
         **audit,
+        **partition_contract,
         "task": args.task,
         "formal_episode_disjoint_valid": audit.get("episode_disjoint", False)
         and audit.get("region_start_disjoint", False),
+        "formal_train_only_valid": partition_contract.get(
+            "gate_partition_train_only_valid", False
+        ),
+        "train_fraction": args.train_fraction,
+        "split_seed": args.split_seed,
+        "nominal_train_num_episodes": len(nominal_train_episodes),
+        "nominal_holdout_num_episodes": len(_holdout_episodes),
         "train_cache": str(args.train_latent_cache.resolve()),
         "eval_cache": str(eval_cache_path),
         "train_cache_sha256": train_cache_hash,
@@ -690,6 +778,7 @@ def main() -> None:
         "partition_sha256": partition_hash,
         "pretrained_model_sha256": pretrained_hash,
         "action_norm_starts": str(action_norm_starts),
+        "action_norm_starts_sha256": action_norm_starts_hash,
         "git_commit": git_commit(),
         "command": " ".join(sys.argv),
         "frameskip": contract.frameskip,
