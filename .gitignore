@@ -53,6 +53,7 @@ experiments/**/matrix_long/
 experiments/control_matrix/assets/region_risk/logs/
 experiments/control_matrix/assets/region_risk/**/*latent_cache*.npz
 experiments/control_matrix/assets/region_risk/**/*.starts.npy
+experiments/control_matrix/assets/formal_region_risk/
 
 # Generated qualitative rollouts
 *.mp4
