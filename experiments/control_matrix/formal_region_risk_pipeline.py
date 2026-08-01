@@ -387,6 +387,16 @@ def phase_train(
             )
 
 
+def is_full_formal_run(args: argparse.Namespace) -> bool:
+    return (
+        args.phase in {"all", "evaluate"}
+        and args.max_train_starts <= 0
+        and args.max_eval_starts <= 0
+        and args.max_anchors <= 0
+        and args.max_episodes <= 0
+    )
+
+
 def evaluate_command(
     args: argparse.Namespace,
     cfg: dict[str, str],
@@ -450,6 +460,8 @@ def evaluate_command(
         command.extend(["--max-episodes", str(args.max_episodes)])
     if args.phase == "smoke":
         command.extend(["--smoke-only"])
+    elif is_full_formal_run(args):
+        command.extend(["--paper-eligible"])
     return command
 
 

@@ -9,7 +9,7 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 import h5py
 import matplotlib.pyplot as plt
@@ -31,7 +31,6 @@ from experiments.control_matrix.episode_split import (  # noqa: E402
 )
 from experiments.control_matrix.region_risk_lib import (  # noqa: E402
     ExpertBundle,
-    MultiHorizonRolloutLosses,
     aggregate_region_metrics,
     atomic_write_json,
     audit_cache_starts_exact,
@@ -435,6 +434,203 @@ def expert_losses_from_matrix(
     return global_loss, correct_loss, wrong_mean, wrong_best
 
 
+def collect_limited_horizon_anchors(
+    eval_starts: np.ndarray,
+    *,
+    horizon: int,
+    contract: Any,
+    eval_start_map: Mapping[int, int],
+    episode_lookup: Mapping[int, int],
+    max_anchors: int,
+    max_episodes: int,
+) -> np.ndarray:
+    anchors = collect_rollout_anchors(
+        eval_starts,
+        horizon=horizon,
+        frameskip=contract.frameskip,
+        history_size=contract.history_size,
+        start_map=eval_start_map,
+        episode_lookup=episode_lookup,
+    )
+    if max_anchors > 0:
+        anchors = anchors[:max_anchors]
+    if max_episodes > 0:
+        anchors = limit_episodes(
+            anchors,
+            np.asarray([episode_lookup[int(start)] for start in anchors], dtype=np.int64),
+            max_episodes=max_episodes,
+        )
+    return anchors
+
+
+def horizon_rollout_losses(
+    *,
+    horizon: int,
+    models: list[torch.nn.Module],
+    eval_cache: LeWMLatentCache,
+    anchors: np.ndarray,
+    contract: Any,
+    eval_start_map: Mapping[int, int],
+    device: torch.device,
+    batch_size: int,
+    rollout_batch_size: int,
+) -> tuple[np.ndarray, np.ndarray]:
+    if horizon == 1:
+        rows = np.asarray([eval_start_map[int(start)] for start in anchors], dtype=np.int64)
+        mean_traj_matrix = one_step_losses(
+            models,
+            eval_cache.emb[rows],
+            eval_cache.act_emb[rows],
+            history_size=contract.history_size,
+            num_preds=contract.num_preds,
+            device=device,
+            batch_size=batch_size,
+        )
+        return mean_traj_matrix, mean_traj_matrix
+    rollout = multi_horizon_open_loop_rollout_losses(
+        models,
+        eval_cache,
+        anchors,
+        horizons=[horizon],
+        contract=contract,
+        start_map=eval_start_map,
+        device=device,
+        batch_size=rollout_batch_size,
+    ).by_horizon[horizon]
+    return rollout.mean_trajectory_mse, rollout.terminal_mse
+
+
+def append_horizon_metrics(
+    *,
+    task: str,
+    train_seed: int,
+    horizon: int,
+    anchors: np.ndarray,
+    anchor_regions: np.ndarray,
+    anchor_episodes: np.ndarray,
+    mean_traj_matrix: np.ndarray,
+    terminal_matrix: np.ndarray,
+    artifact: PartitionArtifact,
+    anchor_support: str,
+    sample_records: list[dict[str, Any]],
+    episode_records: list[dict[str, Any]],
+    region_summary_rows: list[dict[str, Any]],
+    weighted_rows: list[dict[str, Any]],
+    seed_blocks: list[dict[str, Any]],
+) -> None:
+    global_loss, correct_loss, wrong_mean, wrong_best = expert_losses_from_matrix(
+        mean_traj_matrix,
+        anchor_regions,
+        artifact.num_regions,
+    )
+    (
+        terminal_global_loss,
+        terminal_correct_loss,
+        terminal_wrong_mean,
+        terminal_wrong_best,
+    ) = expert_losses_from_matrix(
+        terminal_matrix,
+        anchor_regions,
+        artifact.num_regions,
+    )
+
+    seed_blocks.append(
+        {
+            "horizon": horizon,
+            "train_seed": train_seed,
+            "anchor_support": anchor_support,
+            "global": global_loss,
+            "correct": correct_loss,
+            "wrong_mean": wrong_mean,
+            "wrong_best": wrong_best,
+            "terminal_global": terminal_global_loss,
+            "terminal_correct": terminal_correct_loss,
+            "terminal_wrong_mean": terminal_wrong_mean,
+            "terminal_wrong_best": terminal_wrong_best,
+            "episode_ids": anchor_episodes,
+        }
+    )
+
+    for index, start in enumerate(anchors):
+        sample_records.append(
+            {
+                "sample_id": int(start),
+                "episode_id": int(anchor_episodes[index]),
+                "region": int(anchor_regions[index]),
+                "train_seed": train_seed,
+                "horizon": horizon,
+                "anchor_support": anchor_support,
+                "global_loss": float(global_loss[index]),
+                "correct_loss": float(correct_loss[index]),
+                "wrong_mean_loss": float(wrong_mean[index]),
+                "wrong_best_loss": float(wrong_best[index]),
+                "terminal_global_loss": float(terminal_global_loss[index]),
+                "terminal_correct_loss": float(terminal_correct_loss[index]),
+                "terminal_wrong_mean_loss": float(terminal_wrong_mean[index]),
+                "terminal_wrong_best_loss": float(terminal_wrong_best[index]),
+                "mean_trajectory_global_loss": float(global_loss[index]),
+                "mean_trajectory_correct_loss": float(correct_loss[index]),
+                "mean_trajectory_wrong_mean_loss": float(wrong_mean[index]),
+                "mean_trajectory_wrong_best_loss": float(wrong_best[index]),
+            }
+        )
+
+    for episode in np.unique(anchor_episodes):
+        mask = anchor_episodes == episode
+        episode_records.append(
+            {
+                "task": task,
+                "train_seed": train_seed,
+                "horizon": horizon,
+                "anchor_support": anchor_support,
+                "episode_id": int(episode),
+                "num_anchors": int(mask.sum()),
+                "global_mse": float(global_loss[mask].mean()),
+                "correct_mse": float(correct_loss[mask].mean()),
+                "wrong_mean_mse": float(wrong_mean[mask].mean()),
+                "wrong_best_mse": float(wrong_best[mask].mean()),
+                "terminal_global_mse": float(terminal_global_loss[mask].mean()),
+                "terminal_correct_mse": float(terminal_correct_loss[mask].mean()),
+                "terminal_wrong_mean_mse": float(terminal_wrong_mean[mask].mean()),
+                "terminal_wrong_best_mse": float(terminal_wrong_best[mask].mean()),
+                "mean_trajectory_global_mse": float(global_loss[mask].mean()),
+                "mean_trajectory_correct_mse": float(correct_loss[mask].mean()),
+                "mean_trajectory_wrong_mean_mse": float(wrong_mean[mask].mean()),
+                "mean_trajectory_wrong_best_mse": float(wrong_best[mask].mean()),
+            }
+        )
+
+    region_rows = aggregate_region_metrics(
+        task=task,
+        train_seed=train_seed,
+        horizon=horizon,
+        regions=anchor_regions,
+        episode_ids=anchor_episodes,
+        global_loss=global_loss,
+        correct_loss=correct_loss,
+        wrong_mean_loss=wrong_mean,
+        wrong_best_loss=wrong_best,
+        num_regions=artifact.num_regions,
+        terminal_global_loss=terminal_global_loss,
+        terminal_correct_loss=terminal_correct_loss,
+        terminal_wrong_mean_loss=terminal_wrong_mean,
+        terminal_wrong_best_loss=terminal_wrong_best,
+    )
+    if not region_rows or not any(row["num_anchors"] > 0 for row in region_rows):
+        return
+    for row in region_rows:
+        row["anchor_support"] = anchor_support
+    region_summary_rows.extend(region_rows)
+    summary = weighted_summary(
+        region_rows,
+        task=task,
+        train_seed=train_seed,
+        horizon=horizon,
+    )
+    summary["anchor_support"] = anchor_support
+    weighted_rows.append(summary)
+
+
 def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     if not rows:
         return
@@ -691,8 +887,29 @@ def main() -> None:
     episode_records: list[dict[str, Any]] = []
     region_summary_rows: list[dict[str, Any]] = []
     weighted_rows: list[dict[str, Any]] = []
+    common_h10_region_rows: list[dict[str, Any]] = []
+    common_h10_weighted_rows: list[dict[str, Any]] = []
     seed_blocks: list[dict[str, Any]] = []
     checkpoint_manifests: list[dict[str, Any]] = []
+
+    anchors_by_horizon = {
+        horizon: collect_limited_horizon_anchors(
+            eval_cache.sample_ids,
+            horizon=horizon,
+            contract=contract,
+            eval_start_map=eval_start_map,
+            episode_lookup=episode_lookup,
+            max_anchors=args.max_anchors,
+            max_episodes=args.max_episodes,
+        )
+        for horizon in horizons
+    }
+    horizon_anchor_counts = {
+        str(horizon): int(len(anchors)) for horizon, anchors in anchors_by_horizon.items()
+    }
+    common_h10_anchors = (
+        anchors_by_horizon[10] if 10 in anchors_by_horizon else np.asarray([], dtype=np.int64)
+    )
 
     for train_seed in train_seeds:
         regional_run = resolve_run_dir(
@@ -733,177 +950,90 @@ def main() -> None:
             bundle.regional_models[region] for region in range(artifact.num_regions)
         ]
 
-        anchor_horizon = max(horizons)
-        anchors = collect_rollout_anchors(
-            eval_cache.sample_ids,
-            horizon=anchor_horizon,
-            frameskip=contract.frameskip,
-            history_size=contract.history_size,
-            start_map=eval_start_map,
-            episode_lookup=episode_lookup,
-        )
-        if args.max_anchors > 0:
-            anchors = anchors[: args.max_anchors]
-        if args.max_episodes > 0:
-            anchors = limit_episodes(
-                anchors,
-                np.asarray([episode_lookup[int(start)] for start in anchors], dtype=np.int64),
-                max_episodes=args.max_episodes,
-            )
-        if len(anchors) == 0:
-            continue
-
-        multi_horizons = [horizon for horizon in horizons if horizon > 1]
-        multi_rollout: MultiHorizonRolloutLosses | None = None
-        if multi_horizons:
-            multi_rollout = multi_horizon_open_loop_rollout_losses(
-                models,
-                eval_cache,
-                anchors,
-                horizons=multi_horizons,
-                contract=contract,
-                start_map=eval_start_map,
-                device=device,
-                batch_size=args.rollout_batch_size,
-            )
-
-        anchor_regions = np.asarray(
-            [eval_regions[eval_start_map[int(start)]] for start in anchors], dtype=np.int64
-        )
-        anchor_episodes = np.asarray(
-            [episode_lookup[int(start)] for start in anchors], dtype=np.int64
-        )
-
         for horizon in horizons:
-            if horizon == 1:
-                rows = np.asarray([eval_start_map[int(start)] for start in anchors], dtype=np.int64)
-                mean_traj_matrix = one_step_losses(
-                    models,
-                    eval_cache.emb[rows],
-                    eval_cache.act_emb[rows],
-                    history_size=contract.history_size,
-                    num_preds=contract.num_preds,
-                    device=device,
-                    batch_size=args.batch_size,
-                )
-                terminal_matrix = mean_traj_matrix
-            else:
-                assert multi_rollout is not None
-                rollout = multi_rollout.by_horizon[horizon]
-                terminal_matrix = rollout.terminal_mse
-                mean_traj_matrix = rollout.mean_trajectory_mse
-
-            global_loss, correct_loss, wrong_mean, wrong_best = expert_losses_from_matrix(
-                mean_traj_matrix,
-                anchor_regions,
-                artifact.num_regions,
+            anchors = anchors_by_horizon[horizon]
+            if len(anchors) == 0:
+                continue
+            anchor_regions = np.asarray(
+                [eval_regions[eval_start_map[int(start)]] for start in anchors], dtype=np.int64
             )
-            (
-                terminal_global_loss,
-                terminal_correct_loss,
-                terminal_wrong_mean,
-                terminal_wrong_best,
-            ) = expert_losses_from_matrix(
-                terminal_matrix,
-                anchor_regions,
-                artifact.num_regions,
+            anchor_episodes = np.asarray(
+                [episode_lookup[int(start)] for start in anchors], dtype=np.int64
             )
-
-            seed_blocks.append(
-                {
-                    "horizon": horizon,
-                    "train_seed": train_seed,
-                    "global": global_loss,
-                    "correct": correct_loss,
-                    "wrong_mean": wrong_mean,
-                    "wrong_best": wrong_best,
-                    "terminal_global": terminal_global_loss,
-                    "terminal_correct": terminal_correct_loss,
-                    "terminal_wrong_mean": terminal_wrong_mean,
-                    "terminal_wrong_best": terminal_wrong_best,
-                    "episode_ids": anchor_episodes,
-                }
+            mean_traj_matrix, terminal_matrix = horizon_rollout_losses(
+                horizon=horizon,
+                models=models,
+                eval_cache=eval_cache,
+                anchors=anchors,
+                contract=contract,
+                eval_start_map=eval_start_map,
+                device=device,
+                batch_size=args.batch_size,
+                rollout_batch_size=args.rollout_batch_size,
             )
-
-            for index, start in enumerate(anchors):
-                row = eval_start_map[int(start)]
-                sample_records.append(
-                    {
-                        "sample_id": int(start),
-                        "episode_id": int(anchor_episodes[index]),
-                        "region": int(anchor_regions[index]),
-                        "train_seed": train_seed,
-                        "horizon": horizon,
-                        "global_loss": float(global_loss[index]),
-                        "correct_loss": float(correct_loss[index]),
-                        "wrong_mean_loss": float(wrong_mean[index]),
-                        "wrong_best_loss": float(wrong_best[index]),
-                        "terminal_global_loss": float(terminal_global_loss[index]),
-                        "terminal_correct_loss": float(terminal_correct_loss[index]),
-                        "terminal_wrong_mean_loss": float(terminal_wrong_mean[index]),
-                        "terminal_wrong_best_loss": float(terminal_wrong_best[index]),
-                        "mean_trajectory_global_loss": float(global_loss[index]),
-                        "mean_trajectory_correct_loss": float(correct_loss[index]),
-                        "mean_trajectory_wrong_mean_loss": float(wrong_mean[index]),
-                        "mean_trajectory_wrong_best_loss": float(wrong_best[index]),
-                    }
-                )
-
-            for episode in np.unique(anchor_episodes):
-                mask = anchor_episodes == episode
-                episode_records.append(
-                    {
-                        "task": args.task,
-                        "train_seed": train_seed,
-                        "horizon": horizon,
-                        "episode_id": int(episode),
-                        "num_anchors": int(mask.sum()),
-                        "global_mse": float(global_loss[mask].mean()),
-                        "correct_mse": float(correct_loss[mask].mean()),
-                        "wrong_mean_mse": float(wrong_mean[mask].mean()),
-                        "wrong_best_mse": float(wrong_best[mask].mean()),
-                        "terminal_global_mse": float(terminal_global_loss[mask].mean()),
-                        "terminal_correct_mse": float(terminal_correct_loss[mask].mean()),
-                        "terminal_wrong_mean_mse": float(terminal_wrong_mean[mask].mean()),
-                        "terminal_wrong_best_mse": float(terminal_wrong_best[mask].mean()),
-                        "mean_trajectory_global_mse": float(global_loss[mask].mean()),
-                        "mean_trajectory_correct_mse": float(correct_loss[mask].mean()),
-                        "mean_trajectory_wrong_mean_mse": float(wrong_mean[mask].mean()),
-                        "mean_trajectory_wrong_best_mse": float(wrong_best[mask].mean()),
-                    }
-                )
-
-            region_rows = aggregate_region_metrics(
+            append_horizon_metrics(
                 task=args.task,
                 train_seed=train_seed,
                 horizon=horizon,
-                regions=anchor_regions,
-                episode_ids=anchor_episodes,
-                global_loss=global_loss,
-                correct_loss=correct_loss,
-                wrong_mean_loss=wrong_mean,
-                wrong_best_loss=wrong_best,
-                num_regions=artifact.num_regions,
-                terminal_global_loss=terminal_global_loss,
-                terminal_correct_loss=terminal_correct_loss,
-                terminal_wrong_mean_loss=terminal_wrong_mean,
-                terminal_wrong_best_loss=terminal_wrong_best,
+                anchors=anchors,
+                anchor_regions=anchor_regions,
+                anchor_episodes=anchor_episodes,
+                mean_traj_matrix=mean_traj_matrix,
+                terminal_matrix=terminal_matrix,
+                artifact=artifact,
+                anchor_support="horizon_valid",
+                sample_records=sample_records,
+                episode_records=episode_records,
+                region_summary_rows=region_summary_rows,
+                weighted_rows=weighted_rows,
+                seed_blocks=seed_blocks,
             )
-            if not region_rows or not any(row["num_anchors"] > 0 for row in region_rows):
-                continue
-            region_summary_rows.extend(region_rows)
-            weighted_rows.append(
-                weighted_summary(
-                    region_rows,
+
+        if len(common_h10_anchors) > 0 and len(horizons) > 1:
+            common_regions = np.asarray(
+                [eval_regions[eval_start_map[int(start)]] for start in common_h10_anchors],
+                dtype=np.int64,
+            )
+            common_episodes = np.asarray(
+                [episode_lookup[int(start)] for start in common_h10_anchors], dtype=np.int64
+            )
+            for horizon in horizons:
+                mean_traj_matrix, terminal_matrix = horizon_rollout_losses(
+                    horizon=horizon,
+                    models=models,
+                    eval_cache=eval_cache,
+                    anchors=common_h10_anchors,
+                    contract=contract,
+                    eval_start_map=eval_start_map,
+                    device=device,
+                    batch_size=args.batch_size,
+                    rollout_batch_size=args.rollout_batch_size,
+                )
+                append_horizon_metrics(
                     task=args.task,
                     train_seed=train_seed,
                     horizon=horizon,
+                    anchors=common_h10_anchors,
+                    anchor_regions=common_regions,
+                    anchor_episodes=common_episodes,
+                    mean_traj_matrix=mean_traj_matrix,
+                    terminal_matrix=terminal_matrix,
+                    artifact=artifact,
+                    anchor_support="common_h10",
+                    sample_records=sample_records,
+                    episode_records=episode_records,
+                    region_summary_rows=common_h10_region_rows,
+                    weighted_rows=common_h10_weighted_rows,
+                    seed_blocks=[],
                 )
-            )
 
     bootstrap_rows: list[dict[str, Any]] = []
     for horizon in horizons:
-        blocks = [block for block in seed_blocks if block["horizon"] == horizon]
+        blocks = [
+            block
+            for block in seed_blocks
+            if block["horizon"] == horizon and block.get("anchor_support") == "horizon_valid"
+        ]
         if not blocks:
             continue
         bootstrap_rows.extend(
@@ -959,7 +1089,13 @@ def main() -> None:
         "task": args.task,
         "formal": args.formal,
         "smoke_only": args.smoke_only,
-        "paper_eligible": args.paper_eligible and not args.smoke_only,
+        "paper_eligible": (
+            not args.smoke_only
+            and args.paper_eligible
+            and (not args.formal or formal_audit.get("posttraining_train_only_valid", False))
+        ),
+        "horizon_anchor_counts": horizon_anchor_counts,
+        "common_h10_anchor_count": int(len(common_h10_anchors)),
         "formal_episode_disjoint_valid": audit.get("episode_disjoint", False)
         and audit.get("region_start_disjoint", False),
         "auto_gate_train_only_valid": partition_contracts["auto"].get(
@@ -1030,8 +1166,12 @@ def main() -> None:
     write_csv(out_dir / "episode_metrics.csv", episode_records)
     write_csv(out_dir / "region_summary.csv", region_summary_rows)
     write_csv(out_dir / "weighted_summary.csv", weighted_rows)
+    write_csv(out_dir / "common_h10_support_summary.csv", common_h10_weighted_rows)
     write_csv(out_dir / "bootstrap_summary.csv", bootstrap_rows)
-    plot_region_risk(region_summary_rows, bootstrap_rows, out_dir / "region_risk.pdf", horizons=horizons)
+    main_region_rows = [
+        row for row in region_summary_rows if row.get("anchor_support") == "horizon_valid"
+    ]
+    plot_region_risk(main_region_rows, bootstrap_rows, out_dir / "region_risk.pdf", horizons=horizons)
 
     manifest = {
         "task": args.task,

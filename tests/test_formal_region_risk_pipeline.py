@@ -26,6 +26,7 @@ from experiments.control_matrix.formal_region_risk_pipeline import (  # noqa: E4
     DEFAULT_TASKS,
     PipelinePaths,
     evaluate_command,
+    is_full_formal_run,
     train_command,
 )
 from experiments.control_matrix.region_risk_lib import (
@@ -81,6 +82,51 @@ class FormalRegionRiskPipelineTest(unittest.TestCase):
                 manifest["sha256"]["action_norm_starts"],
                 sha256_file(out_dir / "action_norm_starts.npy"),
             )
+            self.assertFalse(manifest["subsampled"])
+            self.assertEqual(manifest["nominal_train_num_transitions"], 4)
+            self.assertEqual(manifest["written_train_num_transitions"], 4)
+
+    def test_split_manifest_records_subsampled_counts(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            split = EpisodeSplit(
+                train_episode_ids=(0, 1),
+                eval_episode_ids=(2,),
+                train_starts=np.asarray([0, 1, 5, 6, 7], dtype=np.int64),
+                eval_starts=np.asarray([10, 11, 12], dtype=np.int64),
+                split_seed=FORMAL_SPLIT_SEED,
+                train_fraction=FORMAL_TRAIN_FRACTION,
+                data_file=Path(directory) / "dummy.h5",
+                dataset_name="pusht",
+                history_size=3,
+                num_preds=1,
+                frameskip=5,
+                valid_start_seed=0,
+            )
+            out_dir = Path(directory) / "formal"
+            manifest = write_split_artifacts(split, out_dir, max_train_starts=2, max_eval_starts=1)
+            self.assertTrue(manifest["subsampled"])
+            self.assertEqual(manifest["nominal_train_num_transitions"], 5)
+            self.assertEqual(manifest["written_train_num_transitions"], 2)
+            self.assertEqual(manifest["nominal_eval_num_transitions"], 3)
+            self.assertEqual(manifest["written_eval_num_transitions"], 1)
+
+    def test_is_full_formal_run(self) -> None:
+        full = argparse.Namespace(
+            phase="all",
+            max_train_starts=0,
+            max_eval_starts=0,
+            max_anchors=0,
+            max_episodes=0,
+        )
+        smoke = argparse.Namespace(
+            phase="smoke",
+            max_train_starts=4096,
+            max_eval_starts=512,
+            max_anchors=32,
+            max_episodes=4,
+        )
+        self.assertTrue(is_full_formal_run(full))
+        self.assertFalse(is_full_formal_run(smoke))
 
     def test_formal_posttraining_audit_passes_on_valid_contract(self) -> None:
         split_manifest = {
@@ -206,6 +252,44 @@ class FormalRegionRiskPipelineTest(unittest.TestCase):
             self.assertIn("--forced-spectral-partition-dir", command)
             self.assertIn(str(paths.partition_forced_spectral), command)
             self.assertIn("--smoke-only", command)
+
+    def test_evaluate_command_sets_paper_eligible_for_full_run(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "formal"
+            paths = PipelinePaths.from_root(root)
+            paths.root.mkdir(parents=True)
+            split_manifest = {
+                "schema_version": 1,
+                "train_episode_ids": [0],
+                "eval_episode_ids": [1],
+                "sha256": {},
+                "paths": {
+                    "train_starts": str(paths.root / "train_starts.npy"),
+                    "eval_starts": str(paths.root / "eval_starts.npy"),
+                    "action_norm_starts": str(paths.root / "action_norm_starts.npy"),
+                },
+            }
+            (paths.root / "split_manifest.json").write_text(
+                json.dumps(split_manifest), encoding="utf-8"
+            )
+            for name in ("train_starts.npy", "eval_starts.npy", "action_norm_starts.npy"):
+                np.save(paths.root / name, np.asarray([0], dtype=np.int64))
+            args = argparse.Namespace(
+                python=sys.executable,
+                task="pusht",
+                train_seeds="0",
+                bootstrap_reps=50000,
+                encoding_batch_size=128,
+                device="cuda",
+                phase="all",
+                max_train_starts=0,
+                max_eval_starts=0,
+                max_anchors=0,
+                max_episodes=0,
+            )
+            command = evaluate_command(args, DEFAULT_TASKS["pusht"], paths)
+            self.assertIn("--paper-eligible", command)
+            self.assertNotIn("--smoke-only", command)
 
     def test_train_command_includes_device(self) -> None:
         args = argparse.Namespace(

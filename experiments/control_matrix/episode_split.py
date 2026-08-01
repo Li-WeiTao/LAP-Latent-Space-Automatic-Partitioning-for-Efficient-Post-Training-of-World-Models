@@ -48,6 +48,11 @@ class EpisodeSplit:
         train_starts_path: Path,
         eval_starts_path: Path,
         action_norm_starts_path: Path,
+        nominal_train_num_transitions: int,
+        nominal_eval_num_transitions: int,
+        written_train_num_transitions: int,
+        written_eval_num_transitions: int,
+        subsampled: bool,
     ) -> dict[str, Any]:
         return {
             "schema_version": 1,
@@ -63,8 +68,13 @@ class EpisodeSplit:
             "eval_episode_ids": list(self.eval_episode_ids),
             "train_num_episodes": len(self.train_episode_ids),
             "eval_num_episodes": len(self.eval_episode_ids),
-            "train_num_transitions": int(len(self.train_starts)),
-            "eval_num_transitions": int(len(self.eval_starts)),
+            "train_num_transitions": int(written_train_num_transitions),
+            "eval_num_transitions": int(written_eval_num_transitions),
+            "nominal_train_num_transitions": int(nominal_train_num_transitions),
+            "written_train_num_transitions": int(written_train_num_transitions),
+            "nominal_eval_num_transitions": int(nominal_eval_num_transitions),
+            "written_eval_num_transitions": int(written_eval_num_transitions),
+            "subsampled": bool(subsampled),
             "train_eval_episode_disjoint": self.train_eval_episode_disjoint,
             "paths": {
                 "train_starts": str(train_starts_path.resolve()),
@@ -145,12 +155,17 @@ def write_split_artifacts(
     max_eval_starts: int = 0,
 ) -> dict[str, Any]:
     out_dir.mkdir(parents=True, exist_ok=True)
+    nominal_train = int(len(split.train_starts))
+    nominal_eval = int(len(split.eval_starts))
     train_starts = split.train_starts
     eval_starts = split.eval_starts
     if max_train_starts > 0:
         train_starts = train_starts[:max_train_starts]
     if max_eval_starts > 0:
         eval_starts = eval_starts[:max_eval_starts]
+    written_train = int(len(train_starts))
+    written_eval = int(len(eval_starts))
+    subsampled = written_train < nominal_train or written_eval < nominal_eval
     train_starts_path = out_dir / "train_starts.npy"
     eval_starts_path = out_dir / "eval_starts.npy"
     action_norm_starts_path = out_dir / "action_norm_starts.npy"
@@ -161,6 +176,11 @@ def write_split_artifacts(
         train_starts_path=train_starts_path,
         eval_starts_path=eval_starts_path,
         action_norm_starts_path=action_norm_starts_path,
+        nominal_train_num_transitions=nominal_train,
+        nominal_eval_num_transitions=nominal_eval,
+        written_train_num_transitions=written_train,
+        written_eval_num_transitions=written_eval,
+        subsampled=subsampled,
     )
     atomic_write_json(out_dir / "split_manifest.json", manifest)
     return manifest

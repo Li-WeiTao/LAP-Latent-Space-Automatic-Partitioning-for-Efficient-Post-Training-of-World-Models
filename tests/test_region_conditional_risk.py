@@ -299,6 +299,29 @@ class RegionConditionalRiskTest(unittest.TestCase):
         )
         np.testing.assert_array_equal(anchors, [0])
 
+    def test_horizon_specific_anchors_are_nested(self) -> None:
+        start_map = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9}
+        episode_lookup = {index: 0 for index in range(10)}
+        eval_starts = np.asarray(list(range(10)), dtype=np.int64)
+        h1 = collect_rollout_anchors(
+            eval_starts,
+            horizon=1,
+            frameskip=1,
+            history_size=3,
+            start_map=start_map,
+            episode_lookup=episode_lookup,
+        )
+        h5 = collect_rollout_anchors(
+            eval_starts,
+            horizon=5,
+            frameskip=1,
+            history_size=3,
+            start_map=start_map,
+            episode_lookup=episode_lookup,
+        )
+        self.assertGreater(len(h1), len(h5))
+        self.assertTrue(set(map(int, h5)).issubset(set(map(int, h1))))
+
     def test_frameskip_row_stitching(self) -> None:
         starts = np.asarray([0, 5, 10], dtype=np.int64)
         start_map = start_index_map(starts)
