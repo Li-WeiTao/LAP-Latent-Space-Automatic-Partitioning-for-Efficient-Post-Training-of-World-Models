@@ -16,10 +16,12 @@ from experiments.control_matrix.episode_split import (
     EpisodeSplit,
     compute_episode_split,
     load_split_manifest,
+    split_manifest_is_unsubsampled,
     write_split_artifacts,
 )
 from experiments.control_matrix.evaluate_region_conditional_risk import (  # noqa: E402
     FORMAL_REGIONAL_RUN_PATTERNS,
+    resolve_paper_eligible,
     resolve_run_dir,
 )
 from experiments.control_matrix.formal_region_risk_pipeline import (  # noqa: E402
@@ -125,8 +127,74 @@ class FormalRegionRiskPipelineTest(unittest.TestCase):
             max_anchors=32,
             max_episodes=4,
         )
+        unsubsampled = {
+            "subsampled": False,
+            "nominal_train_num_transitions": 100,
+            "written_train_num_transitions": 100,
+            "nominal_eval_num_transitions": 10,
+            "written_eval_num_transitions": 10,
+        }
+        subsampled = {
+            "subsampled": True,
+            "nominal_train_num_transitions": 100,
+            "written_train_num_transitions": 10,
+            "nominal_eval_num_transitions": 10,
+            "written_eval_num_transitions": 1,
+        }
+        evaluate_full = argparse.Namespace(
+            phase="evaluate",
+            max_train_starts=0,
+            max_eval_starts=0,
+            max_anchors=0,
+            max_episodes=0,
+        )
         self.assertTrue(is_full_formal_run(full))
         self.assertFalse(is_full_formal_run(smoke))
+        self.assertTrue(is_full_formal_run(evaluate_full, split_manifest=unsubsampled))
+        self.assertFalse(is_full_formal_run(evaluate_full, split_manifest=subsampled))
+
+    def test_split_manifest_is_unsubsampled(self) -> None:
+        self.assertTrue(
+            split_manifest_is_unsubsampled(
+                {
+                    "subsampled": False,
+                    "nominal_train_num_transitions": 5,
+                    "written_train_num_transitions": 5,
+                    "nominal_eval_num_transitions": 2,
+                    "written_eval_num_transitions": 2,
+                }
+            )
+        )
+        self.assertFalse(
+            split_manifest_is_unsubsampled(
+                {
+                    "subsampled": True,
+                    "nominal_train_num_transitions": 5,
+                    "written_train_num_transitions": 2,
+                    "nominal_eval_num_transitions": 2,
+                    "written_eval_num_transitions": 2,
+                }
+            )
+        )
+
+    def test_resolve_paper_eligible_rejects_subsampled_split(self) -> None:
+        self.assertFalse(
+            resolve_paper_eligible(
+                smoke_only=False,
+                split_manifest={
+                    "subsampled": True,
+                    "nominal_train_num_transitions": 5,
+                    "written_train_num_transitions": 2,
+                    "nominal_eval_num_transitions": 2,
+                    "written_eval_num_transitions": 1,
+                },
+                max_eval_starts=0,
+                max_anchors=0,
+                max_episodes=0,
+                formal=True,
+                posttraining_train_only_valid=True,
+            )
+        )
 
     def test_formal_posttraining_audit_passes_on_valid_contract(self) -> None:
         split_manifest = {
@@ -262,6 +330,11 @@ class FormalRegionRiskPipelineTest(unittest.TestCase):
                 "schema_version": 1,
                 "train_episode_ids": [0],
                 "eval_episode_ids": [1],
+                "subsampled": False,
+                "nominal_train_num_transitions": 1,
+                "written_train_num_transitions": 1,
+                "nominal_eval_num_transitions": 1,
+                "written_eval_num_transitions": 1,
                 "sha256": {},
                 "paths": {
                     "train_starts": str(paths.root / "train_starts.npy"),
@@ -290,6 +363,48 @@ class FormalRegionRiskPipelineTest(unittest.TestCase):
             command = evaluate_command(args, DEFAULT_TASKS["pusht"], paths)
             self.assertIn("--paper-eligible", command)
             self.assertNotIn("--smoke-only", command)
+
+    def test_evaluate_command_rejects_paper_eligible_on_subsampled_workspace(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "formal"
+            paths = PipelinePaths.from_root(root)
+            paths.root.mkdir(parents=True)
+            split_manifest = {
+                "schema_version": 1,
+                "train_episode_ids": [0],
+                "eval_episode_ids": [1],
+                "subsampled": True,
+                "nominal_train_num_transitions": 10,
+                "written_train_num_transitions": 2,
+                "nominal_eval_num_transitions": 5,
+                "written_eval_num_transitions": 1,
+                "sha256": {},
+                "paths": {
+                    "train_starts": str(paths.root / "train_starts.npy"),
+                    "eval_starts": str(paths.root / "eval_starts.npy"),
+                    "action_norm_starts": str(paths.root / "action_norm_starts.npy"),
+                },
+            }
+            (paths.root / "split_manifest.json").write_text(
+                json.dumps(split_manifest), encoding="utf-8"
+            )
+            for name in ("train_starts.npy", "eval_starts.npy", "action_norm_starts.npy"):
+                np.save(paths.root / name, np.asarray([0], dtype=np.int64))
+            args = argparse.Namespace(
+                python=sys.executable,
+                task="pusht",
+                train_seeds="0",
+                bootstrap_reps=50000,
+                encoding_batch_size=128,
+                device="cuda",
+                phase="evaluate",
+                max_train_starts=0,
+                max_eval_starts=0,
+                max_anchors=0,
+                max_episodes=0,
+            )
+            command = evaluate_command(args, DEFAULT_TASKS["pusht"], paths)
+            self.assertNotIn("--paper-eligible", command)
 
     def test_train_command_includes_device(self) -> None:
         args = argparse.Namespace(

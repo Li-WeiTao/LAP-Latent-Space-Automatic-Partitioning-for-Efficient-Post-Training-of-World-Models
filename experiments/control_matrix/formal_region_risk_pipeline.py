@@ -10,7 +10,7 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any, Mapping, Sequence
 
 import numpy as np
 
@@ -25,6 +25,7 @@ from experiments.control_matrix.episode_split import (  # noqa: E402
     FORMAL_TRAIN_FRACTION,
     compute_episode_split,
     load_split_manifest,
+    split_manifest_is_unsubsampled,
     split_paths_from_manifest,
     write_split_artifacts,
 )
@@ -387,14 +388,23 @@ def phase_train(
             )
 
 
-def is_full_formal_run(args: argparse.Namespace) -> bool:
-    return (
+def is_full_formal_run(
+    args: argparse.Namespace,
+    *,
+    split_manifest: Mapping[str, Any] | None = None,
+) -> bool:
+    cli_untruncated = (
         args.phase in {"all", "evaluate"}
         and args.max_train_starts <= 0
         and args.max_eval_starts <= 0
         and args.max_anchors <= 0
         and args.max_episodes <= 0
     )
+    if not cli_untruncated:
+        return False
+    if split_manifest is None:
+        return args.phase == "all"
+    return split_manifest_is_unsubsampled(split_manifest)
 
 
 def evaluate_command(
@@ -402,7 +412,8 @@ def evaluate_command(
     cfg: dict[str, str],
     paths: PipelinePaths,
 ) -> list[str]:
-    split_paths = split_paths_from_manifest(load_split_manifest(paths.split_manifest))
+    split_manifest = load_split_manifest(paths.split_manifest)
+    split_paths = split_paths_from_manifest(split_manifest)
     command = [
         args.python,
         str(PROJECT_ROOT / "experiments/control_matrix/evaluate_region_conditional_risk.py"),
@@ -460,7 +471,7 @@ def evaluate_command(
         command.extend(["--max-episodes", str(args.max_episodes)])
     if args.phase == "smoke":
         command.extend(["--smoke-only"])
-    elif is_full_formal_run(args):
+    elif is_full_formal_run(args, split_manifest=split_manifest):
         command.extend(["--paper-eligible"])
     return command
 

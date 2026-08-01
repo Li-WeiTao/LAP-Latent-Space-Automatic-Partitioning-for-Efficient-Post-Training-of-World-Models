@@ -27,6 +27,7 @@ from lap.partition import PartitionArtifact  # noqa: E402
 
 from experiments.control_matrix.episode_split import (  # noqa: E402
     load_split_manifest,
+    split_manifest_is_unsubsampled,
     split_paths_from_manifest,
 )
 from experiments.control_matrix.region_risk_lib import (  # noqa: E402
@@ -631,6 +632,28 @@ def append_horizon_metrics(
     weighted_rows.append(summary)
 
 
+def resolve_paper_eligible(
+    *,
+    smoke_only: bool,
+    split_manifest: Mapping[str, Any] | None,
+    max_eval_starts: int,
+    max_anchors: int,
+    max_episodes: int,
+    formal: bool,
+    posttraining_train_only_valid: bool,
+) -> bool:
+    eval_untruncated = max_eval_starts <= 0 and max_anchors <= 0 and max_episodes <= 0
+    split_unsubsampled = (
+        split_manifest is not None and split_manifest_is_unsubsampled(split_manifest)
+    )
+    return (
+        not smoke_only
+        and eval_untruncated
+        and split_unsubsampled
+        and (not formal or posttraining_train_only_valid)
+    )
+
+
 def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     if not rows:
         return
@@ -1089,10 +1112,20 @@ def main() -> None:
         "task": args.task,
         "formal": args.formal,
         "smoke_only": args.smoke_only,
-        "paper_eligible": (
-            not args.smoke_only
-            and args.paper_eligible
-            and (not args.formal or formal_audit.get("posttraining_train_only_valid", False))
+        "paper_eligible": resolve_paper_eligible(
+            smoke_only=args.smoke_only,
+            split_manifest=split_manifest_payload,
+            max_eval_starts=args.max_eval_starts,
+            max_anchors=args.max_anchors,
+            max_episodes=args.max_episodes,
+            formal=args.formal,
+            posttraining_train_only_valid=formal_audit.get(
+                "posttraining_train_only_valid", False
+            ),
+        ),
+        "split_manifest_unsubsampled_valid": (
+            split_manifest_payload is not None
+            and split_manifest_is_unsubsampled(split_manifest_payload)
         ),
         "horizon_anchor_counts": horizon_anchor_counts,
         "common_h10_anchor_count": int(len(common_h10_anchors)),
@@ -1142,6 +1175,9 @@ def main() -> None:
         region=np.asarray([row["region"] for row in sample_records], dtype=np.int64),
         train_seed=np.asarray([row["train_seed"] for row in sample_records], dtype=np.int64),
         horizon=np.asarray([row["horizon"] for row in sample_records], dtype=np.int64),
+        anchor_support=np.asarray(
+            [row["anchor_support"] for row in sample_records], dtype="<U16"
+        ),
         global_loss=np.asarray([row["global_loss"] for row in sample_records], dtype=np.float64),
         correct_loss=np.asarray([row["correct_loss"] for row in sample_records], dtype=np.float64),
         wrong_mean_loss=np.asarray(

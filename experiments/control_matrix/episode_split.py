@@ -194,6 +194,18 @@ def load_split_manifest(path: Path) -> dict[str, Any]:
     return payload
 
 
+def split_manifest_is_unsubsampled(manifest: Mapping[str, Any]) -> bool:
+    if bool(manifest.get("subsampled")):
+        return False
+    nominal_train = manifest.get("nominal_train_num_transitions")
+    written_train = manifest.get("written_train_num_transitions")
+    nominal_eval = manifest.get("nominal_eval_num_transitions")
+    written_eval = manifest.get("written_eval_num_transitions")
+    if None in (nominal_train, written_train, nominal_eval, written_eval):
+        return False
+    return int(written_train) == int(nominal_train) and int(written_eval) == int(nominal_eval)
+
+
 def split_paths_from_manifest(manifest: Mapping[str, Any]) -> dict[str, Path]:
     paths = manifest.get("paths", {})
     return {

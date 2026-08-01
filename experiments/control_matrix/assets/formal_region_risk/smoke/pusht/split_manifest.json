@@ -18699,8 +18699,13 @@
   ],
   "train_num_episodes": 16816,
   "eval_num_episodes": 1869,
-  "train_num_transitions": 1852570,
-  "eval_num_transitions": 203891,
+  "train_num_transitions": 4096,
+  "eval_num_transitions": 512,
+  "nominal_train_num_transitions": 1852570,
+  "written_train_num_transitions": 4096,
+  "nominal_eval_num_transitions": 203891,
+  "written_eval_num_transitions": 512,
+  "subsampled": true,
   "train_eval_episode_disjoint": true,
   "paths": {
     "train_starts": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/formal_region_risk/smoke/pusht/train_starts.npy",
@@ -18708,8 +18713,8 @@
     "action_norm_starts": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/formal_region_risk/smoke/pusht/action_norm_starts.npy"
   },
   "sha256": {
-    "train_starts": "786ba91f962fbb60ca48a1cafd9d11f9a11e46a2a00c46a2088e9a9f383a00b4",
-    "eval_starts": "8e8e2d74d17a56273bcffd4b986f9226c752679fe40dabc9145115a159e35f96",
+    "train_starts": "00e169f1659444568a849be4caac2b723c5f9cd5854258012a9dff0e6ec2f4d7",
+    "eval_starts": "5c64c6a238fe6dff6dc7c9e5dce6733a4bf8396508a35188c719013c04964113",
     "action_norm_starts": "5e5a66aef9abe3e0546755fcf3e4249190d004e648314e1b76f82a12682f0355"
   }
 }
