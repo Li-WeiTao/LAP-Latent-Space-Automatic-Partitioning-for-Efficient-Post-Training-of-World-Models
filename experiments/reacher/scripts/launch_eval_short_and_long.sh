@@ -43,32 +43,38 @@ common_short=(
   GOAL_OFFSET=
   EVAL_BUDGET=
   TASK_RETRIES=2
+  SKIP_JOINT=0
+  SKIP_REGIONS=0
   MUJOCO_GL=egl
   PYOPENGL_PLATFORM=egl
 )
 
-nohup env "${common_short[@]}" \
-  GPU_IDS=3 \
-  START_STAGE=official_eval \
-  RUN_ID="${SHORT_RUN_ID}_official" \
-  bash experiments/control_matrix/scripts/run_lewm_matrix_parallel.sh \
-  >"${SHORT_CONTROLLER_LOG}.official" 2>&1 &
-
-OFFICIAL_PID=$!
-echo "$OFFICIAL_PID" >"$SHORT_ROOT/logs/${SHORT_RUN_ID}.official.pid"
-
+# Run official → model → aggregate sequentially in one background subshell.
+# Do not start official in the parent and wait from a subshell: bash only lets
+# you wait on direct child processes, so that pattern fails with
+# "wait: pid … is not a child of this shell" and skips model_eval/aggregate.
+# Each stage must set END_STAGE so parallel.sh does not run through aggregate
+# inside the official job (the failure mode that hit line 238 EOF mid-edit).
 (
   set -euo pipefail
-  wait "$OFFICIAL_PID"
+  env "${common_short[@]}" \
+    GPU_IDS=3 \
+    START_STAGE=official_eval \
+    END_STAGE=official_eval \
+    RUN_ID="${SHORT_RUN_ID}_official" \
+    bash experiments/control_matrix/scripts/run_lewm_matrix_parallel.sh \
+    >>"${SHORT_CONTROLLER_LOG}.official" 2>&1
   env "${common_short[@]}" \
     GPU_IDS=3,4,5,6 \
     START_STAGE=model_eval \
+    END_STAGE=model_eval \
     RUN_ID="${SHORT_RUN_ID}_model" \
     bash experiments/control_matrix/scripts/run_lewm_matrix_parallel.sh \
     >>"${SHORT_CONTROLLER_LOG}.model" 2>&1
   env "${common_short[@]}" \
     GPU_IDS=3 \
     START_STAGE=aggregate \
+    END_STAGE=aggregate \
     RUN_ID="${SHORT_RUN_ID}_aggregate" \
     bash experiments/control_matrix/scripts/run_lewm_matrix_parallel.sh \
     >>"${SHORT_CONTROLLER_LOG}.aggregate" 2>&1
@@ -89,6 +95,5 @@ echo "$LONG_PID" >"$LONG_LOG_ROOT/long_after_short.pid"
 
 echo "SHORT_RUN_ID=$SHORT_RUN_ID"
 echo "SHORT_PID=$SHORT_PID"
-echo "OFFICIAL_PID=$OFFICIAL_PID"
 echo "SHORT_LOG=$SHORT_CONTROLLER_LOG"
 echo "LONG_PID=$LONG_PID"

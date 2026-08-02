@@ -1,0 +1,79 @@
+[stage] official_eval tasks=5 workers=1 retries=2
+[start] stage=official_eval task=official_e0 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/official_eval/official_e0.log
+[done] stage=official_eval task=official_e0 gpu=3
+[start] stage=official_eval task=official_e1 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/official_eval/official_e1.log
+[done] stage=official_eval task=official_e1 gpu=3
+[start] stage=official_eval task=official_e2 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/official_eval/official_e2.log
+[done] stage=official_eval task=official_e2 gpu=3
+[start] stage=official_eval task=official_e3 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/official_eval/official_e3.log
+[done] stage=official_eval task=official_e3 gpu=3
+[start] stage=official_eval task=official_e4 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/official_eval/official_e4.log
+[done] stage=official_eval task=official_e4 gpu=3
+[stage] model_eval tasks=33 workers=1 retries=2
+[start] stage=model_eval task=joint_t0 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/joint_t0.log
+[done] stage=model_eval task=joint_t0 gpu=3
+[start] stage=model_eval task=global_t0 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/global_t0.log
+[done] stage=model_eval task=global_t0 gpu=3
+[start] stage=model_eval task=random_voronoi_p0_t0 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/random_voronoi_p0_t0.log
+[done] stage=model_eval task=random_voronoi_p0_t0 gpu=3
+[start] stage=model_eval task=random_voronoi_p1_t0 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/random_voronoi_p1_t0.log
+[done] stage=model_eval task=random_voronoi_p1_t0 gpu=3
+[start] stage=model_eval task=random_voronoi_p2_t0 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/random_voronoi_p2_t0.log
+[done] stage=model_eval task=random_voronoi_p2_t0 gpu=3
+[start] stage=model_eval task=kmeanspp_p0_t0 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/kmeanspp_p0_t0.log
+[done] stage=model_eval task=kmeanspp_p0_t0 gpu=3
+[start] stage=model_eval task=kmeanspp_p1_t0 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/kmeanspp_p1_t0.log
+[done] stage=model_eval task=kmeanspp_p1_t0 gpu=3
+[start] stage=model_eval task=kmeanspp_p2_t0 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/kmeanspp_p2_t0.log
+[done] stage=model_eval task=kmeanspp_p2_t0 gpu=3
+[start] stage=model_eval task=spectral_p0_t0 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/spectral_p0_t0.log
+[done] stage=model_eval task=spectral_p0_t0 gpu=3
+[start] stage=model_eval task=spectral_p1_t0 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/spectral_p1_t0.log
+[done] stage=model_eval task=spectral_p1_t0 gpu=3
+[start] stage=model_eval task=spectral_p2_t0 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/spectral_p2_t0.log
+[done] stage=model_eval task=spectral_p2_t0 gpu=3
+[start] stage=model_eval task=joint_t42 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/joint_t42.log
+[done] stage=model_eval task=joint_t42 gpu=3
+[start] stage=model_eval task=global_t42 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/global_t42.log
+[done] stage=model_eval task=global_t42 gpu=3
+[start] stage=model_eval task=random_voronoi_p0_t42 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/random_voronoi_p0_t42.log
+[done] stage=model_eval task=random_voronoi_p0_t42 gpu=3
+[start] stage=model_eval task=random_voronoi_p1_t42 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/random_voronoi_p1_t42.log
+[done] stage=model_eval task=random_voronoi_p1_t42 gpu=3
+[start] stage=model_eval task=random_voronoi_p2_t42 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/random_voronoi_p2_t42.log
+[done] stage=model_eval task=random_voronoi_p2_t42 gpu=3
+[start] stage=model_eval task=kmeanspp_p0_t42 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/kmeanspp_p0_t42.log
+[done] stage=model_eval task=kmeanspp_p0_t42 gpu=3
+[start] stage=model_eval task=kmeanspp_p1_t42 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/kmeanspp_p1_t42.log
+[done] stage=model_eval task=kmeanspp_p1_t42 gpu=3
+[start] stage=model_eval task=kmeanspp_p2_t42 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/kmeanspp_p2_t42.log
+[done] stage=model_eval task=kmeanspp_p2_t42 gpu=3
+[start] stage=model_eval task=spectral_p0_t42 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/spectral_p0_t42.log
+[done] stage=model_eval task=spectral_p0_t42 gpu=3
+[start] stage=model_eval task=spectral_p1_t42 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/spectral_p1_t42.log
+[done] stage=model_eval task=spectral_p1_t42 gpu=3
+[start] stage=model_eval task=spectral_p2_t42 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/spectral_p2_t42.log
+[done] stage=model_eval task=spectral_p2_t42 gpu=3
+[start] stage=model_eval task=joint_t625 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/joint_t625.log
+[done] stage=model_eval task=joint_t625 gpu=3
+[start] stage=model_eval task=global_t625 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/global_t625.log
+[done] stage=model_eval task=global_t625 gpu=3
+[start] stage=model_eval task=random_voronoi_p0_t625 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/random_voronoi_p0_t625.log
+[done] stage=model_eval task=random_voronoi_p0_t625 gpu=3
+[start] stage=model_eval task=random_voronoi_p1_t625 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/random_voronoi_p1_t625.log
+[done] stage=model_eval task=random_voronoi_p1_t625 gpu=3
+[start] stage=model_eval task=random_voronoi_p2_t625 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/random_voronoi_p2_t625.log
+[done] stage=model_eval task=random_voronoi_p2_t625 gpu=3
+[start] stage=model_eval task=kmeanspp_p0_t625 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/kmeanspp_p0_t625.log
+[done] stage=model_eval task=kmeanspp_p0_t625 gpu=3
+[start] stage=model_eval task=kmeanspp_p1_t625 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/kmeanspp_p1_t625.log
+[done] stage=model_eval task=kmeanspp_p1_t625 gpu=3
+[start] stage=model_eval task=kmeanspp_p2_t625 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/kmeanspp_p2_t625.log
+[done] stage=model_eval task=kmeanspp_p2_t625 gpu=3
+[start] stage=model_eval task=spectral_p0_t625 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/spectral_p0_t625.log
+[done] stage=model_eval task=spectral_p0_t625 gpu=3
+[start] stage=model_eval task=spectral_p1_t625 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/spectral_p1_t625.log
+[done] stage=model_eval task=spectral_p1_t625 gpu=3
+[start] stage=model_eval task=spectral_p2_t625 gpu=3 attempt=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0731Z_official/model_eval/spectral_p2_t625.log
+[done] stage=model_eval task=spectral_p2_t625 gpu=3
+experiments/control_matrix/scripts/run_lewm_matrix_parallel.sh: line 238: unexpected EOF while looking for matching `"'

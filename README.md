@@ -313,6 +313,36 @@ one-region Global-FT branch. The plotted values, underlying seed-level results,
 gate manifests, and plotting source are committed under `experiments/pusht/`.
 See `experiments/pusht/README.md` for the exact protocols and interpretation.
 
+## Reacher result snapshot
+
+Reacher uses the same three predictor fine-tuning seeds (`0`, `42`, and `625`),
+three partition seeds for partitioned methods, and five paired evaluation seeds.
+Each fine-tuning-seed value for a partitioned method is first averaged over its
+partition and evaluation seeds; the table reports the mean and sample standard
+deviation across fine-tuning seeds. The official checkpoint has no post-training
+seed and therefore no error bar.
+
+| Method | Short horizon | Long horizon |
+|---|---:|---:|
+| Official baseline | 87.20% | 76.80% |
+| Joint-Continue FP32, 3 epochs | 84.53 ± 1.80% | 76.80 ± 4.21% |
+| Global-FT, 50 epochs | 82.93 ± 1.01% | 78.67 ± 1.01% |
+| Random-Voronoi K3, 50 epochs | 83.96 ± 1.82% | 77.20 ± 1.83% |
+| K-means++ K3, 50 epochs | 85.73 ± 0.80% | 78.58 ± 0.50% |
+| Spectral K3, 50 epochs | 84.09 ± 0.60% | 77.91 ± 1.13% |
+| **Auto-LAP (Global-FT)** | **82.93 ± 1.01%** | **78.67 ± 1.01%** |
+
+![Reacher short-horizon results](experiments/reacher/assets/control_metrics/reacher_short_horizon_main.png)
+
+![Reacher long-horizon results](experiments/reacher/assets/control_metrics/reacher_long_horizon_main.png)
+
+For Reacher, Auto-LAP is the one-region Global-FT branch, not a partitioned
+predictor. The gate passes the perturbation-safety check (`S = 0.7729`) but its
+robust residual gap (`R = 0.0119`) is below the background threshold
+(`T_bg = 0.3806`), so the manifest selects `global_predictor` with reason
+`residual_gap_not_above_background`. The Auto-LAP points above therefore reuse
+the Global-FT50 statistics exactly.
+
 ## Repository layout
 
 ```text

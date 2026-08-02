@@ -37,6 +37,8 @@ checkpoints/
 *.safetensors
 *_embeddings.npz
 *_latent_cache.npz
+**/embedding_cache.npz
+**/spectral_embedding_cache.npz
 *transitions.npz
 
 # Runtime products

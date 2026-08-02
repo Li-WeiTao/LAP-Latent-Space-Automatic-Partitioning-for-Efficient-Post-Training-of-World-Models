@@ -1,0 +1,10 @@
+[stage] official_eval tasks=5 workers=7
+[start] stage=official_eval task=official_e0 gpu=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0716Z/official_eval/official_e0.log
+[start] stage=official_eval task=official_e1 gpu=2 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0716Z/official_eval/official_e1.log
+[start] stage=official_eval task=official_e2 gpu=3 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0716Z/official_eval/official_e2.log
+[start] stage=official_eval task=official_e3 gpu=4 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0716Z/official_eval/official_e3.log
+[start] stage=official_eval task=official_e4 gpu=5 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0716Z/official_eval/official_e4.log
+[done] stage=official_eval task=official_e0 gpu=1
+[done] stage=official_eval task=official_e1 gpu=2
+[done] stage=official_eval task=official_e3 gpu=4
+stage failed: official_eval; inspect experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0716Z/official_eval

@@ -1,0 +1,113 @@
+{
+  "arrays": {
+    "act_emb": {
+      "dtype": "float32",
+      "sha256": "a36699c8b5099c24e37412435cc9c474f725153ca509af60c17078f20e6f80be",
+      "shape": [
+        1024,
+        4,
+        192
+      ]
+    },
+    "emb": {
+      "dtype": "float32",
+      "sha256": "95c3059bc5db5dbf569035177a77bb26b1b6c51094457cafb9a4a8f44cb97d95",
+      "shape": [
+        1024,
+        4,
+        192
+      ]
+    },
+    "region_starts": {
+      "dtype": "int64",
+      "sha256": "04aa28b85bc76dfe92ce03a51f5de83e9c6a61612c967f858c775fbe2d5288d7",
+      "shape": [
+        1024
+      ]
+    }
+  },
+  "auxiliary": {
+    "frameskip": 5,
+    "normalization_samples": 1674000
+  },
+  "config": {
+    "chunk_aware": true,
+    "cpu_threads": 4,
+    "device": "cuda",
+    "exact_batch_shapes": true,
+    "frame_batch_size": 512,
+    "log_every": 50,
+    "max_samples": 0,
+    "num_workers": 4,
+    "prefetch_factor": 2,
+    "start_offset": 0,
+    "transition_batch_size": 128
+  },
+  "counts": {
+    "eliminated_duplicate_frames": 2856,
+    "encoded_frame_keys": 1240,
+    "frame_slots": 4096,
+    "padded_encoder_slots": 1536,
+    "unique_frames": 1240
+  },
+  "dataset": {
+    "action_key": "action",
+    "adapter": "backends.lewm.encoding:LeWMHDF5TransitionDataset",
+    "data_file": "/data/sicong/weitao/datasets/lewm/reacher.h5",
+    "frameskip": 5,
+    "history_size": 3,
+    "num_preds": 1,
+    "pixel_key": "pixels"
+  },
+  "efficiency": {
+    "actual_kernel_frame_reduction_fraction": 0.625,
+    "actual_kernel_frame_speedup_after_padding": 2.6666666666666665,
+    "encoded_key_speedup_before_padding": 3.303225806451613,
+    "ideal_unique_frame_speedup": 3.303225806451613
+  },
+  "encoder": {
+    "adapter": "backends.lewm.encoding:LeWMEncoderAdapter",
+    "img_size": 224,
+    "requested_frameskip": 5
+  },
+  "environment": {
+    "cuda_runtime": "13.0",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 4090",
+    "numpy": "2.2.6",
+    "python": "3.10.9 (main, Mar  1 2023, 18:23:06) [GCC 11.2.0]",
+    "torch": "2.12.1+cu130"
+  },
+  "frame_groups": {
+    "512": {
+      "encoded_keys": 1240,
+      "padded_encoder_slots": 1536,
+      "timing_sec": {
+        "loader_wait_sec": 0.32534231804311275,
+        "preprocess_encode_d2h_sec": 2.9147870580200106,
+        "total_sec": 3.312532818992622
+      }
+    }
+  },
+  "method": "unique_frame_inverse_reconstruction",
+  "pretrained_model": "/data/sicong/weitao/.stable_worldmodel/reacher/lewm_object.ckpt",
+  "schema_version": 2,
+  "selection": {
+    "samples": 1024,
+    "sequence_length": 4,
+    "source_count": 1024,
+    "source_offset": 0,
+    "starts_source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/reacher/matrix/preparation/.encode_starts.npy"
+  },
+  "timing_sec": {
+    "auxiliary_encode": 1.45940024999436,
+    "inverse_reconstruct": 0.001352112041786313,
+    "model_load_and_prepare": 3.9997244650730863,
+    "npz_save": 0.148657179903239,
+    "reference_validation": 0.0,
+    "total": 8.959808649960905,
+    "unique_frame_encode": 3.347852578968741,
+    "unique_index": 0.0023311679251492023
+  },
+  "validation": null
+}

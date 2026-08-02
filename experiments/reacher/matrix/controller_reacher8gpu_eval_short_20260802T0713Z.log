@@ -1,0 +1,3 @@
+[stage] official_eval tasks=1 workers=7
+[start] stage=official_eval task=official_e0 gpu=1 log=experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0713Z/official_eval/official_e0.log
+stage failed: official_eval; inspect experiments/reacher/matrix/logs/parallel_reacher8gpu_eval_short_20260802T0713Z/official_eval

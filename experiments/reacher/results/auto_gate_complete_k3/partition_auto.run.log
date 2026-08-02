@@ -1,0 +1,2 @@
+[done] auto seed=0 counts=[1998682] elapsed=76.23s -> experiments/reacher/results/auto_gate_complete_k3/auto/partition
+[auto-gate] selected_method=global reason=residual_gap_not_above_background S=0.7729442177889703 R=0.011877795619155047 T_bg=0.3806083606504297
