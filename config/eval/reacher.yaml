@@ -13,6 +13,8 @@ dataset:
   stats: ${eval.dataset_name}
   keys_to_cache:
     - action
+    - qpos
+    - qvel
 
 seed: 42
 policy: random

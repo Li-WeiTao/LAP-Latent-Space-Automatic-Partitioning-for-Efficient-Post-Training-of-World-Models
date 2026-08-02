@@ -21,8 +21,11 @@ GOAL_OFFSET=${GOAL_OFFSET:-}
 EVAL_BUDGET=${EVAL_BUDGET:-}
 PYTHON=${PYTHON:-python}
 RUN_ID=${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ)}
+START_STAGE=${START_STAGE:-prepare}
+END_STAGE=${END_STAGE:-aggregate}
 
 BASE_SCRIPT=experiments/control_matrix/scripts/run_lewm_matrix.sh
+STAGE_ORDER=(prepare partition training official_eval model_eval aggregate)
 LOG_ROOT="$WORK_ROOT/logs/parallel_$RUN_ID"
 mkdir -p "$LOG_ROOT"
 
@@ -48,6 +51,8 @@ common_env=(
   GOAL_OFFSET="$GOAL_OFFSET"
   EVAL_BUDGET="$EVAL_BUDGET"
   PYTHON="$PYTHON"
+  MUJOCO_GL=egl
+  PYOPENGL_PLATFORM=egl
   OMP_NUM_THREADS="$CPU_THREADS"
   MKL_NUM_THREADS="$CPU_THREADS"
   OPENBLAS_NUM_THREADS="$CPU_THREADS"
@@ -83,25 +88,38 @@ run_stage() {
   local stage=$1
   local task_count=${#task_names[@]}
   local worker_count=${#gpu_ids[@]}
+  local max_attempts=${TASK_RETRIES:-2}
   local -a worker_pids=()
   mkdir -p "$LOG_ROOT/$stage"
-  echo "[stage] $stage tasks=$task_count workers=$worker_count"
+  echo "[stage] $stage tasks=$task_count workers=$worker_count retries=$max_attempts"
   for ((worker=0; worker<worker_count; worker++)); do
     (
       gpu=${gpu_ids[$worker]}
       for ((index=worker; index<task_count; index+=worker_count)); do
         name=${task_names[$index]}
         log="$LOG_ROOT/$stage/$name.log"
-        echo "[start] stage=$stage task=$name gpu=$gpu log=$log"
-        env "${common_env[@]}" \
-          CUDA_VISIBLE_DEVICES="$gpu" GPU_ID= \
-          PHASE="${task_phases[$index]}" \
-          TRAIN_SEEDS="${task_train_seeds[$index]}" \
-          PARTITION_SEEDS="${task_partition_seeds[$index]}" \
-          METHODS="${task_methods[$index]}" \
-          EVAL_SEEDS="${task_eval_seeds[$index]}" \
-          bash "$BASE_SCRIPT" >"$log" 2>&1
-        echo "[done] stage=$stage task=$name gpu=$gpu"
+        attempt=1
+        while true; do
+          echo "[start] stage=$stage task=$name gpu=$gpu attempt=$attempt log=$log"
+          if env "${common_env[@]}" \
+            CUDA_VISIBLE_DEVICES="$gpu" GPU_ID= \
+            PHASE="${task_phases[$index]}" \
+            TRAIN_SEEDS="${task_train_seeds[$index]}" \
+            PARTITION_SEEDS="${task_partition_seeds[$index]}" \
+            METHODS="${task_methods[$index]}" \
+            EVAL_SEEDS="${task_eval_seeds[$index]}" \
+            bash "$BASE_SCRIPT" >"$log" 2>&1; then
+            echo "[done] stage=$stage task=$name gpu=$gpu"
+            break
+          fi
+          if [[ "$attempt" -ge "$max_attempts" ]]; then
+            echo "[failed] stage=$stage task=$name gpu=$gpu attempts=$attempt" >&2
+            exit 1
+          fi
+          echo "[retry] stage=$stage task=$name gpu=$gpu attempt=$attempt" >>"$log"
+          attempt=$((attempt + 1))
+          sleep 10
+        done
       done
     ) &
     worker_pids+=("$!")
@@ -130,58 +148,87 @@ run_stage() {
   echo "methods=$METHODS"
   echo "goal_offset=${GOAL_OFFSET:-config_default}"
   echo "eval_budget=${EVAL_BUDGET:-config_default}"
+  echo "start_stage=$START_STAGE"
+  echo "end_stage=$END_STAGE"
   echo "git_commit=$(git rev-parse HEAD)"
 } >"$LOG_ROOT/run.env"
 echo "$$" >"$LOG_ROOT/controller.pid"
 
-env "${common_env[@]}" CUDA_VISIBLE_DEVICES="${gpu_ids[0]}" GPU_ID= \
-  PHASE=prepare bash "$BASE_SCRIPT" >"$LOG_ROOT/prepare.log" 2>&1
-
-clear_tasks
-add_task global partition_global "" "" "" ""
-for method in "${methods[@]}"; do
-  for pseed in "${partition_seeds[@]}"; do
-    add_task "${method}_p${pseed}" partition_regions "" "$pseed" "$method" ""
+stage_enabled() {
+  local stage=$1
+  local in_range=0
+  for candidate in "${STAGE_ORDER[@]}"; do
+    [[ "$candidate" == "$START_STAGE" ]] && in_range=1
+    if [[ "$candidate" == "$stage" ]]; then
+      [[ "$in_range" -eq 1 ]] && return 0
+      return 1
+    fi
+    [[ "$candidate" == "$END_STAGE" ]] && in_range=0
   done
-done
-run_stage partition
+  echo "unknown START_STAGE=$START_STAGE or END_STAGE=$END_STAGE" >&2
+  exit 2
+}
 
-clear_tasks
-for tseed in "${train_seeds[@]}"; do
-  add_task "joint_t${tseed}" train_joint "$tseed" "" "" ""
-  add_task "global_t${tseed}" train_global "$tseed" "" "" ""
+if stage_enabled prepare; then
+  env "${common_env[@]}" CUDA_VISIBLE_DEVICES="${gpu_ids[0]}" GPU_ID= \
+    PHASE=prepare bash "$BASE_SCRIPT" >"$LOG_ROOT/prepare.log" 2>&1
+fi
+
+if stage_enabled partition; then
+  clear_tasks
+  add_task global partition_global "" "" "" ""
   for method in "${methods[@]}"; do
     for pseed in "${partition_seeds[@]}"; do
-      add_task "${method}_p${pseed}_t${tseed}" train_regions \
-        "$tseed" "$pseed" "$method" ""
+      add_task "${method}_p${pseed}" partition_regions "" "$pseed" "$method" ""
     done
   done
-done
-run_stage training
+  run_stage partition
+fi
 
-clear_tasks
-for eseed in "${eval_seeds[@]}"; do
-  add_task "official_e${eseed}" eval_official "" "" "" "$eseed"
-done
-run_stage official_eval
-
-clear_tasks
-for tseed in "${train_seeds[@]}"; do
-  add_task "joint_t${tseed}" eval_joint "$tseed" "" "" "$EVAL_SEEDS"
-  add_task "global_t${tseed}" eval_global "$tseed" "" "" "$EVAL_SEEDS"
-  for method in "${methods[@]}"; do
-    for pseed in "${partition_seeds[@]}"; do
-      add_task "${method}_p${pseed}_t${tseed}" eval_regions \
-        "$tseed" "$pseed" "$method" "$EVAL_SEEDS"
+if stage_enabled training; then
+  clear_tasks
+  for tseed in "${train_seeds[@]}"; do
+    add_task "joint_t${tseed}" train_joint "$tseed" "" "" ""
+    add_task "global_t${tseed}" train_global "$tseed" "" "" ""
+    for method in "${methods[@]}"; do
+      for pseed in "${partition_seeds[@]}"; do
+        add_task "${method}_p${pseed}_t${tseed}" train_regions \
+          "$tseed" "$pseed" "$method" ""
+      done
     done
   done
-done
-run_stage model_eval
+  run_stage training
+fi
 
-env "${common_env[@]}" CUDA_VISIBLE_DEVICES="${gpu_ids[0]}" GPU_ID= \
-  PHASE=aggregate TRAIN_SEEDS="$TRAIN_SEEDS" \
-  PARTITION_SEEDS="$PARTITION_SEEDS" METHODS="$METHODS" \
-  EVAL_SEEDS="$EVAL_SEEDS" bash "$BASE_SCRIPT" \
-  >"$LOG_ROOT/aggregate.log" 2>&1
+if stage_enabled official_eval; then
+  clear_tasks
+  for eseed in "${eval_seeds[@]}"; do
+    add_task "official_e${eseed}" eval_official "" "" "" "$eseed"
+  done
+  run_stage official_eval
+fi
+
+if stage_enabled model_eval; then
+  clear_tasks
+  for tseed in "${train_seeds[@]}"; do
+    add_task "joint_t${tseed}" eval_joint "$tseed" "" "" "$EVAL_SEEDS"
+    add_task "global_t${tseed}" eval_global "$tseed" "" "" "$EVAL_SEEDS"
+    for method in "${methods[@]}"; do
+      for pseed in "${partition_seeds[@]}"; do
+        add_task "${method}_p${pseed}_t${tseed}" eval_regions \
+          "$tseed" "$pseed" "$method" "$EVAL_SEEDS"
+      done
+    done
+  done
+  run_stage model_eval
+fi
+
+if stage_enabled aggregate; then
+  env "${common_env[@]}" CUDA_VISIBLE_DEVICES="${gpu_ids[0]}" GPU_ID= \
+    PHASE=aggregate TRAIN_SEEDS="$TRAIN_SEEDS" \
+    PARTITION_SEEDS="$PARTITION_SEEDS" METHODS="$METHODS" \
+    EVAL_SEEDS="$EVAL_SEEDS" bash "$BASE_SCRIPT" \
+    >"$LOG_ROOT/aggregate.log" 2>&1
+fi
 
 echo "[complete] run_id=$RUN_ID logs=$LOG_ROOT"

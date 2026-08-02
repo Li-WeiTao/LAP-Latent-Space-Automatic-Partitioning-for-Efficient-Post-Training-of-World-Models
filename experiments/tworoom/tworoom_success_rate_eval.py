@@ -64,6 +64,16 @@ def _proprio_xy(proprio: torch.Tensor) -> tuple[float, float]:
     return pos[0, 0].item(), pos[0, 1].item()
 
 
+def _state_processor(process: dict) -> preprocessing.StandardScaler:
+    for key in ("proprio", "state", "qpos", "observation", "finger_pos"):
+        if key in process:
+            return process[key]
+    raise KeyError(
+        "No state processor found in process; expected one of "
+        "proprio, state, qpos, observation, finger_pos"
+    )
+
+
 def _standardize_geometry_thresholds(
     thresholds: dict[str, float], proprio_processor
 ) -> dict[str, float]:
@@ -1147,7 +1157,7 @@ def run_eval(
 
     device = torch.device(str(cfg.solver.device))
     model, model_meta = resolve_model(
-        experiment_mode, checkpoint, device, process["proprio"],
+        experiment_mode, checkpoint, device, _state_processor(process),
         region_ckpt_overrides=region_ckpt_overrides,
         cluster_artifact_dir=cluster_artifact_dir,
         cluster_predictor_dir=cluster_predictor_dir,
