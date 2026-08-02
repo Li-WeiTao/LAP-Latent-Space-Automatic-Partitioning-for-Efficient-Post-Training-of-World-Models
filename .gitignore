@@ -51,7 +51,13 @@ wandb/
 runs/
 experiments/**/matrix/logs/
 experiments/**/matrix/training/
-experiments/**/matrix_long/
+# Matrix long: publish summaries + per-seed eval artifacts; omit runtime bulk.
+experiments/**/matrix_long/*
+!experiments/**/matrix_long/matrix_raw.csv
+!experiments/**/matrix_long/matrix_summary.csv
+!experiments/**/matrix_long/matrix_summary.json
+!experiments/**/matrix_long/eval/
+experiments/**/matrix_long/logs/
 experiments/control_matrix/assets/region_risk/logs/
 experiments/control_matrix/assets/region_risk/**/*latent_cache*.npz
 experiments/control_matrix/assets/region_risk/**/*.starts.npy
