@@ -18,7 +18,7 @@ GPU="${GPU:?set GPU to one available physical GPU id}"
 export CUDA_VISIBLE_DEVICES="${GPU}"
 
 ROOT="experiments/tworoom"
-DATA_ROOT="${LAP_DATA_ROOT:-/data/sicong/weitao/datasets/lewm}"
+DATA_ROOT="${LAP_DATA_ROOT:?set LAP_DATA_ROOT}"
 DATA_FILE="${LAP_TWOROOM_DATA:-${DATA_ROOT}/tworoom.h5}"
 EMBED_DIR="${EMBED_DIR:-${ROOT}/results/tworoom_geometry_train_region_predictors}"
 SEEDS="${SEEDS:-0}"

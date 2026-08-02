@@ -7,10 +7,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
 cd "$REPO_ROOT"
 source .venv/bin/activate
-export STABLEWM_HOME=/data/sicong/weitao/.stable_worldmodel
+export STABLEWM_HOME="${STABLEWM_HOME:-${LAP_STABLEWM_HOME:-$HOME/.stable_worldmodel}}"
 
 OUT_DIR="experiments/tworoom/results/tworoom_geometry_trajectory_predictors"
-CKPT="${LAP_LEWM_CHECKPOINT:-/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt}"
+CKPT="${LAP_LEWM_CHECKPOINT:?set LAP_LEWM_CHECKPOINT}"
 
 mkdir -p "${OUT_DIR}"
 

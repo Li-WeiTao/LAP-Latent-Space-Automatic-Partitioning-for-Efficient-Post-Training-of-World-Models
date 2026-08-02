@@ -46,8 +46,14 @@ IFS=, read -r -a eval_seeds <<< "$EVAL_SEEDS"
 IFS=, read -r -a methods <<< "$METHODS"
 
 PREP="$WORK_ROOT/preparation"
-STARTS="$PREP/train_global_reference_starts.npy"
-LATENT_CACHE="$WORK_ROOT/${DATASET_NAME}_lewm_train_latent_cache.npz"
+EMBEDDING_CACHE="$PREP/embedding_cache.npz"
+LATENT_CACHE="$EMBEDDING_CACHE"
+PREPARE_MAX_STARTS=${PREPARE_MAX_STARTS:-}
+PREPARE_REFERENCE_CACHE=${PREPARE_REFERENCE_CACHE:-}
+PREPARE_OVERWRITE=${PREPARE_OVERWRITE:-}
+
+SKIP_JOINT=${SKIP_JOINT:-0}
+SKIP_REGIONS=${SKIP_REGIONS:-0}
 
 prepare() {
   mkdir -p "$PREP"
@@ -59,39 +65,24 @@ prepare() {
     echo "evaluation dataset path already resolves to another file: $eval_dataset_path" >&2
     exit 1
   fi
-  if [[ ! -f "$STARTS" ]]; then
-    "$PYTHON" experiments/tworoom/trajectory.py \
-      --dataset "$DATASET_NAME" \
-      --data-file "$DATA_FILE" \
-      --checkpoint "$CHECKPOINT" \
-      --out-dir "$PREP" \
-      --prepare-starts-only \
-      --regions common \
-      --restrict-to-train-split \
-      --predictor-prefix train_ \
-      --frameskip 5
-  fi
-  if [[ ! -f "$LATENT_CACHE" ]]; then
-    "$PYTHON" -m lap.encoding.cli encode \
-      --dataset-factory backends.lewm.encoding:make_hdf5_transition_dataset \
-      --dataset-arg "data_file=\"$DATA_FILE\"" \
-      --dataset-arg "starts=\"$STARTS\"" \
-      --dataset-arg "action_norm_starts=\"$STARTS\"" \
-      --dataset-arg history_size=3 \
-      --dataset-arg num_preds=1 \
-      --dataset-arg frameskip=5 \
-      --encoder-factory backends.lewm.encoding:make_encoder \
-      --encoder-arg img_size=224 \
-      --encoder-arg frameskip=5 \
-      --pretrained-model "$CHECKPOINT" \
-      --output "$LATENT_CACHE" \
-      --device cuda \
-      --transition-batch-size 128 \
-      --frame-batch-size 512 \
-      --batch-shape-mode exact \
-      --num-workers 4 \
-      --cpu-threads 4
-  fi
+  local -a prepare_args=(
+    "$PYTHON" experiments/control_matrix/prepare_lewm_cache.py
+    --dataset-name "$DATASET_NAME"
+    --data-file "$DATA_FILE"
+    --checkpoint "$CHECKPOINT"
+    --out-dir "$PREP"
+    --frameskip 5
+    --device cuda
+    --transition-batch-size 128
+    --frame-batch-size 512
+    --num-workers "$CPU_THREADS"
+    --cpu-threads "$CPU_THREADS"
+    --python "$PYTHON"
+  )
+  [[ -n "$PREPARE_MAX_STARTS" ]] && prepare_args+=(--max-starts "$PREPARE_MAX_STARTS")
+  [[ -n "$PREPARE_REFERENCE_CACHE" ]] && prepare_args+=(--reference-cache "$PREPARE_REFERENCE_CACHE")
+  [[ "$PREPARE_OVERWRITE" == "1" ]] && prepare_args+=(--overwrite)
+  "${prepare_args[@]}"
 }
 
 partition_global() {
@@ -203,7 +194,7 @@ train_regions() {
 }
 
 train() {
-  train_joint
+  [[ "$SKIP_JOINT" != "1" ]] && train_joint
   train_global
   train_regions
 }
@@ -295,7 +286,7 @@ evaluate_regions() {
 
 evaluate() {
   evaluate_official
-  evaluate_joint
+  [[ "$SKIP_JOINT" != "1" ]] && evaluate_joint
   evaluate_global
   evaluate_regions
 }
@@ -320,10 +311,17 @@ auto_posttrain() {
 }
 
 aggregate() {
-  "$PYTHON" experiments/control_matrix/aggregate_matrix.py \
-    --root "$WORK_ROOT" --dataset-name "$DATASET_NAME" \
-    --train-seeds "$TRAIN_SEEDS" --partition-seeds "$PARTITION_SEEDS" \
+  local -a aggregate_args=(
+    "$PYTHON" experiments/control_matrix/aggregate_matrix.py
+    --root "$WORK_ROOT"
+    --dataset-name "$DATASET_NAME"
+    --train-seeds "$TRAIN_SEEDS"
+    --partition-seeds "$PARTITION_SEEDS"
     --eval-seeds "$EVAL_SEEDS"
+  )
+  [[ "$SKIP_JOINT" == "1" ]] && aggregate_args+=(--skip-joint)
+  [[ "$SKIP_REGIONS" == "1" ]] && aggregate_args+=(--skip-regions)
+  "${aggregate_args[@]}"
 }
 
 case "$PHASE" in

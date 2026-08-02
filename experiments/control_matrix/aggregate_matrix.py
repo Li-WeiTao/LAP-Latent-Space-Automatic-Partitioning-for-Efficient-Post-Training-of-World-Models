@@ -20,6 +20,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--train-seeds", default="0,42,625")
     parser.add_argument("--partition-seeds", default="0,1,2")
     parser.add_argument("--eval-seeds", default="0,1,2,3,4")
+    parser.add_argument(
+        "--skip-joint",
+        action="store_true",
+        help="Omit Joint-Continue rows when running smoke subsets.",
+    )
+    parser.add_argument(
+        "--skip-regions",
+        action="store_true",
+        help="Omit partitioned-method rows when running smoke subsets.",
+    )
     return parser.parse_args()
 
 
@@ -80,6 +90,8 @@ def main() -> None:
         )
 
     for method, label in (("joint", "Joint-Continue 3ep"), ("global", "Global-FT50")):
+        if args.skip_joint and method == "joint":
+            continue
         train_means: list[float] = []
         all_values: list[float] = []
         for t in train:
@@ -124,6 +136,8 @@ def main() -> None:
         "spectral": "Spectral",
     }
     for method in PARTITION_METHODS:
+        if args.skip_regions:
+            continue
         train_means = []
         all_values = []
         for t in train:

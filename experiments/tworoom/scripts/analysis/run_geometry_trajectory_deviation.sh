@@ -7,10 +7,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
 cd "$REPO_ROOT"
 source .venv/bin/activate
-export STABLEWM_HOME=/data/sicong/weitao/.stable_worldmodel
+export STABLEWM_HOME="${STABLEWM_HOME:-${LAP_STABLEWM_HOME:-$HOME/.stable_worldmodel}}"
 
 PRED_DIR="experiments/tworoom/results/tworoom_geometry_trajectory_predictors"
-GLOBAL_CKPT="${LAP_LEWM_CHECKPOINT:-/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt}"
+GLOBAL_CKPT="${LAP_LEWM_CHECKPOINT:?set LAP_LEWM_CHECKPOINT}"
 TEST_CACHE="experiments/tworoom/cache/tworoom_trajectory_test_full_transitions.npz"
 
 regions=(common doorway_corridor left_room near_wall right_room)

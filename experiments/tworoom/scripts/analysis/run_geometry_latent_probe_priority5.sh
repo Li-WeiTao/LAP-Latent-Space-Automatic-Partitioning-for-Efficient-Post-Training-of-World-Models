@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
 cd "$REPO_ROOT"
 source .venv/bin/activate
-export STABLEWM_HOME=/data/sicong/weitao/.stable_worldmodel
+export STABLEWM_HOME="${STABLEWM_HOME:-${LAP_STABLEWM_HOME:-$HOME/.stable_worldmodel}}"
 
 GPU="${CUDA_VISIBLE_DEVICES:-4}"
 export CUDA_VISIBLE_DEVICES="${GPU}"
@@ -22,7 +22,7 @@ echo "==== geometry priority5 latent probes (episode split) started at $(date) =
 /usr/bin/time -p python "${ROOT}/geometry_latent_svm_rooms3.py" \
   --partition priority5 \
   --embedding-dir "${ROOT}/results/tworoom_geometry_train_region_predictors" \
-  --data-root "${LAP_DATA_ROOT:-/data/sicong/weitao/datasets/lewm}" \
+  --data-root "${LAP_DATA_ROOT:?set LAP_DATA_ROOT}" \
   --out-dir "${OUT}" \
   --episode-split-seed 20260711 \
   --episode-train-fraction 0.7 \

@@ -357,12 +357,105 @@ Required external inputs are:
 
 ```text
 LAP_TWOROOM_DATA=/path/to/tworoom.h5
+LAP_PUSHT_DATA=/path/to/pusht_expert_train.h5
 LAP_LEWM_CHECKPOINT=/path/to/lewm_object.ckpt
 GPU=0
 ```
 
-The official checkpoint used by the committed experiments has SHA-256
-`18b5764492c74de5487efdadb66adab11876cb230952765b17c0815fa87b13ff`.
+### Downloading public LeWM data and checkpoints
+
+Artifacts are published on Hugging Face in the
+[LeWM collection](https://huggingface.co/collections/quentinll/lewm).
+Task-specific model repos:
+
+- [quentinll/lewm-pusht](https://huggingface.co/quentinll/lewm-pusht)
+- [quentinll/lewm-tworooms](https://huggingface.co/quentinll/lewm-tworooms)
+- [quentinll/lewm-reacher](https://huggingface.co/quentinll/lewm-reacher)
+
+Example: fetch PushT artifacts into a fresh directory and verify checksums.
+
+```bash
+export LAP_STABLEWM_HOME="$PWD/.stable_worldmodel"
+export LAP_DATA_ROOT="$PWD/datasets/lewm"
+mkdir -p "$LAP_STABLEWM_HOME/pusht" "$LAP_DATA_ROOT"
+
+# Dataset archive from the LeWM Hugging Face collection (adjust URL to the
+# published pusht_expert_train archive for your mirror).
+huggingface-cli download quentinll/lewm-pusht --local-dir "$LAP_DATA_ROOT"
+tar --zstd -xvf "$LAP_DATA_ROOT/pusht_expert_train.h5.tar.zst" -C "$LAP_DATA_ROOT"
+
+huggingface-cli download quentinll/lewm-pusht lewm_object.ckpt \
+  --local-dir "$LAP_STABLEWM_HOME/pusht"
+
+sha256sum "$LAP_DATA_ROOT/pusht_expert_train.h5" "$LAP_STABLEWM_HOME/pusht/lewm_object.ckpt"
+```
+
+Recorded SHA-256 values for the completed PushT matrix run:
+
+| Artifact | SHA-256 |
+|---|---|
+| `pusht_expert_train.h5` | `b6ebd9ac94bbe9e383f6e7a9cd92d74e9aa665ea57b758ed3717b0ee7df8d4fb` |
+| PushT `lewm_object.ckpt` | `e727d64a8b3535c3152dc72688bb7565c536c1b1317c56d04072cf7cc1183cc2` |
+| TwoRoom `lewm_object.ckpt` (shared official baseline in committed results) | `18b5764492c74de5487efdadb66adab11876cb230952765b17c0815fa87b13ff` |
+
+Copy `.env.example` to `.env`, fill in the resolved paths, then:
+
+```bash
+set -a
+source .env
+set +a
+```
+
+### Control-matrix smoke test from an empty directory
+
+The parameterized matrix launcher writes five preparation artifacts under
+`$WORK_ROOT/preparation/`:
+
+```text
+embedding_cache.npz
+spectral_embedding_cache.npz
+representation_manifest.json
+action_norm_stats.npz
+action_norm_manifest.json
+```
+
+Minimal end-to-end smoke (small encode subset, one seed per stage):
+
+```bash
+export LAP_PUSHT_DATA=/path/to/pusht_expert_train.h5
+export LAP_PUSHT_CHECKPOINT=/path/to/pusht/lewm_object.ckpt
+export WORK_ROOT="$PWD/experiments/pusht/smoke_matrix"
+export CACHE_DIR="$PWD/.stable_worldmodel"
+export GPU_ID=0
+export PREPARE_MAX_STARTS=1024
+export SKIP_JOINT=1
+export SKIP_REGIONS=1
+export TRAIN_SEEDS=0
+export PARTITION_SEEDS=0
+export EVAL_SEEDS=0
+export METHODS=global
+export GOAL_OFFSET=25
+export EVAL_BUDGET=50
+
+DATASET_NAME=pusht \
+DATA_FILE="$LAP_PUSHT_DATA" \
+CHECKPOINT="$LAP_PUSHT_CHECKPOINT" \
+EVAL_CONFIG=pusht \
+EVAL_DATASET_NAME=pusht_expert_train \
+PHASE=prepare bash experiments/control_matrix/scripts/run_lewm_matrix.sh
+
+PHASE=partition bash experiments/control_matrix/scripts/run_lewm_matrix.sh
+PHASE=train bash experiments/control_matrix/scripts/run_lewm_matrix.sh
+PHASE=eval bash experiments/control_matrix/scripts/run_lewm_matrix.sh
+PHASE=aggregate bash experiments/control_matrix/scripts/run_lewm_matrix.sh
+```
+
+For a full-fidelity cache audit against a historical reference, rerun
+`PHASE=prepare` without `PREPARE_MAX_STARTS` and optionally set
+`PREPARE_REFERENCE_CACHE=/path/to/reference/embedding_cache.npz`.
+
+The official TwoRoom checkpoint used by the committed main-comparison results
+has SHA-256 `18b5764492c74de5487efdadb66adab11876cb230952765b17c0815fa87b13ff`.
 
 ## Fast audit of the committed results
 
