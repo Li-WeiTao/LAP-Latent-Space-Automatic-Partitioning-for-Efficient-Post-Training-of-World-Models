@@ -51,6 +51,15 @@ wandb/
 runs/
 experiments/**/matrix/logs/
 experiments/**/matrix/training/
+# Matrix preparation: publish manifests/starts; ignore regenerable caches.
+experiments/**/matrix/preparation/*
+!experiments/**/matrix/preparation/P_train_common_starts.npy
+!experiments/**/matrix/preparation/train_global_reference_starts.npy
+!experiments/**/matrix/preparation/*manifest.json
+!experiments/**/matrix/preparation/*.report.json
+!experiments/**/matrix/preparation/action_norm_stats.npz
+!experiments/**/matrix/preparation/.encode_starts.npy
+!experiments/**/matrix/preparation/reacher_heldout_eval_latent_cache.starts.npy
 # Matrix long: publish summaries + per-seed eval artifacts; omit runtime bulk.
 experiments/**/matrix_long/*
 !experiments/**/matrix_long/matrix_raw.csv
