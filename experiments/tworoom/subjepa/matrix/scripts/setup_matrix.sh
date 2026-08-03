@@ -66,14 +66,12 @@ PREP="$MATRIX/preparation"
 rm -rf "$PREP"
 ln -sfn "$(realpath "$FORMAL/preparation")" "$PREP"
 
-# --- reuse formal spectral partitions (no refit) ---
-for seed in 0 1 2; do
-  dst="$MATRIX/partitions/spectral/seed${seed}"
-  src="$(realpath "$FORMAL/partitions/spectral/seed${seed}")"
-  mkdir -p "$(dirname "$dst")"
-  rm -rf "$dst"
-  ln -sfn "$src" "$dst"
-done
+# --- reuse formal spectral partitions (remap cluster_labels to global IDs) ---
+"$PYTHON" experiments/tworoom/subjepa/matrix/scripts/materialize_spectral_partitions.py \
+  --formal-root "$FORMAL/partitions/spectral" \
+  --matrix-root "$MATRIX/partitions/spectral" \
+  --latent-cache "$FORMAL/preparation/embedding_cache.npz" \
+  --seeds 0,1,2
 
 # --- LeWM paired evaluation starts (short + long) ---
 PAIR_SHORT="$MATRIX/paired_starts/lewm_short/eval/official"

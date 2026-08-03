@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "git_commit": "91f3d68ccb6a85a54796f5fbbc773819968dcbde",
+  "git_commit": "805d353e33830cdaec532abc91ea297711bd2793",
   "gate_passport": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/manifests/material_passport.json",
   "gate_status": "VERIFIED",
   "selected_branch": "spectral",
