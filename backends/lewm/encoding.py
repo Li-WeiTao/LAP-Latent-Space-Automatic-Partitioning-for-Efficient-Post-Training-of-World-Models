@@ -257,12 +257,14 @@ class LeWMEncoderAdapter:
         img_size: int = 224,
         frameskip: int = 0,
         checkpoint_cache_dir: str | None = None,
+        model_family: str = "lewm",
     ) -> None:
         if img_size < 1 or frameskip < 0:
             raise ValueError("img_size must be positive and frameskip nonnegative")
         self.img_size = int(img_size)
         self.frameskip = int(frameskip)
         self.checkpoint_cache_dir = checkpoint_cache_dir
+        self.model_family = model_family
 
     def describe(self) -> Mapping[str, Any]:
         return {
@@ -277,12 +279,13 @@ class LeWMEncoderAdapter:
         else:
             checkpoint = Path(str(pretrained_model)).expanduser()
             if checkpoint.exists() and checkpoint.suffix == ".ckpt":
-                try:
-                    model = torch.load(
-                        checkpoint, map_location="cpu", weights_only=False
-                    )
-                except TypeError:
-                    model = torch.load(checkpoint, map_location="cpu")
+                from backends.lewm.checkpoint_compat import load_jepa_object_checkpoint
+
+                model = load_jepa_object_checkpoint(
+                    checkpoint,
+                    model_family=self.model_family,
+                    map_location="cpu",
+                )
             else:
                 import stable_worldmodel as stable_wm
 
@@ -293,6 +296,18 @@ class LeWMEncoderAdapter:
         model.requires_grad_(False)
         if hasattr(model, "interpolate_pos_encoding"):
             model.interpolate_pos_encoding = True
+        encoder = getattr(model, "encoder", None)
+        config = getattr(encoder, "config", None)
+        if config is not None:
+            for attr, value in (
+                ("output_attentions", False),
+                ("output_hidden_states", False),
+                ("return_dict", True),
+                ("torchscript", False),
+                ("use_bfloat16", False),
+            ):
+                if not hasattr(config, attr):
+                    setattr(config, attr, value)
         return model
 
     def prepare_dataset(

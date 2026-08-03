@@ -1,5 +1,24 @@
 # Migration validation report
 
+## Sub-JEPA: TwoRoom smoke (2026-08-03)
+
+**Status: `VERIFIED`**
+
+| Check | Result |
+|---|---:|
+| Sub-JEPA checkpoint offline load + compat probe | passed |
+| Production cache (3686 transitions, unique-frame + exact_batch_shapes) | preserved; SHA-256 unchanged |
+| Cache-equivalence (16 samples, production replay) | exact (`max_abs_diff = 0`) |
+| False failure root cause | old validator used direct `encode_frames(batch=4)` instead of production unique-frame path (~0.013 apparent mismatch) |
+| Smoke: partition / 1-epoch train / reduced eval | passed |
+| Reduced eval success rates (official/global/spectral) | 100% each — **pipeline only**, not method comparison |
+
+Preserved cache SHA-256: `6828c6b5b7f87df33878ed43684821e975b4e5aa9e859a1ce00e1bf6f40ab3a7`  
+Emb array SHA-256: `982fa6f190e189505393649ccee5b906a84be8673bbedfc65b537ea64ea47c7c`  
+Manifest: `experiments/tworoom/subjepa/manifests/verification_status.json`
+
+Formal method conclusions require full paired short/long evaluation; reduced smoke eval must not be interpreted as performance evidence.
+
 ## Material Passport
 
 - ID: `lap-tworoom-migration-2026-07-30`

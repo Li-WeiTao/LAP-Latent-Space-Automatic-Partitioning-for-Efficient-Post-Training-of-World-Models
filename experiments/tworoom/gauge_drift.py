@@ -350,13 +350,25 @@ def sample_indices(h5: h5py.File, spec: DatasetSpec, state_key: str, max_samples
     return np.sort(valid_idx)
 
 
-def load_encoder(checkpoint: str, device: torch.device, cache_dir: str | None):
+def load_encoder(
+    checkpoint: str,
+    device: torch.device,
+    cache_dir: str | None,
+    *,
+    model_family: str = "lewm",
+):
     if not checkpoint:
         raise ValueError("--checkpoint is required when --latent-source encoder")
 
     checkpoint_path = Path(checkpoint)
     if checkpoint_path.exists() and checkpoint_path.suffix == ".ckpt":
-        model = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+        from backends.lewm.checkpoint_compat import load_jepa_object_checkpoint
+
+        model = load_jepa_object_checkpoint(
+            checkpoint_path,
+            model_family=model_family,
+            map_location="cpu",
+        )
         model = model.to(device).eval()
         model.requires_grad_(False)
         return model

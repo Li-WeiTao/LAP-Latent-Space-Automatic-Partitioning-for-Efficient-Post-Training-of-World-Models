@@ -293,6 +293,74 @@ def _validate_reference(
     return {"passed": passed, "arrays": details}
 
 
+def recompute_latent_windows(
+    *,
+    dataset: EncodingDataset,
+    encoder: LatentEncoderAdapter,
+    model: Any,
+    config: FastEncodingConfig,
+    device: torch.device | None = None,
+    log: LogFn = print,
+) -> tuple[np.ndarray, EncodingSelection]:
+    """Rebuild latent windows using the production unique-frame encode path."""
+
+    config.validate()
+    resolved_device = device or torch.device(config.device)
+    if resolved_device.type == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError("CUDA requested but unavailable")
+
+    selection = dataset.make_selection(
+        start_offset=config.start_offset,
+        max_samples=config.max_samples,
+    )
+    selection.validate()
+    keyed_frames, required_shapes, inverse, _global_unique_count = (
+        build_unique_frame_index(
+            selection,
+            transition_batch_size=config.transition_batch_size,
+            exact_batch_shapes=config.exact_batch_shapes,
+        )
+    )
+
+    all_embeddings: np.ndarray | None = None
+    if config.exact_batch_shapes:
+        group_shapes = np.unique(required_shapes)
+    else:
+        group_shapes = np.asarray([config.frame_batch_size], dtype=np.int64)
+
+    for target_shape in group_shapes:
+        if config.exact_batch_shapes:
+            positions = np.flatnonzero(required_shapes == target_shape)
+        else:
+            positions = np.arange(len(keyed_frames))
+        target_batch_size = int(target_shape)
+        group_embeddings, _timing = _encode_frame_group(
+            dataset,
+            encoder,
+            model,
+            keyed_frames[positions],
+            target_batch_size=target_batch_size,
+            device=resolved_device,
+            config=config,
+            log=log,
+        )
+        if all_embeddings is None:
+            all_embeddings = np.empty(
+                (len(keyed_frames), group_embeddings.shape[1]),
+                dtype=group_embeddings.dtype,
+            )
+        all_embeddings[positions] = group_embeddings
+
+    if all_embeddings is None:
+        raise RuntimeError("no latent embeddings were produced")
+    latent_windows = all_embeddings[inverse].reshape(
+        len(selection.sample_ids),
+        selection.frame_ids.shape[1],
+        all_embeddings.shape[1],
+    )
+    return latent_windows, selection
+
+
 class FastLatentCacheEncoder:
     """Build a backend cache from arbitrary dataset and encoder adapters."""
 
@@ -332,12 +400,12 @@ class FastLatentCacheEncoder:
         encoder.prepare_dataset(dataset, model)
         model_sec = time.perf_counter() - model_start
 
+        index_start = time.perf_counter()
         selection = dataset.make_selection(
             start_offset=self.config.start_offset,
             max_samples=self.config.max_samples,
         )
         selection.validate()
-        index_start = time.perf_counter()
         keyed_frames, required_shapes, inverse, global_unique_count = (
             build_unique_frame_index(
                 selection,
@@ -352,7 +420,6 @@ class FastLatentCacheEncoder:
             f"unique_frames={global_unique_count} encoded_keys={len(keyed_frames)}"
         )
 
-        all_embeddings: np.ndarray | None = None
         group_reports: dict[str, Any] = {}
         padded_slots = 0
         if self.config.exact_batch_shapes:
@@ -360,6 +427,7 @@ class FastLatentCacheEncoder:
         else:
             group_shapes = np.asarray([self.config.frame_batch_size], dtype=np.int64)
         frame_total_start = time.perf_counter()
+        all_embeddings: np.ndarray | None = None
         for target_shape in group_shapes:
             if self.config.exact_batch_shapes:
                 positions = np.flatnonzero(required_shapes == target_shape)

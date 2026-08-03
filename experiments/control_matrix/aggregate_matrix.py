@@ -30,6 +30,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Omit partitioned-method rows when running smoke subsets.",
     )
+    parser.add_argument(
+        "--methods",
+        default="random_voronoi,kmeanspp,spectral",
+        help="Comma-separated partition methods to aggregate.",
+    )
     return parser.parse_args()
 
 
@@ -135,7 +140,12 @@ def main() -> None:
         "kmeanspp": "K-means++",
         "spectral": "Spectral",
     }
-    for method in PARTITION_METHODS:
+    partition_methods = [
+        method.strip()
+        for method in args.methods.split(",")
+        if method.strip()
+    ]
+    for method in partition_methods:
         if args.skip_regions:
             continue
         train_means = []

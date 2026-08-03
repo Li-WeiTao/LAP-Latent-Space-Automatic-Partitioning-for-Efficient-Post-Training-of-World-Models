@@ -523,6 +523,7 @@ def parse_args() -> argparse.Namespace:
         default="/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt",
     )
     parser.add_argument("--checkpoint-cache-dir", default=None)
+    parser.add_argument("--model-family", default="lewm")
     parser.add_argument(
         "--out-dir",
         type=Path,
@@ -812,7 +813,9 @@ def main() -> None:
     if args.device == "auto" and not torch.cuda.is_available():
         device = torch.device("cpu")
 
-    base_model = load_encoder(args.checkpoint, device, args.checkpoint_cache_dir)
+    base_model = load_encoder(
+        args.checkpoint, device, args.checkpoint_cache_dir, model_family=args.model_family
+    )
     base_model.train()
 
     with h5py.File(h5_path, "r") as h5:

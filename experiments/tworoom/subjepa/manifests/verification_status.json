@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "status": "VERIFIED",
+  "scope": "tworoom_subjepa_smoke",
+  "verified_at": "2026-08-03",
+  "false_failure": {
+    "phase": "cache-equivalence",
+    "reported_max_abs_diff": 0.013258576393127441,
+    "root_cause": "validate_jepa_smoke used direct per-window encode_frames(batch=4) instead of the production unique-frame exact_batch_shapes reconstruction path.",
+    "resolution": "Validator now replays production frame deduplication, ordering, and batch splitting via recompute_latent_windows()."
+  },
+  "preserved_cache": {
+    "path": "experiments/tworoom/subjepa/preparation/embedding_cache.npz",
+    "sha256": "6828c6b5b7f87df33878ed43684821e975b4e5aa9e859a1ce00e1bf6f40ab3a7",
+    "emb_sha256": "982fa6f190e189505393649ccee5b906a84be8673bbedfc65b537ea64ea47c7c",
+    "rebuilt": false
+  },
+  "equivalence_after_fix": {
+    "num_samples_8": {"max_abs_diff": 0.0, "allclose": true},
+    "num_samples_16": {"max_abs_diff": 0.0, "allclose": true},
+    "verification_path": "production_unique_frame_reconstruction"
+  },
+  "smoke_note": "Reduced eval success rates at 100% only prove pipeline equivalence and executability; formal method comparisons require full paired evaluation."
+}

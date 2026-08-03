@@ -32,6 +32,11 @@ from experiments.control_matrix.region_risk_lib import (  # noqa: E402
     git_commit,
     sha256_file,
 )
+from experiments.control_matrix.backend_registry import (  # noqa: E402
+    DEFAULT_MODEL_FAMILY,
+    backend_metadata,
+    normalize_model_family,
+)
 from lap.encoding.fast import FastEncodingConfig, FastLatentCacheEncoder  # noqa: E402
 
 
@@ -80,6 +85,7 @@ class PreparePaths:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset-name", required=True)
+    parser.add_argument("--model-family", default=DEFAULT_MODEL_FAMILY)
     parser.add_argument("--data-file", type=Path, required=True)
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, required=True)
@@ -151,6 +157,8 @@ def run_prepare_starts(args: argparse.Namespace, paths: PreparePaths) -> None:
         str(args.history_size),
         "--num-preds",
         str(args.num_preds),
+        "--model-family",
+        args.model_family,
     ]
     if args.max_starts > 0:
         command.extend(["--max-starts", str(args.max_starts)])
@@ -268,7 +276,11 @@ def encode_embedding_cache(
         num_preds=args.num_preds,
         frameskip=args.frameskip,
     )
-    encoder = LeWMEncoderAdapter(img_size=args.img_size, frameskip=args.frameskip)
+    encoder = LeWMEncoderAdapter(
+        img_size=args.img_size,
+        frameskip=args.frameskip,
+        model_family=args.model_family,
+    )
     config = FastEncodingConfig(
         device=args.device,
         transition_batch_size=args.transition_batch_size,
@@ -351,7 +363,8 @@ def write_representation_manifest(
     reference_audit: Mapping[str, Any] | None,
 ) -> None:
     manifest = {
-        "schema_version": 1,
+        "schema_version": 2,
+        **backend_metadata(normalize_model_family(getattr(args, "model_family", None))),
         "dataset_name": args.dataset_name,
         "data_file": str(args.data_file.resolve()),
         "checkpoint": str(args.checkpoint.resolve()),

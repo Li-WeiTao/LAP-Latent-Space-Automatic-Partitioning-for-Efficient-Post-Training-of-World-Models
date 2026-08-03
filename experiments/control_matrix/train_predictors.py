@@ -20,6 +20,7 @@ from backends.lewm import (  # noqa: E402
     LeWMLatentCache,
     LeWMRegionalPredictorTrainer,
 )
+from experiments.control_matrix.backend_registry import backend_metadata, normalize_model_family  # noqa: E402
 from lap import LAP, LAPConfig  # noqa: E402
 from lap.interfaces import RegionalTrainingConfig  # noqa: E402
 from lap.partition import IndexedPartitioner, PartitionArtifact  # noqa: E402
@@ -32,6 +33,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--partition-dir", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, required=True)
     parser.add_argument("--dataset-name", required=True)
+    parser.add_argument("--model-family", default="lewm")
     parser.add_argument("--train-seed", type=int, default=42)
     parser.add_argument("--epochs", type=int, default=50)
     parser.add_argument("--batch-size", type=int, default=128)
@@ -64,11 +66,10 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def load_model(path: str | Path) -> torch.nn.Module:
-    try:
-        return torch.load(path, map_location="cpu", weights_only=False)
-    except TypeError:
-        return torch.load(path, map_location="cpu")
+def load_model(path: str | Path, *, model_family: str = "lewm") -> torch.nn.Module:
+    from backends.lewm.checkpoint_compat import load_jepa_object_checkpoint
+
+    return load_jepa_object_checkpoint(path, model_family=model_family, map_location="cpu")
 
 
 def main() -> None:
@@ -97,8 +98,13 @@ def main() -> None:
             "num_preds": args.num_preds,
         },
     )
+    family = normalize_model_family(args.model_family)
+
+    def _load_pretrained(path: str | Path) -> torch.nn.Module:
+        return load_model(path, model_family=family)
+
     method = LAP(
-        backend_factory=LeWMBackendFactory(load_model),
+        backend_factory=LeWMBackendFactory(_load_pretrained),
         partitioner=IndexedPartitioner(
             artifact, assignment_ids, assignment_labels
         ),
@@ -118,6 +124,7 @@ def main() -> None:
     )
     manifest.update(
         {
+            **backend_metadata(family),
             "dataset": args.dataset_name,
             "training_role": args.training_role,
             "partition_source": str(partition_run),

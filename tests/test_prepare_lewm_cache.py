@@ -89,6 +89,7 @@ class PrepareLeWMCacheTest(unittest.TestCase):
             checkpoint.write_bytes(b"ckpt")
             args = mock.Mock(
                 dataset_name="pusht",
+                model_family="lewm",
                 data_file=data_file,
                 checkpoint=checkpoint,
                 history_size=3,

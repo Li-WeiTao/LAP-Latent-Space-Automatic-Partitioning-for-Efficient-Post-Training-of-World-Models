@@ -522,11 +522,13 @@ def build_latent_cluster_switch_model(
     spherical: bool,
     zscore: dict | None = None,
     routing_mode: str = "mpc",
+    model_family: str = "lewm",
 ) -> LatentClusterSwitchJEPA:
-    base = load_object_checkpoint(base_ckpt, device)
+    base = load_object_checkpoint(base_ckpt, device, model_family=model_family)
     validate_jepa_components(base, source=base_ckpt)
     cluster_models = {
-        name: load_object_checkpoint(path, device) for name, path in cluster_ckpts.items()
+        name: load_object_checkpoint(path, device, model_family=model_family)
+        for name, path in cluster_ckpts.items()
     }
     for name, model in cluster_models.items():
         validate_jepa_components(model, source=cluster_ckpts[name])
@@ -797,11 +799,14 @@ def get_episodes_length(dataset, episodes):
     return np.array(lengths)
 
 
-def load_object_checkpoint(path: Path, device: torch.device) -> torch.nn.Module:
-    try:
-        model = torch.load(path, map_location=device, weights_only=False)
-    except TypeError:
-        model = torch.load(path, map_location=device)
+def load_object_checkpoint(
+    path: Path, device: torch.device, *, model_family: str = "lewm"
+) -> torch.nn.Module:
+    from backends.lewm.checkpoint_compat import load_jepa_object_checkpoint
+
+    model = load_jepa_object_checkpoint(
+        path, model_family=model_family, map_location=device
+    )
     model = model.to(device)
     model.eval()
     model.requires_grad_(False)
@@ -838,11 +843,14 @@ def build_region_switch_model(
     proprio_processor,
     device: torch.device,
     region_selector,
+    *,
+    model_family: str = "lewm",
 ) -> RegionSwitchJEPA:
-    base = load_object_checkpoint(base_ckpt, device)
+    base = load_object_checkpoint(base_ckpt, device, model_family=model_family)
     validate_jepa_components(base, source=base_ckpt)
     region_models = {
-        name: load_object_checkpoint(path, device) for name, path in region_ckpts.items()
+        name: load_object_checkpoint(path, device, model_family=model_family)
+        for name, path in region_ckpts.items()
     }
     for name, model in region_models.items():
         validate_jepa_components(model, source=region_ckpts[name])
@@ -905,11 +913,14 @@ def resolve_model(
     zscore_params_npz: Path | None = None,
     lap_run_dir: Path | None = None,
     latent_routing: str = "mpc",
+    model_family: str = "lewm",
 ) -> tuple[torch.nn.Module, dict]:
     meta: dict = {"mode": mode}
     if mode == "baseline":
         meta["checkpoint"] = str(checkpoint)
-        return load_object_checkpoint(checkpoint, device), meta
+        return load_object_checkpoint(
+            checkpoint, device, model_family=model_family
+        ), meta
 
     if mode == "lap":
         if lap_run_dir is None:
@@ -947,6 +958,7 @@ def resolve_model(
                 "eps": 1e-12,
             },
             routing_mode=latent_routing,
+            model_family=model_family,
         )
         meta.update(
             {
@@ -1029,6 +1041,7 @@ def resolve_model(
                 spherical=spherical,
                 zscore=artifact.get("zscore"),
                 routing_mode=latent_routing,
+                model_family=model_family,
             )
         meta.update(
             {
@@ -1103,7 +1116,12 @@ def resolve_model(
         }
     )
     return build_region_switch_model(
-        checkpoint, region_ckpts, proprio_processor, device, selector
+        checkpoint,
+        region_ckpts,
+        proprio_processor,
+        device,
+        selector,
+        model_family=model_family,
     ), meta
 
 
@@ -1121,6 +1139,7 @@ def run_eval(
     zscore_params_npz: Path | None = None,
     lap_run_dir: Path | None = None,
     latent_routing: str = "mpc",
+    model_family: str = "lewm",
 ) -> dict:
     assert (
         cfg.plan_config.horizon * cfg.plan_config.action_block <= cfg.eval.eval_budget
@@ -1165,6 +1184,7 @@ def run_eval(
         zscore_params_npz=zscore_params_npz,
         lap_run_dir=lap_run_dir,
         latent_routing=latent_routing,
+        model_family=model_family,
     )
     plan_config = swm.PlanConfig(**cfg.plan_config)
     solver = hydra.utils.instantiate(cfg.solver, model=model)
@@ -1399,6 +1419,11 @@ def parse_args() -> argparse.Namespace:
             "or independently at every imagined rollout step from the predicted latent"
         ),
     )
+    parser.add_argument(
+        "--model-family",
+        default="lewm",
+        help="JEPA checkpoint family for offline object loading (lewm or subjepa).",
+    )
     return parser.parse_args()
 
 
@@ -1493,6 +1518,7 @@ def main() -> None:
         zscore_params_npz=args.zscore_params,
         lap_run_dir=args.lap_run_dir,
         latent_routing=args.latent_routing,
+        model_family=args.model_family,
     )
 
 

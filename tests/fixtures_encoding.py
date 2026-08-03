@@ -93,3 +93,21 @@ def make_dataset(**config: Any) -> FakeEncodingDataset:
 
 def make_encoder(**config: Any) -> FakeEncoderAdapter:
     return FakeEncoderAdapter(**config)
+
+
+class BatchShapeSensitiveEncoder(FakeEncoderAdapter):
+    """Test double whose outputs depend on the encoder batch size."""
+
+    def encode_frames(self, model, frames, device) -> np.ndarray:
+        batch_size = int(frames.shape[0])
+        frame_value = frames.detach().cpu().numpy()[:, 0].astype(np.float32)
+        return np.column_stack(
+            (
+                frame_value * self.scale,
+                np.full(len(frame_value), batch_size, dtype=np.float32),
+            )
+        ).astype(np.float32, copy=False)
+
+
+def make_batch_shape_sensitive_encoder(**config: Any) -> BatchShapeSensitiveEncoder:
+    return BatchShapeSensitiveEncoder(**config)
