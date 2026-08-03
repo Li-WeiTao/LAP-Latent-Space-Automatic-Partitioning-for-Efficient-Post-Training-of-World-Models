@@ -1,0 +1,208 @@
+{
+  "status": "PASSED",
+  "schema_version": 1,
+  "model_family": "subjepa",
+  "implementation_backend": "jepa_object",
+  "checkpoint": {
+    "path": "/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt",
+    "size_bytes": 72351378,
+    "sha256": "06d743c6fb46914dafed0aabab4e9e2eed8d53efbf9cb4a4a3350244afbb2652",
+    "python_class": "backends.lewm.vendor.jepa.JEPA",
+    "module_import_path": "backends.lewm.vendor.jepa"
+  },
+  "dataset": {
+    "path": "/data/sicong/weitao/datasets/lewm/tworoom.h5",
+    "sha256": "129a36aa93ea0de488d2bcc876e396de9e3907bf66c6aae6394e542ef6a6d623"
+  },
+  "device": "cuda",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "train_mode": false,
+  "named_children": [
+    "encoder",
+    "predictor",
+    "action_encoder",
+    "projector",
+    "pred_proj"
+  ],
+  "named_modules_count": 365,
+  "named_parameters_count": 297,
+  "components": {
+    "encoder": {
+      "class": "backends.lewm.vendor.transformers_vit_legacy.ViTModel",
+      "num_parameters": 5501376,
+      "trainable_parameters": 0
+    },
+    "projector": {
+      "class": "backends.lewm.vendor.module.MLP",
+      "num_parameters": 792768,
+      "trainable_parameters": 0
+    },
+    "action_encoder": {
+      "class": "backends.lewm.vendor.module.Embedder",
+      "num_parameters": 156206,
+      "trainable_parameters": 0
+    },
+    "predictor": {
+      "class": "backends.lewm.vendor.module.ARPredictor",
+      "num_parameters": 10791360,
+      "trainable_parameters": 0
+    },
+    "pred_proj": {
+      "class": "backends.lewm.vendor.module.MLP",
+      "num_parameters": 792768,
+      "trainable_parameters": 0
+    }
+  },
+  "action_encoder_input_dim": 10,
+  "suggested_trainable_allowlist": [
+    "predictor",
+    "pred_proj"
+  ],
+  "official_prediction_path_parameters": [
+    "predictor.pos_embedding",
+    "predictor.transformer.norm.weight",
+    "predictor.transformer.norm.bias",
+    "predictor.transformer.layers.0.attn.norm.weight",
+    "predictor.transformer.layers.0.attn.norm.bias",
+    "predictor.transformer.layers.0.attn.to_qkv.weight",
+    "predictor.transformer.layers.0.attn.to_out.0.weight",
+    "predictor.transformer.layers.0.attn.to_out.0.bias",
+    "predictor.transformer.layers.0.mlp.net.0.weight",
+    "predictor.transformer.layers.0.mlp.net.0.bias",
+    "predictor.transformer.layers.0.mlp.net.1.weight",
+    "predictor.transformer.layers.0.mlp.net.1.bias",
+    "predictor.transformer.layers.0.mlp.net.4.weight",
+    "predictor.transformer.layers.0.mlp.net.4.bias",
+    "predictor.transformer.layers.0.adaLN_modulation.1.weight",
+    "predictor.transformer.layers.0.adaLN_modulation.1.bias",
+    "predictor.transformer.layers.1.attn.norm.weight",
+    "predictor.transformer.layers.1.attn.norm.bias",
+    "predictor.transformer.layers.1.attn.to_qkv.weight",
+    "predictor.transformer.layers.1.attn.to_out.0.weight",
+    "predictor.transformer.layers.1.attn.to_out.0.bias",
+    "predictor.transformer.layers.1.mlp.net.0.weight",
+    "predictor.transformer.layers.1.mlp.net.0.bias",
+    "predictor.transformer.layers.1.mlp.net.1.weight",
+    "predictor.transformer.layers.1.mlp.net.1.bias",
+    "predictor.transformer.layers.1.mlp.net.4.weight",
+    "predictor.transformer.layers.1.mlp.net.4.bias",
+    "predictor.transformer.layers.1.adaLN_modulation.1.weight",
+    "predictor.transformer.layers.1.adaLN_modulation.1.bias",
+    "predictor.transformer.layers.2.attn.norm.weight",
+    "predictor.transformer.layers.2.attn.norm.bias",
+    "predictor.transformer.layers.2.attn.to_qkv.weight",
+    "predictor.transformer.layers.2.attn.to_out.0.weight",
+    "predictor.transformer.layers.2.attn.to_out.0.bias",
+    "predictor.transformer.layers.2.mlp.net.0.weight",
+    "predictor.transformer.layers.2.mlp.net.0.bias",
+    "predictor.transformer.layers.2.mlp.net.1.weight",
+    "predictor.transformer.layers.2.mlp.net.1.bias",
+    "predictor.transformer.layers.2.mlp.net.4.weight",
+    "predictor.transformer.layers.2.mlp.net.4.bias",
+    "predictor.transformer.layers.2.adaLN_modulation.1.weight",
+    "predictor.transformer.layers.2.adaLN_modulation.1.bias",
+    "predictor.transformer.layers.3.attn.norm.weight",
+    "predictor.transformer.layers.3.attn.norm.bias",
+    "predictor.transformer.layers.3.attn.to_qkv.weight",
+    "predictor.transformer.layers.3.attn.to_out.0.weight",
+    "predictor.transformer.layers.3.attn.to_out.0.bias",
+    "predictor.transformer.layers.3.mlp.net.0.weight",
+    "predictor.transformer.layers.3.mlp.net.0.bias",
+    "predictor.transformer.layers.3.mlp.net.1.weight",
+    "predictor.transformer.layers.3.mlp.net.1.bias",
+    "predictor.transformer.layers.3.mlp.net.4.weight",
+    "predictor.transformer.layers.3.mlp.net.4.bias",
+    "predictor.transformer.layers.3.adaLN_modulation.1.weight",
+    "predictor.transformer.layers.3.adaLN_modulation.1.bias",
+    "predictor.transformer.layers.4.attn.norm.weight",
+    "predictor.transformer.layers.4.attn.norm.bias",
+    "predictor.transformer.layers.4.attn.to_qkv.weight",
+    "predictor.transformer.layers.4.attn.to_out.0.weight",
+    "predictor.transformer.layers.4.attn.to_out.0.bias",
+    "predictor.transformer.layers.4.mlp.net.0.weight",
+    "predictor.transformer.layers.4.mlp.net.0.bias",
+    "predictor.transformer.layers.4.mlp.net.1.weight",
+    "predictor.transformer.layers.4.mlp.net.1.bias",
+    "predictor.transformer.layers.4.mlp.net.4.weight",
+    "predictor.transformer.layers.4.mlp.net.4.bias",
+    "predictor.transformer.layers.4.adaLN_modulation.1.weight",
+    "predictor.transformer.layers.4.adaLN_modulation.1.bias",
+    "predictor.transformer.layers.5.attn.norm.weight",
+    "predictor.transformer.layers.5.attn.norm.bias",
+    "predictor.transformer.layers.5.attn.to_qkv.weight",
+    "predictor.transformer.layers.5.attn.to_out.0.weight",
+    "predictor.transformer.layers.5.attn.to_out.0.bias",
+    "predictor.transformer.layers.5.mlp.net.0.weight",
+    "predictor.transformer.layers.5.mlp.net.0.bias",
+    "predictor.transformer.layers.5.mlp.net.1.weight",
+    "predictor.transformer.layers.5.mlp.net.1.bias",
+    "predictor.transformer.layers.5.mlp.net.4.weight",
+    "predictor.transformer.layers.5.mlp.net.4.bias",
+    "predictor.transformer.layers.5.adaLN_modulation.1.weight",
+    "predictor.transformer.layers.5.adaLN_modulation.1.bias",
+    "pred_proj.net.0.weight",
+    "pred_proj.net.0.bias",
+    "pred_proj.net.1.weight",
+    "pred_proj.net.1.bias",
+    "pred_proj.net.3.weight",
+    "pred_proj.net.3.bias"
+  ],
+  "inferred_frame_skip": 5,
+  "encode": {
+    "emb": {
+      "shape": [
+        1,
+        4,
+        192
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "has_nan": false,
+      "has_inf": false,
+      "all_finite": true
+    },
+    "act_emb": {
+      "shape": [
+        1,
+        4,
+        192
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "has_nan": false,
+      "has_inf": false,
+      "all_finite": true
+    }
+  },
+  "predictor": {
+    "output": {
+      "shape": [
+        1,
+        3,
+        192
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "has_nan": false,
+      "has_inf": false,
+      "all_finite": true
+    }
+  },
+  "planning": {
+    "get_cost": {
+      "shape": [
+        1,
+        2
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0",
+      "has_nan": false,
+      "has_inf": false,
+      "all_finite": true
+    },
+    "success": true
+  },
+  "trainable_parameter_count_probe": 0
+}

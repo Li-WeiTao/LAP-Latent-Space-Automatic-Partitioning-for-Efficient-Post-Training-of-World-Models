@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "dataset_name": "pusht",
+  "data_file": "/data/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
+  "starts_file": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/preparation/train_global_reference_starts.npy",
+  "starts_sha256": "ec2eecdae76245e3f889f3bd10b44c2270ae443b980f4bc47fb741d2f602a78e",
+  "num_starts": 3686,
+  "action_mean_shape": [
+    1,
+    10
+  ],
+  "action_std_shape": [
+    1,
+    10
+  ],
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "action_steps": 3,
+  "normalization_samples": 3686,
+  "sha256": {
+    "action_norm_stats": "d58cfa8032403d7d58ab6dd1cc1f12839ec53b876ca0ae3b1133b6fbc6acf1b3",
+    "starts": "ec2eecdae76245e3f889f3bd10b44c2270ae443b980f4bc47fb741d2f602a78e",
+    "data_file": "b6ebd9ac94bbe9e383f6e7a9cd92d74e9aa665ea57b758ed3717b0ee7df8d4fb",
+    "checkpoint": "f4b4b9bdf4cf6254a98f1ae73c182f884f449eb52436e5900157a5f463313b3a"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "phase": "frozen-audit",
+  "passed": true,
+  "trainable_parameter_count": 11584128,
+  "checked_training_checkpoints": [
+    "experiments/pusht/subjepa/training/global/train0/P_train_cluster0_object.ckpt",
+    "experiments/pusht/subjepa/training/spectral/partition0_train0/P_train_cluster0_object.ckpt",
+    "experiments/pusht/subjepa/training/spectral/partition0_train0/P_train_cluster1_object.ckpt"
+  ],
+  "violations": [],
+  "optimizer_has_frozen": false
+}

@@ -1,0 +1,27 @@
+{
+  "mode": "baseline",
+  "seed": 0,
+  "num_eval": 5,
+  "goal_offset_steps": 25,
+  "eval_budget": 50,
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
+  "metrics": {
+    "success_rate": 80.0,
+    "episode_successes": [
+      true,
+      true,
+      true,
+      true,
+      false
+    ],
+    "seeds": null
+  },
+  "eval_start_indices": [
+    630445,
+    719545,
+    1201274,
+    1489168,
+    1987957
+  ],
+  "evaluation_time_sec": 6.016838550567627
+}

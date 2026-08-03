@@ -1,0 +1,27 @@
+{
+  "mode": "baseline",
+  "seed": 0,
+  "num_eval": 5,
+  "goal_offset_steps": 25,
+  "eval_budget": 50,
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt",
+  "metrics": {
+    "success_rate": 100.0,
+    "episode_successes": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "seeds": null
+  },
+  "eval_start_indices": [
+    248524,
+    283544,
+    470873,
+    586602,
+    783627
+  ],
+  "evaluation_time_sec": 4.658844947814941
+}

@@ -1,0 +1,794 @@
+{
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt",
+  "is_zip_archive": true,
+  "pickle_member": "lewm_epoch_10_object/data.pkl",
+  "unique_globals": 39,
+  "globals": [
+    {
+      "module": "__builtin__",
+      "name": "set",
+      "opcode": "GLOBAL",
+      "position": 112,
+      "count": 1
+    },
+    {
+      "module": "collections",
+      "name": "OrderedDict",
+      "opcode": "GLOBAL",
+      "position": 166,
+      "count": 1
+    },
+    {
+      "module": "jepa",
+      "name": "JEPA",
+      "opcode": "GLOBAL",
+      "position": 2,
+      "count": 1
+    },
+    {
+      "module": "module",
+      "name": "ARPredictor",
+      "opcode": "GLOBAL",
+      "position": 72093,
+      "count": 1
+    },
+    {
+      "module": "module",
+      "name": "Attention",
+      "opcode": "GLOBAL",
+      "position": 73810,
+      "count": 1
+    },
+    {
+      "module": "module",
+      "name": "ConditionalBlock",
+      "opcode": "GLOBAL",
+      "position": 73578,
+      "count": 1
+    },
+    {
+      "module": "module",
+      "name": "Embedder",
+      "opcode": "GLOBAL",
+      "position": 111151,
+      "count": 1
+    },
+    {
+      "module": "module",
+      "name": "FeedForward",
+      "opcode": "GLOBAL",
+      "position": 76084,
+      "count": 1
+    },
+    {
+      "module": "module",
+      "name": "MLP",
+      "opcode": "GLOBAL",
+      "position": 113271,
+      "count": 1
+    },
+    {
+      "module": "module",
+      "name": "Transformer",
+      "opcode": "GLOBAL",
+      "position": 72678,
+      "count": 1
+    },
+    {
+      "module": "torch",
+      "name": "FloatStorage",
+      "opcode": "GLOBAL",
+      "position": 982,
+      "count": 1
+    },
+    {
+      "module": "torch",
+      "name": "LongStorage",
+      "opcode": "GLOBAL",
+      "position": 114703,
+      "count": 1
+    },
+    {
+      "module": "torch._C._nn",
+      "name": "gelu",
+      "opcode": "GLOBAL",
+      "position": 8229,
+      "count": 1
+    },
+    {
+      "module": "torch._utils",
+      "name": "_rebuild_parameter",
+      "opcode": "GLOBAL",
+      "position": 896,
+      "count": 1
+    },
+    {
+      "module": "torch._utils",
+      "name": "_rebuild_tensor_v2",
+      "opcode": "GLOBAL",
+      "position": 931,
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.activation",
+      "name": "GELU",
+      "opcode": "GLOBAL",
+      "position": 77433,
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.activation",
+      "name": "SiLU",
+      "opcode": "GLOBAL",
+      "position": 79319,
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.activation",
+      "name": "Softmax",
+      "opcode": "GLOBAL",
+      "position": 74495,
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.batchnorm",
+      "name": "BatchNorm1d",
+      "opcode": "GLOBAL",
+      "position": 114140,
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.container",
+      "name": "ModuleList",
+      "opcode": "GLOBAL",
+      "position": 3728,
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.container",
+      "name": "Sequential",
+      "opcode": "GLOBAL",
+      "position": 75110,
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.conv",
+      "name": "Conv1d",
+      "opcode": "GLOBAL",
+      "position": 111382,
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.conv",
+      "name": "Conv2d",
+      "opcode": "GLOBAL",
+      "position": 1534,
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.dropout",
+      "name": "Dropout",
+      "opcode": "GLOBAL",
+      "position": 2290,
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.linear",
+      "name": "Identity",
+      "opcode": "GLOBAL",
+      "position": 110465,
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.linear",
+      "name": "Linear",
+      "opcode": "GLOBAL",
+      "position": 4742,
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.normalization",
+      "name": "LayerNorm",
+      "opcode": "GLOBAL",
+      "position": 9202,
+      "count": 1
+    },
+    {
+      "module": "transformers.activations",
+      "name": "GELUActivation",
+      "opcode": "GLOBAL",
+      "position": 7983,
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.configuration_vit",
+      "name": "ViTConfig",
+      "opcode": "GLOBAL",
+      "position": 2529,
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTAttention",
+      "opcode": "GLOBAL",
+      "position": 4230,
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTEmbeddings",
+      "opcode": "GLOBAL",
+      "position": 809,
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTEncoder",
+      "opcode": "GLOBAL",
+      "position": 3472,
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTIntermediate",
+      "opcode": "GLOBAL",
+      "position": 7256,
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTLayer",
+      "opcode": "GLOBAL",
+      "position": 3971,
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTModel",
+      "opcode": "GLOBAL",
+      "position": 612,
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTOutput",
+      "opcode": "GLOBAL",
+      "position": 8269,
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTPatchEmbeddings",
+      "opcode": "GLOBAL",
+      "position": 1328,
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTSelfAttention",
+      "opcode": "GLOBAL",
+      "position": 4479,
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTSelfOutput",
+      "opcode": "GLOBAL",
+      "position": 6312,
+      "count": 1
+    }
+  ],
+  "grouped_globals": [
+    {
+      "module": "__builtin__",
+      "name": "set",
+      "count": 1
+    },
+    {
+      "module": "collections",
+      "name": "OrderedDict",
+      "count": 1
+    },
+    {
+      "module": "jepa",
+      "name": "JEPA",
+      "count": 1
+    },
+    {
+      "module": "module",
+      "name": "ARPredictor",
+      "count": 1
+    },
+    {
+      "module": "module",
+      "name": "Attention",
+      "count": 1
+    },
+    {
+      "module": "module",
+      "name": "ConditionalBlock",
+      "count": 1
+    },
+    {
+      "module": "module",
+      "name": "Embedder",
+      "count": 1
+    },
+    {
+      "module": "module",
+      "name": "FeedForward",
+      "count": 1
+    },
+    {
+      "module": "module",
+      "name": "MLP",
+      "count": 1
+    },
+    {
+      "module": "module",
+      "name": "Transformer",
+      "count": 1
+    },
+    {
+      "module": "torch",
+      "name": "FloatStorage",
+      "count": 1
+    },
+    {
+      "module": "torch",
+      "name": "LongStorage",
+      "count": 1
+    },
+    {
+      "module": "torch._C._nn",
+      "name": "gelu",
+      "count": 1
+    },
+    {
+      "module": "torch._utils",
+      "name": "_rebuild_parameter",
+      "count": 1
+    },
+    {
+      "module": "torch._utils",
+      "name": "_rebuild_tensor_v2",
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.activation",
+      "name": "GELU",
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.activation",
+      "name": "SiLU",
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.activation",
+      "name": "Softmax",
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.batchnorm",
+      "name": "BatchNorm1d",
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.container",
+      "name": "ModuleList",
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.container",
+      "name": "Sequential",
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.conv",
+      "name": "Conv1d",
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.conv",
+      "name": "Conv2d",
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.dropout",
+      "name": "Dropout",
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.linear",
+      "name": "Identity",
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.linear",
+      "name": "Linear",
+      "count": 1
+    },
+    {
+      "module": "torch.nn.modules.normalization",
+      "name": "LayerNorm",
+      "count": 1
+    },
+    {
+      "module": "transformers.activations",
+      "name": "GELUActivation",
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.configuration_vit",
+      "name": "ViTConfig",
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTAttention",
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTEmbeddings",
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTEncoder",
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTIntermediate",
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTLayer",
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTModel",
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTOutput",
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTPatchEmbeddings",
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTSelfAttention",
+      "count": 1
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTSelfOutput",
+      "count": 1
+    }
+  ],
+  "importable_globals": [
+    {
+      "module": "collections",
+      "name": "OrderedDict",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    },
+    {
+      "module": "torch",
+      "name": "FloatStorage",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "torch.storage._LegacyStorageMeta",
+      "import_error": null
+    },
+    {
+      "module": "torch",
+      "name": "LongStorage",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "torch.storage._LegacyStorageMeta",
+      "import_error": null
+    },
+    {
+      "module": "torch._C._nn",
+      "name": "gelu",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.builtin_function_or_method",
+      "import_error": null
+    },
+    {
+      "module": "torch._utils",
+      "name": "_rebuild_parameter",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.function",
+      "import_error": null
+    },
+    {
+      "module": "torch._utils",
+      "name": "_rebuild_tensor_v2",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.function",
+      "import_error": null
+    },
+    {
+      "module": "torch.nn.modules.activation",
+      "name": "GELU",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    },
+    {
+      "module": "torch.nn.modules.activation",
+      "name": "SiLU",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    },
+    {
+      "module": "torch.nn.modules.activation",
+      "name": "Softmax",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    },
+    {
+      "module": "torch.nn.modules.batchnorm",
+      "name": "BatchNorm1d",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    },
+    {
+      "module": "torch.nn.modules.container",
+      "name": "ModuleList",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    },
+    {
+      "module": "torch.nn.modules.container",
+      "name": "Sequential",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    },
+    {
+      "module": "torch.nn.modules.conv",
+      "name": "Conv1d",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    },
+    {
+      "module": "torch.nn.modules.conv",
+      "name": "Conv2d",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    },
+    {
+      "module": "torch.nn.modules.dropout",
+      "name": "Dropout",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    },
+    {
+      "module": "torch.nn.modules.linear",
+      "name": "Identity",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    },
+    {
+      "module": "torch.nn.modules.linear",
+      "name": "Linear",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    },
+    {
+      "module": "torch.nn.modules.normalization",
+      "name": "LayerNorm",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    },
+    {
+      "module": "transformers.activations",
+      "name": "GELUActivation",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    },
+    {
+      "module": "transformers.models.vit.configuration_vit",
+      "name": "ViTConfig",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTAttention",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTEmbeddings",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTLayer",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTModel",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTPatchEmbeddings",
+      "module_importable": true,
+      "attribute_exists": true,
+      "resolved_type": "builtins.type",
+      "import_error": null
+    }
+  ],
+  "missing_globals": [
+    {
+      "module": "__builtin__",
+      "name": "set",
+      "module_importable": false,
+      "attribute_exists": false,
+      "resolved_type": null,
+      "import_error": "ModuleNotFoundError(\"No module named '__builtin__'\")"
+    },
+    {
+      "module": "jepa",
+      "name": "JEPA",
+      "module_importable": false,
+      "attribute_exists": false,
+      "resolved_type": null,
+      "import_error": "ModuleNotFoundError(\"No module named 'jepa'\")"
+    },
+    {
+      "module": "module",
+      "name": "ARPredictor",
+      "module_importable": false,
+      "attribute_exists": false,
+      "resolved_type": null,
+      "import_error": "ModuleNotFoundError(\"No module named 'module'\")"
+    },
+    {
+      "module": "module",
+      "name": "Attention",
+      "module_importable": false,
+      "attribute_exists": false,
+      "resolved_type": null,
+      "import_error": "ModuleNotFoundError(\"No module named 'module'\")"
+    },
+    {
+      "module": "module",
+      "name": "ConditionalBlock",
+      "module_importable": false,
+      "attribute_exists": false,
+      "resolved_type": null,
+      "import_error": "ModuleNotFoundError(\"No module named 'module'\")"
+    },
+    {
+      "module": "module",
+      "name": "Embedder",
+      "module_importable": false,
+      "attribute_exists": false,
+      "resolved_type": null,
+      "import_error": "ModuleNotFoundError(\"No module named 'module'\")"
+    },
+    {
+      "module": "module",
+      "name": "FeedForward",
+      "module_importable": false,
+      "attribute_exists": false,
+      "resolved_type": null,
+      "import_error": "ModuleNotFoundError(\"No module named 'module'\")"
+    },
+    {
+      "module": "module",
+      "name": "MLP",
+      "module_importable": false,
+      "attribute_exists": false,
+      "resolved_type": null,
+      "import_error": "ModuleNotFoundError(\"No module named 'module'\")"
+    },
+    {
+      "module": "module",
+      "name": "Transformer",
+      "module_importable": false,
+      "attribute_exists": false,
+      "resolved_type": null,
+      "import_error": "ModuleNotFoundError(\"No module named 'module'\")"
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTEncoder",
+      "module_importable": true,
+      "attribute_exists": false,
+      "resolved_type": null,
+      "import_error": null
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTIntermediate",
+      "module_importable": true,
+      "attribute_exists": false,
+      "resolved_type": null,
+      "import_error": null
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTOutput",
+      "module_importable": true,
+      "attribute_exists": false,
+      "resolved_type": null,
+      "import_error": null
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTSelfAttention",
+      "module_importable": true,
+      "attribute_exists": false,
+      "resolved_type": null,
+      "import_error": null
+    },
+    {
+      "module": "transformers.models.vit.modeling_vit",
+      "name": "ViTSelfOutput",
+      "module_importable": true,
+      "attribute_exists": false,
+      "resolved_type": null,
+      "import_error": null
+    }
+  ]
+}

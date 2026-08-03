@@ -1,0 +1,42 @@
+{
+  "dataset": "pusht",
+  "train_seeds": [
+    0
+  ],
+  "partition_seeds": [
+    0
+  ],
+  "eval_seeds": [
+    0
+  ],
+  "primary_error_bar": "sample SD across fine-tuning seeds after averaging partition and evaluation seeds",
+  "rows": [
+    {
+      "method": "Official baseline",
+      "mean_percent": 80.0,
+      "sd_across_finetuning_seeds_percent": null,
+      "num_finetuning_seeds": 0,
+      "num_partition_seeds": 0,
+      "num_eval_seeds": 1,
+      "eval_seed_sd_percent": 0.0
+    },
+    {
+      "method": "Global-FT50",
+      "mean_percent": 80.0,
+      "sd_across_finetuning_seeds_percent": 0.0,
+      "num_finetuning_seeds": 1,
+      "num_partition_seeds": 0,
+      "num_eval_seeds": 1,
+      "eval_seed_sd_percent": 0.0
+    },
+    {
+      "method": "Spectral",
+      "mean_percent": 100.0,
+      "sd_across_finetuning_seeds_percent": 0.0,
+      "num_finetuning_seeds": 1,
+      "num_partition_seeds": 1,
+      "num_eval_seeds": 1,
+      "eval_seed_sd_percent": 0.0
+    }
+  ]
+}

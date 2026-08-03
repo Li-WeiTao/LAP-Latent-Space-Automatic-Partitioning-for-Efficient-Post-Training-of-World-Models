@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "dataset": "pusht",
+  "method": "global",
+  "selected_method": "global",
+  "partition_seed": 0,
+  "num_clusters": 1,
+  "cluster_counts": [
+    14713
+  ],
+  "cluster_fractions": [
+    1.0
+  ],
+  "cache_stats": {
+    "cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/preparation/embedding_cache.npz",
+    "num_transitions": 3686,
+    "num_expanded_latents": 14744,
+    "num_unique_timesteps": 14713,
+    "discarded_repeated_window_slots": 31,
+    "duplicate_policy": "stable_first_occurrence_per_timestep",
+    "latent_dim": 192,
+    "frameskip": 5
+  },
+  "latent_cache_sha256": "3276baa78353564f6baccbdea423137ee8472901841da6d1840d9b6353c4fc67",
+  "data_file": null,
+  "method_metadata": {
+    "algorithm": "global_single_region",
+    "num_clusters": 1,
+    "routing": "constant_region_0"
+  },
+  "elapsed_sec": 0.1569539150223136
+}

@@ -1,0 +1,6 @@
+{
+  "phase": "route-equivalence",
+  "passed": true,
+  "prediction_allclose": true,
+  "all_finite": true
+}

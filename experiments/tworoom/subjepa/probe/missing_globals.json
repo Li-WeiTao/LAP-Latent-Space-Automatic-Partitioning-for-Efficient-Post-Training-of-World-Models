@@ -1,0 +1,114 @@
+[
+  {
+    "module": "__builtin__",
+    "name": "set",
+    "module_importable": false,
+    "attribute_exists": false,
+    "resolved_type": null,
+    "import_error": "ModuleNotFoundError(\"No module named '__builtin__'\")"
+  },
+  {
+    "module": "jepa",
+    "name": "JEPA",
+    "module_importable": false,
+    "attribute_exists": false,
+    "resolved_type": null,
+    "import_error": "ModuleNotFoundError(\"No module named 'jepa'\")"
+  },
+  {
+    "module": "module",
+    "name": "ARPredictor",
+    "module_importable": false,
+    "attribute_exists": false,
+    "resolved_type": null,
+    "import_error": "ModuleNotFoundError(\"No module named 'module'\")"
+  },
+  {
+    "module": "module",
+    "name": "Attention",
+    "module_importable": false,
+    "attribute_exists": false,
+    "resolved_type": null,
+    "import_error": "ModuleNotFoundError(\"No module named 'module'\")"
+  },
+  {
+    "module": "module",
+    "name": "ConditionalBlock",
+    "module_importable": false,
+    "attribute_exists": false,
+    "resolved_type": null,
+    "import_error": "ModuleNotFoundError(\"No module named 'module'\")"
+  },
+  {
+    "module": "module",
+    "name": "Embedder",
+    "module_importable": false,
+    "attribute_exists": false,
+    "resolved_type": null,
+    "import_error": "ModuleNotFoundError(\"No module named 'module'\")"
+  },
+  {
+    "module": "module",
+    "name": "FeedForward",
+    "module_importable": false,
+    "attribute_exists": false,
+    "resolved_type": null,
+    "import_error": "ModuleNotFoundError(\"No module named 'module'\")"
+  },
+  {
+    "module": "module",
+    "name": "MLP",
+    "module_importable": false,
+    "attribute_exists": false,
+    "resolved_type": null,
+    "import_error": "ModuleNotFoundError(\"No module named 'module'\")"
+  },
+  {
+    "module": "module",
+    "name": "Transformer",
+    "module_importable": false,
+    "attribute_exists": false,
+    "resolved_type": null,
+    "import_error": "ModuleNotFoundError(\"No module named 'module'\")"
+  },
+  {
+    "module": "transformers.models.vit.modeling_vit",
+    "name": "ViTEncoder",
+    "module_importable": true,
+    "attribute_exists": false,
+    "resolved_type": null,
+    "import_error": null
+  },
+  {
+    "module": "transformers.models.vit.modeling_vit",
+    "name": "ViTIntermediate",
+    "module_importable": true,
+    "attribute_exists": false,
+    "resolved_type": null,
+    "import_error": null
+  },
+  {
+    "module": "transformers.models.vit.modeling_vit",
+    "name": "ViTOutput",
+    "module_importable": true,
+    "attribute_exists": false,
+    "resolved_type": null,
+    "import_error": null
+  },
+  {
+    "module": "transformers.models.vit.modeling_vit",
+    "name": "ViTSelfAttention",
+    "module_importable": true,
+    "attribute_exists": false,
+    "resolved_type": null,
+    "import_error": null
+  },
+  {
+    "module": "transformers.models.vit.modeling_vit",
+    "name": "ViTSelfOutput",
+    "module_importable": true,
+    "attribute_exists": false,
+    "resolved_type": null,
+    "import_error": null
+  }
+]

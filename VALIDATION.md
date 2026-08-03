@@ -19,6 +19,13 @@ Manifest: `experiments/tworoom/subjepa/manifests/verification_status.json`
 
 Formal method conclusions require full paired short/long evaluation; reduced smoke eval must not be interpreted as performance evidence.
 
+### PushT Sub-JEPA smoke (2026-08-03)
+
+**Status: `VERIFIED`**
+
+Cache SHA-256: `3276baa78353564f6baccbdea423137ee8472901841da6d1840d9b6353c4fc67`  
+Manifest: `experiments/pusht/subjepa/manifests/verification_status.json`
+
 ## Material Passport
 
 - ID: `lap-tworoom-migration-2026-07-30`

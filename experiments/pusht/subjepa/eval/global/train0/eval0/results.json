@@ -1,0 +1,27 @@
+{
+  "mode": "baseline",
+  "seed": 0,
+  "num_eval": 5,
+  "goal_offset_steps": 25,
+  "eval_budget": 50,
+  "checkpoint": "experiments/pusht/subjepa/training/global/train0/P_train_cluster0_object.ckpt",
+  "metrics": {
+    "success_rate": 80.0,
+    "episode_successes": [
+      true,
+      true,
+      true,
+      false,
+      true
+    ],
+    "seeds": null
+  },
+  "eval_start_indices": [
+    630445,
+    719545,
+    1201274,
+    1489168,
+    1987957
+  ],
+  "evaluation_time_sec": 5.917988061904907
+}

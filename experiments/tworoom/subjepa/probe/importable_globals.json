@@ -1,0 +1,202 @@
+[
+  {
+    "module": "collections",
+    "name": "OrderedDict",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  },
+  {
+    "module": "torch",
+    "name": "FloatStorage",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "torch.storage._LegacyStorageMeta",
+    "import_error": null
+  },
+  {
+    "module": "torch",
+    "name": "LongStorage",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "torch.storage._LegacyStorageMeta",
+    "import_error": null
+  },
+  {
+    "module": "torch._C._nn",
+    "name": "gelu",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.builtin_function_or_method",
+    "import_error": null
+  },
+  {
+    "module": "torch._utils",
+    "name": "_rebuild_parameter",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.function",
+    "import_error": null
+  },
+  {
+    "module": "torch._utils",
+    "name": "_rebuild_tensor_v2",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.function",
+    "import_error": null
+  },
+  {
+    "module": "torch.nn.modules.activation",
+    "name": "GELU",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  },
+  {
+    "module": "torch.nn.modules.activation",
+    "name": "SiLU",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  },
+  {
+    "module": "torch.nn.modules.activation",
+    "name": "Softmax",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  },
+  {
+    "module": "torch.nn.modules.batchnorm",
+    "name": "BatchNorm1d",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  },
+  {
+    "module": "torch.nn.modules.container",
+    "name": "ModuleList",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  },
+  {
+    "module": "torch.nn.modules.container",
+    "name": "Sequential",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  },
+  {
+    "module": "torch.nn.modules.conv",
+    "name": "Conv1d",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  },
+  {
+    "module": "torch.nn.modules.conv",
+    "name": "Conv2d",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  },
+  {
+    "module": "torch.nn.modules.dropout",
+    "name": "Dropout",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  },
+  {
+    "module": "torch.nn.modules.linear",
+    "name": "Identity",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  },
+  {
+    "module": "torch.nn.modules.linear",
+    "name": "Linear",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  },
+  {
+    "module": "torch.nn.modules.normalization",
+    "name": "LayerNorm",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  },
+  {
+    "module": "transformers.activations",
+    "name": "GELUActivation",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  },
+  {
+    "module": "transformers.models.vit.configuration_vit",
+    "name": "ViTConfig",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  },
+  {
+    "module": "transformers.models.vit.modeling_vit",
+    "name": "ViTAttention",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  },
+  {
+    "module": "transformers.models.vit.modeling_vit",
+    "name": "ViTEmbeddings",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  },
+  {
+    "module": "transformers.models.vit.modeling_vit",
+    "name": "ViTLayer",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  },
+  {
+    "module": "transformers.models.vit.modeling_vit",
+    "name": "ViTModel",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  },
+  {
+    "module": "transformers.models.vit.modeling_vit",
+    "name": "ViTPatchEmbeddings",
+    "module_importable": true,
+    "attribute_exists": true,
+    "resolved_type": "builtins.type",
+    "import_error": null
+  }
+]

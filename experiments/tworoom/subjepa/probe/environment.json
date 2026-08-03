@@ -1,0 +1,7 @@
+{
+  "executable": "/data/sicong/weitao/le-wm/.venv/bin/python",
+  "python": "3.10.9 (main, Mar  1 2023, 18:23:06) [GCC 11.2.0]",
+  "torch": "2.12.1+cu130",
+  "transformers": "5.12.1",
+  "einops": "0.8.2"
+}

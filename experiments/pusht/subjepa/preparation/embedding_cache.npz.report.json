@@ -1,0 +1,122 @@
+{
+  "arrays": {
+    "act_emb": {
+      "dtype": "float32",
+      "sha256": "e596685dc8832d9270374ea72233effab35a5ee9f38590ea9b147397e719529c",
+      "shape": [
+        3686,
+        4,
+        192
+      ]
+    },
+    "emb": {
+      "dtype": "float32",
+      "sha256": "65e5bf33fa047199a79bf6181d94a25a09902302d12ca2ed191698a223710c12",
+      "shape": [
+        3686,
+        4,
+        192
+      ]
+    },
+    "region_starts": {
+      "dtype": "int64",
+      "sha256": "03e7743ae389bf0cba6f990772a7efb4ea3dd2ccd37f92a466e3124d8470dd81",
+      "shape": [
+        3686
+      ]
+    }
+  },
+  "auxiliary": {
+    "frameskip": 5,
+    "normalization_samples": 3686
+  },
+  "config": {
+    "chunk_aware": true,
+    "cpu_threads": 4,
+    "device": "cuda",
+    "exact_batch_shapes": true,
+    "frame_batch_size": 512,
+    "log_every": 50,
+    "max_samples": 0,
+    "num_workers": 4,
+    "prefetch_factor": 2,
+    "start_offset": 0,
+    "transition_batch_size": 128
+  },
+  "counts": {
+    "eliminated_duplicate_frames": 31,
+    "encoded_frame_keys": 14713,
+    "frame_slots": 14744,
+    "padded_encoder_slots": 14744,
+    "unique_frames": 14713
+  },
+  "dataset": {
+    "action_key": "action",
+    "adapter": "backends.lewm.encoding:LeWMHDF5TransitionDataset",
+    "data_file": "/data/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+    "frameskip": 5,
+    "history_size": 3,
+    "num_preds": 1,
+    "pixel_key": "pixels"
+  },
+  "efficiency": {
+    "actual_kernel_frame_reduction_fraction": 0.0,
+    "actual_kernel_frame_speedup_after_padding": 1.0,
+    "encoded_key_speedup_before_padding": 1.0021069802215727,
+    "ideal_unique_frame_speedup": 1.0021069802215727
+  },
+  "encoder": {
+    "adapter": "backends.lewm.encoding:LeWMEncoderAdapter",
+    "img_size": 224,
+    "requested_frameskip": 5
+  },
+  "environment": {
+    "cuda_runtime": "13.0",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 4090",
+    "numpy": "2.2.6",
+    "python": "3.10.9 (main, Mar  1 2023, 18:23:06) [GCC 11.2.0]",
+    "torch": "2.12.1+cu130"
+  },
+  "frame_groups": {
+    "408": {
+      "encoded_keys": 407,
+      "padded_encoder_slots": 408,
+      "timing_sec": {
+        "loader_wait_sec": 1.4042312139645219,
+        "preprocess_encode_d2h_sec": 0.828985764994286,
+        "total_sec": 2.2951981759397313
+      }
+    },
+    "512": {
+      "encoded_keys": 14306,
+      "padded_encoder_slots": 14336,
+      "timing_sec": {
+        "loader_wait_sec": 1.9110336580779403,
+        "preprocess_encode_d2h_sec": 21.26028274919372,
+        "total_sec": 23.223053419962525
+      }
+    }
+  },
+  "method": "unique_frame_inverse_reconstruction",
+  "pretrained_model": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
+  "schema_version": 2,
+  "selection": {
+    "samples": 3686,
+    "sequence_length": 4,
+    "source_count": 3686,
+    "source_offset": 0,
+    "starts_source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/preparation/.encode_starts.npy"
+  },
+  "timing_sec": {
+    "auxiliary_encode": 0.056635251035913825,
+    "inverse_reconstruct": 0.0031622579554095864,
+    "model_load_and_prepare": 1.93018662603572,
+    "npz_save": 1.2698669700184837,
+    "reference_validation": 0.0,
+    "total": 28.857393087935634,
+    "unique_frame_encode": 25.5909480759874,
+    "unique_index": 0.006513708969578147
+  },
+  "validation": null
+}

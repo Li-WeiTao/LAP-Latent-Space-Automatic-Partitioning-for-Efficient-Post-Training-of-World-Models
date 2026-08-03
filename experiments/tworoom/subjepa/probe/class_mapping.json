@@ -1,0 +1,164 @@
+{
+  "transformers.models.vit.modeling_vit.ViTEmbeddings": {
+    "mapped_to": "backends.lewm.vendor.transformers_vit_legacy.ViTEmbeddings",
+    "source_file": "backends/lewm/vendor/transformers_vit_legacy.py",
+    "source_commit": "transformers==4.24.0 modeling_vit.py",
+    "constructor_match": true,
+    "forward_match": true,
+    "state_match": true,
+    "justification": "Sub-JEPA object checkpoints were serialized with Transformers 4.x ViT internals; Transformers 5.x removed ViTEncoder/ViTSelfAttention."
+  },
+  "transformers.models.vit.modeling_vit.ViTPatchEmbeddings": {
+    "mapped_to": "backends.lewm.vendor.transformers_vit_legacy.ViTPatchEmbeddings",
+    "source_file": "backends/lewm/vendor/transformers_vit_legacy.py",
+    "source_commit": "transformers==4.24.0 modeling_vit.py",
+    "constructor_match": true,
+    "forward_match": true,
+    "state_match": true,
+    "justification": "Sub-JEPA object checkpoints were serialized with Transformers 4.x ViT internals; Transformers 5.x removed ViTEncoder/ViTSelfAttention."
+  },
+  "transformers.models.vit.modeling_vit.ViTSelfAttention": {
+    "mapped_to": "backends.lewm.vendor.transformers_vit_legacy.ViTSelfAttention",
+    "source_file": "backends/lewm/vendor/transformers_vit_legacy.py",
+    "source_commit": "transformers==4.24.0 modeling_vit.py",
+    "constructor_match": true,
+    "forward_match": true,
+    "state_match": true,
+    "justification": "Sub-JEPA object checkpoints were serialized with Transformers 4.x ViT internals; Transformers 5.x removed ViTEncoder/ViTSelfAttention."
+  },
+  "transformers.models.vit.modeling_vit.ViTSelfOutput": {
+    "mapped_to": "backends.lewm.vendor.transformers_vit_legacy.ViTSelfOutput",
+    "source_file": "backends/lewm/vendor/transformers_vit_legacy.py",
+    "source_commit": "transformers==4.24.0 modeling_vit.py",
+    "constructor_match": true,
+    "forward_match": true,
+    "state_match": true,
+    "justification": "Sub-JEPA object checkpoints were serialized with Transformers 4.x ViT internals; Transformers 5.x removed ViTEncoder/ViTSelfAttention."
+  },
+  "transformers.models.vit.modeling_vit.ViTAttention": {
+    "mapped_to": "backends.lewm.vendor.transformers_vit_legacy.ViTAttention",
+    "source_file": "backends/lewm/vendor/transformers_vit_legacy.py",
+    "source_commit": "transformers==4.24.0 modeling_vit.py",
+    "constructor_match": true,
+    "forward_match": true,
+    "state_match": true,
+    "justification": "Sub-JEPA object checkpoints were serialized with Transformers 4.x ViT internals; Transformers 5.x removed ViTEncoder/ViTSelfAttention."
+  },
+  "transformers.models.vit.modeling_vit.ViTIntermediate": {
+    "mapped_to": "backends.lewm.vendor.transformers_vit_legacy.ViTIntermediate",
+    "source_file": "backends/lewm/vendor/transformers_vit_legacy.py",
+    "source_commit": "transformers==4.24.0 modeling_vit.py",
+    "constructor_match": true,
+    "forward_match": true,
+    "state_match": true,
+    "justification": "Sub-JEPA object checkpoints were serialized with Transformers 4.x ViT internals; Transformers 5.x removed ViTEncoder/ViTSelfAttention."
+  },
+  "transformers.models.vit.modeling_vit.ViTOutput": {
+    "mapped_to": "backends.lewm.vendor.transformers_vit_legacy.ViTOutput",
+    "source_file": "backends/lewm/vendor/transformers_vit_legacy.py",
+    "source_commit": "transformers==4.24.0 modeling_vit.py",
+    "constructor_match": true,
+    "forward_match": true,
+    "state_match": true,
+    "justification": "Sub-JEPA object checkpoints were serialized with Transformers 4.x ViT internals; Transformers 5.x removed ViTEncoder/ViTSelfAttention."
+  },
+  "transformers.models.vit.modeling_vit.ViTLayer": {
+    "mapped_to": "backends.lewm.vendor.transformers_vit_legacy.ViTLayer",
+    "source_file": "backends/lewm/vendor/transformers_vit_legacy.py",
+    "source_commit": "transformers==4.24.0 modeling_vit.py",
+    "constructor_match": true,
+    "forward_match": true,
+    "state_match": true,
+    "justification": "Sub-JEPA object checkpoints were serialized with Transformers 4.x ViT internals; Transformers 5.x removed ViTEncoder/ViTSelfAttention."
+  },
+  "transformers.models.vit.modeling_vit.ViTEncoder": {
+    "mapped_to": "backends.lewm.vendor.transformers_vit_legacy.ViTEncoder",
+    "source_file": "backends/lewm/vendor/transformers_vit_legacy.py",
+    "source_commit": "transformers==4.24.0 modeling_vit.py",
+    "constructor_match": true,
+    "forward_match": true,
+    "state_match": true,
+    "justification": "Sub-JEPA object checkpoints were serialized with Transformers 4.x ViT internals; Transformers 5.x removed ViTEncoder/ViTSelfAttention."
+  },
+  "transformers.models.vit.modeling_vit.ViTModel": {
+    "mapped_to": "backends.lewm.vendor.transformers_vit_legacy.ViTModel",
+    "source_file": "backends/lewm/vendor/transformers_vit_legacy.py",
+    "source_commit": "transformers==4.24.0 modeling_vit.py",
+    "constructor_match": true,
+    "forward_match": true,
+    "state_match": true,
+    "justification": "Sub-JEPA object checkpoints were serialized with Transformers 4.x ViT internals; Transformers 5.x removed ViTEncoder/ViTSelfAttention."
+  },
+  "jepa.JEPA": {
+    "mapped_to": "backends.lewm.vendor.jepa.JEPA",
+    "source_file": "backends/lewm/vendor/jepa.py",
+    "source_commit": "LAP vendored runtime",
+    "constructor_match": true,
+    "forward_match": true,
+    "state_match": true,
+    "justification": "Historical checkpoints store top-level jepa.JEPA."
+  },
+  "module.ARPredictor": {
+    "mapped_to": "backends.lewm.vendor.module.ARPredictor",
+    "source_file": "backends/lewm/vendor/module.py",
+    "source_commit": "LAP vendored runtime",
+    "constructor_match": true,
+    "forward_match": true,
+    "state_match": true,
+    "justification": "Historical checkpoints store top-level module.* symbols."
+  },
+  "module.Transformer": {
+    "mapped_to": "backends.lewm.vendor.module.Transformer",
+    "source_file": "backends/lewm/vendor/module.py",
+    "source_commit": "LAP vendored runtime",
+    "constructor_match": true,
+    "forward_match": true,
+    "state_match": true,
+    "justification": "Historical checkpoints store top-level module.* symbols."
+  },
+  "module.ConditionalBlock": {
+    "mapped_to": "backends.lewm.vendor.module.ConditionalBlock",
+    "source_file": "backends/lewm/vendor/module.py",
+    "source_commit": "LAP vendored runtime",
+    "constructor_match": true,
+    "forward_match": true,
+    "state_match": true,
+    "justification": "Historical checkpoints store top-level module.* symbols."
+  },
+  "module.Attention": {
+    "mapped_to": "backends.lewm.vendor.module.Attention",
+    "source_file": "backends/lewm/vendor/module.py",
+    "source_commit": "LAP vendored runtime",
+    "constructor_match": true,
+    "forward_match": true,
+    "state_match": true,
+    "justification": "Historical checkpoints store top-level module.* symbols."
+  },
+  "module.Embedder": {
+    "mapped_to": "backends.lewm.vendor.module.Embedder",
+    "source_file": "backends/lewm/vendor/module.py",
+    "source_commit": "LAP vendored runtime",
+    "constructor_match": true,
+    "forward_match": true,
+    "state_match": true,
+    "justification": "Historical checkpoints store top-level module.* symbols."
+  },
+  "module.FeedForward": {
+    "mapped_to": "backends.lewm.vendor.module.FeedForward",
+    "source_file": "backends/lewm/vendor/module.py",
+    "source_commit": "LAP vendored runtime",
+    "constructor_match": true,
+    "forward_match": true,
+    "state_match": true,
+    "justification": "Historical checkpoints store top-level module.* symbols."
+  },
+  "module.MLP": {
+    "mapped_to": "backends.lewm.vendor.module.MLP",
+    "source_file": "backends/lewm/vendor/module.py",
+    "source_commit": "LAP vendored runtime",
+    "constructor_match": true,
+    "forward_match": true,
+    "state_match": true,
+    "justification": "Historical checkpoints store top-level module.* symbols."
+  }
+}

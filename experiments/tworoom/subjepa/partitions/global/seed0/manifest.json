@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "dataset": "tworoom",
+  "method": "global",
+  "selected_method": "global",
+  "partition_seed": 0,
+  "num_clusters": 1,
+  "cluster_counts": [
+    14663
+  ],
+  "cluster_fractions": [
+    1.0
+  ],
+  "cache_stats": {
+    "cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/preparation/embedding_cache.npz",
+    "num_transitions": 3686,
+    "num_expanded_latents": 14744,
+    "num_unique_timesteps": 14663,
+    "discarded_repeated_window_slots": 81,
+    "duplicate_policy": "stable_first_occurrence_per_timestep",
+    "latent_dim": 192,
+    "frameskip": 5
+  },
+  "latent_cache_sha256": "6828c6b5b7f87df33878ed43684821e975b4e5aa9e859a1ce00e1bf6f40ab3a7",
+  "data_file": null,
+  "method_metadata": {
+    "algorithm": "global_single_region",
+    "num_clusters": 1,
+    "routing": "constant_region_0"
+  },
+  "elapsed_sec": 0.16048618301283568
+}
