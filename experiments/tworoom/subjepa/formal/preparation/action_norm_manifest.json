@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "dataset_name": "tworoom",
+  "data_file": "/data/sicong/weitao/datasets/lewm/tworoom.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt",
+  "starts_file": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/preparation/train_global_reference_starts.npy",
+  "starts_sha256": "7c3047914d9f54c07ccafa5dcf13a27412bf963cd96fd0e2675feadaef8ae496",
+  "num_starts": 693728,
+  "action_mean_shape": [
+    1,
+    10
+  ],
+  "action_std_shape": [
+    1,
+    10
+  ],
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "action_steps": 3,
+  "normalization_samples": 693728,
+  "sha256": {
+    "action_norm_stats": "0860f39ef9d286cbe1d1fd3ff788486b6c9bda4ff50330aa4b58faa19c844280",
+    "starts": "7c3047914d9f54c07ccafa5dcf13a27412bf963cd96fd0e2675feadaef8ae496",
+    "data_file": "129a36aa93ea0de488d2bcc876e396de9e3907bf66c6aae6394e542ef6a6d623",
+    "checkpoint": "06d743c6fb46914dafed0aabab4e9e2eed8d53efbf9cb4a4a3350244afbb2652"
+  }
+}

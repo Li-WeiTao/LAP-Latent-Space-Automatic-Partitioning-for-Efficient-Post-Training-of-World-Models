@@ -1,0 +1,76 @@
+{
+  "schema_version": 2,
+  "implementation_backend": "jepa_object",
+  "model_family": "subjepa",
+  "dataset_name": "tworoom",
+  "data_file": "/data/sicong/weitao/datasets/lewm/tworoom.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt",
+  "starts_file": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/preparation/train_global_reference_starts.npy",
+  "history_size": 3,
+  "num_preds": 1,
+  "frameskip": 5,
+  "encode_report": {
+    "method": "unique_frame_inverse_reconstruction",
+    "selection": {
+      "starts_source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/preparation/.encode_starts.npy",
+      "samples": 693728,
+      "source_offset": 0,
+      "source_count": 693728,
+      "sequence_length": 4
+    },
+    "arrays": {
+      "emb": {
+        "shape": [
+          693728,
+          4,
+          192
+        ],
+        "dtype": "float32",
+        "sha256": "728bf0de0835fa0c9fe5740fce77201ff6b0f7546c3956fb115f9e23380889a5"
+      },
+      "act_emb": {
+        "shape": [
+          693728,
+          4,
+          192
+        ],
+        "dtype": "float32",
+        "sha256": "6bcdd545168ca9b5fd8d34d165aff930ca4fce00d2a838d6e78ee1955fd3dbe8"
+      },
+      "region_starts": {
+        "shape": [
+          693728
+        ],
+        "dtype": "int64",
+        "sha256": "bd13018df229c3c7da02a807e5946745fd483c7f69ca09e4fe1f5847998f22ab"
+      }
+    }
+  },
+  "spectral_cache_stats": {
+    "cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/preparation/embedding_cache.npz",
+    "num_transitions": 693728,
+    "num_expanded_latents": 2774912,
+    "num_unique_timesteps": 909723,
+    "discarded_repeated_window_slots": 1865189,
+    "duplicate_policy": "stable_first_occurrence_per_timestep",
+    "latent_dim": 192,
+    "frameskip": 5
+  },
+  "reference_audit": null,
+  "git_commit": "769664866547f069b8f94a023223f6f449aefc8a",
+  "artifacts": {
+    "embedding_cache.npz": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/preparation/embedding_cache.npz",
+    "spectral_embedding_cache.npz": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/preparation/spectral_embedding_cache.npz",
+    "representation_manifest.json": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/preparation/representation_manifest.json",
+    "action_norm_stats.npz": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/preparation/action_norm_stats.npz",
+    "action_norm_manifest.json": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/preparation/action_norm_manifest.json"
+  },
+  "sha256": {
+    "data_file": "129a36aa93ea0de488d2bcc876e396de9e3907bf66c6aae6394e542ef6a6d623",
+    "checkpoint": "06d743c6fb46914dafed0aabab4e9e2eed8d53efbf9cb4a4a3350244afbb2652",
+    "starts": "7c3047914d9f54c07ccafa5dcf13a27412bf963cd96fd0e2675feadaef8ae496",
+    "embedding_cache": "1e973e4f8fe5781892de64203f3e91f32cb805ce0f16550e417d8ad48956401e",
+    "spectral_embedding_cache": "9a76d1afb2af4ceda23881b8ea3d85f43be19b6bbf0d0c987f5cdd29df961b2b",
+    "action_norm_stats": "0860f39ef9d286cbe1d1fd3ff788486b6c9bda4ff50330aa4b58faa19c844280"
+  }
+}

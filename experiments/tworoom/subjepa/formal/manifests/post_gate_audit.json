@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "scope": "subjepa_tworoom_formal_post_gate",
+  "git_commit_baseline": "36f960a",
+  "git_commit": "769664866547f069b8f94a023223f6f449aefc8a",
+  "gate_task_summary": {
+    "graph_count": 9,
+    "expected_graph_count": 9,
+    "required_eigenvalues": 14,
+    "safety_pass": true,
+    "background_pass": true,
+    "criterion_matches_selection": true,
+    "E_K_min": 0.4889454129414175,
+    "T_E_K_max": 0.00548474384245512,
+    "S_task": 0.9887825027144446,
+    "R_K": 0.4834606690989624,
+    "T_bg": 0.47539666619366533,
+    "selected_method": "spectral",
+    "reason": "spectrally_nondegenerate",
+    "deployment_seed": 0,
+    "graph_details": [
+      {
+        "diagnostic_seed": 0,
+        "knn": 27,
+        "background_gap_count": 10,
+        "candidate_relative_gap": 0.49772228271115443,
+        "background_threshold": 0.3087766594574522
+      },
+      {
+        "diagnostic_seed": 0,
+        "knn": 30,
+        "background_gap_count": 10,
+        "candidate_relative_gap": 0.4951349868644606,
+        "background_threshold": 0.3588605980174834
+      },
+      {
+        "diagnostic_seed": 0,
+        "knn": 33,
+        "background_gap_count": 10,
+        "candidate_relative_gap": 0.49239261494323305,
+        "background_threshold": 0.36958525473753706
+      },
+      {
+        "diagnostic_seed": 1,
+        "knn": 27,
+        "background_gap_count": 10,
+        "candidate_relative_gap": 0.4918077436053003,
+        "background_threshold": 0.33279546692810946
+      },
+      {
+        "diagnostic_seed": 1,
+        "knn": 30,
+        "background_gap_count": 10,
+        "candidate_relative_gap": 0.4893791367644056,
+        "background_threshold": 0.3232485038844389
+      },
+      {
+        "diagnostic_seed": 1,
+        "knn": 33,
+        "background_gap_count": 10,
+        "candidate_relative_gap": 0.4872991048244592,
+        "background_threshold": 0.3358115790811865
+      },
+      {
+        "diagnostic_seed": 2,
+        "knn": 27,
+        "background_gap_count": 10,
+        "candidate_relative_gap": 0.49063796287584927,
+        "background_threshold": 0.43555617583283773
+      },
+      {
+        "diagnostic_seed": 2,
+        "knn": 30,
+        "background_gap_count": 10,
+        "candidate_relative_gap": 0.4889454129414175,
+        "background_threshold": 0.4582714902287103
+      },
+      {
+        "diagnostic_seed": 2,
+        "knn": 33,
+        "background_gap_count": 10,
+        "candidate_relative_gap": 0.4899176394698501,
+        "background_threshold": 0.47539666619366533
+      }
+    ]
+  },
+  "pairwise_nominal_partitions": [
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "ari": 0.9588307536109617,
+      "nmi": 0.9274095605062539
+    },
+    {
+      "pair": [
+        0,
+        2
+      ],
+      "ari": 0.9446709829709176,
+      "nmi": 0.9114134267687157
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "ari": 0.9572972865974874,
+      "nmi": 0.9288159146579821
+    }
+  ],
+  "deployment_seed_0_region_sizes": {
+    "region_0": 314664,
+    "region_1": 277408,
+    "region_2": 317651
+  },
+  "empty_regions": [],
+  "tiny_regions": {},
+  "router_fidelity": {
+    "offline_labels_reproduced_rate": 1.0,
+    "holdout_macro_f1": 1.0,
+    "holdout_fraction": 0.1,
+    "num_holdout": 91486,
+    "num_train": 818237
+  },
+  "cache_stats": {
+    "cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/preparation/embedding_cache.npz",
+    "num_transitions": 693728,
+    "num_expanded_latents": 2774912,
+    "num_unique_timesteps": 909723,
+    "discarded_repeated_window_slots": 1865189,
+    "duplicate_policy": "stable_first_occurrence_per_timestep",
+    "latent_dim": 192,
+    "frameskip": 5
+  },
+  "timings_sec": {
+    "post_gate_audit_wall": 41.00227578706108,
+    "gate_elapsed_sec": 47.29334984498564
+  },
+  "peak_rss_mb": 5646.625,
+  "bindings": {
+    "checkpoint_sha256": "06d743c6fb46914dafed0aabab4e9e2eed8d53efbf9cb4a4a3350244afbb2652",
+    "dataset_sha256": "129a36aa93ea0de488d2bcc876e396de9e3907bf66c6aae6394e542ef6a6d623",
+    "full_cache_sha256": "1e973e4f8fe5781892de64203f3e91f32cb805ce0f16550e417d8ad48956401e",
+    "resolved_task_spec_sha256": "e8b1d10be7784e7702b5d177c4be0f0ca1e8ae75290267a7f7be0535f6c6939b"
+  },
+  "replay_audit_all_passed": true
+}

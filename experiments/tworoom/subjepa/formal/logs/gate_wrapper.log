@@ -1,0 +1,12 @@
+[formal-gate] phase=gate (method=auto, K=3, 9 graph configs)
+[done] auto seed=0 counts=[314664, 277408, 317651] elapsed=47.29s -> experiments/tworoom/subjepa/formal/gate/partition
+Traceback (most recent call last):
+  File "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/scripts/formal_post_gate_audit.py", line 401, in <module>
+    main()
+  File "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/scripts/formal_post_gate_audit.py", line 388, in main
+    report = run_post_gate_audit(
+  File "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/scripts/formal_post_gate_audit.py", line 204, in run_post_gate_audit
+    groups = episode_ids(data_file.resolve(), sample_ids)
+  File "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/scripts/formal_post_gate_audit.py", line 56, in episode_ids
+    raise KeyError("could not infer episode key")
+KeyError: 'could not infer episode key'

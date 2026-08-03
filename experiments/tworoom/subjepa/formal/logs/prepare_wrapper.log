@@ -1,0 +1,115 @@
+[formal-gate] phase=prepare (no max_train_starts cap)
+{
+  "model_family": "subjepa",
+  "implementation_backend": "jepa_object",
+  "task_name": "tworoom",
+  "dataset_name": "tworoom",
+  "dataset": "/data/sicong/weitao/datasets/lewm/tworoom.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt",
+  "eval_config_name": "tworoom",
+  "eval_config": null,
+  "eval_dataset_name": "tworoom",
+  "work_root": "experiments/tworoom/subjepa/formal",
+  "cache_dir": "/data/sicong/weitao/.stable_worldmodel/subjepa/tworoom",
+  "paired_start_root": null,
+  "paired_start_root_short": null,
+  "paired_start_root_long": null,
+  "phase": "prepare",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "img_size": 224,
+  "short_goal_offset": 25,
+  "long_goal_offset": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "max_train_starts": 0,
+  "dry_run": false,
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/configs/experiments/tasks/tworoom.json",
+  "train_seeds": "0,42,625",
+  "partition_seeds": "0,1,2",
+  "eval_seeds": "0,1,2,3,4",
+  "methods": "random_voronoi,kmeanspp,spectral",
+  "skip_joint": true,
+  "python": "/data/sicong/weitao/le-wm/.venv/bin/python",
+  "cpu_threads": 4,
+  "gpu_id": "0",
+  "sources": {
+    "model_family": "cli",
+    "dataset_name": "task_spec",
+    "task_name": "task_spec",
+    "eval_config_name": "cli",
+    "eval_dataset_name": "task_spec",
+    "work_root": "cli",
+    "cache_dir": "env",
+    "phase": "cli",
+    "skip_joint": "default",
+    "frameskip": "task_spec",
+    "short_goal_offset": "task_spec",
+    "long_goal_offset": "task_spec",
+    "eval_budget": "task_spec",
+    "train_seeds": "default",
+    "partition_seeds": "default",
+    "eval_seeds": "default",
+    "methods": "default",
+    "python": "env",
+    "cpu_threads": "default",
+    "gpu_id": "env"
+  }
+}
+[jepa-matrix] model_family=subjepa phase=prepare work_root=experiments/tworoom/subjepa/formal
+[jepa-matrix] resolved_config=experiments/tworoom/subjepa/formal/manifests/resolved_config.json
+[prepare-starts] common: 230910 -> /data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/preparation/P_train_common_starts.npy
+[prepare-starts] complete; no embeddings or predictors were trained
+[index] samples=693728 frame_slots=2774912 unique_frames=909723 encoded_keys=909738
+[batch-shape] batch=384 keys=129
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+[frames] batch 1/1 (129/129)
+[batch-shape] batch=512 keys=909609
+[frames] batch 50/1777 (25600/909609)
+[frames] batch 100/1777 (51200/909609)
+[frames] batch 150/1777 (76800/909609)
+[frames] batch 200/1777 (102400/909609)
+[frames] batch 250/1777 (128000/909609)
+[frames] batch 300/1777 (153600/909609)
+[frames] batch 350/1777 (179200/909609)
+[frames] batch 400/1777 (204800/909609)
+[frames] batch 450/1777 (230400/909609)
+[frames] batch 500/1777 (256000/909609)
+[frames] batch 550/1777 (281600/909609)
+[frames] batch 600/1777 (307200/909609)
+[frames] batch 650/1777 (332800/909609)
+[frames] batch 700/1777 (358400/909609)
+[frames] batch 750/1777 (384000/909609)
+[frames] batch 800/1777 (409600/909609)
+[frames] batch 850/1777 (435200/909609)
+[frames] batch 900/1777 (460800/909609)
+[frames] batch 950/1777 (486400/909609)
+[frames] batch 1000/1777 (512000/909609)
+[frames] batch 1050/1777 (537600/909609)
+[frames] batch 1100/1777 (563200/909609)
+[frames] batch 1150/1777 (588800/909609)
+[frames] batch 1200/1777 (614400/909609)
+[frames] batch 1250/1777 (640000/909609)
+[frames] batch 1300/1777 (665600/909609)
+[frames] batch 1350/1777 (691200/909609)
+[frames] batch 1400/1777 (716800/909609)
+[frames] batch 1450/1777 (742400/909609)
+[frames] batch 1500/1777 (768000/909609)
+[frames] batch 1550/1777 (793600/909609)
+[frames] batch 1600/1777 (819200/909609)
+[frames] batch 1650/1777 (844800/909609)
+[frames] batch 1700/1777 (870400/909609)
+[frames] batch 1750/1777 (896000/909609)
+[frames] batch 1777/1777 (909609/909609)
+[saved] cache=/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/preparation/embedding_cache.npz
+[saved] report=/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/preparation/embedding_cache.npz.report.json
+[prepare] wrote matrix cache artifacts under /data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/preparation
+Traceback (most recent call last):
+  File "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/scripts/formal_cache_audit.py", line 372, in <module>
+    main()
+  File "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/scripts/formal_cache_audit.py", line 359, in main
+    report = augment_manifest(work_root, args.git_baseline)
+  File "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/scripts/formal_cache_audit.py", line 117, in augment_manifest
+    raise RuntimeError(
+RuntimeError: formal cache unexpectedly truncated: retained=693728 candidate=770809
