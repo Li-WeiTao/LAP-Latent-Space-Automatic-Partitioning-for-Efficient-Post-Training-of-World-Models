@@ -1,0 +1,756 @@
+{
+  "schema_version": 1,
+  "scope": "subjepa_tworoom_matrix_protocol_parity",
+  "reference": {
+    "label": "canonical_lewm_tworoom_matrix",
+    "resolved_manifest_source": "resolve_jepa_matrix_config.py",
+    "canonical_entrypoint": "experiments/tworoom/scripts/canonical/run_tworoom_main_matrix.sh",
+    "bundle": {
+      "resolved_manifest": {
+        "model_family": "lewm",
+        "implementation_backend": "jepa_object",
+        "task_name": "tworoom",
+        "dataset_name": "tworoom",
+        "dataset": "/data/sicong/weitao/datasets/lewm/tworoom.h5",
+        "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt",
+        "eval_config_name": "tworoom",
+        "eval_config": null,
+        "eval_dataset_name": "tworoom",
+        "work_root": "experiments/tworoom/matrix",
+        "cache_dir": "/home/sicong/.stable_worldmodel",
+        "paired_start_root": null,
+        "paired_start_root_short": null,
+        "paired_start_root_long": null,
+        "phase": "all",
+        "frameskip": 5,
+        "history_size": 3,
+        "num_preds": 1,
+        "img_size": 224,
+        "short_goal_offset": 25,
+        "long_goal_offset": 50,
+        "eval_budget": 50,
+        "num_eval": 50,
+        "max_train_starts": 0,
+        "dry_run": false,
+        "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/configs/experiments/tasks/tworoom.json",
+        "train_seeds": "0,42,625",
+        "partition_seeds": "0,1,2",
+        "eval_seeds": "0,1,2,3,4",
+        "methods": "random_voronoi,kmeanspp,spectral",
+        "skip_joint": false,
+        "python": "/data/sicong/weitao/le-wm/.venv/bin/python",
+        "cpu_threads": 4,
+        "gpu_id": "",
+        "sources": {
+          "model_family": "cli",
+          "dataset_name": "task_spec",
+          "task_name": "task_spec",
+          "eval_config_name": "cli",
+          "eval_dataset_name": "task_spec",
+          "work_root": "cli",
+          "cache_dir": "cli",
+          "phase": "default",
+          "skip_joint": "env",
+          "frameskip": "task_spec",
+          "short_goal_offset": "task_spec",
+          "long_goal_offset": "task_spec",
+          "eval_budget": "task_spec",
+          "train_seeds": "cli",
+          "partition_seeds": "cli",
+          "eval_seeds": "cli",
+          "methods": "cli",
+          "python": "env",
+          "cpu_threads": "env",
+          "gpu_id": "default"
+        }
+      },
+      "dataset_transition_scope": {
+        "prepare_script": "experiments/control_matrix/prepare_lewm_cache.py",
+        "regions": [
+          "common"
+        ],
+        "restrict_to_train_split": true,
+        "predictor_prefix": "train_",
+        "transition_batch_size": 128,
+        "frame_batch_size": 512,
+        "encoding": "lossless_precomputed unique_frame_inverse_reconstruction",
+        "train_global_reference_starts_path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/preparation/train_global_reference_starts.npy",
+        "train_global_reference_starts_sha256": "c3197b47a3afadb62573b32aa5edc4595743816c0e2028d987cada54870e053e",
+        "num_train_global_reference_starts": 693728,
+        "num_all_starts": 770809,
+        "train_fraction": 0.9,
+        "split_seed": 3072,
+        "max_starts": 0,
+        "cache_path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/preparation/embedding_cache.npz",
+        "cache_sha256": "1e973e4f8fe5781892de64203f3e91f32cb805ce0f16550e417d8ad48956401e",
+        "latent_shape": {
+          "emb": [
+            693728,
+            4,
+            192
+          ],
+          "act_emb": [
+            693728,
+            4,
+            192
+          ]
+        },
+        "num_transitions": 693728
+      },
+      "context_target_construction": {
+        "history_size": 3,
+        "num_preds": 1,
+        "frameskip": 5,
+        "sequence_length": 4,
+        "img_size": 224
+      },
+      "training": {
+        "epochs": 50,
+        "batch_size": 128,
+        "learning_rate": 5e-05,
+        "weight_decay": 0.001,
+        "min_region_samples": 256,
+        "history_size": 3,
+        "num_preds": 1,
+        "precision": "fp32",
+        "checkpoint_selection_rule": "minimum loss on same-region training cache",
+        "predictor_loss": "MSE between model.predict(ctx_emb, ctx_act) and tgt_emb (final-token latent regression; backends/lewm/finetuning.py::predictor_loss)",
+        "trainable_parameter_allowlist": [
+          "predictor",
+          "pred_proj"
+        ],
+        "frozen_parameter_prefixes": [
+          "encoder",
+          "projector",
+          "action_encoder"
+        ],
+        "action_embedding_usage": "precomputed act_emb windows stored in embedding_cache.npz; training consumes cached act_emb alongside emb"
+      },
+      "partition_config": {
+        "num_clusters": 3,
+        "partition_seeds": "0,1,2",
+        "methods": "random_voronoi,kmeanspp,spectral",
+        "fit_script": "experiments/control_matrix/fit_partition.py",
+        "frameskip": 5
+      },
+      "matrix_scope": {
+        "train_seeds": "0,42,625",
+        "eval_seeds": "0,1,2,3,4",
+        "skip_joint": false
+      },
+      "evaluation": {
+        "short_goal_offset": 25,
+        "long_goal_offset": 50,
+        "eval_budget": 50,
+        "num_eval": 50,
+        "eval_config_name": "tworoom",
+        "plan_horizon": 5,
+        "plan_receding_horizon": 5,
+        "plan_action_block": 5,
+        "evaluator": "experiments/tworoom/tworoom_success_rate_eval.py",
+        "latent_routing": "mpc",
+        "paired_start_source_short": "experiments/tworoom/results/tworoom_success_rate_baseline_seed{eval_seed}",
+        "paired_start_source_long": "experiments/tworoom/results/tworoom_success_rate_baseline_exp6_seed{eval_seed}"
+      },
+      "bootstrap_aggregation": {
+        "script": "experiments/tworoom/subjepa/matrix/scripts/matrix_paired_bootstrap.py",
+        "reps": 200000,
+        "unit": "paired eval seed blocks after averaging partition seeds per train seed",
+        "comparisons": [
+          "Global-FT50 vs Official baseline",
+          "K-means++ K3-50 vs Global-FT50",
+          "Spectral K3-50 vs Global-FT50"
+        ],
+        "ci": "2.5/97.5 percentile of paired block bootstrap delta in success-rate points"
+      },
+      "paired_start_sha256_by_eval_seed": {
+        "0": "e32f5a95c67029c185f815a7b9d76d2c9ba97ecd703da75eeb0b5922b600f072",
+        "1": "3aaea5d546ce9c4d0c4b5560662d8510441a9e7f841b01e4890cd3dd814881a3",
+        "2": "802e5ebb46fb9b6eef46b74f4c271ed2a6f99afc7f535feb05b656889a89979d",
+        "3": "0ba87a8d58ff79fc4d0ab171dd0e4c62511ecd87b9bf1b7332509a0c59815014",
+        "4": "5316ff899a29b780e78c83ab69873170e63241a4dc5909c4840c0f8f28d5a031"
+      }
+    }
+  },
+  "candidate": {
+    "label": "subjepa_tworoom_matrix",
+    "bundle": {
+      "resolved_manifest": {
+        "model_family": "subjepa",
+        "implementation_backend": "jepa_object",
+        "task_name": "tworoom",
+        "dataset_name": "tworoom",
+        "dataset": "/data/sicong/weitao/datasets/lewm/tworoom.h5",
+        "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt",
+        "eval_config_name": "tworoom",
+        "eval_config": null,
+        "eval_dataset_name": "tworoom",
+        "work_root": "experiments/tworoom/subjepa/matrix",
+        "cache_dir": "/data/sicong/weitao/.stable_worldmodel/subjepa/tworoom",
+        "paired_start_root": null,
+        "paired_start_root_short": null,
+        "paired_start_root_long": null,
+        "phase": "all",
+        "frameskip": 5,
+        "history_size": 3,
+        "num_preds": 1,
+        "img_size": 224,
+        "short_goal_offset": 25,
+        "long_goal_offset": 50,
+        "eval_budget": 50,
+        "num_eval": 50,
+        "max_train_starts": 0,
+        "dry_run": false,
+        "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/configs/experiments/tasks/tworoom.json",
+        "train_seeds": "0,42,625",
+        "partition_seeds": "0,1,2",
+        "eval_seeds": "0,1,2,3,4",
+        "methods": "kmeanspp,spectral",
+        "skip_joint": true,
+        "python": "/data/sicong/weitao/le-wm/.venv/bin/python",
+        "cpu_threads": 4,
+        "gpu_id": "",
+        "sources": {
+          "model_family": "cli",
+          "dataset_name": "task_spec",
+          "task_name": "task_spec",
+          "eval_config_name": "cli",
+          "eval_dataset_name": "task_spec",
+          "work_root": "cli",
+          "cache_dir": "cli",
+          "phase": "default",
+          "skip_joint": "cli",
+          "frameskip": "task_spec",
+          "short_goal_offset": "task_spec",
+          "long_goal_offset": "task_spec",
+          "eval_budget": "task_spec",
+          "train_seeds": "cli",
+          "partition_seeds": "cli",
+          "eval_seeds": "cli",
+          "methods": "cli",
+          "python": "env",
+          "cpu_threads": "env",
+          "gpu_id": "default"
+        }
+      },
+      "dataset_transition_scope": {
+        "prepare_script": "experiments/control_matrix/prepare_lewm_cache.py",
+        "regions": [
+          "common"
+        ],
+        "restrict_to_train_split": true,
+        "predictor_prefix": "train_",
+        "transition_batch_size": 128,
+        "frame_batch_size": 512,
+        "encoding": "lossless_precomputed unique_frame_inverse_reconstruction",
+        "train_global_reference_starts_path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/preparation/train_global_reference_starts.npy",
+        "train_global_reference_starts_sha256": "c3197b47a3afadb62573b32aa5edc4595743816c0e2028d987cada54870e053e",
+        "num_train_global_reference_starts": 693728,
+        "num_all_starts": 770809,
+        "train_fraction": 0.9,
+        "split_seed": 3072,
+        "max_starts": 0,
+        "cache_path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/preparation/embedding_cache.npz",
+        "cache_sha256": "1e973e4f8fe5781892de64203f3e91f32cb805ce0f16550e417d8ad48956401e",
+        "latent_shape": {
+          "emb": [
+            693728,
+            4,
+            192
+          ],
+          "act_emb": [
+            693728,
+            4,
+            192
+          ]
+        },
+        "num_transitions": 693728
+      },
+      "context_target_construction": {
+        "history_size": 3,
+        "num_preds": 1,
+        "frameskip": 5,
+        "sequence_length": 4,
+        "img_size": 224
+      },
+      "training": {
+        "epochs": 50,
+        "batch_size": 128,
+        "learning_rate": 5e-05,
+        "weight_decay": 0.001,
+        "min_region_samples": 256,
+        "history_size": 3,
+        "num_preds": 1,
+        "precision": "fp32",
+        "checkpoint_selection_rule": "minimum loss on same-region training cache",
+        "predictor_loss": "MSE between model.predict(ctx_emb, ctx_act) and tgt_emb (final-token latent regression; backends/lewm/finetuning.py::predictor_loss)",
+        "trainable_parameter_allowlist": [
+          "predictor",
+          "pred_proj"
+        ],
+        "frozen_parameter_prefixes": [
+          "encoder",
+          "projector",
+          "action_encoder"
+        ],
+        "action_embedding_usage": "precomputed act_emb windows stored in embedding_cache.npz; training consumes cached act_emb alongside emb"
+      },
+      "partition_config": {
+        "num_clusters": 3,
+        "partition_seeds": "0,1,2",
+        "methods": "kmeanspp,spectral",
+        "fit_script": "experiments/control_matrix/fit_partition.py",
+        "frameskip": 5
+      },
+      "matrix_scope": {
+        "train_seeds": "0,42,625",
+        "eval_seeds": "0,1,2,3,4",
+        "skip_joint": true
+      },
+      "evaluation": {
+        "short_goal_offset": 25,
+        "long_goal_offset": 50,
+        "eval_budget": 50,
+        "num_eval": 50,
+        "eval_config_name": "tworoom",
+        "plan_horizon": 5,
+        "plan_receding_horizon": 5,
+        "plan_action_block": 5,
+        "evaluator": "experiments/tworoom/tworoom_success_rate_eval.py",
+        "latent_routing": "mpc",
+        "paired_start_source_short": "experiments/tworoom/results/tworoom_success_rate_baseline_seed{eval_seed}",
+        "paired_start_source_long": "experiments/tworoom/results/tworoom_success_rate_baseline_exp6_seed{eval_seed}"
+      },
+      "bootstrap_aggregation": {
+        "script": "experiments/tworoom/subjepa/matrix/scripts/matrix_paired_bootstrap.py",
+        "reps": 200000,
+        "unit": "paired eval seed blocks after averaging partition seeds per train seed",
+        "comparisons": [
+          "Global-FT50 vs Official baseline",
+          "K-means++ K3-50 vs Global-FT50",
+          "Spectral K3-50 vs Global-FT50"
+        ],
+        "ci": "2.5/97.5 percentile of paired block bootstrap delta in success-rate points"
+      },
+      "paired_start_sha256_by_eval_seed": {
+        "0": "e32f5a95c67029c185f815a7b9d76d2c9ba97ecd703da75eeb0b5922b600f072",
+        "1": "3aaea5d546ce9c4d0c4b5560662d8510441a9e7f841b01e4890cd3dd814881a3",
+        "2": "802e5ebb46fb9b6eef46b74f4c271ed2a6f99afc7f535feb05b656889a89979d",
+        "3": "0ba87a8d58ff79fc4d0ab171dd0e4c62511ecd87b9bf1b7332509a0c59815014",
+        "4": "5316ff899a29b780e78c83ab69873170e63241a4dc5909c4840c0f8f28d5a031"
+      }
+    }
+  },
+  "allowed_difference_fields": [
+    "cache_dir",
+    "cache_path",
+    "cache_sha256",
+    "checkpoint",
+    "checkpoint_class",
+    "checkpoint_path",
+    "checkpoint_sha256",
+    "implementation_backend",
+    "latent_shape",
+    "methods",
+    "model_family",
+    "output_paths",
+    "skip_joint",
+    "task_spec_path",
+    "work_root"
+  ],
+  "parity_status": "PASSED",
+  "comparisons": [
+    {
+      "field": "context_target_construction.history_size",
+      "reference": 3,
+      "candidate": 3,
+      "status": "match"
+    },
+    {
+      "field": "context_target_construction.num_preds",
+      "reference": 1,
+      "candidate": 1,
+      "status": "match"
+    },
+    {
+      "field": "context_target_construction.frameskip",
+      "reference": 5,
+      "candidate": 5,
+      "status": "match"
+    },
+    {
+      "field": "context_target_construction.sequence_length",
+      "reference": 4,
+      "candidate": 4,
+      "status": "match"
+    },
+    {
+      "field": "context_target_construction.img_size",
+      "reference": 224,
+      "candidate": 224,
+      "status": "match"
+    },
+    {
+      "field": "dataset_transition_scope.regions",
+      "reference": [
+        "common"
+      ],
+      "candidate": [
+        "common"
+      ],
+      "status": "match"
+    },
+    {
+      "field": "dataset_transition_scope.restrict_to_train_split",
+      "reference": true,
+      "candidate": true,
+      "status": "match"
+    },
+    {
+      "field": "dataset_transition_scope.predictor_prefix",
+      "reference": "train_",
+      "candidate": "train_",
+      "status": "match"
+    },
+    {
+      "field": "dataset_transition_scope.transition_batch_size",
+      "reference": 128,
+      "candidate": 128,
+      "status": "match"
+    },
+    {
+      "field": "dataset_transition_scope.frame_batch_size",
+      "reference": 512,
+      "candidate": 512,
+      "status": "match"
+    },
+    {
+      "field": "dataset_transition_scope.encoding",
+      "reference": "lossless_precomputed unique_frame_inverse_reconstruction",
+      "candidate": "lossless_precomputed unique_frame_inverse_reconstruction",
+      "status": "match"
+    },
+    {
+      "field": "dataset_transition_scope.num_all_starts",
+      "reference": 770809,
+      "candidate": 770809,
+      "status": "match"
+    },
+    {
+      "field": "dataset_transition_scope.train_fraction",
+      "reference": 0.9,
+      "candidate": 0.9,
+      "status": "match"
+    },
+    {
+      "field": "dataset_transition_scope.split_seed",
+      "reference": 3072,
+      "candidate": 3072,
+      "status": "match"
+    },
+    {
+      "field": "dataset_transition_scope.max_starts",
+      "reference": 0,
+      "candidate": 0,
+      "status": "match"
+    },
+    {
+      "field": "dataset_transition_scope.num_train_global_reference_starts",
+      "reference": 693728,
+      "candidate": 693728,
+      "status": "match"
+    },
+    {
+      "field": "dataset_transition_scope.train_global_reference_starts_sha256",
+      "reference": "c3197b47a3afadb62573b32aa5edc4595743816c0e2028d987cada54870e053e",
+      "candidate": "c3197b47a3afadb62573b32aa5edc4595743816c0e2028d987cada54870e053e",
+      "status": "match"
+    },
+    {
+      "field": "training.epochs",
+      "reference": 50,
+      "candidate": 50,
+      "status": "match"
+    },
+    {
+      "field": "training.batch_size",
+      "reference": 128,
+      "candidate": 128,
+      "status": "match"
+    },
+    {
+      "field": "training.learning_rate",
+      "reference": 5e-05,
+      "candidate": 5e-05,
+      "status": "match"
+    },
+    {
+      "field": "training.weight_decay",
+      "reference": 0.001,
+      "candidate": 0.001,
+      "status": "match"
+    },
+    {
+      "field": "training.min_region_samples",
+      "reference": 256,
+      "candidate": 256,
+      "status": "match"
+    },
+    {
+      "field": "training.history_size",
+      "reference": 3,
+      "candidate": 3,
+      "status": "match"
+    },
+    {
+      "field": "training.num_preds",
+      "reference": 1,
+      "candidate": 1,
+      "status": "match"
+    },
+    {
+      "field": "training.precision",
+      "reference": "fp32",
+      "candidate": "fp32",
+      "status": "match"
+    },
+    {
+      "field": "training.checkpoint_selection_rule",
+      "reference": "minimum loss on same-region training cache",
+      "candidate": "minimum loss on same-region training cache",
+      "status": "match"
+    },
+    {
+      "field": "training.predictor_loss",
+      "reference": "MSE between model.predict(ctx_emb, ctx_act) and tgt_emb (final-token latent regression; backends/lewm/finetuning.py::predictor_loss)",
+      "candidate": "MSE between model.predict(ctx_emb, ctx_act) and tgt_emb (final-token latent regression; backends/lewm/finetuning.py::predictor_loss)",
+      "status": "match"
+    },
+    {
+      "field": "training.trainable_parameter_allowlist",
+      "reference": [
+        "predictor",
+        "pred_proj"
+      ],
+      "candidate": [
+        "predictor",
+        "pred_proj"
+      ],
+      "status": "match"
+    },
+    {
+      "field": "training.frozen_parameter_prefixes",
+      "reference": [
+        "encoder",
+        "projector",
+        "action_encoder"
+      ],
+      "candidate": [
+        "encoder",
+        "projector",
+        "action_encoder"
+      ],
+      "status": "match"
+    },
+    {
+      "field": "training.action_embedding_usage",
+      "reference": "precomputed act_emb windows stored in embedding_cache.npz; training consumes cached act_emb alongside emb",
+      "candidate": "precomputed act_emb windows stored in embedding_cache.npz; training consumes cached act_emb alongside emb",
+      "status": "match"
+    },
+    {
+      "field": "partition_config.num_clusters",
+      "reference": 3,
+      "candidate": 3,
+      "status": "match"
+    },
+    {
+      "field": "partition_config.partition_seeds",
+      "reference": "0,1,2",
+      "candidate": "0,1,2",
+      "status": "match"
+    },
+    {
+      "field": "partition_config.methods",
+      "reference": "random_voronoi,kmeanspp,spectral",
+      "candidate": "kmeanspp,spectral",
+      "status": "allowed_diff"
+    },
+    {
+      "field": "partition_config.frameskip",
+      "reference": 5,
+      "candidate": 5,
+      "status": "match"
+    },
+    {
+      "field": "matrix_scope.train_seeds",
+      "reference": "0,42,625",
+      "candidate": "0,42,625",
+      "status": "match"
+    },
+    {
+      "field": "matrix_scope.eval_seeds",
+      "reference": "0,1,2,3,4",
+      "candidate": "0,1,2,3,4",
+      "status": "match"
+    },
+    {
+      "field": "matrix_scope.skip_joint",
+      "reference": false,
+      "candidate": true,
+      "status": "allowed_diff"
+    },
+    {
+      "field": "evaluation.short_goal_offset",
+      "reference": 25,
+      "candidate": 25,
+      "status": "match"
+    },
+    {
+      "field": "evaluation.long_goal_offset",
+      "reference": 50,
+      "candidate": 50,
+      "status": "match"
+    },
+    {
+      "field": "evaluation.eval_budget",
+      "reference": 50,
+      "candidate": 50,
+      "status": "match"
+    },
+    {
+      "field": "evaluation.num_eval",
+      "reference": 50,
+      "candidate": 50,
+      "status": "match"
+    },
+    {
+      "field": "evaluation.plan_horizon",
+      "reference": 5,
+      "candidate": 5,
+      "status": "match"
+    },
+    {
+      "field": "evaluation.plan_receding_horizon",
+      "reference": 5,
+      "candidate": 5,
+      "status": "match"
+    },
+    {
+      "field": "evaluation.plan_action_block",
+      "reference": 5,
+      "candidate": 5,
+      "status": "match"
+    },
+    {
+      "field": "evaluation.evaluator",
+      "reference": "experiments/tworoom/tworoom_success_rate_eval.py",
+      "candidate": "experiments/tworoom/tworoom_success_rate_eval.py",
+      "status": "match"
+    },
+    {
+      "field": "evaluation.latent_routing",
+      "reference": "mpc",
+      "candidate": "mpc",
+      "status": "match"
+    },
+    {
+      "field": "evaluation.paired_start_source_short",
+      "reference": "experiments/tworoom/results/tworoom_success_rate_baseline_seed{eval_seed}",
+      "candidate": "experiments/tworoom/results/tworoom_success_rate_baseline_seed{eval_seed}",
+      "status": "match"
+    },
+    {
+      "field": "evaluation.paired_start_source_long",
+      "reference": "experiments/tworoom/results/tworoom_success_rate_baseline_exp6_seed{eval_seed}",
+      "candidate": "experiments/tworoom/results/tworoom_success_rate_baseline_exp6_seed{eval_seed}",
+      "status": "match"
+    },
+    {
+      "field": "bootstrap_aggregation.reps",
+      "reference": 200000,
+      "candidate": 200000,
+      "status": "match"
+    },
+    {
+      "field": "bootstrap_aggregation.unit",
+      "reference": "paired eval seed blocks after averaging partition seeds per train seed",
+      "candidate": "paired eval seed blocks after averaging partition seeds per train seed",
+      "status": "match"
+    },
+    {
+      "field": "bootstrap_aggregation.ci",
+      "reference": "2.5/97.5 percentile of paired block bootstrap delta in success-rate points",
+      "candidate": "2.5/97.5 percentile of paired block bootstrap delta in success-rate points",
+      "status": "match"
+    },
+    {
+      "field": "resolved_manifest.model_family",
+      "reference": "lewm",
+      "candidate": "subjepa",
+      "status": "allowed_diff"
+    },
+    {
+      "field": "resolved_manifest.checkpoint",
+      "reference": "/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt",
+      "candidate": "/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt",
+      "status": "allowed_diff"
+    },
+    {
+      "field": "dataset_transition_scope.cache_sha256",
+      "reference": "1e973e4f8fe5781892de64203f3e91f32cb805ce0f16550e417d8ad48956401e",
+      "candidate": "1e973e4f8fe5781892de64203f3e91f32cb805ce0f16550e417d8ad48956401e",
+      "status": "match"
+    },
+    {
+      "field": "dataset_transition_scope.latent_shape",
+      "reference": {
+        "emb": [
+          693728,
+          4,
+          192
+        ],
+        "act_emb": [
+          693728,
+          4,
+          192
+        ]
+      },
+      "candidate": {
+        "emb": [
+          693728,
+          4,
+          192
+        ],
+        "act_emb": [
+          693728,
+          4,
+          192
+        ]
+      },
+      "status": "match"
+    },
+    {
+      "field": "resolved_manifest.work_root",
+      "reference": "experiments/tworoom/matrix",
+      "candidate": "experiments/tworoom/subjepa/matrix",
+      "status": "allowed_diff"
+    },
+    {
+      "field": "resolved_manifest.cache_dir",
+      "reference": "/home/sicong/.stable_worldmodel",
+      "candidate": "/data/sicong/weitao/.stable_worldmodel/subjepa/tworoom",
+      "status": "allowed_diff"
+    }
+  ],
+  "mismatches": [],
+  "allowed_differences_observed": [
+    "matrix_scope.skip_joint",
+    "partition_config.methods",
+    "resolved_manifest.cache_dir",
+    "resolved_manifest.checkpoint",
+    "resolved_manifest.model_family",
+    "resolved_manifest.work_root"
+  ],
+  "formal_gate_scope_note": "Formal gate artifacts supply only gate decision, verified spectral partitions, deployment seed, and router metadata. They must not override training or evaluation protocol fields checked here."
+}

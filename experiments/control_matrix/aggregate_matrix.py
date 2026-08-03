@@ -35,6 +35,17 @@ def parse_args() -> argparse.Namespace:
         default="random_voronoi,kmeanspp,spectral",
         help="Comma-separated partition methods to aggregate.",
     )
+    parser.add_argument(
+        "--include-auto-lap",
+        action="store_true",
+        help="Add Auto-LAP row from eval/auto (deployed Spectral partition seed).",
+    )
+    parser.add_argument(
+        "--deployment-seed",
+        type=int,
+        default=0,
+        help="Spectral partition seed used by Auto-LAP when verifying parity.",
+    )
     return parser.parse_args()
 
 
@@ -181,6 +192,45 @@ def main() -> None:
                 "sd_across_finetuning_seeds_percent": sd(train_means),
                 "num_finetuning_seeds": len(train),
                 "num_partition_seeds": len(partition),
+                "num_eval_seeds": len(evaluate),
+                "eval_seed_sd_percent": sd(all_values),
+            }
+        )
+
+    if args.include_auto_lap:
+        train_means = []
+        all_values = []
+        for t in train:
+            values = [
+                rate(
+                    args.root
+                    / "auto"
+                    / "eval"
+                    / f"train{t}"
+                    / f"eval{e}"
+                    / "results.json"
+                )
+                for e in evaluate
+            ]
+            train_means.append(mean(values))
+            all_values.extend(values)
+            for e, value in zip(evaluate, values):
+                raw_rows.append(
+                    {
+                        "method": "auto_lap",
+                        "train_seed": t,
+                        "partition_seed": args.deployment_seed,
+                        "eval_seed": e,
+                        "success_rate_percent": value,
+                    }
+                )
+        rows.append(
+            {
+                "method": "Auto-LAP",
+                "mean_percent": mean(train_means),
+                "sd_across_finetuning_seeds_percent": sd(train_means),
+                "num_finetuning_seeds": len(train),
+                "num_partition_seeds": 1,
                 "num_eval_seeds": len(evaluate),
                 "eval_seed_sd_percent": sd(all_values),
             }

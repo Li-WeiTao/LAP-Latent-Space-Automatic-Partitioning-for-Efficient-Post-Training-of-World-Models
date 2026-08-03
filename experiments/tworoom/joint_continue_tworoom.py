@@ -88,6 +88,11 @@ def parse_args() -> argparse.Namespace:
         choices=("fp32", "bf16-mixed"),
         help="Training precision. FP32 is the canonical fair-comparison setting.",
     )
+    parser.add_argument(
+        "--model-family",
+        default="lewm",
+        help="JEPA object backend family (lewm or subjepa).",
+    )
     return parser.parse_args()
 
 
@@ -219,7 +224,7 @@ def main() -> None:
     )
     dataset_sec = time.perf_counter() - dataset_t0
 
-    model = load_encoder(str(args.checkpoint), device, None)
+    model = load_encoder(str(args.checkpoint), device, None, model_family=args.model_family)
     expected_action_dim = args.frameskip * int(dataset.get_dim("action"))
     action_linear = next(
         module

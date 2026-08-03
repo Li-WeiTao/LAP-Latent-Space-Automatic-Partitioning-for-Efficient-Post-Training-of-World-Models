@@ -33,3 +33,14 @@ bash experiments/control_matrix/scripts/run_subjepa_matrix.sh \
 ```
 
 Do not write into `experiments/tworoom/matrix` or other LeWM result directories.
+
+## Full 50-epoch matrix
+
+Formal gate, protocol parity, detached launch, training, paired short/long eval, audit,
+and bootstrap are documented in **`matrix/README.md`**.
+
+Quick start (detached, 8 GPUs):
+
+```bash
+bash experiments/tworoom/subjepa/matrix/scripts/launch_matrix_detached.sh
+```

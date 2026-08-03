@@ -196,7 +196,7 @@ train_joint() {
         --checkpoint "$CHECKPOINT" --out-dir "$joint" \
         --seed "$tseed" --epochs 3 --precision fp32 \
         --frameskip "$FRAMESKIP" --num-workers "$CPU_THREADS" \
-        --cpu-threads "$CPU_THREADS"
+        --cpu-threads "$CPU_THREADS" --model-family "$MODEL_FAMILY"
     fi
   done
 }
