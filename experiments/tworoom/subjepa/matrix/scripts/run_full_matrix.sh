@@ -34,18 +34,6 @@ JEPA_BASE=(
   --methods "$MATRIX_METHODS"
 )
 
-seed_official_from_paired() {
-  local paired_root=$1
-  local official="$WORK_ROOT/eval/official"
-  mkdir -p "$official"
-  for seed in 0 1 2 3 4; do
-    local src="$paired_root/eval/official/eval${seed}/results.json"
-    [[ -f "$src" ]] || { echo "missing paired official seed $seed: $src" >&2; exit 1; }
-    mkdir -p "$official/eval${seed}"
-    cp "$src" "$official/eval${seed}/results.json"
-  done
-}
-
 snapshot_eval_horizon() {
   local label=$1
   local dst="$WORK_ROOT/eval_${label}"
@@ -104,8 +92,8 @@ case "${1:-training}" in
     ;;
   eval-short)
     bash experiments/tworoom/subjepa/matrix/scripts/setup_matrix.sh
-    seed_official_from_paired "$(realpath "$PAIR_SHORT")"
-    rm -rf "$WORK_ROOT/eval/global" "$WORK_ROOT/eval/kmeanspp" "$WORK_ROOT/eval/spectral"
+    rm -rf "$WORK_ROOT/eval/official" "$WORK_ROOT/eval/global" \
+      "$WORK_ROOT/eval/kmeanspp" "$WORK_ROOT/eval/spectral"
     RUN_ID="${RUN_ID}_short" \
       PAIRED_START_ROOT_SHORT="$(realpath "$PAIR_SHORT")" \
       SHORT_GOAL_OFFSET=25 \
@@ -118,8 +106,8 @@ case "${1:-training}" in
     ;;
   eval-long)
     bash experiments/tworoom/subjepa/matrix/scripts/setup_matrix.sh
-    seed_official_from_paired "$(realpath "$PAIR_LONG")"
-    rm -rf "$WORK_ROOT/eval/global" "$WORK_ROOT/eval/kmeanspp" "$WORK_ROOT/eval/spectral"
+    rm -rf "$WORK_ROOT/eval/official" "$WORK_ROOT/eval/global" \
+      "$WORK_ROOT/eval/kmeanspp" "$WORK_ROOT/eval/spectral"
     RUN_ID="${RUN_ID}_long" \
       PAIRED_START_ROOT_LONG="$(realpath "$PAIR_LONG")" \
       LONG_GOAL_OFFSET=50 \

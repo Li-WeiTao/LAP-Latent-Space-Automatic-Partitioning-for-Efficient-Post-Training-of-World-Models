@@ -101,8 +101,8 @@ kill $(cat experiments/tworoom/subjepa/matrix/logs/detached_<RUN_ID>.pid)
 |---------|----------------|
 | `setup` | Gate check, protocol parity, cache/partition links, LeWM paired starts |
 | `training` | setup + partition (kmeanspp only; spectral reused) + **21** training jobs |
-| `eval-short` | MPC eval goal_offset=25, snapshot → `eval_short/` |
-| `eval-long` | MPC eval goal_offset=50, snapshot → `eval_long/` |
+| `eval-short` | MPC eval goal_offset=25 (Official Sub-JEPA + Global + Regional), snapshot → `eval_short/` |
+| `eval-long` | MPC eval goal_offset=50 (same methods), snapshot → `eval_long/` |
 | `audit` | Frozen-parameter audit + one-step latent MSE |
 | `aggregate` | Success-rate tables (includes Auto-LAP row) |
 | `bootstrap` | 200k paired block bootstrap |

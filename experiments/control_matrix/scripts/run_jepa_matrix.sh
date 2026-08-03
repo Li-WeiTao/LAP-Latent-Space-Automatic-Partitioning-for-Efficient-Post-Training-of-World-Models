@@ -12,7 +12,12 @@ TMP_RESOLVED="$(mktemp)"
 WORK_ROOT="$( "$PYTHON" -c "import json; print(json.load(open('$TMP_RESOLVED'))['work_root'])" )"
 mkdir -p "$WORK_ROOT/manifests"
 RESOLVED_JSON="$WORK_ROOT/manifests/resolved_config.json"
-cp "$TMP_RESOLVED" "$RESOLVED_JSON"
+if [[ "${RESOLVED_CONFIG_SKIP:-0}" != "1" ]]; then
+  cp "$TMP_RESOLVED" "$RESOLVED_JSON"
+elif [[ -n "${RESOLVED_CONFIG_LEAF:-}" ]]; then
+  mkdir -p "$(dirname "$RESOLVED_CONFIG_LEAF")"
+  cp "$TMP_RESOLVED" "$RESOLVED_CONFIG_LEAF"
+fi
 rm -f "$TMP_RESOLVED"
 
 eval "$("$PYTHON" experiments/control_matrix/resolve_jepa_matrix_config.py "$@" --emit-shell)"
@@ -293,10 +298,17 @@ eval_one() {
 evaluate_official() {
   local goal_offset="${1:-}"
   local out_root="${2:-$WORK_ROOT/eval/official}"
+  local horizon="${3:-}"
   for eseed in "${eval_seeds[@]}"; do
+    local starts
+    starts="$(resolve_eval_starts "$eseed" "$horizon")"
+    [[ -f "$starts" || "$DRY_RUN" == "1" ]] || {
+      echo "missing paired starts for official eval seed $eseed: $starts" >&2
+      exit 1
+    }
     local baseline="$out_root/eval$eseed"
     if [[ ! -f "$baseline/results.json" || "$DRY_RUN" == "1" ]]; then
-      eval_one baseline "$CHECKPOINT" "" "$baseline" "$eseed" "" "$goal_offset"
+      eval_one baseline "$CHECKPOINT" "" "$baseline" "$eseed" "$starts" "$goal_offset"
     fi
   done
 }

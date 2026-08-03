@@ -28,12 +28,6 @@ for ((i = 0; i < ${#JEPA_ARGS[@]}; i++)); do
 done
 
 PYTHON="${PYTHON:-python}"
-TMP_RESOLVED="$(mktemp)"
-"$PYTHON" experiments/control_matrix/resolve_jepa_matrix_config.py \
-  "${JEPA_ARGS[@]}" --output "$TMP_RESOLVED"
-WORK_ROOT="$( "$PYTHON" -c "import json; print(json.load(open('$TMP_RESOLVED'))['work_root'])" )"
-rm -f "$TMP_RESOLVED"
-
 GPU_IDS="${GPU_IDS:-0,1,2,3,4,5,6,7}"
 CPU_THREADS="${CPU_THREADS:-4}"
 RUN_ID="${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ)}"
@@ -46,6 +40,26 @@ PARTITION_SEEDS="${PARTITION_SEEDS:-0,1,2}"
 EVAL_SEEDS="${EVAL_SEEDS:-0,1,2,3,4}"
 METHODS="${METHODS:-kmeanspp,spectral}"
 SKIP_JOINT="${SKIP_JOINT:-1}"
+
+TMP_RESOLVED="$(mktemp)"
+"$PYTHON" experiments/control_matrix/resolve_jepa_matrix_config.py \
+  "${JEPA_ARGS[@]}" --output "$TMP_RESOLVED"
+WORK_ROOT="$( "$PYTHON" -c "import json; print(json.load(open('$TMP_RESOLVED'))['work_root'])" )"
+rm -f "$TMP_RESOLVED"
+
+CANONICAL_RESOLVED="$(mktemp)"
+resolve_canonical_args=( "${JEPA_ARGS[@]}" )
+[[ "$SKIP_JOINT" == "1" ]] && resolve_canonical_args+=( --skip-joint )
+"$PYTHON" experiments/control_matrix/resolve_jepa_matrix_config.py \
+  "${resolve_canonical_args[@]}" \
+  --methods "$METHODS" \
+  --train-seeds "$TRAIN_SEEDS" \
+  --partition-seeds "$PARTITION_SEEDS" \
+  --eval-seeds "$EVAL_SEEDS" \
+  --output "$CANONICAL_RESOLVED"
+mkdir -p "$WORK_ROOT/manifests"
+cp "$CANONICAL_RESOLVED" "$WORK_ROOT/manifests/resolved_config.json"
+rm -f "$CANONICAL_RESOLVED"
 
 BASE_SCRIPT="${JEPA_MATRIX_SCRIPT:-experiments/control_matrix/scripts/run_subjepa_matrix.sh}"
 LOG_ROOT="$WORK_ROOT/logs/parallel_$RUN_ID"
@@ -103,26 +117,33 @@ run_stage() {
         while true; do
           echo "[start] stage=$stage task=$name gpu=$gpu attempt=$attempt log=$log"
           extra=${task_extra_args[$index]}
+          leaf_methods="${task_methods[$index]}"
+          [[ -z "$leaf_methods" ]] && leaf_methods="$METHODS"
+          leaf_args=(
+            --phase "${task_phases[$index]}"
+            --train-seeds "${task_train_seeds[$index]}"
+            --partition-seeds "${task_partition_seeds[$index]}"
+            --eval-seeds "${task_eval_seeds[$index]}"
+            --methods "$leaf_methods"
+          )
           # shellcheck disable=SC2086
           if env \
             CUDA_VISIBLE_DEVICES="$gpu" \
             GPU_ID= \
             TRAIN_SEEDS="${task_train_seeds[$index]}" \
             PARTITION_SEEDS="${task_partition_seeds[$index]}" \
-            METHODS="${task_methods[$index]}" \
+            METHODS="$leaf_methods" \
             EVAL_SEEDS="${task_eval_seeds[$index]}" \
             SKIP_JOINT="$SKIP_JOINT" \
+            RESOLVED_CONFIG_SKIP=1 \
+            RESOLVED_CONFIG_LEAF="$LOG_ROOT/$stage/${name}.resolved.json" \
             OMP_NUM_THREADS="$CPU_THREADS" \
             MKL_NUM_THREADS="$CPU_THREADS" \
             OPENBLAS_NUM_THREADS="$CPU_THREADS" \
             NUMEXPR_NUM_THREADS="$CPU_THREADS" \
             bash "$BASE_SCRIPT" \
             "${JEPA_ARGS[@]}" \
-            --phase "${task_phases[$index]}" \
-            --train-seeds "${task_train_seeds[$index]}" \
-            --partition-seeds "${task_partition_seeds[$index]}" \
-            --methods "${task_methods[$index]}" \
-            --eval-seeds "${task_eval_seeds[$index]}" \
+            "${leaf_args[@]}" \
             $extra \
             >"$log" 2>&1; then
             echo "[done] stage=$stage task=$name gpu=$gpu"
@@ -175,6 +196,7 @@ stage_enabled() {
   echo "partition_seeds=$PARTITION_SEEDS"
   echo "eval_seeds=$EVAL_SEEDS"
   echo "methods=$METHODS"
+  echo "skip_joint=$SKIP_JOINT"
   echo "start_stage=$START_STAGE"
   echo "end_stage=$END_STAGE"
   echo "git_commit=$(git rev-parse HEAD)"
@@ -219,6 +241,7 @@ if stage_enabled eval_short; then
   short_paired="${PAIRED_START_ROOT_SHORT:-${PAIRED_START_ROOT:-}}"
   short_env="GOAL_OFFSET=${short_goal}"
   [[ -n "$short_paired" ]] && short_env+=" PAIRED_START_ROOT=${short_paired}"
+  add_task "official" eval_official "" "" "" "$EVAL_SEEDS" "$short_env"
   for tseed in "${train_seeds[@]}"; do
     add_task "global_t${tseed}" eval_global "$tseed" "" "" "$EVAL_SEEDS" "$short_env"
     for method in "${methods[@]}"; do
@@ -237,6 +260,7 @@ if stage_enabled eval_long; then
   long_paired="${PAIRED_START_ROOT_LONG:-${PAIRED_START_ROOT:-}}"
   long_env="GOAL_OFFSET=${long_goal}"
   [[ -n "$long_paired" ]] && long_env+=" PAIRED_START_ROOT=${long_paired}"
+  add_task "official" eval_official "" "" "" "$EVAL_SEEDS" "$long_env"
   for tseed in "${train_seeds[@]}"; do
     add_task "global_t${tseed}" eval_global "$tseed" "" "" "$EVAL_SEEDS" "$long_env"
     for method in "${methods[@]}"; do
