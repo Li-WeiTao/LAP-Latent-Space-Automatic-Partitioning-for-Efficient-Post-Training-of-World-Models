@@ -1,0 +1,3 @@
+metric,value,comparison,threshold,absolute_margin,relative_margin_percent,interpretation,selected_branch,deployment_seed
+S_task,0.989,">=",0.5,0.489,NA,wide,spectral,0
+R_K,0.483,">",0.475,0.008,1.6842105263,narrow,spectral,0

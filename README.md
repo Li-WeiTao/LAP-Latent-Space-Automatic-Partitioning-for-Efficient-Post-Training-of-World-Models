@@ -286,6 +286,41 @@ Use `python experiments/tworoom/reproduce.py list --profile full` to see every
 retained analysis, ablation, and validation family. The registry deliberately
 excludes development-time queue, `nohup`, recovery, and partial-rerun launchers.
 
+## TwoRoom Sub-JEPA result snapshot
+
+The completed Sub-JEPA automatic gate selected the **spectral** branch with preset
+deployment seed 0. The safety condition passes with a wide margin; the background-gap
+condition passes narrowly.
+
+| Gate metric | Value | Threshold | Margin |
+|---|---:|---:|---|
+| `S_task` | 0.989 | ≥ 0.5 | wide (+0.49) |
+| `R_K` vs `T_bg` | 0.483 | > 0.475 | narrow (+0.008, ≈1.7%) |
+
+| Method | Short-horizon success rate | Long-horizon success rate |
+|---|---:|---:|
+| Official Sub-JEPA | 94.0% | 57.2% |
+| Global-FT50 | 94.8 ± 0.0% | 58.53 ± 0.61% |
+| K-means++ K3-50 | 93.87 ± 0.13% | 57.87 ± 0.80% |
+| Spectral K3-50 | 93.96 ± 0.28% | 58.27 ± 0.48% |
+| **Auto-LAP (Spectral, seed 0)** | **93.87 ± 0.23%** | **58.67 ± 1.40%** |
+
+![TwoRoom Sub-JEPA short-horizon results](experiments/tworoom/assets/subjepa_control_metrics/tworoom_subjepa_short_horizon_main.png)
+
+![TwoRoom Sub-JEPA long-horizon results](experiments/tworoom/assets/subjepa_control_metrics/tworoom_subjepa_long_horizon_main.png)
+
+Auto-LAP is **Spectral K3-50 with preset deployment seed 0**. Its statistics use the
+deployed partition seed, whereas the Spectral row averages partition seeds 0, 1, and
+2. Fine-tuned methods show the sample SD across train seeds 0, 42, and 625 after
+averaging the applicable partition seeds and five paired evaluation seeds. The
+official checkpoint has no fine-tuning seed and therefore no error bar.
+
+Recreate both ggplot2 figures from the repository root:
+
+```bash
+Rscript experiments/tworoom/assets/subjepa_control_metrics/plot_tworoom_subjepa_control_matrix.R
+```
+
 ## PushT result snapshot
 
 PushT uses the same three predictor fine-tuning seeds (`0`, `42`, and `625`),

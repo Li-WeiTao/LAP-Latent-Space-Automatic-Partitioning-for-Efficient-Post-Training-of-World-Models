@@ -6,12 +6,12 @@
   "git_commit": "769664866547f069b8f94a023223f6f449aefc8a",
   "checkpoint_sha256": "06d743c6fb46914dafed0aabab4e9e2eed8d53efbf9cb4a4a3350244afbb2652",
   "dataset_sha256": "129a36aa93ea0de488d2bcc876e396de9e3907bf66c6aae6394e542ef6a6d623",
-  "full_cache_sha256": "1e973e4f8fe5781892de64203f3e91f32cb805ce0f16550e417d8ad48956401e",
+  "full_cache_sha256": "b2fab2bfc3127e7cefcad0d1dca409b9e39d156f55d518945bc9ab4ee417a900",
   "full_cache_stats": {
     "candidate_starts_total": 693728,
     "retained_starts_total": 693728,
     "encoded_transitions": 693728,
-    "encoded_unique_frames": 909723,
+    "encoded_unique_frames": 909609,
     "truncated": false
   },
   "replay_audit": {

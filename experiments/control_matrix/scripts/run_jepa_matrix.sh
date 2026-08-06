@@ -454,10 +454,10 @@ case "$PHASE" in
   eval-long)
     evaluate "$LONG_GOAL_OFFSET"
     ;;
-  eval_official) evaluate_official "${GOAL_OFFSET:-}" ;;
-  eval_global) evaluate_global "${GOAL_OFFSET:-}" ;;
-  eval_regions) evaluate_regions "${GOAL_OFFSET:-}" ;;
-  eval) evaluate "${GOAL_OFFSET:-}" ;;
+  eval_official) evaluate_official "${EVAL_GOAL_OFFSET:-${GOAL_OFFSET:-}}" ;;
+  eval_global) evaluate_global "${EVAL_GOAL_OFFSET:-${GOAL_OFFSET:-}}" ;;
+  eval_regions) evaluate_regions "${EVAL_GOAL_OFFSET:-${GOAL_OFFSET:-}}" ;;
+  eval) evaluate "${EVAL_GOAL_OFFSET:-${GOAL_OFFSET:-}}" ;;
   aggregate) aggregate ;;
   smoke) smoke ;;
   all)

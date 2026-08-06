@@ -128,6 +128,7 @@ run_stage() {
           )
           # shellcheck disable=SC2086
           if env \
+            $extra \
             CUDA_VISIBLE_DEVICES="$gpu" \
             GPU_ID= \
             TRAIN_SEEDS="${task_train_seeds[$index]}" \
@@ -144,7 +145,6 @@ run_stage() {
             bash "$BASE_SCRIPT" \
             "${JEPA_ARGS[@]}" \
             "${leaf_args[@]}" \
-            $extra \
             >"$log" 2>&1; then
             echo "[done] stage=$stage task=$name gpu=$gpu"
             break
@@ -239,7 +239,9 @@ if stage_enabled eval_short; then
   clear_tasks
   short_goal="${SHORT_GOAL_OFFSET:-25}"
   short_paired="${PAIRED_START_ROOT_SHORT:-${PAIRED_START_ROOT:-}}"
-  short_env="GOAL_OFFSET=${short_goal}"
+  # EVAL_GOAL_OFFSET drives MPC horizon; avoid GOAL_OFFSET here because config
+  # resolution treats GOAL_OFFSET as short_goal_offset and conflicts with task spec.
+  short_env="EVAL_GOAL_OFFSET=${short_goal}"
   [[ -n "$short_paired" ]] && short_env+=" PAIRED_START_ROOT=${short_paired}"
   add_task "official" eval_official "" "" "" "$EVAL_SEEDS" "$short_env"
   for tseed in "${train_seeds[@]}"; do
@@ -258,7 +260,7 @@ if stage_enabled eval_long; then
   clear_tasks
   long_goal="${LONG_GOAL_OFFSET:-50}"
   long_paired="${PAIRED_START_ROOT_LONG:-${PAIRED_START_ROOT:-}}"
-  long_env="GOAL_OFFSET=${long_goal}"
+  long_env="EVAL_GOAL_OFFSET=${long_goal}"
   [[ -n "$long_paired" ]] && long_env+=" PAIRED_START_ROOT=${long_paired}"
   add_task "official" eval_official "" "" "" "$EVAL_SEEDS" "$long_env"
   for tseed in "${train_seeds[@]}"; do

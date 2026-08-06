@@ -1,0 +1,18 @@
+Source manifests (repository-relative)
+
+experiments/tworoom/subjepa/matrix/manifests/matrix_summary_short.json
+SHA-256: 8acba9ceb19bd0ff8a3e6fc45391616cc81940e8e4ad5abb6bb1fa855fd439d8
+
+experiments/tworoom/subjepa/matrix/manifests/matrix_summary_long.json
+SHA-256: c7590d95290a5449f6e9bb8bb4cdbef23ccd7e4d6e3ae0d2fff12afb4d7a24f5
+
+The rows and numeric fields were transcribed without rounding into
+tworoom_subjepa_control_summary.csv and validated programmatically against both JSON
+manifests before plotting. The displayed labels round only for presentation.
+
+Primary error bar:
+sample SD across fine-tuning seeds after averaging partition and evaluation seeds.
+
+Gate decision:
+selected_branch = spectral
+deployment_seed = 0

@@ -1,0 +1,11 @@
+horizon,method_id,method_label,mean_percent,sd_percent,num_finetuning_seeds,num_partition_seeds,num_eval_seeds,seed_type,source_scope
+short,baseline,Official Sub-JEPA,94.0,NA,0,0,5,official,"official checkpoint; no fine-tuning seed"
+short,globalft50,Global-FT50,94.8,0.0,3,0,5,fine_tuning,"train seeds 0,42,625"
+short,kmeans,K-means++ K3-50,93.86666666666667,0.13333333333333286,3,3,5,fine_tuning,"partition seeds 0,1,2; train seeds 0,42,625"
+short,spectral,Spectral K3-50,93.95555555555556,0.2775554665954845,3,3,5,fine_tuning,"partition seeds 0,1,2; train seeds 0,42,625"
+short,autolap,Auto-LAP,93.86666666666667,0.2309401076758536,3,1,5,fine_tuning,"Spectral K3-50; preset deployment seed 0; train seeds 0,42,625"
+long,baseline,Official Sub-JEPA,57.2,NA,0,0,5,official,"official checkpoint; no fine-tuning seed"
+long,globalft50,Global-FT50,58.53333333333333,0.6110100926607803,3,0,5,fine_tuning,"train seeds 0,42,625"
+long,kmeans,K-means++ K3-50,57.86666666666667,0.7999999999999972,3,3,5,fine_tuning,"partition seeds 0,1,2; train seeds 0,42,625"
+long,spectral,Spectral K3-50,58.26666666666667,0.48074017006186354,3,3,5,fine_tuning,"partition seeds 0,1,2; train seeds 0,42,625"
+long,autolap,Auto-LAP,58.666666666666664,1.4047538337136969,3,1,5,fine_tuning,"Spectral K3-50; preset deployment seed 0; train seeds 0,42,625"

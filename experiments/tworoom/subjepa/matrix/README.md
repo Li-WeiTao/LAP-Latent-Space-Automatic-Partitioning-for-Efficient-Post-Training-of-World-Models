@@ -33,7 +33,8 @@ Formal gate artifacts supply spectral partitions, deployment seed 0, and router 
 | Sub-JEPA checkpoint | `.stable_worldmodel/tworoom/subjepa_object.ckpt` |
 | Dataset | `tworoom.h5` (same file as LeWM matrix) |
 | LeWM paired eval starts | `experiments/tworoom/results/tworoom_success_rate_baseline_seed{0-4}` (short), `..._baseline_exp6_seed{0-4}` (long) |
-| Python env | `le-wm/.venv` (Sub-JEPA checkpoint compat) |
+| Python env | Repo `.venv` (Python 3.10; see `../README.md` server runbook) |
+| Extra pip deps | `hdf5plugin`, `imageio[ffmpeg]` |
 
 ## Directory layout
 
@@ -114,18 +115,159 @@ After training:
 bash experiments/tworoom/subjepa/matrix/scripts/run_full_matrix.sh all-post-train
 ```
 
+### Eval only (short + long, no audit/aggregate/bootstrap)
+
+When training is already complete and you only need MPC success-rate evaluation
+(Official + Global-FT + K-means++ + Spectral):
+
+```bash
+GPU_IDS=0,1,2,3,4,5,6 \
+bash experiments/tworoom/subjepa/matrix/scripts/launch_eval_detached.sh
+```
+
+# Long only (after short is done)
+bash experiments/tworoom/subjepa/matrix/scripts/launch_eval_long_detached.sh
+```
+
+This runs `run_eval_only.sh` → `eval-short` then `eval-long` with **7-GPU parallel**
+dispatch (22 tasks per horizon). Logs under `matrix/logs/eval_only_<RUN_ID>.log`.
+Outputs snapshot to `eval_short/` and `eval_long/`.
+
+Long eval passes horizon via `EVAL_GOAL_OFFSET` in `run_jepa_matrix_parallel.sh`
+(not bare `GOAL_OFFSET`, which conflicts with task-spec `short_goal_offset`).
+
+Requires `imageio[ffmpeg]` in the active venv.
+
+### What `audit` does (optional post-train stage)
+
+Not part of success-rate evaluation. The `audit` stage runs two checks on completed
+training jobs:
+
+1. **`matrix_frozen_audit.py`**: every trained checkpoint must leave encoder (and all
+   non-predictor) weights identical to the original Sub-JEPA checkpoint; only
+   `predictor` / `pred_proj` may change.
+2. **`matrix_one_step_mse.py`**: one-step latent prediction MSE on a fixed 5% holdout
+   of `embedding_cache.npz` for each regional predictor.
+
+Use audit for reproducibility reporting; skip it if you only need MPC eval numbers.
+
+## Results (sicong, Aug 2026)
+
+Training, short/long MPC eval, and aggregate completed on 7× RTX 3090. Gate
+artifacts were produced on another machine (same protocol) and committed under
+`../formal/`; this server re-encoded the full latent cache locally and reused
+formal spectral partitions.
+
+Raw outputs:
+
+| Artifact | Path |
+|----------|------|
+| Short eval snapshots | `eval_short/` (110 `results.json`) |
+| Long eval snapshots | `eval_long/` (110 `results.json`) |
+| Aggregate tables | `manifests/matrix_summary_short.json`, `matrix_summary_long.json` |
+| Raw CSV | `manifests/matrix_raw_short.csv`, `matrix_raw_long.csv` |
+
+Reproduce aggregate after eval:
+
+```bash
+PYTHON=$PWD/.venv/bin/python bash experiments/tworoom/subjepa/matrix/scripts/run_full_matrix.sh aggregate
+```
+
+### Formal gate
+
+Source: `../formal/manifests/material_passport.json` (`id`:
+`subjepa-tworoom-formal-gate-2026-08-03`).
+
+| Field | Value |
+|-------|-------|
+| `verification_status` | `VERIFIED` |
+| `selected_branch` | `spectral` |
+| `selected_reason` | `spectrally_nondegenerate` |
+| `deployment_seed` | `0` |
+
+Gate criteria (`lap/partition/gate.py`): safety `S_task ≥ 0.5` and background
+`R_K > T_bg`, where `R_K = E_K_min − T_E_K_max`.
+
+| Metric | Value | Notes |
+|--------|-------|-------|
+| `E_K_min` | 0.489 | Minimum nominal relative eigengap across 3 diagnostic seeds |
+| `T_E_K_max` | 0.0055 | Max kNN perturbation (×2 multiplier) |
+| `S_task` | 0.989 | Safety retention — **wide margin** above 0.5 |
+| `R_K` | 0.483 | Robust residual gap |
+| `T_bg` | 0.475 | Background threshold (max over 9 diagnostic graphs) |
+| **`R_K − T_bg`** | **0.008** | **Narrow pass** (~1.7% above threshold) |
+
+Tightest single graph: diagnostic seed **2**, kNN **33** (candidate gap 0.490 vs
+background threshold 0.475, margin ≈ 0.015). Seeds 0 and 1 had much larger margins.
+
+Deployed partition stability (pairwise ARI across partition seeds 0/1/2):
+**0.94–0.96**. Router holdout macro-F1: **1.0**.
+
+Spectral structure at deployment (seed 0): `eigengap_after_k ≈ 0.00069`; first
+Laplacian eigenvalues after the zero mode are very small — partition signal exists
+but is weak. TwoRoom has low intrinsic dimensionality; Sub-JEPA’s global Gaussian
+regularization may already impose strong structure, leaving little benefit from hard
+K=3 splits.
+
+Detailed gate diagnostics: `../formal/gate/partition/manifest.json`,
+`../formal/manifests/post_gate_audit.json`.
+
+### Matrix MPC success rates
+
+From `manifests/matrix_summary_{short,long}.json` after paired MPC eval (50 episodes
+× 5 eval seeds; train seeds 0, 42, 625; partition seeds 0, 1, 2). Error bars:
+sample SD across fine-tuning seeds.
+
+**Short horizon** (`goal_offset_steps = 25`):
+
+| Method | Mean | SD (FT seeds) |
+|--------|------|---------------|
+| Official baseline | 94.0% | — |
+| Global-FT50 | **94.8%** | ±0.0% |
+| K-means++ | 93.9% | ±0.1% |
+| Spectral | 94.0% | ±0.3% |
+| Auto-LAP | 93.9% | ±0.2% |
+
+**Long horizon** (`goal_offset_steps = 50`):
+
+| Method | Mean | SD (FT seeds) |
+|--------|------|---------------|
+| Official baseline | 57.2% | — |
+| Global-FT50 | **58.5%** | ±0.6% |
+| K-means++ | 57.9% | ±0.8% |
+| Spectral | 58.3% | ±0.5% |
+| Auto-LAP | 58.7% | ±1.4% |
+
+### Interpretation
+
+1. **Post-training helps.** Official is lowest on both horizons; Global-FT and
+   regional predictors gain ~0.8–1.3 pp (short) and ~1–1.5 pp (long).
+2. **Regional methods ≈ Global-FT.** K-means++, Spectral, and Auto-LAP do not
+   consistently beat Global-FT50; differences are within fine-tuning seed noise.
+3. **Consistent with a narrow gate.** The background check passed by only
+   `R_K − T_bg ≈ 0.008`, so latent space barely supports a confident K=3 spectral
+   split. Expect limited uplift from regional post-training on this task/checkpoint.
+4. **Auto-LAP on long** has the highest mean (58.7%) but the largest FT-seed SD
+   (±1.4%), matching unstable routing gains when partition signal is weak.
+
+This run is best read as a **neutral / weak-positive** LAP scenario for Sub-JEPA
+TwoRoom, not a strong spectral win. Compare against LeWM TwoRoom gate margins and
+matrix numbers when available.
+
 ## GPU scheduling and wall time
 
-8 GPUs, round-robin queue, ~2.6 jobs/GPU for 21 jobs.
+7–8 GPUs, round-robin queue, ~3 jobs/GPU for 21 training jobs; ~3.1 waves for 22 eval
+tasks per horizon.
 
 | Job type | Count | Approx. time each |
 |----------|-------|-------------------|
 | Regional 50ep (3 clusters) | 18 | ~1.5–2 h |
 | Global 50ep | 3 | ~75–90 min |
 
-**Training wall time (8×4090): ~4–6 hours.**
+**Training wall time (8×4090): ~4–6 hours; observed ~10.5 h on 7×3090 (sicong, Aug 2026).**
 
-Post-train eval/audit/bootstrap adds several hours depending on eval parallelism.
+Eval-only (short + long, 7 GPUs): ~4–6 hours. Audit/aggregate/bootstrap add further
+time if enabled.
 
 ## Resume behavior
 

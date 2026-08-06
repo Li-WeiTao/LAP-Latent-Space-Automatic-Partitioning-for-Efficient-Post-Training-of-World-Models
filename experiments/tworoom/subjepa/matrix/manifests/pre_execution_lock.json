@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "git_commit": "805d353e33830cdaec532abc91ea297711bd2793",
-  "gate_passport": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/formal/manifests/material_passport.json",
+  "git_commit": "b7a7d4ba4a4d09e5d87fec462238c5205ce74557",
+  "gate_passport": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/formal/manifests/material_passport.json",
   "gate_status": "VERIFIED",
   "selected_branch": "spectral",
   "deployment_seed": 0,
   "sha256": {
     "dataset": "129a36aa93ea0de488d2bcc876e396de9e3907bf66c6aae6394e542ef6a6d623",
     "checkpoint": "06d743c6fb46914dafed0aabab4e9e2eed8d53efbf9cb4a4a3350244afbb2652",
-    "full_cache": "1e973e4f8fe5781892de64203f3e91f32cb805ce0f16550e417d8ad48956401e",
+    "full_cache": "b2fab2bfc3127e7cefcad0d1dca409b9e39d156f55d518945bc9ab4ee417a900",
     "task_spec": "ab31872ab893101bb703d370498e6c10f5fb6541c0fa5face2fece020ca82449"
   },
-  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/configs/experiments/tasks/tworoom.json",
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/tworoom.json",
   "eval_config_name": "tworoom",
-  "protocol_parity": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/matrix/manifests/protocol_parity.json"
+  "protocol_parity": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/matrix/manifests/protocol_parity.json"
 }

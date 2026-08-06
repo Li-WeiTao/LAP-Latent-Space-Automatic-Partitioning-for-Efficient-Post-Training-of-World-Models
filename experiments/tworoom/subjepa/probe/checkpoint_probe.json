@@ -11,7 +11,7 @@
     "module_import_path": "backends.lewm.vendor.jepa"
   },
   "dataset": {
-    "path": "/data/sicong/weitao/datasets/lewm/tworoom.h5",
+    "path": "/home/sicong/weitao/datasets/lewm/tworoom.h5",
     "sha256": "129a36aa93ea0de488d2bcc876e396de9e3907bf66c6aae6394e542ef6a6d623"
   },
   "device": "cuda",

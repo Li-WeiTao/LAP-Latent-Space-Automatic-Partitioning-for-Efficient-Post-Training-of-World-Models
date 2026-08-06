@@ -1,0 +1,430 @@
+==== CONFIG ====
+cache_dir: /data/sicong/weitao/.stable_worldmodel/subjepa/tworoom
+solver:
+  _target_: stable_worldmodel.solver.CEMSolver
+  model: ???
+  batch_size: 1
+  num_samples: 300
+  var_scale: 1.0
+  n_steps: 30
+  topk: 30
+  device: cuda
+  seed: ${seed}
+world:
+  env_name: swm/TwoRoom-v1
+  num_envs: ${eval.num_eval}
+  max_episode_steps: 100
+seed: 2
+policy: random
+dataset:
+  stats: ${eval.dataset_name}
+  keys_to_cache:
+  - action
+  - proprio
+plan_config:
+  horizon: 5
+  receding_horizon: 5
+  action_block: 5
+eval:
+  num_eval: 50
+  goal_offset_steps: 25
+  eval_budget: 50
+  img_size: 224
+  dataset_name: tworoom
+  callables:
+  - method: _set_state
+    args:
+      state:
+        value: proprio
+  - method: _set_goal_state
+    args:
+      goal_state:
+        value: goal_proprio
+output:
+  filename: tworoom_results.txt
+
+==== MODEL ====
+{
+  "mode": "lap",
+  "base_encoder_checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt",
+  "lap_run_dir": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/matrix/training/kmeanspp/partition0_train0",
+  "lap_manifest": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/matrix/training/kmeanspp/partition0_train0/manifest.json",
+  "cluster_predictors": {
+    "cluster0": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/matrix/training/kmeanspp/partition0_train0/P_train_cluster0_object.ckpt",
+    "cluster1": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/matrix/training/kmeanspp/partition0_train0/P_train_cluster1_object.ckpt",
+    "cluster2": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/matrix/training/kmeanspp/partition0_train0/P_train_cluster2_object.ckpt"
+  },
+  "num_clusters": 3,
+  "num_routing_prototypes": 3,
+  "partition_metadata": {
+    "algorithm": "spherical_kmeanspp",
+    "num_clusters": 3,
+    "seed": 0,
+    "n_init": 50,
+    "selected_restart": 34,
+    "selected_objective": 0.48549672961235046,
+    "runs": [
+      {
+        "restart": 0,
+        "seed": 0,
+        "objective": 0.4854966700077057,
+        "niter": 44,
+        "converged": true
+      },
+      {
+        "restart": 1,
+        "seed": 1,
+        "objective": 0.4854966998100281,
+        "niter": 42,
+        "converged": true
+      },
+      {
+        "restart": 2,
+        "seed": 2,
+        "objective": 0.4854966700077057,
+        "niter": 189,
+        "converged": true
+      },
+      {
+        "restart": 3,
+        "seed": 3,
+        "objective": 0.4854966700077057,
+        "niter": 195,
+        "converged": true
+      },
+      {
+        "restart": 4,
+        "seed": 4,
+        "objective": 0.4854966700077057,
+        "niter": 199,
+        "converged": true
+      },
+      {
+        "restart": 5,
+        "seed": 5,
+        "objective": 0.4854966700077057,
+        "niter": 210,
+        "converged": true
+      },
+      {
+        "restart": 6,
+        "seed": 6,
+        "objective": 0.4854966998100281,
+        "niter": 191,
+        "converged": true
+      },
+      {
+        "restart": 7,
+        "seed": 7,
+        "objective": 0.4854966998100281,
+        "niter": 182,
+        "converged": true
+      },
+      {
+        "restart": 8,
+        "seed": 8,
+        "objective": 0.4854966700077057,
+        "niter": 193,
+        "converged": true
+      },
+      {
+        "restart": 9,
+        "seed": 9,
+        "objective": 0.4854966700077057,
+        "niter": 34,
+        "converged": true
+      },
+      {
+        "restart": 10,
+        "seed": 10,
+        "objective": 0.4572082459926605,
+        "niter": 62,
+        "converged": true
+      },
+      {
+        "restart": 11,
+        "seed": 11,
+        "objective": 0.4854966700077057,
+        "niter": 234,
+        "converged": true
+      },
+      {
+        "restart": 12,
+        "seed": 12,
+        "objective": 0.4854966700077057,
+        "niter": 55,
+        "converged": true
+      },
+      {
+        "restart": 13,
+        "seed": 13,
+        "objective": 0.4854966700077057,
+        "niter": 210,
+        "converged": true
+      },
+      {
+        "restart": 14,
+        "seed": 14,
+        "objective": 0.4854966700077057,
+        "niter": 48,
+        "converged": true
+      },
+      {
+        "restart": 15,
+        "seed": 15,
+        "objective": 0.4854966700077057,
+        "niter": 188,
+        "converged": true
+      },
+      {
+        "restart": 16,
+        "seed": 16,
+        "objective": 0.4854966700077057,
+        "niter": 206,
+        "converged": true
+      },
+      {
+        "restart": 17,
+        "seed": 17,
+        "objective": 0.4854966998100281,
+        "niter": 174,
+        "converged": true
+      },
+      {
+        "restart": 18,
+        "seed": 18,
+        "objective": 0.4854966998100281,
+        "niter": 191,
+        "converged": true
+      },
+      {
+        "restart": 19,
+        "seed": 19,
+        "objective": 0.4854966700077057,
+        "niter": 41,
+        "converged": true
+      },
+      {
+        "restart": 20,
+        "seed": 20,
+        "objective": 0.4854966998100281,
+        "niter": 54,
+        "converged": true
+      },
+      {
+        "restart": 21,
+        "seed": 21,
+        "objective": 0.4854966700077057,
+        "niter": 160,
+        "converged": true
+      },
+      {
+        "restart": 22,
+        "seed": 22,
+        "objective": 0.4854966700077057,
+        "niter": 63,
+        "converged": true
+      },
+      {
+        "restart": 23,
+        "seed": 23,
+        "objective": 0.4854966700077057,
+        "niter": 41,
+        "converged": true
+      },
+      {
+        "restart": 24,
+        "seed": 24,
+        "objective": 0.4854966998100281,
+        "niter": 44,
+        "converged": true
+      },
+      {
+        "restart": 25,
+        "seed": 25,
+        "objective": 0.4854966700077057,
+        "niter": 198,
+        "converged": true
+      },
+      {
+        "restart": 26,
+        "seed": 26,
+        "objective": 0.4854966700077057,
+        "niter": 189,
+        "converged": true
+      },
+      {
+        "restart": 27,
+        "seed": 27,
+        "objective": 0.4854966700077057,
+        "niter": 54,
+        "converged": true
+      },
+      {
+        "restart": 28,
+        "seed": 28,
+        "objective": 0.4854966700077057,
+        "niter": 176,
+        "converged": true
+      },
+      {
+        "restart": 29,
+        "seed": 29,
+        "objective": 0.47055086493492126,
+        "niter": 53,
+        "converged": true
+      },
+      {
+        "restart": 30,
+        "seed": 30,
+        "objective": 0.4854966998100281,
+        "niter": 152,
+        "converged": true
+      },
+      {
+        "restart": 31,
+        "seed": 31,
+        "objective": 0.4854966700077057,
+        "niter": 47,
+        "converged": true
+      },
+      {
+        "restart": 32,
+        "seed": 32,
+        "objective": 0.4854966998100281,
+        "niter": 155,
+        "converged": true
+      },
+      {
+        "restart": 33,
+        "seed": 33,
+        "objective": 0.4854966700077057,
+        "niter": 118,
+        "converged": true
+      },
+      {
+        "restart": 34,
+        "seed": 34,
+        "objective": 0.48549672961235046,
+        "niter": 35,
+        "converged": true
+      },
+      {
+        "restart": 35,
+        "seed": 35,
+        "objective": 0.4854966700077057,
+        "niter": 200,
+        "converged": true
+      },
+      {
+        "restart": 36,
+        "seed": 36,
+        "objective": 0.4854966998100281,
+        "niter": 180,
+        "converged": true
+      },
+      {
+        "restart": 37,
+        "seed": 37,
+        "objective": 0.4854966998100281,
+        "niter": 135,
+        "converged": true
+      },
+      {
+        "restart": 38,
+        "seed": 38,
+        "objective": 0.4854966998100281,
+        "niter": 202,
+        "converged": true
+      },
+      {
+        "restart": 39,
+        "seed": 39,
+        "objective": 0.4854966700077057,
+        "niter": 52,
+        "converged": true
+      },
+      {
+        "restart": 40,
+        "seed": 40,
+        "objective": 0.4854966700077057,
+        "niter": 188,
+        "converged": true
+      },
+      {
+        "restart": 41,
+        "seed": 41,
+        "objective": 0.4854966700077057,
+        "niter": 185,
+        "converged": true
+      },
+      {
+        "restart": 42,
+        "seed": 42,
+        "objective": 0.4854966700077057,
+        "niter": 35,
+        "converged": true
+      },
+      {
+        "restart": 43,
+        "seed": 43,
+        "objective": 0.4854966998100281,
+        "niter": 196,
+        "converged": true
+      },
+      {
+        "restart": 44,
+        "seed": 44,
+        "objective": 0.4854966700077057,
+        "niter": 182,
+        "converged": true
+      },
+      {
+        "restart": 45,
+        "seed": 45,
+        "objective": 0.4854966700077057,
+        "niter": 191,
+        "converged": true
+      },
+      {
+        "restart": 46,
+        "seed": 46,
+        "objective": 0.47055086493492126,
+        "niter": 96,
+        "converged": true
+      },
+      {
+        "restart": 47,
+        "seed": 47,
+        "objective": 0.4854966700077057,
+        "niter": 205,
+        "converged": true
+      },
+      {
+        "restart": 48,
+        "seed": 48,
+        "objective": 0.4854966700077057,
+        "niter": 61,
+        "converged": true
+      },
+      {
+        "restart": 49,
+        "seed": 49,
+        "objective": 0.47055086493492126,
+        "niter": 37,
+        "converged": true
+      }
+    ],
+    "routing": "zscore_l2_spherical_voronoi"
+  },
+  "switch_timing": "once per MPC replan from the observed latent",
+  "latent_routing": "mpc"
+}
+==== RESULTS ====
+metrics: {'success_rate': 94.0, 'episode_successes': array([ True,  True,  True,  True,  True, False,  True,  True,  True,
+        True,  True, False,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True, False,  True,  True,  True,
+        True,  True,  True,  True,  True]), 'seeds': None}
+evaluation_time: 84.65062236785889 seconds

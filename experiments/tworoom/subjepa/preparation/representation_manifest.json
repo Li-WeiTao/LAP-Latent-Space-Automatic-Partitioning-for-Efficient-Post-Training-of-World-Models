@@ -3,74 +3,74 @@
   "implementation_backend": "jepa_object",
   "model_family": "subjepa",
   "dataset_name": "tworoom",
-  "data_file": "/data/sicong/weitao/datasets/lewm/tworoom.h5",
+  "data_file": "/home/sicong/weitao/datasets/lewm/tworoom.h5",
   "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt",
-  "starts_file": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/preparation/train_global_reference_starts.npy",
+  "starts_file": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/preparation/train_global_reference_starts.npy",
   "history_size": 3,
   "num_preds": 1,
   "frameskip": 5,
   "encode_report": {
     "method": "unique_frame_inverse_reconstruction",
     "selection": {
-      "starts_source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/preparation/.encode_starts.npy",
-      "samples": 3686,
+      "starts_source": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/preparation/.encode_starts.npy",
+      "samples": 693728,
       "source_offset": 0,
-      "source_count": 3686,
+      "source_count": 693728,
       "sequence_length": 4
     },
     "arrays": {
       "emb": {
         "shape": [
-          3686,
+          693728,
           4,
           192
         ],
         "dtype": "float32",
-        "sha256": "982fa6f190e189505393649ccee5b906a84be8673bbedfc65b537ea64ea47c7c"
+        "sha256": "c24585c9f0e5c3224b9139c69896cfb4627a56b5cf83500fb6056b1898bea01a"
       },
       "act_emb": {
         "shape": [
-          3686,
+          693728,
           4,
           192
         ],
         "dtype": "float32",
-        "sha256": "4916384615985ee324bb7371a67a9397b38cf9bdb758d49e2ab032b09e0a5c7a"
+        "sha256": "0e91bf46368f980c4801077fafebbc5eaf4d0445fcc031d93659890c306394cb"
       },
       "region_starts": {
         "shape": [
-          3686
+          693728
         ],
         "dtype": "int64",
-        "sha256": "222501892e1a7b4727c96ac27252901dd11413e917dbec142ab7d90c5d959782"
+        "sha256": "bd13018df229c3c7da02a807e5946745fd483c7f69ca09e4fe1f5847998f22ab"
       }
     }
   },
   "spectral_cache_stats": {
-    "cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/preparation/embedding_cache.npz",
-    "num_transitions": 3686,
-    "num_expanded_latents": 14744,
-    "num_unique_timesteps": 14663,
-    "discarded_repeated_window_slots": 81,
+    "cache": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/preparation/embedding_cache.npz",
+    "num_transitions": 693728,
+    "num_expanded_latents": 2774912,
+    "num_unique_timesteps": 909723,
+    "discarded_repeated_window_slots": 1865189,
     "duplicate_policy": "stable_first_occurrence_per_timestep",
     "latent_dim": 192,
     "frameskip": 5
   },
   "reference_audit": null,
-  "git_commit": "0babf1687afaa1c6667ca6d877cc85e4509f1131",
+  "git_commit": "b7a7d4ba4a4d09e5d87fec462238c5205ce74557",
   "artifacts": {
-    "embedding_cache.npz": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/preparation/embedding_cache.npz",
-    "spectral_embedding_cache.npz": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/preparation/spectral_embedding_cache.npz",
-    "representation_manifest.json": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/preparation/representation_manifest.json",
-    "action_norm_stats.npz": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/preparation/action_norm_stats.npz",
-    "action_norm_manifest.json": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/subjepa/preparation/action_norm_manifest.json"
+    "embedding_cache.npz": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/preparation/embedding_cache.npz",
+    "spectral_embedding_cache.npz": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/preparation/spectral_embedding_cache.npz",
+    "representation_manifest.json": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/preparation/representation_manifest.json",
+    "action_norm_stats.npz": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/preparation/action_norm_stats.npz",
+    "action_norm_manifest.json": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/preparation/action_norm_manifest.json"
   },
   "sha256": {
     "data_file": "129a36aa93ea0de488d2bcc876e396de9e3907bf66c6aae6394e542ef6a6d623",
     "checkpoint": "06d743c6fb46914dafed0aabab4e9e2eed8d53efbf9cb4a4a3350244afbb2652",
-    "starts": "886eebf549a4d34355b410e708eaf88d554188a44588c8fd9229ceba98b3a380",
-    "embedding_cache": "6828c6b5b7f87df33878ed43684821e975b4e5aa9e859a1ce00e1bf6f40ab3a7",
-    "spectral_embedding_cache": "5f64378cf214b251232be8ea890ce90947d92a5939ae1e13d2bff604e3c27628",
-    "action_norm_stats": "94bcfaf32c782e016e4e088f90ceae3fb89bb3436ad91a2ce9070b0597d6d93d"
+    "starts": "7c3047914d9f54c07ccafa5dcf13a27412bf963cd96fd0e2675feadaef8ae496",
+    "embedding_cache": "b2fab2bfc3127e7cefcad0d1dca409b9e39d156f55d518945bc9ab4ee417a900",
+    "spectral_embedding_cache": "4d9ece0743793f6bff4e909d3d239c19f4f99437122addcfedb7e5773ec4f1d4",
+    "action_norm_stats": "0860f39ef9d286cbe1d1fd3ff788486b6c9bda4ff50330aa4b58faa19c844280"
   }
 }
