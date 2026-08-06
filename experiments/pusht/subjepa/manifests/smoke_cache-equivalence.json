@@ -12,9 +12,9 @@
     4,
     192
   ],
-  "starts_source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/preparation/.encode_starts.npy",
+  "starts_source": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/.encode_starts.npy",
   "starts_sha256": "ec2eecdae76245e3f889f3bd10b44c2270ae443b980f4bc47fb741d2f602a78e",
-  "cache_sha256": "3276baa78353564f6baccbdea423137ee8472901841da6d1840d9b6353c4fc67",
+  "cache_sha256": "3d2e75d1e347c1826b94ab47a474d8e97af0eb92a7a9f6f63a733dcb3177ec3e",
   "selection_source_count": 3686,
   "passed": true,
   "max_abs_diff": 0.0,

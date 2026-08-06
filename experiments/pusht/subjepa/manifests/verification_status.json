@@ -2,15 +2,24 @@
   "schema_version": 1,
   "status": "VERIFIED",
   "scope": "pusht_subjepa_smoke",
-  "verified_at": "2026-08-03",
+  "verified_at": "2026-08-06",
+  "server": "sicong",
   "preserved_cache": {
     "path": "experiments/pusht/subjepa/preparation/embedding_cache.npz",
-    "sha256": "3276baa78353564f6baccbdea423137ee8472901841da6d1840d9b6353c4fc67",
-    "rebuilt": false
+    "sha256": "3d2e75d1e347c1826b94ab47a474d8e97af0eb92a7a9f6f63a733dcb3177ec3e",
+    "rebuilt": true
   },
   "equivalence_after_fix": {
     "num_samples_16": {"max_abs_diff": 0.0, "allclose": true},
     "verification_path": "production_unique_frame_reconstruction"
   },
-  "smoke_note": "Reduced eval rates (official/global 80%, spectral 100%) prove pipeline wiring only, not method comparison."
+  "frozen_audit": {"passed": true},
+  "route_equivalence": {"passed": true},
+  "smoke_eval": {
+    "official_percent": 80.0,
+    "global_ft_percent": 100.0,
+    "spectral_percent": 100.0,
+    "num_eval": 5,
+    "note": "Reduced eval proves pipeline wiring only, not method comparison."
+  }
 }

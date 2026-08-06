@@ -50,5 +50,5 @@ output:
   "checkpoint": "experiments/pusht/subjepa/training/global/train0/P_train_cluster0_object.ckpt"
 }
 ==== RESULTS ====
-metrics: {'success_rate': 80.0, 'episode_successes': array([ True,  True,  True, False,  True]), 'seeds': None}
-evaluation_time: 5.917988061904907 seconds
+metrics: {'success_rate': 100.0, 'episode_successes': array([ True,  True,  True,  True,  True]), 'seeds': None}
+evaluation_time: 8.424646377563477 seconds

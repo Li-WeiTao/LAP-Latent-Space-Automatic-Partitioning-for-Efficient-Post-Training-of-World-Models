@@ -255,16 +255,16 @@ def encode_embedding_cache(
     starts: np.ndarray,
 ) -> dict[str, Any]:
     report_path = paths.embedding_cache.with_suffix(".npz.report.json")
-    if paths.embedding_cache.exists() and not args.overwrite:
+    if args.overwrite:
+        for path in (paths.embedding_cache, report_path):
+            if path.exists():
+                path.unlink()
+    elif paths.embedding_cache.exists():
         if report_path.exists():
             return json.loads(report_path.read_text(encoding="utf-8"))
         raise FileExistsError(
             f"existing cache without report refuses overwrite: {paths.embedding_cache}"
         )
-    if paths.embedding_cache.exists() and args.overwrite:
-        for path in (paths.embedding_cache, report_path):
-            if path.exists():
-                path.unlink()
 
     starts_path = paths.out_dir / ".encode_starts.npy"
     np.save(starts_path, starts)

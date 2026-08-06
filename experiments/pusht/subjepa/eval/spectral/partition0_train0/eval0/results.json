@@ -5,12 +5,12 @@
   "goal_offset_steps": 25,
   "eval_budget": 50,
   "base_encoder_checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
-  "lap_run_dir": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0",
-  "lap_manifest": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0/manifest.json",
+  "lap_run_dir": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0",
+  "lap_manifest": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0/manifest.json",
   "cluster_predictors": {
-    "cluster0": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0/P_train_cluster0_object.ckpt",
-    "cluster1": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0/P_train_cluster1_object.ckpt",
-    "cluster2": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0/P_train_cluster2_object.ckpt"
+    "cluster0": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0/P_train_cluster0_object.ckpt",
+    "cluster1": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0/P_train_cluster1_object.ckpt",
+    "cluster2": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0/P_train_cluster2_object.ckpt"
   },
   "num_clusters": 3,
   "num_routing_prototypes": 48,
@@ -75,9 +75,9 @@
   "inference_classify_assignments": 6,
   "inference_classify_timed_calls": 6,
   "inference_classify_timed_assignments": 6,
-  "inference_classify_time_sample_sec": 0.0745043819248676,
-  "inference_classify_per_call_ms": 12.41739698747793,
-  "inference_classify_per_assignment_us": 12417.396987477934,
+  "inference_classify_time_sample_sec": 0.1785323548316955,
+  "inference_classify_per_call_ms": 29.75539247194925,
+  "inference_classify_per_assignment_us": 29755.39247194925,
   "inference_classify_timing_backend": "cuda_events",
   "inference_mpc_route_cache_hits": 174,
   "inference_mpc_route_cache_misses": 6,
@@ -99,5 +99,5 @@
     1489168,
     1987957
   ],
-  "evaluation_time_sec": 5.980649948120117
+  "evaluation_time_sec": 9.059826850891113
 }

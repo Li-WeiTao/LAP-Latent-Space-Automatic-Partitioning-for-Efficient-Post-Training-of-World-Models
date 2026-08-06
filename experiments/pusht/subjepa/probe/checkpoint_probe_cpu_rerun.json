@@ -14,7 +14,7 @@
     "path": "/home/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
     "sha256": "b6ebd9ac94bbe9e383f6e7a9cd92d74e9aa665ea57b758ed3717b0ee7df8d4fb"
   },
-  "device": "cuda",
+  "device": "cpu",
   "frameskip": 5,
   "history_size": 3,
   "num_preds": 1,
@@ -158,7 +158,7 @@
         192
       ],
       "dtype": "torch.float32",
-      "device": "cuda:0",
+      "device": "cpu",
       "has_nan": false,
       "has_inf": false,
       "all_finite": true
@@ -170,7 +170,7 @@
         192
       ],
       "dtype": "torch.float32",
-      "device": "cuda:0",
+      "device": "cpu",
       "has_nan": false,
       "has_inf": false,
       "all_finite": true
@@ -184,7 +184,7 @@
         192
       ],
       "dtype": "torch.float32",
-      "device": "cuda:0",
+      "device": "cpu",
       "has_nan": false,
       "has_inf": false,
       "all_finite": true
@@ -197,7 +197,7 @@
         2
       ],
       "dtype": "torch.float32",
-      "device": "cuda:0",
+      "device": "cpu",
       "has_nan": false,
       "has_inf": false,
       "all_finite": true

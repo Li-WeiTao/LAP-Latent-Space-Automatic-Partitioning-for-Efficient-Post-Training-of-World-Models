@@ -48,12 +48,12 @@ output:
 {
   "mode": "lap",
   "base_encoder_checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
-  "lap_run_dir": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0",
-  "lap_manifest": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0/manifest.json",
+  "lap_run_dir": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0",
+  "lap_manifest": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0/manifest.json",
   "cluster_predictors": {
-    "cluster0": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0/P_train_cluster0_object.ckpt",
-    "cluster1": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0/P_train_cluster1_object.ckpt",
-    "cluster2": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0/P_train_cluster2_object.ckpt"
+    "cluster0": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0/P_train_cluster0_object.ckpt",
+    "cluster1": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0/P_train_cluster1_object.ckpt",
+    "cluster2": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/training/spectral/partition0_train0/P_train_cluster2_object.ckpt"
   },
   "num_clusters": 3,
   "num_routing_prototypes": 48,
@@ -117,4 +117,4 @@ output:
 }
 ==== RESULTS ====
 metrics: {'success_rate': 100.0, 'episode_successes': array([ True,  True,  True,  True,  True]), 'seeds': None}
-evaluation_time: 5.980649948120117 seconds
+evaluation_time: 9.059826850891113 seconds

@@ -6,12 +6,12 @@
   "eval_budget": 50,
   "checkpoint": "experiments/pusht/subjepa/training/global/train0/P_train_cluster0_object.ckpt",
   "metrics": {
-    "success_rate": 80.0,
+    "success_rate": 100.0,
     "episode_successes": [
       true,
       true,
       true,
-      false,
+      true,
       true
     ],
     "seeds": null
@@ -23,5 +23,5 @@
     1489168,
     1987957
   ],
-  "evaluation_time_sec": 5.917988061904907
+  "evaluation_time_sec": 8.424646377563477
 }

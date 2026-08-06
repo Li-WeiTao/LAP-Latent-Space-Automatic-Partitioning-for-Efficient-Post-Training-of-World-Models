@@ -8,7 +8,7 @@
     "mode": "indexed_assignment_replay"
   },
   "cache_metadata": {
-    "source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/preparation/embedding_cache.npz",
+    "source": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/embedding_cache.npz",
     "encoding": "lossless_precomputed",
     "route_index": 0
   },
@@ -33,10 +33,10 @@
   "model_family": "subjepa",
   "dataset": "pusht",
   "training_role": "standard",
-  "partition_source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/partitions/spectral/seed0",
+  "partition_source": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/partitions/spectral/seed0",
   "partition_source_manifest_sha256": "4088e0176e4ae00166b53500bf73429bdb7dda654364df0cb6b7829b92b7e10b",
-  "latent_cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/preparation/embedding_cache.npz",
-  "latent_cache_sha256": "3276baa78353564f6baccbdea423137ee8472901841da6d1840d9b6353c4fc67",
+  "latent_cache": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/embedding_cache.npz",
+  "latent_cache_sha256": "3d2e75d1e347c1826b94ab47a474d8e97af0eb92a7a9f6f63a733dcb3177ec3e",
   "pretrained_model_sha256": "f4b4b9bdf4cf6254a98f1ae73c182f884f449eb52436e5900157a5f463313b3a",
   "train_seed": 0,
   "split_manifest": null,
@@ -53,8 +53,8 @@
     "checkpoint_selection": "minimum loss on same-region training cache"
   },
   "predictor_checkpoint_sha256": {
-    "cluster0": "44b1972e78ca40bc14beb895c870572213b73a37f3f559dae8807cd4428abb63",
-    "cluster1": "614c545c37ff9a9fa58cdd33a3dee2a24332c613d5f13feb23bca765bd88390e",
-    "cluster2": "e2ba7e258e0a3093681d0a6f3ffe47b395def2e1f692a85a79954155ebc47bf7"
+    "cluster0": "1501ea2d309ef2820f835db17dbc2b9d8db2427d06092e05f9b828c1585c0bae",
+    "cluster1": "776aad999611f6ed298186455508a8eb197f0d90f7358685441f356866d63914",
+    "cluster2": "6103adb5c10815eddafb619daec94e0f1bdf49331095e8e70414fa56d15c7847"
   }
 }

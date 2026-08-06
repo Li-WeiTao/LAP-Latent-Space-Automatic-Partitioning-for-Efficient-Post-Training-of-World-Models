@@ -2,7 +2,7 @@
   "arrays": {
     "act_emb": {
       "dtype": "float32",
-      "sha256": "e596685dc8832d9270374ea72233effab35a5ee9f38590ea9b147397e719529c",
+      "sha256": "fa1fd5c98453a92f721b2707ca669b4750023b08c94dc19d3e46e47200f790a5",
       "shape": [
         3686,
         4,
@@ -11,7 +11,7 @@
     },
     "emb": {
       "dtype": "float32",
-      "sha256": "65e5bf33fa047199a79bf6181d94a25a09902302d12ca2ed191698a223710c12",
+      "sha256": "b4838929c3ed56ea029d81880ddb47c697a3b7caf45088879812883110a1e02f",
       "shape": [
         3686,
         4,
@@ -53,7 +53,7 @@
   "dataset": {
     "action_key": "action",
     "adapter": "backends.lewm.encoding:LeWMHDF5TransitionDataset",
-    "data_file": "/data/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+    "data_file": "/home/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
     "frameskip": 5,
     "history_size": 3,
     "num_preds": 1,
@@ -73,9 +73,9 @@
   "environment": {
     "cuda_runtime": "13.0",
     "device": "cuda",
-    "device_name": "NVIDIA GeForce RTX 4090",
+    "device_name": "NVIDIA GeForce RTX 3090",
     "numpy": "2.2.6",
-    "python": "3.10.9 (main, Mar  1 2023, 18:23:06) [GCC 11.2.0]",
+    "python": "3.10.12 (main, Jun 22 2026, 18:55:27) [GCC 11.4.0]",
     "torch": "2.12.1+cu130"
   },
   "frame_groups": {
@@ -83,18 +83,18 @@
       "encoded_keys": 407,
       "padded_encoder_slots": 408,
       "timing_sec": {
-        "loader_wait_sec": 1.4042312139645219,
-        "preprocess_encode_d2h_sec": 0.828985764994286,
-        "total_sec": 2.2951981759397313
+        "loader_wait_sec": 1.6074309470000117,
+        "preprocess_encode_d2h_sec": 1.3438579570000684,
+        "total_sec": 3.0236219129999427
       }
     },
     "512": {
       "encoded_keys": 14306,
       "padded_encoder_slots": 14336,
       "timing_sec": {
-        "loader_wait_sec": 1.9110336580779403,
-        "preprocess_encode_d2h_sec": 21.26028274919372,
-        "total_sec": 23.223053419962525
+        "loader_wait_sec": 2.0724302570001782,
+        "preprocess_encode_d2h_sec": 24.707903007999676,
+        "total_sec": 26.82801736700003
       }
     }
   },
@@ -106,17 +106,17 @@
     "sequence_length": 4,
     "source_count": 3686,
     "source_offset": 0,
-    "starts_source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/preparation/.encode_starts.npy"
+    "starts_source": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/.encode_starts.npy"
   },
   "timing_sec": {
-    "auxiliary_encode": 0.056635251035913825,
-    "inverse_reconstruct": 0.0031622579554095864,
-    "model_load_and_prepare": 1.93018662603572,
-    "npz_save": 1.2698669700184837,
+    "auxiliary_encode": 0.06533513099998345,
+    "inverse_reconstruct": 0.005015111999910005,
+    "model_load_and_prepare": 2.1002503979999574,
+    "npz_save": 0.8964305340000465,
     "reference_validation": 0.0,
-    "total": 28.857393087935634,
-    "unique_frame_encode": 25.5909480759874,
-    "unique_index": 0.006513708969578147
+    "total": 33.091612108999925,
+    "unique_frame_encode": 30.017707932999997,
+    "unique_index": 0.006789712999989206
   },
   "validation": null
 }

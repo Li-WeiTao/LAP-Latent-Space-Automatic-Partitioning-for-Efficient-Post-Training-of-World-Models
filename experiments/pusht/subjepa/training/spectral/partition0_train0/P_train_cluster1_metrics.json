@@ -1,15 +1,15 @@
 {
   "epochs": 1,
-  "final_loss": 0.0068683009937497005,
+  "final_loss": 0.006780318849819732,
   "best_epoch": 1,
-  "best_eval_loss": 0.0068683009937497005,
+  "best_eval_loss": 0.006780318849819732,
   "select_best_by_eval": true,
   "saved_checkpoints": {},
   "history": [
     {
       "epoch": 1,
-      "loss": 0.04681286308914423,
-      "eval_loss": 0.0068683009937497005
+      "loss": 0.046902777161449194,
+      "eval_loss": 0.006780318849819732
     }
   ]
 }

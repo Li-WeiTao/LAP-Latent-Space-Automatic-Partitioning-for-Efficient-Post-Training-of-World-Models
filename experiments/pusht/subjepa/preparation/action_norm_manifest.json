@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "dataset_name": "pusht",
-  "data_file": "/data/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+  "data_file": "/home/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
   "checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
-  "starts_file": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/preparation/train_global_reference_starts.npy",
+  "starts_file": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/train_global_reference_starts.npy",
   "starts_sha256": "ec2eecdae76245e3f889f3bd10b44c2270ae443b980f4bc47fb741d2f602a78e",
   "num_starts": 3686,
   "action_mean_shape": [

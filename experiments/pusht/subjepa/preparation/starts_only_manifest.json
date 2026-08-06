@@ -1,7 +1,7 @@
 {
   "mode": "prepare_starts_only",
   "dataset": "pusht",
-  "data_file": "/data/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+  "data_file": "/home/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
   "checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
   "train_config": {
     "history_size": 3,
@@ -27,7 +27,7 @@
   "regions": {
     "common": {
       "num_starts": 1000,
-      "starts_file": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/preparation/P_train_common_starts.npy"
+      "starts_file": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/P_train_common_starts.npy"
     }
   }
 }

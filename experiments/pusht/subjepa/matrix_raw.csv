@@ -1,4 +1,4 @@
 method,train_seed,partition_seed,eval_seed,success_rate_percent
 official,,,0,80.0
-global,0,,0,80.0
+global,0,,0,100.0
 spectral,0,0,0,100.0

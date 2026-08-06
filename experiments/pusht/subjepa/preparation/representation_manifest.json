@@ -3,16 +3,16 @@
   "implementation_backend": "jepa_object",
   "model_family": "subjepa",
   "dataset_name": "pusht",
-  "data_file": "/data/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+  "data_file": "/home/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
   "checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
-  "starts_file": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/preparation/train_global_reference_starts.npy",
+  "starts_file": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/train_global_reference_starts.npy",
   "history_size": 3,
   "num_preds": 1,
   "frameskip": 5,
   "encode_report": {
     "method": "unique_frame_inverse_reconstruction",
     "selection": {
-      "starts_source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/preparation/.encode_starts.npy",
+      "starts_source": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/.encode_starts.npy",
       "samples": 3686,
       "source_offset": 0,
       "source_count": 3686,
@@ -26,7 +26,7 @@
           192
         ],
         "dtype": "float32",
-        "sha256": "65e5bf33fa047199a79bf6181d94a25a09902302d12ca2ed191698a223710c12"
+        "sha256": "b4838929c3ed56ea029d81880ddb47c697a3b7caf45088879812883110a1e02f"
       },
       "act_emb": {
         "shape": [
@@ -35,7 +35,7 @@
           192
         ],
         "dtype": "float32",
-        "sha256": "e596685dc8832d9270374ea72233effab35a5ee9f38590ea9b147397e719529c"
+        "sha256": "fa1fd5c98453a92f721b2707ca669b4750023b08c94dc19d3e46e47200f790a5"
       },
       "region_starts": {
         "shape": [
@@ -47,7 +47,7 @@
     }
   },
   "spectral_cache_stats": {
-    "cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/preparation/embedding_cache.npz",
+    "cache": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/embedding_cache.npz",
     "num_transitions": 3686,
     "num_expanded_latents": 14744,
     "num_unique_timesteps": 14713,
@@ -57,20 +57,20 @@
     "frameskip": 5
   },
   "reference_audit": null,
-  "git_commit": "36f960a506dfe4a187941d0adffb2e69c45ee345",
+  "git_commit": "31aa2b49c502ec222a92a7274c2f5f9cbfc038f6",
   "artifacts": {
-    "embedding_cache.npz": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/preparation/embedding_cache.npz",
-    "spectral_embedding_cache.npz": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/preparation/spectral_embedding_cache.npz",
-    "representation_manifest.json": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/preparation/representation_manifest.json",
-    "action_norm_stats.npz": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/preparation/action_norm_stats.npz",
-    "action_norm_manifest.json": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/subjepa/preparation/action_norm_manifest.json"
+    "embedding_cache.npz": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/embedding_cache.npz",
+    "spectral_embedding_cache.npz": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/spectral_embedding_cache.npz",
+    "representation_manifest.json": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/representation_manifest.json",
+    "action_norm_stats.npz": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/action_norm_stats.npz",
+    "action_norm_manifest.json": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/action_norm_manifest.json"
   },
   "sha256": {
     "data_file": "b6ebd9ac94bbe9e383f6e7a9cd92d74e9aa665ea57b758ed3717b0ee7df8d4fb",
     "checkpoint": "f4b4b9bdf4cf6254a98f1ae73c182f884f449eb52436e5900157a5f463313b3a",
     "starts": "ec2eecdae76245e3f889f3bd10b44c2270ae443b980f4bc47fb741d2f602a78e",
-    "embedding_cache": "3276baa78353564f6baccbdea423137ee8472901841da6d1840d9b6353c4fc67",
-    "spectral_embedding_cache": "9018b768cb16f7c66774ebf9d4e337e1341ff007fa9b3a2ae617392bf7631610",
+    "embedding_cache": "3d2e75d1e347c1826b94ab47a474d8e97af0eb92a7a9f6f63a733dcb3177ec3e",
+    "spectral_embedding_cache": "9df695acc9846395d1cb90dbfe90fb014d9f8e339716f3db307400945676d816",
     "action_norm_stats": "d58cfa8032403d7d58ab6dd1cc1f12839ec53b876ca0ae3b1133b6fbc6acf1b3"
   }
 }

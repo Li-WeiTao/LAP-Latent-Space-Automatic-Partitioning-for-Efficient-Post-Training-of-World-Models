@@ -4,8 +4,8 @@ set -euo pipefail
 
 cd "$(git rev-parse --show-toplevel)"
 
-export HTTPS_PROXY="${HTTPS_PROXY:-http://127.0.0.1:17890}"
-export HTTP_PROXY="${HTTP_PROXY:-http://127.0.0.1:17890}"
+export HTTPS_PROXY="${HTTPS_PROXY:-http://127.0.0.1:17891}"
+export HTTP_PROXY="${HTTP_PROXY:-http://127.0.0.1:17891}"
 
 remote="origin"
 branch="main"

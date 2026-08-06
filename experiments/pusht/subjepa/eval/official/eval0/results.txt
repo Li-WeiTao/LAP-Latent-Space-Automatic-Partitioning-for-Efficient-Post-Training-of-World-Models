@@ -51,4 +51,4 @@ output:
 }
 ==== RESULTS ====
 metrics: {'success_rate': 80.0, 'episode_successes': array([ True,  True,  True,  True, False]), 'seeds': None}
-evaluation_time: 6.016838550567627 seconds
+evaluation_time: 10.02372407913208 seconds

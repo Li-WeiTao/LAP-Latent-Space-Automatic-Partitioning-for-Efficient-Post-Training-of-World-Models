@@ -1,0 +1,6 @@
+# PushT Sub-JEPA / LeWM closed-loop eval (swm/PushT-v1).
+-r tworoom.txt
+pygame==2.6.1
+pymunk==7.3.0
+shapely==2.1.2
+opencv-python-headless==5.0.0.93

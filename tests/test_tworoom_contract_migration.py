@@ -88,3 +88,13 @@ class TwoRoomMigrationContractTest(unittest.TestCase):
             spherical=True,
         ).cpu().numpy()
         np.testing.assert_array_equal(actual, expected)
+
+    def test_resolve_torch_device_auto_falls_back_to_cpu(self):
+        import trajectory
+        from unittest import mock
+
+        with mock.patch.object(trajectory.torch.cuda, "is_available", return_value=False):
+            self.assertEqual(str(trajectory.resolve_torch_device("auto")), "cpu")
+        with mock.patch.object(trajectory.torch.cuda, "is_available", return_value=True):
+            self.assertEqual(str(trajectory.resolve_torch_device("auto")), "cuda")
+        self.assertEqual(str(trajectory.resolve_torch_device("cpu")), "cpu")

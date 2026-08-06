@@ -68,6 +68,13 @@ REGION_SPLITS = (
 GLOBAL_FT_EMBED_REGIONS = ("left_room", "doorway_corridor", "right_room")
 
 
+def resolve_torch_device(device: str) -> torch.device:
+    """Map CLI device strings; ``auto`` prefers CUDA when available."""
+    if device == "auto":
+        return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    return torch.device(device)
+
+
 def json_ready(value):
     if isinstance(value, Path):
         return str(value)
@@ -807,11 +814,7 @@ def main() -> None:
 
     spec = DATASETS[args.dataset]
     h5_path = args.data_file or (args.data_root / spec.default_file)
-    device = torch.device(
-        "cuda" if args.device == "auto" and torch.cuda.is_available() else args.device
-    )
-    if args.device == "auto" and not torch.cuda.is_available():
-        device = torch.device("cpu")
+    device = resolve_torch_device(args.device)
 
     base_model = load_encoder(
         args.checkpoint, device, args.checkpoint_cache_dir, model_family=args.model_family

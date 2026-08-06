@@ -22,7 +22,7 @@
     },
     {
       "method": "Global-FT50",
-      "mean_percent": 80.0,
+      "mean_percent": 100.0,
       "sd_across_finetuning_seeds_percent": 0.0,
       "num_finetuning_seeds": 1,
       "num_partition_seeds": 0,
