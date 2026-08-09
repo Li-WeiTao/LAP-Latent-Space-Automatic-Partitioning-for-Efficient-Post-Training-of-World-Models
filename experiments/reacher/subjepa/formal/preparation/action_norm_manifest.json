@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "dataset_name": "reacher",
+  "data_file": "/home/sicong/weitao/datasets/lewm/reacher.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/reacher/subjepa_object.ckpt",
+  "starts_file": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/reacher/subjepa/formal/preparation/train_global_reference_starts.npy",
+  "starts_sha256": "04de7faf07580f4a0239e0e0235b0b76893e5c23ce54e97005dbb850a5815065",
+  "num_starts": 1674000,
+  "action_mean_shape": [
+    1,
+    10
+  ],
+  "action_std_shape": [
+    1,
+    10
+  ],
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "action_steps": 3,
+  "normalization_samples": 1674000,
+  "sha256": {
+    "action_norm_stats": "6edf3a59d2a20349be0ac9be89d12694e35112499d0bb724617bfba37a207f17",
+    "starts": "04de7faf07580f4a0239e0e0235b0b76893e5c23ce54e97005dbb850a5815065",
+    "data_file": "85a7dddfa1801302abcb175a80a23bb69c78291dd977ce40d69aedcb9123da06",
+    "checkpoint": "da032d7905c7215af55fe61e517a64357479fca74960c0fc60405d5084411240"
+  }
+}

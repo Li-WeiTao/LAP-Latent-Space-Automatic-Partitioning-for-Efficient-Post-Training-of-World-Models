@@ -1,0 +1,142 @@
+{
+  "model_family": "subjepa",
+  "implementation_backend": "jepa_object",
+  "task_name": "pusht",
+  "dataset_name": "pusht",
+  "dataset": "/home/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
+  "eval_config_name": "pusht",
+  "eval_config": null,
+  "eval_dataset_name": "pusht_expert_train",
+  "work_root": "experiments/pusht/subjepa",
+  "cache_dir": "/data/sicong/weitao/.stableworldmodel/subjepa/pusht",
+  "paired_start_root": null,
+  "paired_start_root_short": null,
+  "paired_start_root_long": null,
+  "phase": "smoke",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "img_size": 224,
+  "short_goal_offset": 25,
+  "long_goal_offset": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "max_train_starts": 4096,
+  "dry_run": false,
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/pusht.json",
+  "train_seeds": "0,42,625",
+  "partition_seeds": "0,1,2",
+  "eval_seeds": "0,1,2,3,4",
+  "methods": "random_voronoi,kmeanspp,spectral",
+  "skip_joint": true,
+  "python": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/bin/python",
+  "cpu_threads": 4,
+  "gpu_id": "",
+  "sources": {
+    "model_family": "cli",
+    "dataset_name": "task_spec",
+    "task_name": "task_spec",
+    "eval_config_name": "cli",
+    "eval_dataset_name": "task_spec",
+    "work_root": "cli",
+    "cache_dir": "cli",
+    "phase": "cli",
+    "skip_joint": "default",
+    "frameskip": "task_spec",
+    "short_goal_offset": "task_spec",
+    "long_goal_offset": "task_spec",
+    "eval_budget": "task_spec",
+    "train_seeds": "default",
+    "partition_seeds": "default",
+    "eval_seeds": "default",
+    "methods": "default",
+    "python": "env",
+    "cpu_threads": "env",
+    "gpu_id": "default"
+  }
+}
+[jepa-matrix] model_family=subjepa phase=smoke work_root=experiments/pusht/subjepa
+[jepa-matrix] resolved_config=experiments/pusht/subjepa/manifests/resolved_config.json
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+{
+  "status": "PASSED",
+  "output": "experiments/pusht/subjepa/probe/checkpoint_probe.json"
+}
+[prepare-starts] common: 1000 -> /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/P_train_common_starts.npy
+[prepare-starts] complete; no embeddings or predictors were trained
+[index] samples=3686 frame_slots=14744 unique_frames=14713 encoded_keys=14713
+[batch-shape] batch=408 keys=407
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+[frames] batch 1/1 (407/407)
+[batch-shape] batch=512 keys=14306
+[frames] batch 28/28 (14306/14306)
+[saved] cache=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/embedding_cache.npz
+[saved] report=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/embedding_cache.npz.report.json
+[prepare] wrote matrix cache artifacts under /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+{
+  "phase": "cache-equivalence",
+  "verification_path": "production_unique_frame_reconstruction",
+  "num_samples": 16,
+  "cached_shape": [
+    16,
+    4,
+    192
+  ],
+  "recomputed_shape": [
+    16,
+    4,
+    192
+  ],
+  "starts_source": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/.encode_starts.npy",
+  "starts_sha256": "ec2eecdae76245e3f889f3bd10b44c2270ae443b980f4bc47fb741d2f602a78e",
+  "cache_sha256": "3d2e75d1e347c1826b94ab47a474d8e97af0eb92a7a9f6f63a733dcb3177ec3e",
+  "selection_source_count": 3686,
+  "passed": true,
+  "max_abs_diff": 0.0,
+  "mean_abs_diff": 0.0,
+  "allclose": true,
+  "per_sample_max_abs_diff": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "per_timestep_max_abs_diff": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ]
+}
+{
+  "phase": "frozen-audit",
+  "passed": true,
+  "trainable_parameter_count": 11584128,
+  "checked_training_checkpoints": [],
+  "violations": [],
+  "optimizer_has_frozen": false
+}
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+{
+  "phase": "route-equivalence",
+  "passed": true,
+  "prediction_allclose": true,
+  "all_finite": true
+}
+Official baseline: 80.00%
+Global-FT50: 80.00% ± 0.00%
+Spectral: 100.00% ± 0.00%

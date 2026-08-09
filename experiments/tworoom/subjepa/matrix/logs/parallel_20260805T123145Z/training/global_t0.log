@@ -1,0 +1,112 @@
+{
+  "model_family": "subjepa",
+  "implementation_backend": "jepa_object",
+  "task_name": "tworoom",
+  "dataset_name": "tworoom",
+  "dataset": "/data/sicong/weitao/datasets/lewm/tworoom.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt",
+  "eval_config_name": "tworoom",
+  "eval_config": null,
+  "eval_dataset_name": "tworoom",
+  "work_root": "experiments/tworoom/subjepa/matrix",
+  "cache_dir": "/data/sicong/weitao/.stable_worldmodel/subjepa/tworoom",
+  "paired_start_root": null,
+  "paired_start_root_short": null,
+  "paired_start_root_long": null,
+  "phase": "train_global",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "img_size": 224,
+  "short_goal_offset": 25,
+  "long_goal_offset": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "max_train_starts": 0,
+  "dry_run": false,
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/tworoom.json",
+  "train_seeds": "0",
+  "partition_seeds": "0,1,2",
+  "eval_seeds": "0,1,2,3,4",
+  "methods": "kmeanspp,spectral",
+  "skip_joint": true,
+  "python": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/bin/python",
+  "cpu_threads": 4,
+  "gpu_id": "",
+  "sources": {
+    "model_family": "cli",
+    "dataset_name": "task_spec",
+    "task_name": "task_spec",
+    "eval_config_name": "cli",
+    "eval_dataset_name": "task_spec",
+    "work_root": "cli",
+    "cache_dir": "cli",
+    "phase": "cli",
+    "skip_joint": "env",
+    "frameskip": "task_spec",
+    "short_goal_offset": "task_spec",
+    "long_goal_offset": "task_spec",
+    "eval_budget": "task_spec",
+    "train_seeds": "cli",
+    "partition_seeds": "default",
+    "eval_seeds": "default",
+    "methods": "cli",
+    "python": "cli",
+    "cpu_threads": "cli",
+    "gpu_id": "default"
+  }
+}
+[jepa-matrix] model_family=subjepa phase=train_global work_root=experiments/tworoom/subjepa/matrix
+[jepa-matrix] resolved_config=experiments/tworoom/subjepa/matrix/manifests/resolved_config.json
+  [train] epoch 1/50  train_loss=0.006910  eval_loss=0.002341
+  [train] epoch 2/50  train_loss=0.001828  eval_loss=0.001643
+  [train] epoch 3/50  train_loss=0.001615  eval_loss=0.001514
+  [train] epoch 4/50  train_loss=0.001462  eval_loss=0.001342
+  [train] epoch 5/50  train_loss=0.001324  eval_loss=0.001240
+  [train] epoch 6/50  train_loss=0.001216  eval_loss=0.001092
+  [train] epoch 7/50  train_loss=0.001123  eval_loss=0.001009
+  [train] epoch 8/50  train_loss=0.001050  eval_loss=0.000941
+  [train] epoch 9/50  train_loss=0.000981  eval_loss=0.000942
+  [train] epoch 10/50  train_loss=0.000913  eval_loss=0.000878
+  [train] epoch 11/50  train_loss=0.000866  eval_loss=0.000895
+  [train] epoch 12/50  train_loss=0.000812  eval_loss=0.000828
+  [train] epoch 13/50  train_loss=0.000760  eval_loss=0.000685
+  [train] epoch 14/50  train_loss=0.000733  eval_loss=0.000705
+  [train] epoch 15/50  train_loss=0.000688  eval_loss=0.000634
+  [train] epoch 16/50  train_loss=0.000657  eval_loss=0.000577
+  [train] epoch 17/50  train_loss=0.000613  eval_loss=0.000582
+  [train] epoch 18/50  train_loss=0.000597  eval_loss=0.000542
+  [train] epoch 19/50  train_loss=0.000566  eval_loss=0.000545
+  [train] epoch 20/50  train_loss=0.000545  eval_loss=0.000630
+  [train] epoch 21/50  train_loss=0.000524  eval_loss=0.000550
+  [train] epoch 22/50  train_loss=0.000501  eval_loss=0.000425
+  [train] epoch 23/50  train_loss=0.000483  eval_loss=0.000385
+  [train] epoch 24/50  train_loss=0.000463  eval_loss=0.000418
+  [train] epoch 25/50  train_loss=0.000443  eval_loss=0.000392
+  [train] epoch 26/50  train_loss=0.000434  eval_loss=0.000384
+  [train] epoch 27/50  train_loss=0.000410  eval_loss=0.000404
+  [train] epoch 28/50  train_loss=0.000405  eval_loss=0.000453
+  [train] epoch 29/50  train_loss=0.000389  eval_loss=0.000355
+  [train] epoch 30/50  train_loss=0.000376  eval_loss=0.000356
+  [train] epoch 31/50  train_loss=0.000368  eval_loss=0.000301
+  [train] epoch 32/50  train_loss=0.000364  eval_loss=0.000322
+  [train] epoch 33/50  train_loss=0.000344  eval_loss=0.000396
+  [train] epoch 34/50  train_loss=0.000335  eval_loss=0.000298
+  [train] epoch 35/50  train_loss=0.000328  eval_loss=0.000333
+  [train] epoch 36/50  train_loss=0.000315  eval_loss=0.000300
+  [train] epoch 37/50  train_loss=0.000317  eval_loss=0.000317
+  [train] epoch 38/50  train_loss=0.000304  eval_loss=0.000277
+  [train] epoch 39/50  train_loss=0.000299  eval_loss=0.000340
+  [train] epoch 40/50  train_loss=0.000293  eval_loss=0.000273
+  [train] epoch 41/50  train_loss=0.000286  eval_loss=0.000220
+  [train] epoch 42/50  train_loss=0.000276  eval_loss=0.000255
+  [train] epoch 43/50  train_loss=0.000276  eval_loss=0.000220
+  [train] epoch 44/50  train_loss=0.000255  eval_loss=0.000249
+  [train] epoch 45/50  train_loss=0.000256  eval_loss=0.000236
+  [train] epoch 46/50  train_loss=0.000258  eval_loss=0.000193
+  [train] epoch 47/50  train_loss=0.000257  eval_loss=0.000197
+  [train] epoch 48/50  train_loss=0.000239  eval_loss=0.000224
+  [train] epoch 49/50  train_loss=0.000243  eval_loss=0.000189
+  [train] epoch 50/50  train_loss=0.000244  eval_loss=0.000208
+  [best] epoch 49  eval_loss=0.000189 (selected over 50 epochs)
+[done] dataset=tworoom train_seed=0 regions=1 -> experiments/tworoom/subjepa/matrix/training/global/train0

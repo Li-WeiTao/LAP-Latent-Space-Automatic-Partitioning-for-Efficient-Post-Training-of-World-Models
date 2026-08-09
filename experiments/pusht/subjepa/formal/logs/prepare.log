@@ -1,0 +1,159 @@
+{
+  "model_family": "subjepa",
+  "implementation_backend": "jepa_object",
+  "task_name": "pusht",
+  "dataset_name": "pusht",
+  "dataset": "/home/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
+  "eval_config_name": "pusht",
+  "eval_config": null,
+  "eval_dataset_name": "pusht_expert_train",
+  "work_root": "experiments/pusht/subjepa/formal",
+  "cache_dir": "/data/sicong/weitao/.stableworldmodel/subjepa/pusht",
+  "paired_start_root": null,
+  "paired_start_root_short": null,
+  "paired_start_root_long": null,
+  "phase": "prepare",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "img_size": 224,
+  "short_goal_offset": 25,
+  "long_goal_offset": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "max_train_starts": 0,
+  "dry_run": false,
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/pusht.json",
+  "train_seeds": "0,42,625",
+  "partition_seeds": "0,1,2",
+  "eval_seeds": "0,1,2,3,4",
+  "methods": "random_voronoi,kmeanspp,spectral",
+  "skip_joint": true,
+  "python": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/bin/python",
+  "cpu_threads": 4,
+  "gpu_id": "0",
+  "sources": {
+    "model_family": "cli",
+    "dataset_name": "task_spec",
+    "task_name": "task_spec",
+    "eval_config_name": "cli",
+    "eval_dataset_name": "task_spec",
+    "work_root": "cli",
+    "cache_dir": "env",
+    "phase": "cli",
+    "skip_joint": "default",
+    "frameskip": "task_spec",
+    "short_goal_offset": "task_spec",
+    "long_goal_offset": "task_spec",
+    "eval_budget": "task_spec",
+    "train_seeds": "default",
+    "partition_seeds": "default",
+    "eval_seeds": "default",
+    "methods": "default",
+    "python": "env",
+    "cpu_threads": "default",
+    "gpu_id": "env"
+  }
+}
+[jepa-matrix] model_family=subjepa phase=prepare work_root=experiments/pusht/subjepa/formal
+[jepa-matrix] resolved_config=experiments/pusht/subjepa/formal/manifests/resolved_config.json
+[index] samples=1850815 frame_slots=7403260 unique_frames=2315671 encoded_keys=2315686
+[batch-shape] batch=252 keys=83
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+[frames] batch 1/1 (83/83)
+[batch-shape] batch=512 keys=2315603
+[frames] batch 50/4523 (25600/2315603)
+[frames] batch 100/4523 (51200/2315603)
+[frames] batch 150/4523 (76800/2315603)
+[frames] batch 200/4523 (102400/2315603)
+[frames] batch 250/4523 (128000/2315603)
+[frames] batch 300/4523 (153600/2315603)
+[frames] batch 350/4523 (179200/2315603)
+[frames] batch 400/4523 (204800/2315603)
+[frames] batch 450/4523 (230400/2315603)
+[frames] batch 500/4523 (256000/2315603)
+[frames] batch 550/4523 (281600/2315603)
+[frames] batch 600/4523 (307200/2315603)
+[frames] batch 650/4523 (332800/2315603)
+[frames] batch 700/4523 (358400/2315603)
+[frames] batch 750/4523 (384000/2315603)
+[frames] batch 800/4523 (409600/2315603)
+[frames] batch 850/4523 (435200/2315603)
+[frames] batch 900/4523 (460800/2315603)
+[frames] batch 950/4523 (486400/2315603)
+[frames] batch 1000/4523 (512000/2315603)
+[frames] batch 1050/4523 (537600/2315603)
+[frames] batch 1100/4523 (563200/2315603)
+[frames] batch 1150/4523 (588800/2315603)
+[frames] batch 1200/4523 (614400/2315603)
+[frames] batch 1250/4523 (640000/2315603)
+[frames] batch 1300/4523 (665600/2315603)
+[frames] batch 1350/4523 (691200/2315603)
+[frames] batch 1400/4523 (716800/2315603)
+[frames] batch 1450/4523 (742400/2315603)
+[frames] batch 1500/4523 (768000/2315603)
+[frames] batch 1550/4523 (793600/2315603)
+[frames] batch 1600/4523 (819200/2315603)
+[frames] batch 1650/4523 (844800/2315603)
+[frames] batch 1700/4523 (870400/2315603)
+[frames] batch 1750/4523 (896000/2315603)
+[frames] batch 1800/4523 (921600/2315603)
+[frames] batch 1850/4523 (947200/2315603)
+[frames] batch 1900/4523 (972800/2315603)
+[frames] batch 1950/4523 (998400/2315603)
+[frames] batch 2000/4523 (1024000/2315603)
+[frames] batch 2050/4523 (1049600/2315603)
+[frames] batch 2100/4523 (1075200/2315603)
+[frames] batch 2150/4523 (1100800/2315603)
+[frames] batch 2200/4523 (1126400/2315603)
+[frames] batch 2250/4523 (1152000/2315603)
+[frames] batch 2300/4523 (1177600/2315603)
+[frames] batch 2350/4523 (1203200/2315603)
+[frames] batch 2400/4523 (1228800/2315603)
+[frames] batch 2450/4523 (1254400/2315603)
+[frames] batch 2500/4523 (1280000/2315603)
+[frames] batch 2550/4523 (1305600/2315603)
+[frames] batch 2600/4523 (1331200/2315603)
+[frames] batch 2650/4523 (1356800/2315603)
+[frames] batch 2700/4523 (1382400/2315603)
+[frames] batch 2750/4523 (1408000/2315603)
+[frames] batch 2800/4523 (1433600/2315603)
+[frames] batch 2850/4523 (1459200/2315603)
+[frames] batch 2900/4523 (1484800/2315603)
+[frames] batch 2950/4523 (1510400/2315603)
+[frames] batch 3000/4523 (1536000/2315603)
+[frames] batch 3050/4523 (1561600/2315603)
+[frames] batch 3100/4523 (1587200/2315603)
+[frames] batch 3150/4523 (1612800/2315603)
+[frames] batch 3200/4523 (1638400/2315603)
+[frames] batch 3250/4523 (1664000/2315603)
+[frames] batch 3300/4523 (1689600/2315603)
+[frames] batch 3350/4523 (1715200/2315603)
+[frames] batch 3400/4523 (1740800/2315603)
+[frames] batch 3450/4523 (1766400/2315603)
+[frames] batch 3500/4523 (1792000/2315603)
+[frames] batch 3550/4523 (1817600/2315603)
+[frames] batch 3600/4523 (1843200/2315603)
+[frames] batch 3650/4523 (1868800/2315603)
+[frames] batch 3700/4523 (1894400/2315603)
+[frames] batch 3750/4523 (1920000/2315603)
+[frames] batch 3800/4523 (1945600/2315603)
+[frames] batch 3850/4523 (1971200/2315603)
+[frames] batch 3900/4523 (1996800/2315603)
+[frames] batch 3950/4523 (2022400/2315603)
+[frames] batch 4000/4523 (2048000/2315603)
+[frames] batch 4050/4523 (2073600/2315603)
+[frames] batch 4100/4523 (2099200/2315603)
+[frames] batch 4150/4523 (2124800/2315603)
+[frames] batch 4200/4523 (2150400/2315603)
+[frames] batch 4250/4523 (2176000/2315603)
+[frames] batch 4300/4523 (2201600/2315603)
+[frames] batch 4350/4523 (2227200/2315603)
+[frames] batch 4400/4523 (2252800/2315603)
+[frames] batch 4450/4523 (2278400/2315603)
+[frames] batch 4500/4523 (2304000/2315603)
+[frames] batch 4523/4523 (2315603/2315603)
+[saved] cache=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/preparation/embedding_cache.npz
+[saved] report=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/preparation/embedding_cache.npz.report.json
+[prepare] wrote matrix cache artifacts under /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/preparation

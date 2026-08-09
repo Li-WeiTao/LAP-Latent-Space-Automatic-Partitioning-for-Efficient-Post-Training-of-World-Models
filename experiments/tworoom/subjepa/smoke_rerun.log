@@ -1,0 +1,360 @@
+{
+  "model_family": "subjepa",
+  "implementation_backend": "jepa_object",
+  "task_name": "tworoom",
+  "dataset_name": "tworoom",
+  "dataset": "/home/sicong/weitao/datasets/lewm/tworoom.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt",
+  "eval_config_name": "tworoom",
+  "eval_config": null,
+  "eval_dataset_name": "tworoom",
+  "work_root": "experiments/tworoom/subjepa",
+  "cache_dir": "/data/sicong/weitao/.stable_worldmodel/subjepa/tworoom",
+  "paired_start_root": null,
+  "paired_start_root_short": null,
+  "paired_start_root_long": null,
+  "phase": "smoke",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "img_size": 224,
+  "short_goal_offset": 25,
+  "long_goal_offset": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "max_train_starts": 4096,
+  "dry_run": false,
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/tworoom.json",
+  "train_seeds": "0,42,625",
+  "partition_seeds": "0,1,2",
+  "eval_seeds": "0,1,2,3,4",
+  "methods": "random_voronoi,kmeanspp,spectral",
+  "skip_joint": true,
+  "python": "python",
+  "cpu_threads": 4,
+  "gpu_id": "0",
+  "sources": {
+    "model_family": "cli",
+    "dataset_name": "task_spec",
+    "task_name": "task_spec",
+    "eval_config_name": "cli",
+    "eval_dataset_name": "task_spec",
+    "work_root": "cli",
+    "cache_dir": "cli",
+    "phase": "cli",
+    "skip_joint": "default",
+    "frameskip": "task_spec",
+    "short_goal_offset": "task_spec",
+    "long_goal_offset": "task_spec",
+    "eval_budget": "task_spec",
+    "train_seeds": "default",
+    "partition_seeds": "default",
+    "eval_seeds": "default",
+    "methods": "default",
+    "python": "env",
+    "cpu_threads": "default",
+    "gpu_id": "cli"
+  }
+}
+[jepa-matrix] model_family=subjepa phase=smoke work_root=experiments/tworoom/subjepa
+[jepa-matrix] resolved_config=experiments/tworoom/subjepa/manifests/resolved_config.json
+{
+  "status": "FAILED",
+  "output": "experiments/tworoom/subjepa/probe/checkpoint_probe.json"
+}
+{
+  "model_family": "subjepa",
+  "implementation_backend": "jepa_object",
+  "task_name": "tworoom",
+  "dataset_name": "tworoom",
+  "dataset": "/home/sicong/weitao/datasets/lewm/tworoom.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt",
+  "eval_config_name": "tworoom",
+  "eval_config": null,
+  "eval_dataset_name": "tworoom",
+  "work_root": "experiments/tworoom/subjepa",
+  "cache_dir": "/data/sicong/weitao/.stable_worldmodel/subjepa/tworoom",
+  "paired_start_root": null,
+  "paired_start_root_short": null,
+  "paired_start_root_long": null,
+  "phase": "smoke",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "img_size": 224,
+  "short_goal_offset": 25,
+  "long_goal_offset": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "max_train_starts": 4096,
+  "dry_run": false,
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/tworoom.json",
+  "train_seeds": "0,42,625",
+  "partition_seeds": "0,1,2",
+  "eval_seeds": "0,1,2,3,4",
+  "methods": "random_voronoi,kmeanspp,spectral",
+  "skip_joint": true,
+  "python": "python",
+  "cpu_threads": 4,
+  "gpu_id": "0",
+  "sources": {
+    "model_family": "cli",
+    "dataset_name": "task_spec",
+    "task_name": "task_spec",
+    "eval_config_name": "cli",
+    "eval_dataset_name": "task_spec",
+    "work_root": "cli",
+    "cache_dir": "cli",
+    "phase": "cli",
+    "skip_joint": "default",
+    "frameskip": "task_spec",
+    "short_goal_offset": "task_spec",
+    "long_goal_offset": "task_spec",
+    "eval_budget": "task_spec",
+    "train_seeds": "default",
+    "partition_seeds": "default",
+    "eval_seeds": "default",
+    "methods": "default",
+    "python": "env",
+    "cpu_threads": "default",
+    "gpu_id": "cli"
+  }
+}
+[jepa-matrix] model_family=subjepa phase=smoke work_root=experiments/tworoom/subjepa
+[jepa-matrix] resolved_config=experiments/tworoom/subjepa/manifests/resolved_config.json
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+{
+  "status": "PASSED",
+  "output": "experiments/tworoom/subjepa/probe/checkpoint_probe.json"
+}
+[prepare-starts] common: 1216 -> /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/preparation/P_train_common_starts.npy
+[prepare-starts] complete; no embeddings or predictors were trained
+Traceback (most recent call last):
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/prepare_lewm_cache.py", line 480, in <module>
+    main()
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/prepare_lewm_cache.py", line 450, in main
+    encode_report = encode_embedding_cache(args, paths, encode_starts)
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/prepare_lewm_cache.py", line 292, in encode_embedding_cache
+    return FastLatentCacheEncoder(config).encode(
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/lap/encoding/fast.py", line 390, in encode
+    raise FileExistsError(f"refusing to overwrite {path}")
+FileExistsError: refusing to overwrite /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/preparation/embedding_cache.npz.report.json
+{
+  "model_family": "subjepa",
+  "implementation_backend": "jepa_object",
+  "task_name": "tworoom",
+  "dataset_name": "tworoom",
+  "dataset": "/home/sicong/weitao/datasets/lewm/tworoom.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt",
+  "eval_config_name": "tworoom",
+  "eval_config": null,
+  "eval_dataset_name": "tworoom",
+  "work_root": "experiments/tworoom/subjepa",
+  "cache_dir": "/data/sicong/weitao/.stable_worldmodel/subjepa/tworoom",
+  "paired_start_root": null,
+  "paired_start_root_short": null,
+  "paired_start_root_long": null,
+  "phase": "smoke",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "img_size": 224,
+  "short_goal_offset": 25,
+  "long_goal_offset": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "max_train_starts": 4096,
+  "dry_run": false,
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/tworoom.json",
+  "train_seeds": "0,42,625",
+  "partition_seeds": "0,1,2",
+  "eval_seeds": "0,1,2,3,4",
+  "methods": "random_voronoi,kmeanspp,spectral",
+  "skip_joint": true,
+  "python": "python",
+  "cpu_threads": 4,
+  "gpu_id": "0",
+  "sources": {
+    "model_family": "cli",
+    "dataset_name": "task_spec",
+    "task_name": "task_spec",
+    "eval_config_name": "cli",
+    "eval_dataset_name": "task_spec",
+    "work_root": "cli",
+    "cache_dir": "cli",
+    "phase": "cli",
+    "skip_joint": "default",
+    "frameskip": "task_spec",
+    "short_goal_offset": "task_spec",
+    "long_goal_offset": "task_spec",
+    "eval_budget": "task_spec",
+    "train_seeds": "default",
+    "partition_seeds": "default",
+    "eval_seeds": "default",
+    "methods": "default",
+    "python": "env",
+    "cpu_threads": "default",
+    "gpu_id": "cli"
+  }
+}
+[jepa-matrix] model_family=subjepa phase=smoke work_root=experiments/tworoom/subjepa
+[jepa-matrix] resolved_config=experiments/tworoom/subjepa/manifests/resolved_config.json
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+{
+  "status": "PASSED",
+  "output": "experiments/tworoom/subjepa/probe/checkpoint_probe.json"
+}
+[prepare-starts] common: 1216 -> /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/preparation/P_train_common_starts.npy
+[prepare-starts] complete; no embeddings or predictors were trained
+Traceback (most recent call last):
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/prepare_lewm_cache.py", line 480, in <module>
+    main()
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/prepare_lewm_cache.py", line 450, in main
+    encode_report = encode_embedding_cache(args, paths, encode_starts)
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/prepare_lewm_cache.py", line 292, in encode_embedding_cache
+    return FastLatentCacheEncoder(config).encode(
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/lap/encoding/fast.py", line 390, in encode
+    raise FileExistsError(f"refusing to overwrite {path}")
+FileExistsError: refusing to overwrite /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/preparation/embedding_cache.npz.report.json
+{
+  "model_family": "subjepa",
+  "implementation_backend": "jepa_object",
+  "task_name": "tworoom",
+  "dataset_name": "tworoom",
+  "dataset": "/home/sicong/weitao/datasets/lewm/tworoom.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt",
+  "eval_config_name": "tworoom",
+  "eval_config": null,
+  "eval_dataset_name": "tworoom",
+  "work_root": "experiments/tworoom/subjepa",
+  "cache_dir": "/data/sicong/weitao/.stable_worldmodel/subjepa/tworoom",
+  "paired_start_root": null,
+  "paired_start_root_short": null,
+  "paired_start_root_long": null,
+  "phase": "smoke",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "img_size": 224,
+  "short_goal_offset": 25,
+  "long_goal_offset": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "max_train_starts": 4096,
+  "dry_run": false,
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/tworoom.json",
+  "train_seeds": "0,42,625",
+  "partition_seeds": "0,1,2",
+  "eval_seeds": "0,1,2,3,4",
+  "methods": "random_voronoi,kmeanspp,spectral",
+  "skip_joint": true,
+  "python": "python",
+  "cpu_threads": 4,
+  "gpu_id": "0",
+  "sources": {
+    "model_family": "cli",
+    "dataset_name": "task_spec",
+    "task_name": "task_spec",
+    "eval_config_name": "cli",
+    "eval_dataset_name": "task_spec",
+    "work_root": "cli",
+    "cache_dir": "cli",
+    "phase": "cli",
+    "skip_joint": "default",
+    "frameskip": "task_spec",
+    "short_goal_offset": "task_spec",
+    "long_goal_offset": "task_spec",
+    "eval_budget": "task_spec",
+    "train_seeds": "default",
+    "partition_seeds": "default",
+    "eval_seeds": "default",
+    "methods": "default",
+    "python": "env",
+    "cpu_threads": "default",
+    "gpu_id": "cli"
+  }
+}
+[jepa-matrix] model_family=subjepa phase=smoke work_root=experiments/tworoom/subjepa
+[jepa-matrix] resolved_config=experiments/tworoom/subjepa/manifests/resolved_config.json
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+{
+  "status": "PASSED",
+  "output": "experiments/tworoom/subjepa/probe/checkpoint_probe.json"
+}
+[prepare-starts] common: 1216 -> /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/preparation/P_train_common_starts.npy
+[prepare-starts] complete; no embeddings or predictors were trained
+[index] samples=3686 frame_slots=14744 unique_frames=14663 encoded_keys=14663
+[batch-shape] batch=408 keys=400
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+[frames] batch 1/1 (400/400)
+[batch-shape] batch=512 keys=14263
+[frames] batch 28/28 (14263/14263)
+[saved] cache=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/preparation/embedding_cache.npz
+[saved] report=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/preparation/embedding_cache.npz.report.json
+[prepare] wrote matrix cache artifacts under /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/preparation
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+{
+  "phase": "cache-equivalence",
+  "verification_path": "production_unique_frame_reconstruction",
+  "num_samples": 16,
+  "cached_shape": [
+    16,
+    4,
+    192
+  ],
+  "recomputed_shape": [
+    16,
+    4,
+    192
+  ],
+  "starts_source": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/preparation/.encode_starts.npy",
+  "starts_sha256": "886eebf549a4d34355b410e708eaf88d554188a44588c8fd9229ceba98b3a380",
+  "cache_sha256": "2be582a24c78901b4591d7eff12038c110b6602d322720b57ad5f19ed1fa32ce",
+  "selection_source_count": 3686,
+  "passed": true,
+  "max_abs_diff": 0.0,
+  "mean_abs_diff": 0.0,
+  "allclose": true,
+  "per_sample_max_abs_diff": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "per_timestep_max_abs_diff": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ]
+}
+{
+  "phase": "frozen-audit",
+  "passed": true,
+  "trainable_parameter_count": 11584128,
+  "checked_training_checkpoints": [],
+  "violations": [],
+  "optimizer_has_frozen": false
+}
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+{
+  "phase": "route-equivalence",
+  "passed": true,
+  "prediction_allclose": true,
+  "all_finite": true
+}
+Official baseline: 100.00%
+Global-FT50: 100.00% ± 0.00%
+Spectral: 100.00% ± 0.00%

@@ -1,0 +1,137 @@
+{
+  "model_family": "subjepa",
+  "implementation_backend": "jepa_object",
+  "task_name": "tworoom",
+  "dataset_name": "tworoom",
+  "dataset": "/data/sicong/weitao/datasets/lewm/tworoom.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt",
+  "eval_config_name": "tworoom",
+  "eval_config": null,
+  "eval_dataset_name": "tworoom",
+  "work_root": "experiments/tworoom/subjepa/matrix",
+  "cache_dir": "/data/sicong/weitao/.stable_worldmodel/subjepa/tworoom",
+  "paired_start_root": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/matrix/paired_starts/lewm_short",
+  "paired_start_root_short": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/matrix/paired_starts/lewm_short",
+  "paired_start_root_long": null,
+  "phase": "eval_regions",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "img_size": 224,
+  "short_goal_offset": 25,
+  "long_goal_offset": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "max_train_starts": 0,
+  "dry_run": false,
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/tworoom.json",
+  "train_seeds": "0",
+  "partition_seeds": "0",
+  "eval_seeds": "0,1,2,3,4",
+  "methods": "kmeanspp",
+  "skip_joint": true,
+  "python": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/bin/python",
+  "cpu_threads": 4,
+  "gpu_id": "",
+  "sources": {
+    "model_family": "cli",
+    "dataset_name": "task_spec",
+    "task_name": "task_spec",
+    "eval_config_name": "cli",
+    "eval_dataset_name": "task_spec",
+    "work_root": "cli",
+    "cache_dir": "cli",
+    "phase": "cli",
+    "skip_joint": "env",
+    "frameskip": "task_spec",
+    "short_goal_offset": "env",
+    "long_goal_offset": "task_spec",
+    "eval_budget": "task_spec",
+    "train_seeds": "cli",
+    "partition_seeds": "cli",
+    "eval_seeds": "cli",
+    "methods": "cli",
+    "python": "cli",
+    "cpu_threads": "cli",
+    "gpu_id": "default"
+  }
+}
+[jepa-matrix] model_family=subjepa phase=eval_regions work_root=experiments/tworoom/subjepa/matrix
+[jepa-matrix] resolved_config=experiments/tworoom/subjepa/matrix/manifests/resolved_config.json
+/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/stable_worldmodel/envs/__init__.py:215: UserWarning: ale-py not found; ALE/* envs are unavailable. Install with: pip install 'stable-worldmodel[env]' or pip install ale-py.
+  from stable_worldmodel.envs import ale  # noqa: F401
+10:37:09 | INFO  | atomic_chec~| [atomic_save] installed crash-safe checkpoint plugin (write to sibling .tmp + fsync + atomic rename)
+10:37:09 | INFO  | __init__.py | Cached 'action' from '/data/sicong/weitao/.stable_worldmodel/subjepa/tworoom/datasets/tworoom.h5'
+10:37:09 | INFO  | __init__.py | Cached 'proprio' from '/data/sicong/weitao/.stable_worldmodel/subjepa/tworoom/datasets/tworoom.h5'
+Reusing 50 eval starts from /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/matrix/paired_starts/lewm_short/eval/official/eval0/results.json
+[  2536   4965   7607  15311  20375  26096  30928  37783  69493  74356
+  82517 114619 161563 161928 237198 248512 255488 276120 283530 363138
+ 371491 389412 443244 463993 470850 484187 498658 500650 510576 515779
+ 558639 566730 582236 586573 596088 598107 617757 617986 672002 672169
+ 704653 749140 751558 779873 783563 789858 795263 840724 861176 893923]
+/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/gymnasium/utils/passive_env_checker.py:129: UserWarning: [33mWARN: The obs returned by the `reset()` method was expecting a numpy array, actual type: <class 'torch.Tensor'>[0m
+  logger.warn(
+/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/gymnasium/spaces/box.py:415: UserWarning: [33mWARN: Casting input x to numpy array.[0m
+  gym.logger.warn("Casting input x to numpy array.")
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+CEM solve time: 55.5440 seconds
+/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/gymnasium/utils/passive_env_checker.py:129: UserWarning: [33mWARN: The obs returned by the `step()` method was expecting a numpy array, actual type: <class 'torch.Tensor'>[0m
+  logger.warn(
+/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/gymnasium/spaces/box.py:415: UserWarning: [33mWARN: Casting input x to numpy array.[0m
+  gym.logger.warn("Casting input x to numpy array.")
+CEM solve time: 7.5833 seconds
+10:38:23 | ERROR | richuru.py  | Exception:
+Traceback (most recent call last):
+
+> File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/tworoom_success_rate_eval.py", line 1526, in <module>
+    main()
+    └ <function main at 0x7f7d96762830>
+
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/tworoom_success_rate_eval.py", line 1508, in main
+    run_eval(
+    └ <function run_eval at 0x7f7d96762710>
+
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/tworoom_success_rate_eval.py", line 1209, in run_eval
+    metrics = world.evaluate(
+              │     └ <function World.evaluate at 0x7f7dc0b49bd0>
+              └ <stable_worldmodel.world.world.World object at 0x7f7d9674f970>
+
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/stable_worldmodel/world/world.py", line 244, in evaluate
+    return self._evaluate_from_dataset(
+           │    └ <function World._evaluate_from_dataset at 0x7f7dc0b49f30>
+           └ <stable_worldmodel.world.world.World object at 0x7f7d9674f970>
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/stable_worldmodel/world/world.py", line 556, in _evaluate_from_dataset
+    save_panel_videos(
+    └ <function save_panel_videos at 0x7f7dc0b49870>
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/stable_worldmodel/plot/video_utils.py", line 64, in save_panel_videos
+    save_video(video_dir / f'env_{i}.mp4', composed, fps=fps)
+    │          │                           │             └ 15
+    │          │                           └ [array([[[250, 250, 250],
+    │          │                                     [250, 250, 250],
+    │          │                                     [250, 250, 250],
+    │          │                                     ...,
+    │          │                                     [250, 250, 250],
+    │          │                                     [25...
+    │          └ PosixPath('experiments/tworoom/subjepa/matrix/eval/kmeanspp/partition0_train0/eval0')
+    └ <function save_video at 0x7f7dc0b497e0>
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/stable_worldmodel/plot/video_utils.py", line 14, in save_video
+    out = imageio.get_writer(str(path), fps=fps, codec='libx264')
+          │       │              │          └ 15
+          │       │              └ PosixPath('experiments/tworoom/subjepa/matrix/eval/kmeanspp/partition0_train0/eval0/env_0.mp4')
+          │       └ <function get_writer at 0x7f7dc0b3e8c0>
+          └ <module 'imageio' from '/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Mode...
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/imageio/v2.py", line 324, in get_writer
+    image_file = imopen(uri, "w" + mode, **imopen_args)
+                 │      │          │       └ {'plugin': None, 'extension': None, 'legacy_mode': True}
+                 │      │          └ '?'
+                 │      └ 'experiments/tworoom/subjepa/matrix/eval/kmeanspp/partition0_train0/eval0/env_0.mp4'
+                 └ <function imopen at 0x7f7dcb29a440>
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/imageio/core/imopen.py", line 281, in imopen
+    raise err_type(err_msg)
+          │        └ 'Could not find a backend to open `experiments/tworoom/subjepa/matrix/eval/kmeanspp/partition0_train0/eval0/env_0.mp4`` with ...
+          └ <class 'ValueError'>
+
+ValueError: Could not find a backend to open `experiments/tworoom/subjepa/matrix/eval/kmeanspp/partition0_train0/eval0/env_0.mp4`` with iomode `w?`.
+Based on the extension, the following plugins might add capable backends:
+  FFMPEG:  pip install imageio[ffmpeg]
+  pyav:  pip install imageio[pyav]

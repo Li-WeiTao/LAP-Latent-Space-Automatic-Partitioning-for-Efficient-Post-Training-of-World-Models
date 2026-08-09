@@ -1,0 +1,318 @@
+{
+  "model_family": "subjepa",
+  "implementation_backend": "jepa_object",
+  "task_name": "pusht",
+  "dataset_name": "pusht",
+  "dataset": "/home/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
+  "eval_config_name": "pusht",
+  "eval_config": null,
+  "eval_dataset_name": "pusht_expert_train",
+  "work_root": "experiments/pusht/subjepa/matrix",
+  "cache_dir": "/data/sicong/weitao/.stableworldmodel/subjepa/pusht",
+  "paired_start_root": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix/paired_starts/canon_short",
+  "paired_start_root_short": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix/paired_starts/canon_short",
+  "paired_start_root_long": null,
+  "phase": "eval_regions",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "img_size": 224,
+  "short_goal_offset": 25,
+  "long_goal_offset": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "max_train_starts": 0,
+  "dry_run": false,
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/pusht.json",
+  "train_seeds": "0",
+  "partition_seeds": "2",
+  "eval_seeds": "0,1,2,3,4",
+  "methods": "kmeanspp",
+  "skip_joint": true,
+  "python": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/bin/python",
+  "cpu_threads": 4,
+  "gpu_id": "",
+  "sources": {
+    "model_family": "cli",
+    "dataset_name": "task_spec",
+    "task_name": "task_spec",
+    "eval_config_name": "cli",
+    "eval_dataset_name": "task_spec",
+    "work_root": "cli",
+    "cache_dir": "cli",
+    "phase": "cli",
+    "skip_joint": "env",
+    "frameskip": "task_spec",
+    "short_goal_offset": "env",
+    "long_goal_offset": "task_spec",
+    "eval_budget": "task_spec",
+    "train_seeds": "cli",
+    "partition_seeds": "cli",
+    "eval_seeds": "cli",
+    "methods": "cli",
+    "python": "cli",
+    "cpu_threads": "cli",
+    "gpu_id": "default"
+  }
+}
+[jepa-matrix] model_family=subjepa phase=eval_regions work_root=experiments/pusht/subjepa/matrix
+[jepa-matrix] resolved_config=experiments/pusht/subjepa/matrix/manifests/resolved_config.json
+/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/stable_worldmodel/envs/__init__.py:215: UserWarning: ale-py not found; ALE/* envs are unavailable. Install with: pip install 'stable-worldmodel[env]' or pip install ale-py.
+  from stable_worldmodel.envs import ale  # noqa: F401
+/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/pygame/pkgdata.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_stream, resource_exists
+11:24:54 | INFO  | atomic_chec~| [atomic_save] installed crash-safe checkpoint plugin (write to sibling .tmp + fsync + atomic rename)
+11:24:54 | INFO  | __init__.py | Cached 'action' from '/data/sicong/weitao/.stableworldmodel/subjepa/pusht/datasets/pusht_expert_train.h5'
+11:24:54 | INFO  | __init__.py | Cached 'proprio' from '/data/sicong/weitao/.stableworldmodel/subjepa/pusht/datasets/pusht_expert_train.h5'
+11:24:54 | INFO  | __init__.py | Cached 'state' from '/data/sicong/weitao/.stableworldmodel/subjepa/pusht/datasets/pusht_expert_train.h5'
+11:24:56 | ERROR | richuru.py  | Exception:
+Traceback (most recent call last):
+
+> File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/tworoom_success_rate_eval.py", line 1526, in <module>
+    main()
+    └ <function main at 0x7f18879e20e0>
+
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/tworoom_success_rate_eval.py", line 1508, in main
+    run_eval(
+    └ <function run_eval at 0x7f18879e1fc0>
+
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/tworoom_success_rate_eval.py", line 1178, in run_eval
+    model, model_meta = resolve_model(
+                        └ <function resolve_model at 0x7f18879e1f30>
+
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/tworoom_success_rate_eval.py", line 948, in resolve_model
+    switch_model = build_latent_cluster_switch_model(
+                   └ <function build_latent_cluster_switch_model at 0x7f18879e0ee0>
+
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/tworoom_success_rate_eval.py", line 529, in build_latent_cluster_switch_model
+    cluster_models = {
+
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/tworoom_success_rate_eval.py", line 530, in <dictcomp>
+    name: load_object_checkpoint(path, device, model_family=model_family)
+    │     │                      │     │                    └ 'subjepa'
+    │     │                      │     └ device(type='cuda')
+    │     │                      └ PosixPath('/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiment...
+    │     └ <function load_object_checkpoint at 0x7f18879e1c60>
+    └ 'cluster0'
+
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/tworoom_success_rate_eval.py", line 807, in load_object_checkpoint
+    model = load_jepa_object_checkpoint(
+            └ <function load_jepa_object_checkpoint at 0x7f1865cf7e20>
+
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/backends/lewm/checkpoint_compat.py", line 143, in load_jepa_object_checkpoint
+    return load_subjepa_object_checkpoint(
+           └ <function load_subjepa_object_checkpoint at 0x7f1865cf71c0>
+
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/backends/lewm/checkpoint_compat.py", line 118, in load_subjepa_object_checkpoint
+    model = torch.load(
+            │     └ <function load at 0x7f19ab461a20>
+            └ <module 'torch' from '/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models...
+
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/torch/serialization.py", line 1579, in load
+    return _load(
+           └ <function _load at 0x7f19ab461d80>
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/torch/serialization.py", line 2190, in _load
+    result = unpickler.load()
+             │         └ <method 'load' of '_pickle.Unpickler' objects>
+             └ <torch.serialization._load.<locals>.UnpicklerWrapper object at 0x7f185553e3e0>
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/torch/serialization.py", line 2154, in persistent_load
+    typed_storage = load_tensor(
+                    └ <function _load.<locals>.load_tensor at 0x7f1855550f70>
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/torch/serialization.py", line 2116, in load_tensor
+    wrap_storage = restore_location(storage, location)
+                   │                │        └ 'cuda:0'
+                   │                └  12
+                   │                   98
+                   │                   49
+                   │                   187
+                   │                   114
+                   │                   58
+                   │                   145
+                   │                   189
+                   │                   150
+                   │                   244
+                   │                   4
+                   │                   186
+                   │                   37
+                   │                   190
+                   │                   105
+                   │                   61
+                   │                   107
+                   │                   126
+                   │                   57
+                   │                   188
+                   │                   21
+                   │                   219
+                   │                   98
+                   │                   61
+                   │                   198
+                   │                   239
+                   │                   88
+                   │                   61...
+                   └ <function _get_restore_location.<locals>.restore_location at 0x7f1855550ca0>
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/torch/serialization.py", line 1920, in restore_location
+    return default_restore_location(storage, str(map_location))
+           │                        │            └ device(type='cuda')
+           │                        └  12
+           │                           98
+           │                           49
+           │                           187
+           │                           114
+           │                           58
+           │                           145
+           │                           189
+           │                           150
+           │                           244
+           │                           4
+           │                           186
+           │                           37
+           │                           190
+           │                           105
+           │                           61
+           │                           107
+           │                           126
+           │                           57
+           │                           188
+           │                           21
+           │                           219
+           │                           98
+           │                           61
+           │                           198
+           │                           239
+           │                           88
+           │                           61...
+           └ <function default_restore_location at 0x7f19ab460b80>
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/torch/serialization.py", line 734, in default_restore_location
+    result = fn(storage, location)
+             │  │        └ 'cuda'
+             │  └  12
+             │     98
+             │     49
+             │     187
+             │     114
+             │     58
+             │     145
+             │     189
+             │     150
+             │     244
+             │     4
+             │     186
+             │     37
+             │     190
+             │     105
+             │     61
+             │     107
+             │     126
+             │     57
+             │     188
+             │     21
+             │     219
+             │     98
+             │     61
+             │     198
+             │     239
+             │     88
+             │     61...
+             └ functools.partial(<function _deserialize at 0x7f19ab460a60>, 'cuda')
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/torch/serialization.py", line 668, in _deserialize
+    return obj.to(device=device)
+           │   │         └ device(type='cuda', index=0)
+           │   └ <function _StorageBase.to at 0x7f19b2fbd630>
+           └  12
+              98
+              49
+              187
+              114
+              58
+              145
+              189
+              150
+              244
+              4
+              186
+              37
+              190
+              105
+              61
+              107
+              126
+              57
+              188
+              21
+              219
+              98
+              61
+              198
+              239
+              88
+              61...
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/torch/storage.py", line 289, in to
+    return _to(self, device, non_blocking)
+           │   │     │       └ False
+           │   │     └ device(type='cuda', index=0)
+           │   └  12
+           │      98
+           │      49
+           │      187
+           │      114
+           │      58
+           │      145
+           │      189
+           │      150
+           │      244
+           │      4
+           │      186
+           │      37
+           │      190
+           │      105
+           │      61
+           │      107
+           │      126
+           │      57
+           │      188
+           │      21
+           │      219
+           │      98
+           │      61
+           │      198
+           │      239
+           │      88
+           │      61...
+           └ <function _to at 0x7f19e2c61cf0>
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/torch/_utils.py", line 106, in _to
+    untyped_storage = torch.UntypedStorage(self.size(), device=device)
+                      │     │              │    │              └ device(type='cuda', index=0)
+                      │     │              │    └ <function _StorageBase.size at 0x7f19b2f9bc70>
+                      │     │              └  12
+                      │     │                 98
+                      │     │                 49
+                      │     │                 187
+                      │     │                 114
+                      │     │                 58
+                      │     │                 145
+                      │     │                 189
+                      │     │                 150
+                      │     │                 244
+                      │     │                 4
+                      │     │                 186
+                      │     │                 37
+                      │     │                 190
+                      │     │                 105
+                      │     │                 61
+                      │     │                 107
+                      │     │                 126
+                      │     │                 57
+                      │     │                 188
+                      │     │                 21
+                      │     │                 219
+                      │     │                 98
+                      │     │                 61
+                      │     │                 198
+                      │     │                 239
+                      │     │                 88
+                      │     │                 61...
+                      │     └ <class 'torch.storage.UntypedStorage'>
+                      └ <module 'torch' from '/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models...
+
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 0 has a total capacity of 23.56 GiB of which 2.75 MiB is free. Process 307823 has 22.77 GiB memory in use. Process 598169 has 424.00 MiB memory in use. Including non-PyTorch memory, this process has 350.00 MiB memory in use. Of the allocated memory 90.39 MiB is allocated by PyTorch, and 3.61 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)

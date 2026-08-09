@@ -1,0 +1,191 @@
+[pre-lock] gate VERIFIED, spectral seed=0, cache hash ok
+{
+  "seed_dir": "experiments/tworoom/subjepa/matrix/partitions/spectral/seed0",
+  "sample_id_mode": "remapped_from_dense_index",
+  "num_labels": 909723,
+  "id_min": 1,
+  "id_max": 920808,
+  "training_starts_covered": 693728,
+  "seed": 0
+}
+{
+  "seed_dir": "experiments/tworoom/subjepa/matrix/partitions/spectral/seed1",
+  "sample_id_mode": "remapped_from_dense_index",
+  "num_labels": 909723,
+  "id_min": 1,
+  "id_max": 920808,
+  "training_starts_covered": 693728,
+  "seed": 1
+}
+{
+  "seed_dir": "experiments/tworoom/subjepa/matrix/partitions/spectral/seed2",
+  "sample_id_mode": "remapped_from_dense_index",
+  "num_labels": 909723,
+  "id_min": 1,
+  "id_max": 920808,
+  "training_starts_covered": 693728,
+  "seed": 2
+}
+{
+  "parity_status": "PASSED",
+  "mismatches": [],
+  "out": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/matrix/manifests/protocol_parity.json"
+}
+{
+  "schema_version": 1,
+  "git_commit": "b7a7d4ba4a4d09e5d87fec462238c5205ce74557",
+  "gate_passport": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/formal/manifests/material_passport.json",
+  "gate_status": "VERIFIED",
+  "selected_branch": "spectral",
+  "deployment_seed": 0,
+  "sha256": {
+    "dataset": "129a36aa93ea0de488d2bcc876e396de9e3907bf66c6aae6394e542ef6a6d623",
+    "checkpoint": "06d743c6fb46914dafed0aabab4e9e2eed8d53efbf9cb4a4a3350244afbb2652",
+    "full_cache": "b2fab2bfc3127e7cefcad0d1dca409b9e39d156f55d518945bc9ab4ee417a900",
+    "task_spec": "ab31872ab893101bb703d370498e6c10f5fb6541c0fa5face2fece020ca82449"
+  },
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/tworoom.json",
+  "eval_config_name": "tworoom",
+  "protocol_parity": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/matrix/manifests/protocol_parity.json"
+}
+[setup] matrix ready under experiments/tworoom/subjepa/matrix
+[setup] pre_execution_lock=experiments/tworoom/subjepa/matrix/manifests/pre_execution_lock.json
+{
+  "model_family": "lewm",
+  "implementation_backend": "jepa_object",
+  "task_name": "tworoom",
+  "dataset_name": "tworoom",
+  "dataset": "/data/sicong/weitao/datasets/lewm/tworoom.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt",
+  "eval_config_name": "tworoom",
+  "eval_config": null,
+  "eval_dataset_name": "tworoom",
+  "work_root": "experiments/tworoom/subjepa/matrix",
+  "cache_dir": "/data/sicong/weitao/.stable_worldmodel/subjepa/tworoom",
+  "paired_start_root": null,
+  "paired_start_root_short": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/matrix/paired_starts/lewm_short",
+  "paired_start_root_long": null,
+  "phase": "all",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "img_size": 224,
+  "short_goal_offset": 25,
+  "long_goal_offset": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "max_train_starts": 0,
+  "dry_run": false,
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/tworoom.json",
+  "train_seeds": "0,42,625",
+  "partition_seeds": "0,1,2",
+  "eval_seeds": "0,1,2,3,4",
+  "methods": "kmeanspp,spectral",
+  "skip_joint": true,
+  "python": "python",
+  "cpu_threads": 4,
+  "gpu_id": "",
+  "sources": {
+    "model_family": "default",
+    "dataset_name": "task_spec",
+    "task_name": "task_spec",
+    "eval_config_name": "cli",
+    "eval_dataset_name": "task_spec",
+    "work_root": "cli",
+    "cache_dir": "cli",
+    "phase": "default",
+    "skip_joint": "env",
+    "frameskip": "task_spec",
+    "short_goal_offset": "env",
+    "long_goal_offset": "task_spec",
+    "eval_budget": "task_spec",
+    "train_seeds": "default",
+    "partition_seeds": "default",
+    "eval_seeds": "default",
+    "methods": "cli",
+    "python": "cli",
+    "cpu_threads": "cli",
+    "gpu_id": "default"
+  }
+}
+{
+  "model_family": "lewm",
+  "implementation_backend": "jepa_object",
+  "task_name": "tworoom",
+  "dataset_name": "tworoom",
+  "dataset": "/data/sicong/weitao/datasets/lewm/tworoom.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt",
+  "eval_config_name": "tworoom",
+  "eval_config": null,
+  "eval_dataset_name": "tworoom",
+  "work_root": "experiments/tworoom/subjepa/matrix",
+  "cache_dir": "/data/sicong/weitao/.stable_worldmodel/subjepa/tworoom",
+  "paired_start_root": null,
+  "paired_start_root_short": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/matrix/paired_starts/lewm_short",
+  "paired_start_root_long": null,
+  "phase": "all",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "img_size": 224,
+  "short_goal_offset": 25,
+  "long_goal_offset": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "max_train_starts": 0,
+  "dry_run": false,
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/tworoom.json",
+  "train_seeds": "0,42,625",
+  "partition_seeds": "0,1,2",
+  "eval_seeds": "0,1,2,3,4",
+  "methods": "kmeanspp,spectral",
+  "skip_joint": true,
+  "python": "python",
+  "cpu_threads": 4,
+  "gpu_id": "",
+  "sources": {
+    "model_family": "default",
+    "dataset_name": "task_spec",
+    "task_name": "task_spec",
+    "eval_config_name": "cli",
+    "eval_dataset_name": "task_spec",
+    "work_root": "cli",
+    "cache_dir": "cli",
+    "phase": "default",
+    "skip_joint": "cli",
+    "frameskip": "task_spec",
+    "short_goal_offset": "env",
+    "long_goal_offset": "task_spec",
+    "eval_budget": "task_spec",
+    "train_seeds": "cli",
+    "partition_seeds": "cli",
+    "eval_seeds": "cli",
+    "methods": "cli",
+    "python": "cli",
+    "cpu_threads": "cli",
+    "gpu_id": "default"
+  }
+}
+[stage] eval_short tasks=22 workers=7 retries=2
+[start] stage=eval_short task=official gpu=0 attempt=1 log=experiments/tworoom/subjepa/matrix/logs/parallel_20260806T022800Z_short/eval_short/official.log
+[start] stage=eval_short task=global_t0 gpu=1 attempt=1 log=experiments/tworoom/subjepa/matrix/logs/parallel_20260806T022800Z_short/eval_short/global_t0.log
+[start] stage=eval_short task=kmeanspp_p0_t0 gpu=2 attempt=1 log=experiments/tworoom/subjepa/matrix/logs/parallel_20260806T022800Z_short/eval_short/kmeanspp_p0_t0.log
+[start] stage=eval_short task=kmeanspp_p1_t0 gpu=3 attempt=1 log=experiments/tworoom/subjepa/matrix/logs/parallel_20260806T022800Z_short/eval_short/kmeanspp_p1_t0.log
+[start] stage=eval_short task=kmeanspp_p2_t0 gpu=4 attempt=1 log=experiments/tworoom/subjepa/matrix/logs/parallel_20260806T022800Z_short/eval_short/kmeanspp_p2_t0.log
+[start] stage=eval_short task=spectral_p0_t0 gpu=5 attempt=1 log=experiments/tworoom/subjepa/matrix/logs/parallel_20260806T022800Z_short/eval_short/spectral_p0_t0.log
+[start] stage=eval_short task=spectral_p1_t0 gpu=6 attempt=1 log=experiments/tworoom/subjepa/matrix/logs/parallel_20260806T022800Z_short/eval_short/spectral_p1_t0.log
+[start] stage=eval_short task=kmeanspp_p0_t0 gpu=2 attempt=2 log=experiments/tworoom/subjepa/matrix/logs/parallel_20260806T022800Z_short/eval_short/kmeanspp_p0_t0.log
+[start] stage=eval_short task=spectral_p1_t0 gpu=6 attempt=2 log=experiments/tworoom/subjepa/matrix/logs/parallel_20260806T022800Z_short/eval_short/spectral_p1_t0.log
+[start] stage=eval_short task=kmeanspp_p1_t0 gpu=3 attempt=2 log=experiments/tworoom/subjepa/matrix/logs/parallel_20260806T022800Z_short/eval_short/kmeanspp_p1_t0.log
+[start] stage=eval_short task=spectral_p0_t0 gpu=5 attempt=2 log=experiments/tworoom/subjepa/matrix/logs/parallel_20260806T022800Z_short/eval_short/spectral_p0_t0.log
+[start] stage=eval_short task=kmeanspp_p2_t0 gpu=4 attempt=2 log=experiments/tworoom/subjepa/matrix/logs/parallel_20260806T022800Z_short/eval_short/kmeanspp_p2_t0.log
+[start] stage=eval_short task=global_t0 gpu=1 attempt=2 log=experiments/tworoom/subjepa/matrix/logs/parallel_20260806T022800Z_short/eval_short/global_t0.log
+[start] stage=eval_short task=official gpu=0 attempt=2 log=experiments/tworoom/subjepa/matrix/logs/parallel_20260806T022800Z_short/eval_short/official.log
+[failed] stage=eval_short task=kmeanspp_p0_t0 gpu=2 attempts=2
+[failed] stage=eval_short task=kmeanspp_p2_t0 gpu=4 attempts=2
+[failed] stage=eval_short task=kmeanspp_p1_t0 gpu=3 attempts=2
+[failed] stage=eval_short task=spectral_p1_t0 gpu=6 attempts=2
+[failed] stage=eval_short task=official gpu=0 attempts=2
+[failed] stage=eval_short task=global_t0 gpu=1 attempts=2
+[failed] stage=eval_short task=spectral_p0_t0 gpu=5 attempts=2
+stage failed: eval_short; inspect experiments/tworoom/subjepa/matrix/logs/parallel_20260806T022800Z_short/eval_short

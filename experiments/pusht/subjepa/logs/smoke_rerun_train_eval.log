@@ -1,0 +1,259 @@
+{
+  "model_family": "subjepa",
+  "implementation_backend": "jepa_object",
+  "task_name": "pusht",
+  "dataset_name": "pusht",
+  "dataset": "/home/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
+  "eval_config_name": "pusht",
+  "eval_config": null,
+  "eval_dataset_name": "pusht_expert_train",
+  "work_root": "experiments/pusht/subjepa",
+  "cache_dir": "/data/sicong/weitao/.stableworldmodel/subjepa/pusht",
+  "paired_start_root": null,
+  "paired_start_root_short": null,
+  "paired_start_root_long": null,
+  "phase": "smoke",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "img_size": 224,
+  "short_goal_offset": 25,
+  "long_goal_offset": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "max_train_starts": 4096,
+  "dry_run": false,
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/pusht.json",
+  "train_seeds": "0,42,625",
+  "partition_seeds": "0,1,2",
+  "eval_seeds": "0,1,2,3,4",
+  "methods": "random_voronoi,kmeanspp,spectral",
+  "skip_joint": true,
+  "python": ".venv/bin/python",
+  "cpu_threads": 4,
+  "gpu_id": "",
+  "sources": {
+    "model_family": "cli",
+    "dataset_name": "task_spec",
+    "task_name": "task_spec",
+    "eval_config_name": "cli",
+    "eval_dataset_name": "task_spec",
+    "work_root": "cli",
+    "cache_dir": "cli",
+    "phase": "cli",
+    "skip_joint": "default",
+    "frameskip": "task_spec",
+    "short_goal_offset": "task_spec",
+    "long_goal_offset": "task_spec",
+    "eval_budget": "task_spec",
+    "train_seeds": "default",
+    "partition_seeds": "default",
+    "eval_seeds": "default",
+    "methods": "default",
+    "python": "env",
+    "cpu_threads": "default",
+    "gpu_id": "default"
+  }
+}
+[jepa-matrix] model_family=subjepa phase=smoke work_root=experiments/pusht/subjepa
+[jepa-matrix] resolved_config=experiments/pusht/subjepa/manifests/resolved_config.json
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+{
+  "status": "PASSED",
+  "output": "experiments/pusht/subjepa/probe/checkpoint_probe.json"
+}
+[prepare] all artifacts present under /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation; skipping
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+{
+  "phase": "cache-equivalence",
+  "verification_path": "production_unique_frame_reconstruction",
+  "num_samples": 16,
+  "cached_shape": [
+    16,
+    4,
+    192
+  ],
+  "recomputed_shape": [
+    16,
+    4,
+    192
+  ],
+  "starts_source": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/.encode_starts.npy",
+  "starts_sha256": "ec2eecdae76245e3f889f3bd10b44c2270ae443b980f4bc47fb741d2f602a78e",
+  "cache_sha256": "3d2e75d1e347c1826b94ab47a474d8e97af0eb92a7a9f6f63a733dcb3177ec3e",
+  "selection_source_count": 3686,
+  "passed": true,
+  "max_abs_diff": 0.0,
+  "mean_abs_diff": 0.0,
+  "allclose": true,
+  "per_sample_max_abs_diff": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "per_timestep_max_abs_diff": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ]
+}
+Traceback (most recent call last):
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/train_predictors.py", line 173, in <module>
+    main()
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/train_predictors.py", line 116, in main
+    result = method.fit(LeWMLatentCache.from_npz(cache_path), model_path)
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/lap/pipeline.py", line 84, in fit
+    raise FileExistsError(f"LAP output directory is not empty: {output}")
+FileExistsError: LAP output directory is not empty: experiments/pusht/subjepa/training/global/train0
+{
+  "model_family": "subjepa",
+  "implementation_backend": "jepa_object",
+  "task_name": "pusht",
+  "dataset_name": "pusht",
+  "dataset": "/home/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
+  "eval_config_name": "pusht",
+  "eval_config": null,
+  "eval_dataset_name": "pusht_expert_train",
+  "work_root": "experiments/pusht/subjepa",
+  "cache_dir": "/data/sicong/weitao/.stableworldmodel/subjepa/pusht",
+  "paired_start_root": null,
+  "paired_start_root_short": null,
+  "paired_start_root_long": null,
+  "phase": "smoke",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "img_size": 224,
+  "short_goal_offset": 25,
+  "long_goal_offset": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "max_train_starts": 4096,
+  "dry_run": false,
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/pusht.json",
+  "train_seeds": "0,42,625",
+  "partition_seeds": "0,1,2",
+  "eval_seeds": "0,1,2,3,4",
+  "methods": "random_voronoi,kmeanspp,spectral",
+  "skip_joint": true,
+  "python": ".venv/bin/python",
+  "cpu_threads": 4,
+  "gpu_id": "",
+  "sources": {
+    "model_family": "cli",
+    "dataset_name": "task_spec",
+    "task_name": "task_spec",
+    "eval_config_name": "cli",
+    "eval_dataset_name": "task_spec",
+    "work_root": "cli",
+    "cache_dir": "cli",
+    "phase": "cli",
+    "skip_joint": "default",
+    "frameskip": "task_spec",
+    "short_goal_offset": "task_spec",
+    "long_goal_offset": "task_spec",
+    "eval_budget": "task_spec",
+    "train_seeds": "default",
+    "partition_seeds": "default",
+    "eval_seeds": "default",
+    "methods": "default",
+    "python": "env",
+    "cpu_threads": "default",
+    "gpu_id": "default"
+  }
+}
+[jepa-matrix] model_family=subjepa phase=smoke work_root=experiments/pusht/subjepa
+[jepa-matrix] resolved_config=experiments/pusht/subjepa/manifests/resolved_config.json
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+{
+  "status": "PASSED",
+  "output": "experiments/pusht/subjepa/probe/checkpoint_probe.json"
+}
+[prepare] all artifacts present under /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation; skipping
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+{
+  "phase": "cache-equivalence",
+  "verification_path": "production_unique_frame_reconstruction",
+  "num_samples": 16,
+  "cached_shape": [
+    16,
+    4,
+    192
+  ],
+  "recomputed_shape": [
+    16,
+    4,
+    192
+  ],
+  "starts_source": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/.encode_starts.npy",
+  "starts_sha256": "ec2eecdae76245e3f889f3bd10b44c2270ae443b980f4bc47fb741d2f602a78e",
+  "cache_sha256": "3d2e75d1e347c1826b94ab47a474d8e97af0eb92a7a9f6f63a733dcb3177ec3e",
+  "selection_source_count": 3686,
+  "passed": true,
+  "max_abs_diff": 0.0,
+  "mean_abs_diff": 0.0,
+  "allclose": true,
+  "per_sample_max_abs_diff": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "per_timestep_max_abs_diff": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ]
+}
+  [train] epoch 1/1  train_loss=0.017635  eval_loss=0.003893
+  [best] epoch 1  eval_loss=0.003893 (selected over 1 epochs)
+[done] dataset=pusht train_seed=0 regions=1 -> experiments/pusht/subjepa/training/global/train0
+  [train] epoch 1/1  train_loss=0.046721  eval_loss=0.007199
+  [best] epoch 1  eval_loss=0.007199 (selected over 1 epochs)
+  [train] epoch 1/1  train_loss=0.046903  eval_loss=0.006780
+  [best] epoch 1  eval_loss=0.006780 (selected over 1 epochs)
+  [train] epoch 1/1  train_loss=0.038722  eval_loss=0.007082
+  [best] epoch 1  eval_loss=0.007082 (selected over 1 epochs)
+[done] dataset=pusht train_seed=0 regions=3 -> experiments/pusht/subjepa/training/spectral/partition0_train0
+{
+  "phase": "frozen-audit",
+  "passed": true,
+  "trainable_parameter_count": 11584128,
+  "checked_training_checkpoints": [
+    "experiments/pusht/subjepa/training/global/train0/P_train_cluster0_object.ckpt",
+    "experiments/pusht/subjepa/training/spectral/partition0_train0/P_train_cluster0_object.ckpt",
+    "experiments/pusht/subjepa/training/spectral/partition0_train0/P_train_cluster1_object.ckpt"
+  ],
+  "violations": [],
+  "optimizer_has_frozen": false
+}
+missing paired starts for official eval seed 0: experiments/pusht/subjepa/eval/official/eval0/results.json

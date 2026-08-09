@@ -1,0 +1,28 @@
+[gate-wait] replay audit passed: experiments/pusht/subjepa/formal/manifests/replay_audit_summary.json
+[gate-wait] starting gate
+[pusht-formal-gate] phase=gate (method=auto, K=3, 9 graph configs)
+Traceback (most recent call last):
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/fit_partition.py", line 477, in <module>
+    main()
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/fit_partition.py", line 428, in main
+    artifact, labels, method_meta = build_auto(raw, sample_ids, groups, args)
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/fit_partition.py", line 367, in build_auto
+    result = partitioner.fit(raw, sample_ids=sample_ids, group_ids=groups)
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/lap/partition/gate.py", line 410, in fit
+    gate = SpectralDegeneracyGate(
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/lap/partition/gate.py", line 315, in evaluate
+    neighbors, similarities, _ = self.neighbor_search(
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/fit_partition.py", line 330, in <lambda>
+    search = lambda values, max_k: exact_cosine_knn_torch(
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/latent_landmark_spectral.py", line 491, in exact_cosine_knn_torch
+    torch.cuda.set_device(device)
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/lib/python3.10/site-packages/torch/cuda/__init__.py", line 651, in set_device
+    torch._C._cuda_setDevice(device)
+torch.AcceleratorError: CUDA error: out of memory
+Search for `cudaErrorMemoryAllocation' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+

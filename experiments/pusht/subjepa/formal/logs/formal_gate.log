@@ -1,0 +1,3 @@
+[pusht-formal-gate] phase=prepare (no max_train_starts cap)
+[pusht-formal-gate] phase=gate (method=auto, K=3, 9 graph configs)
+[pusht-formal-gate] phase=gate (method=auto, K=3, 9 graph configs)

@@ -1,0 +1,256 @@
+{
+  "seed_dir": "experiments/pusht/subjepa/matrix/partitions/spectral/seed0",
+  "sample_id_mode": "remapped_from_dense_index",
+  "num_labels": 2315671,
+  "id_min": 0,
+  "id_max": 2336735,
+  "training_starts_covered": 1850815,
+  "seed": 0
+}
+{
+  "seed_dir": "experiments/pusht/subjepa/matrix/partitions/spectral/seed1",
+  "sample_id_mode": "remapped_from_dense_index",
+  "num_labels": 2315671,
+  "id_min": 0,
+  "id_max": 2336735,
+  "training_starts_covered": 1850815,
+  "seed": 1
+}
+{
+  "seed_dir": "experiments/pusht/subjepa/matrix/partitions/spectral/seed2",
+  "sample_id_mode": "remapped_from_dense_index",
+  "num_labels": 2315671,
+  "id_min": 0,
+  "id_max": 2336735,
+  "training_starts_covered": 1850815,
+  "seed": 2
+}
+{
+  "schema_version": 2,
+  "gate_selected_branch": "global",
+  "auto_lap_source": {
+    "type": "global",
+    "partition_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/gate/partition",
+    "training_template": "global/train{train_seed}",
+    "eval_template": "global/train{train_seed}/eval{eval_seed}",
+    "note": "Auto-LAP symlinks Global-FT checkpoints; rollout results must match Global-FT exactly per train seed."
+  },
+  "forced_spectral_partition": {
+    "formal_root": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/partitions/spectral",
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "complete": true,
+    "matrix_root": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix/partitions/spectral"
+  },
+  "gate_status": "VERIFIED",
+  "gate_passport": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/manifests/material_passport.json",
+  "deployment_seed": 0,
+  "formal_producer_commit": "87f811da41833c7780965e01d4535e601265d764",
+  "matrix_runner_commit": "87f811da41833c7780965e01d4535e601265d764",
+  "sha256": {
+    "dataset": "b6ebd9ac94bbe9e383f6e7a9cd92d74e9aa665ea57b758ed3717b0ee7df8d4fb",
+    "checkpoint": "f4b4b9bdf4cf6254a98f1ae73c182f884f449eb52436e5900157a5f463313b3a",
+    "full_cache": "a706adcef9f5d1d8a5044c2adb4cf868f48ff098b2aebf3f511d4565d8027ccd",
+    "task_spec": "68ee20804e308c3725176f95acc61432e7ab3cf6be3c6b56cfb65e86f9e33fd4"
+  },
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/pusht.json",
+  "eval_config_name": "pusht",
+  "replay_audit": {
+    "all_passed": true,
+    "replay_16_passed": true,
+    "replay_16_max_abs_diff": 0.0,
+    "replay_64_passed": true,
+    "replay_64_max_abs_diff": 0.0
+  },
+  "gate_checks": {
+    "safety_pass": false,
+    "background_pass": false,
+    "selected_method": "global",
+    "reason": "safety_and_background_checks_failed"
+  },
+  "smoke_artifact_bindings": {
+    "verification_status.json": {
+      "path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/manifests/verification_status.json",
+      "sha256": "ebc14151014cb1733060d940d2d48d2d02a43e300a89805b661e95bc7d8a7a74"
+    },
+    "smoke_cache-equivalence.json": {
+      "path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/manifests/smoke_cache-equivalence.json",
+      "sha256": "07417297d7ab5727b7ba37326127ffd208c7e396c8bcb3559fa6575f41aac3e7"
+    },
+    "smoke_frozen-audit.json": {
+      "path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/manifests/smoke_frozen-audit.json",
+      "sha256": "d3c5b5d8b432589b5e3673f84867f4e4e64e38bc45ead6f83576ef4e8478b8fd"
+    },
+    "smoke_route-equivalence.json": {
+      "path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/manifests/smoke_route-equivalence.json",
+      "sha256": "e3f0864f25cd4e850feee89cb06132931363efd1453a3734f6120b6a2c173461"
+    },
+    "embedding_cache.npz": {
+      "path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/embedding_cache.npz",
+      "sha256": "3d2e75d1e347c1826b94ab47a474d8e97af0eb92a7a9f6f63a733dcb3177ec3e"
+    }
+  },
+  "paired_start_hashes": {
+    "short": {
+      "0": "f214d93573ee1a7b6dff0220a33687e0201c45f150e39402d188f6376c58ec59",
+      "1": "82d8a03b8a7023053235caefeb10569853e53a5ec9562f17d2f0b806021d140a",
+      "2": "99dee1ddc2a9067f5d74ac5e995a5b72df80a5c9345431ac57aa97379f52e908",
+      "3": "6c991ccd14fef011eeaa27a45036269e1360e897a9e08013c9fd1ec5ebe71503",
+      "4": "5f8a263efbec977f80f498d37ad4cb6c6c4d8aecf5782fd248d01801aa9f1d89"
+    },
+    "long": {
+      "0": "1e3883e8e7c2d1bb118c98d025492fda8adc4780c6dbb5b8f9e8c377e2108891",
+      "1": "78942a52ff908480b5537022f0c95d7cccd86065db62c56e5744edd58663a653",
+      "2": "33b26957d0dd8328145079fef33fdaca5a4c33382f8c5a16868a1058dee39b79",
+      "3": "7c70e931dd718e76531b60b253d7a5e764bed3f7190d7eb5c483a394aea42d43",
+      "4": "441899358ff0f1a97a0a90ba27b9087bacf73cddea565c43758ddd01c234739b"
+    }
+  },
+  "paired_start_sources": {
+    "short": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/matrix/eval/official",
+    "long": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/matrix_long/eval/official"
+  },
+  "auto_partition_symlink_source": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/gate/partition"
+}
+[setup] gate_selected_branch=global
+[setup] matrix ready under experiments/pusht/subjepa/matrix
+[setup] pre_execution_lock=experiments/pusht/subjepa/matrix/manifests/pre_execution_lock.json
+[setup] auto_lap branch=global auto/partition -> /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/gate/partition
+{
+  "model_family": "lewm",
+  "implementation_backend": "jepa_object",
+  "task_name": "pusht",
+  "dataset_name": "pusht",
+  "dataset": "/home/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
+  "eval_config_name": "pusht",
+  "eval_config": null,
+  "eval_dataset_name": "pusht_expert_train",
+  "work_root": "experiments/pusht/subjepa/matrix",
+  "cache_dir": "/data/sicong/weitao/.stableworldmodel/subjepa/pusht",
+  "paired_start_root": null,
+  "paired_start_root_short": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix/paired_starts/canon_short",
+  "paired_start_root_long": null,
+  "phase": "all",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "img_size": 224,
+  "short_goal_offset": 25,
+  "long_goal_offset": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "max_train_starts": 0,
+  "dry_run": false,
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/pusht.json",
+  "train_seeds": "0,42,625",
+  "partition_seeds": "0,1,2",
+  "eval_seeds": "0,1,2,3,4",
+  "methods": "kmeanspp,spectral",
+  "skip_joint": true,
+  "python": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/bin/python",
+  "cpu_threads": 4,
+  "gpu_id": "",
+  "sources": {
+    "model_family": "default",
+    "dataset_name": "task_spec",
+    "task_name": "task_spec",
+    "eval_config_name": "cli",
+    "eval_dataset_name": "task_spec",
+    "work_root": "cli",
+    "cache_dir": "cli",
+    "phase": "default",
+    "skip_joint": "env",
+    "frameskip": "task_spec",
+    "short_goal_offset": "env",
+    "long_goal_offset": "task_spec",
+    "eval_budget": "task_spec",
+    "train_seeds": "default",
+    "partition_seeds": "default",
+    "eval_seeds": "default",
+    "methods": "cli",
+    "python": "cli",
+    "cpu_threads": "cli",
+    "gpu_id": "default"
+  }
+}
+{
+  "model_family": "lewm",
+  "implementation_backend": "jepa_object",
+  "task_name": "pusht",
+  "dataset_name": "pusht",
+  "dataset": "/home/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
+  "eval_config_name": "pusht",
+  "eval_config": null,
+  "eval_dataset_name": "pusht_expert_train",
+  "work_root": "experiments/pusht/subjepa/matrix",
+  "cache_dir": "/data/sicong/weitao/.stableworldmodel/subjepa/pusht",
+  "paired_start_root": null,
+  "paired_start_root_short": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix/paired_starts/canon_short",
+  "paired_start_root_long": null,
+  "phase": "all",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "img_size": 224,
+  "short_goal_offset": 25,
+  "long_goal_offset": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "max_train_starts": 0,
+  "dry_run": false,
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/pusht.json",
+  "train_seeds": "0,42,625",
+  "partition_seeds": "0,1,2",
+  "eval_seeds": "0,1,2,3,4",
+  "methods": "kmeanspp,spectral",
+  "skip_joint": true,
+  "python": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/bin/python",
+  "cpu_threads": 4,
+  "gpu_id": "",
+  "sources": {
+    "model_family": "default",
+    "dataset_name": "task_spec",
+    "task_name": "task_spec",
+    "eval_config_name": "cli",
+    "eval_dataset_name": "task_spec",
+    "work_root": "cli",
+    "cache_dir": "cli",
+    "phase": "default",
+    "skip_joint": "cli",
+    "frameskip": "task_spec",
+    "short_goal_offset": "env",
+    "long_goal_offset": "task_spec",
+    "eval_budget": "task_spec",
+    "train_seeds": "cli",
+    "partition_seeds": "cli",
+    "eval_seeds": "cli",
+    "methods": "cli",
+    "python": "cli",
+    "cpu_threads": "cli",
+    "gpu_id": "default"
+  }
+}
+[stage] eval_short tasks=22 workers=6 retries=2
+[start] stage=eval_short task=official gpu=0 attempt=1 log=experiments/pusht/subjepa/matrix/logs/parallel_20260809T032044Z_short/eval_short/official.log
+[start] stage=eval_short task=global_t0 gpu=1 attempt=1 log=experiments/pusht/subjepa/matrix/logs/parallel_20260809T032044Z_short/eval_short/global_t0.log
+[start] stage=eval_short task=kmeanspp_p0_t0 gpu=2 attempt=1 log=experiments/pusht/subjepa/matrix/logs/parallel_20260809T032044Z_short/eval_short/kmeanspp_p0_t0.log
+[start] stage=eval_short task=kmeanspp_p1_t0 gpu=3 attempt=1 log=experiments/pusht/subjepa/matrix/logs/parallel_20260809T032044Z_short/eval_short/kmeanspp_p1_t0.log
+[start] stage=eval_short task=kmeanspp_p2_t0 gpu=5 attempt=1 log=experiments/pusht/subjepa/matrix/logs/parallel_20260809T032044Z_short/eval_short/kmeanspp_p2_t0.log
+[start] stage=eval_short task=spectral_p0_t0 gpu=6 attempt=1 log=experiments/pusht/subjepa/matrix/logs/parallel_20260809T032044Z_short/eval_short/spectral_p0_t0.log
+[start] stage=eval_short task=official gpu=0 attempt=2 log=experiments/pusht/subjepa/matrix/logs/parallel_20260809T032044Z_short/eval_short/official.log
+[start] stage=eval_short task=spectral_p0_t0 gpu=6 attempt=2 log=experiments/pusht/subjepa/matrix/logs/parallel_20260809T032044Z_short/eval_short/spectral_p0_t0.log
+[start] stage=eval_short task=kmeanspp_p2_t0 gpu=5 attempt=2 log=experiments/pusht/subjepa/matrix/logs/parallel_20260809T032044Z_short/eval_short/kmeanspp_p2_t0.log
+[start] stage=eval_short task=kmeanspp_p0_t0 gpu=2 attempt=2 log=experiments/pusht/subjepa/matrix/logs/parallel_20260809T032044Z_short/eval_short/kmeanspp_p0_t0.log
+[failed] stage=eval_short task=official gpu=0 attempts=2
+[failed] stage=eval_short task=spectral_p0_t0 gpu=6 attempts=2
+[failed] stage=eval_short task=kmeanspp_p0_t0 gpu=2 attempts=2
+[failed] stage=eval_short task=kmeanspp_p2_t0 gpu=5 attempts=2
+[start] stage=eval_short task=kmeanspp_p1_t0 gpu=3 attempt=2 log=experiments/pusht/subjepa/matrix/logs/parallel_20260809T032044Z_short/eval_short/kmeanspp_p1_t0.log
+[done] stage=eval_short task=global_t0 gpu=1
+[start] stage=eval_short task=spectral_p2_t0 gpu=1 attempt=1 log=experiments/pusht/subjepa/matrix/logs/parallel_20260809T032044Z_short/eval_short/spectral_p2_t0.log
+Terminated

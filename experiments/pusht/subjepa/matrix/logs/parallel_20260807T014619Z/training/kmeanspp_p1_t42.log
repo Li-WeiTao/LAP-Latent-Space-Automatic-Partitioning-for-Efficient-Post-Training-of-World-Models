@@ -1,0 +1,214 @@
+{
+  "model_family": "subjepa",
+  "implementation_backend": "jepa_object",
+  "task_name": "pusht",
+  "dataset_name": "pusht",
+  "dataset": "/home/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
+  "eval_config_name": "pusht",
+  "eval_config": null,
+  "eval_dataset_name": "pusht_expert_train",
+  "work_root": "experiments/pusht/subjepa/matrix",
+  "cache_dir": "/data/sicong/weitao/.stableworldmodel/subjepa/pusht",
+  "paired_start_root": null,
+  "paired_start_root_short": null,
+  "paired_start_root_long": null,
+  "phase": "train_regions",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "img_size": 224,
+  "short_goal_offset": 25,
+  "long_goal_offset": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "max_train_starts": 0,
+  "dry_run": false,
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/pusht.json",
+  "train_seeds": "42",
+  "partition_seeds": "1",
+  "eval_seeds": "0,1,2,3,4",
+  "methods": "kmeanspp",
+  "skip_joint": true,
+  "python": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/bin/python",
+  "cpu_threads": 4,
+  "gpu_id": "",
+  "sources": {
+    "model_family": "cli",
+    "dataset_name": "task_spec",
+    "task_name": "task_spec",
+    "eval_config_name": "cli",
+    "eval_dataset_name": "task_spec",
+    "work_root": "cli",
+    "cache_dir": "cli",
+    "phase": "cli",
+    "skip_joint": "env",
+    "frameskip": "task_spec",
+    "short_goal_offset": "task_spec",
+    "long_goal_offset": "task_spec",
+    "eval_budget": "task_spec",
+    "train_seeds": "cli",
+    "partition_seeds": "cli",
+    "eval_seeds": "default",
+    "methods": "cli",
+    "python": "cli",
+    "cpu_threads": "cli",
+    "gpu_id": "default"
+  }
+}
+[jepa-matrix] model_family=subjepa phase=train_regions work_root=experiments/pusht/subjepa/matrix
+[jepa-matrix] resolved_config=experiments/pusht/subjepa/matrix/manifests/resolved_config.json
+  [train] epoch 1/50  train_loss=0.015342  eval_loss=0.003482
+  [train] epoch 2/50  train_loss=0.002419  eval_loss=0.002143
+  [train] epoch 3/50  train_loss=0.002020  eval_loss=0.001985
+  [train] epoch 4/50  train_loss=0.001798  eval_loss=0.001682
+  [train] epoch 5/50  train_loss=0.001672  eval_loss=0.001538
+  [train] epoch 6/50  train_loss=0.001552  eval_loss=0.001478
+  [train] epoch 7/50  train_loss=0.001487  eval_loss=0.001402
+  [train] epoch 8/50  train_loss=0.001413  eval_loss=0.001323
+  [train] epoch 9/50  train_loss=0.001366  eval_loss=0.001315
+  [train] epoch 10/50  train_loss=0.001318  eval_loss=0.001282
+  [train] epoch 11/50  train_loss=0.001279  eval_loss=0.001272
+  [train] epoch 12/50  train_loss=0.001251  eval_loss=0.001196
+  [train] epoch 13/50  train_loss=0.001216  eval_loss=0.001158
+  [train] epoch 14/50  train_loss=0.001183  eval_loss=0.001146
+  [train] epoch 15/50  train_loss=0.001157  eval_loss=0.001102
+  [train] epoch 16/50  train_loss=0.001138  eval_loss=0.001135
+  [train] epoch 17/50  train_loss=0.001112  eval_loss=0.001090
+  [train] epoch 18/50  train_loss=0.001099  eval_loss=0.001058
+  [train] epoch 19/50  train_loss=0.001073  eval_loss=0.001044
+  [train] epoch 20/50  train_loss=0.001060  eval_loss=0.001008
+  [train] epoch 21/50  train_loss=0.001036  eval_loss=0.001009
+  [train] epoch 22/50  train_loss=0.001022  eval_loss=0.001026
+  [train] epoch 23/50  train_loss=0.001012  eval_loss=0.000959
+  [train] epoch 24/50  train_loss=0.000996  eval_loss=0.000961
+  [train] epoch 25/50  train_loss=0.000988  eval_loss=0.000986
+  [train] epoch 26/50  train_loss=0.000972  eval_loss=0.000948
+  [train] epoch 27/50  train_loss=0.000961  eval_loss=0.000913
+  [train] epoch 28/50  train_loss=0.000953  eval_loss=0.000900
+  [train] epoch 29/50  train_loss=0.000941  eval_loss=0.000917
+  [train] epoch 30/50  train_loss=0.000933  eval_loss=0.000915
+  [train] epoch 31/50  train_loss=0.000915  eval_loss=0.000916
+  [train] epoch 32/50  train_loss=0.000907  eval_loss=0.000867
+  [train] epoch 33/50  train_loss=0.000904  eval_loss=0.000870
+  [train] epoch 34/50  train_loss=0.000894  eval_loss=0.000846
+  [train] epoch 35/50  train_loss=0.000883  eval_loss=0.000853
+  [train] epoch 36/50  train_loss=0.000875  eval_loss=0.000835
+  [train] epoch 37/50  train_loss=0.000862  eval_loss=0.000843
+  [train] epoch 38/50  train_loss=0.000858  eval_loss=0.000831
+  [train] epoch 39/50  train_loss=0.000850  eval_loss=0.000824
+  [train] epoch 40/50  train_loss=0.000844  eval_loss=0.000816
+  [train] epoch 41/50  train_loss=0.000835  eval_loss=0.000841
+  [train] epoch 42/50  train_loss=0.000829  eval_loss=0.000816
+  [train] epoch 43/50  train_loss=0.000834  eval_loss=0.000803
+  [train] epoch 44/50  train_loss=0.000827  eval_loss=0.000783
+  [train] epoch 45/50  train_loss=0.000811  eval_loss=0.000806
+  [train] epoch 46/50  train_loss=0.000806  eval_loss=0.000769
+  [train] epoch 47/50  train_loss=0.000799  eval_loss=0.000792
+  [train] epoch 48/50  train_loss=0.000792  eval_loss=0.000762
+  [train] epoch 49/50  train_loss=0.000789  eval_loss=0.000772
+  [train] epoch 50/50  train_loss=0.000786  eval_loss=0.000769
+  [best] epoch 48  eval_loss=0.000762 (selected over 50 epochs)
+  [train] epoch 1/50  train_loss=0.015689  eval_loss=0.003749
+  [train] epoch 2/50  train_loss=0.002560  eval_loss=0.002212
+  [train] epoch 3/50  train_loss=0.002142  eval_loss=0.002036
+  [train] epoch 4/50  train_loss=0.001924  eval_loss=0.001796
+  [train] epoch 5/50  train_loss=0.001781  eval_loss=0.001695
+  [train] epoch 6/50  train_loss=0.001682  eval_loss=0.001588
+  [train] epoch 7/50  train_loss=0.001611  eval_loss=0.001546
+  [train] epoch 8/50  train_loss=0.001531  eval_loss=0.001508
+  [train] epoch 9/50  train_loss=0.001487  eval_loss=0.001430
+  [train] epoch 10/50  train_loss=0.001443  eval_loss=0.001387
+  [train] epoch 11/50  train_loss=0.001410  eval_loss=0.001464
+  [train] epoch 12/50  train_loss=0.001369  eval_loss=0.001333
+  [train] epoch 13/50  train_loss=0.001337  eval_loss=0.001271
+  [train] epoch 14/50  train_loss=0.001312  eval_loss=0.001245
+  [train] epoch 15/50  train_loss=0.001279  eval_loss=0.001240
+  [train] epoch 16/50  train_loss=0.001264  eval_loss=0.001197
+  [train] epoch 17/50  train_loss=0.001241  eval_loss=0.001171
+  [train] epoch 18/50  train_loss=0.001216  eval_loss=0.001191
+  [train] epoch 19/50  train_loss=0.001204  eval_loss=0.001161
+  [train] epoch 20/50  train_loss=0.001183  eval_loss=0.001128
+  [train] epoch 21/50  train_loss=0.001166  eval_loss=0.001158
+  [train] epoch 22/50  train_loss=0.001149  eval_loss=0.001092
+  [train] epoch 23/50  train_loss=0.001133  eval_loss=0.001172
+  [train] epoch 24/50  train_loss=0.001124  eval_loss=0.001099
+  [train] epoch 25/50  train_loss=0.001112  eval_loss=0.001094
+  [train] epoch 26/50  train_loss=0.001092  eval_loss=0.001060
+  [train] epoch 27/50  train_loss=0.001083  eval_loss=0.001084
+  [train] epoch 28/50  train_loss=0.001071  eval_loss=0.001081
+  [train] epoch 29/50  train_loss=0.001063  eval_loss=0.001026
+  [train] epoch 30/50  train_loss=0.001053  eval_loss=0.001061
+  [train] epoch 31/50  train_loss=0.001042  eval_loss=0.000993
+  [train] epoch 32/50  train_loss=0.001033  eval_loss=0.001029
+  [train] epoch 33/50  train_loss=0.001023  eval_loss=0.001050
+  [train] epoch 34/50  train_loss=0.001016  eval_loss=0.000985
+  [train] epoch 35/50  train_loss=0.001006  eval_loss=0.001004
+  [train] epoch 36/50  train_loss=0.000996  eval_loss=0.000977
+  [train] epoch 37/50  train_loss=0.000992  eval_loss=0.000947
+  [train] epoch 38/50  train_loss=0.000983  eval_loss=0.001027
+  [train] epoch 39/50  train_loss=0.000976  eval_loss=0.000954
+  [train] epoch 40/50  train_loss=0.000969  eval_loss=0.000978
+  [train] epoch 41/50  train_loss=0.000959  eval_loss=0.000958
+  [train] epoch 42/50  train_loss=0.000952  eval_loss=0.000936
+  [train] epoch 43/50  train_loss=0.000949  eval_loss=0.000950
+  [train] epoch 44/50  train_loss=0.000937  eval_loss=0.000941
+  [train] epoch 45/50  train_loss=0.000938  eval_loss=0.000911
+  [train] epoch 46/50  train_loss=0.000929  eval_loss=0.000918
+  [train] epoch 47/50  train_loss=0.000919  eval_loss=0.000891
+  [train] epoch 48/50  train_loss=0.000917  eval_loss=0.000890
+  [train] epoch 49/50  train_loss=0.000910  eval_loss=0.000901
+  [train] epoch 50/50  train_loss=0.000908  eval_loss=0.000869
+  [best] epoch 50  eval_loss=0.000869 (selected over 50 epochs)
+  [train] epoch 1/50  train_loss=0.015473  eval_loss=0.003468
+  [train] epoch 2/50  train_loss=0.002508  eval_loss=0.002241
+  [train] epoch 3/50  train_loss=0.002101  eval_loss=0.001916
+  [train] epoch 4/50  train_loss=0.001878  eval_loss=0.001802
+  [train] epoch 5/50  train_loss=0.001740  eval_loss=0.001649
+  [train] epoch 6/50  train_loss=0.001633  eval_loss=0.001642
+  [train] epoch 7/50  train_loss=0.001559  eval_loss=0.001482
+  [train] epoch 8/50  train_loss=0.001492  eval_loss=0.001417
+  [train] epoch 9/50  train_loss=0.001437  eval_loss=0.001404
+  [train] epoch 10/50  train_loss=0.001391  eval_loss=0.001325
+  [train] epoch 11/50  train_loss=0.001356  eval_loss=0.001299
+  [train] epoch 12/50  train_loss=0.001320  eval_loss=0.001259
+  [train] epoch 13/50  train_loss=0.001293  eval_loss=0.001280
+  [train] epoch 14/50  train_loss=0.001263  eval_loss=0.001227
+  [train] epoch 15/50  train_loss=0.001237  eval_loss=0.001243
+  [train] epoch 16/50  train_loss=0.001223  eval_loss=0.001195
+  [train] epoch 17/50  train_loss=0.001200  eval_loss=0.001152
+  [train] epoch 18/50  train_loss=0.001175  eval_loss=0.001159
+  [train] epoch 19/50  train_loss=0.001151  eval_loss=0.001130
+  [train] epoch 20/50  train_loss=0.001140  eval_loss=0.001091
+  [train] epoch 21/50  train_loss=0.001123  eval_loss=0.001080
+  [train] epoch 22/50  train_loss=0.001107  eval_loss=0.001074
+  [train] epoch 23/50  train_loss=0.001096  eval_loss=0.001051
+  [train] epoch 24/50  train_loss=0.001080  eval_loss=0.001053
+  [train] epoch 25/50  train_loss=0.001068  eval_loss=0.001038
+  [train] epoch 26/50  train_loss=0.001053  eval_loss=0.001039
+  [train] epoch 27/50  train_loss=0.001044  eval_loss=0.001067
+  [train] epoch 28/50  train_loss=0.001036  eval_loss=0.001005
+  [train] epoch 29/50  train_loss=0.001020  eval_loss=0.000985
+  [train] epoch 30/50  train_loss=0.001019  eval_loss=0.001002
+  [train] epoch 31/50  train_loss=0.001001  eval_loss=0.000985
+  [train] epoch 32/50  train_loss=0.000991  eval_loss=0.000983
+  [train] epoch 33/50  train_loss=0.000982  eval_loss=0.000951
+  [train] epoch 34/50  train_loss=0.000972  eval_loss=0.000948
+  [train] epoch 35/50  train_loss=0.000971  eval_loss=0.000950
+  [train] epoch 36/50  train_loss=0.000965  eval_loss=0.000938
+  [train] epoch 37/50  train_loss=0.000945  eval_loss=0.000934
+  [train] epoch 38/50  train_loss=0.000945  eval_loss=0.000932
+  [train] epoch 39/50  train_loss=0.000935  eval_loss=0.000932
+  [train] epoch 40/50  train_loss=0.000927  eval_loss=0.000897
+  [train] epoch 41/50  train_loss=0.000919  eval_loss=0.000897
+  [train] epoch 42/50  train_loss=0.000918  eval_loss=0.000896
+  [train] epoch 43/50  train_loss=0.000910  eval_loss=0.000874
+  [train] epoch 44/50  train_loss=0.000901  eval_loss=0.000883
+  [train] epoch 45/50  train_loss=0.000895  eval_loss=0.000881
+  [train] epoch 46/50  train_loss=0.000888  eval_loss=0.000868
+  [train] epoch 47/50  train_loss=0.000884  eval_loss=0.000852
+  [train] epoch 48/50  train_loss=0.000876  eval_loss=0.000881
+  [train] epoch 49/50  train_loss=0.000870  eval_loss=0.000855
+  [train] epoch 50/50  train_loss=0.000866  eval_loss=0.000864
+  [best] epoch 47  eval_loss=0.000852 (selected over 50 epochs)
+[done] dataset=pusht train_seed=42 regions=3 -> experiments/pusht/subjepa/matrix/training/kmeanspp/partition1_train42

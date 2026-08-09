@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/resolve_jepa_matrix_config.py", line 545, in <module>
+    main()
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/resolve_jepa_matrix_config.py", line 533, in main
+    resolved = resolve_config(args)
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/resolve_jepa_matrix_config.py", line 169, in resolve_config
+    raise ValueError(
+ValueError: conflicting task parameters across CLI/env/task-spec:
+  - short_goal_offset: {'env': '50', 'task_spec': 25}
