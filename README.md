@@ -321,6 +321,47 @@ Recreate both ggplot2 figures from the repository root:
 Rscript experiments/tworoom/assets/subjepa_control_metrics/plot_tworoom_subjepa_control_matrix.R
 ```
 
+## PushT Sub-JEPA result snapshot
+
+The completed PushT Sub-JEPA automatic gate selected the **global** branch with
+deployment seed 0. Both the perturbation-safety and background-gap checks fail,
+so Auto-LAP reuses the Global-FT checkpoints and rollout results.
+
+| Gate quantity | Value | Decision |
+|---|---:|---|
+| `E_min` | 0.148880 | candidate minimum |
+| `T_max^E` | 0.118164 | perturbation envelope |
+| `S_task` | 0.206311 | fails `>= 0.5` (margin -0.293689) |
+| `R_K` | 0.030716 | fails background check |
+| `T_bg` | 0.159443 | `R_K - T_bg = -0.128728` |
+
+The gate manifest records `safety_pass = false`, `background_pass = false`,
+selected branch `global`, and reason `safety_and_background_checks_failed`.
+
+| Method | Short-horizon success rate | Long-horizon success rate |
+|---|---:|---:|
+| Official Sub-JEPA | 92.4% | 38.8% |
+| Global-FT50 | 94.53 ± 1.01% | 46.40 ± 0.40% |
+| K-means++ K3-50 | 94.49 ± 0.15% | 42.93 ± 0.69% |
+| Spectral K3-50 | 94.40 ± 0.27% | 44.09 ± 0.89% |
+| **Auto-LAP (Global-FT)** | **94.53 ± 1.01%** | **46.40 ± 0.40%** |
+
+![PushT Sub-JEPA short-horizon results](experiments/pusht/assets/subjepa_control_metrics/pusht_subjepa_short_horizon_main.png)
+
+![PushT Sub-JEPA long-horizon results](experiments/pusht/assets/subjepa_control_metrics/pusht_subjepa_long_horizon_main.png)
+
+The figures intentionally contain no gate annotation; the gate decision and
+diagnostics are recorded in this README. Fine-tuned methods show the sample SD
+across train seeds 0, 42, and 625 after averaging the applicable partition seeds
+and five paired evaluation seeds. The official checkpoint has no fine-tuning
+seed and therefore no error bar.
+
+Recreate both ggplot2 figures from the repository root:
+
+```bash
+Rscript experiments/pusht/assets/subjepa_control_metrics/plot_pusht_subjepa_control_matrix.R
+```
+
 ## PushT result snapshot
 
 PushT uses the same three predictor fine-tuning seeds (`0`, `42`, and `625`),

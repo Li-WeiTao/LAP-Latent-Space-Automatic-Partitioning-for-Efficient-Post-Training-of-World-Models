@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "dataset_name": "pusht",
+  "data_file": "/home/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
+  "starts_file": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/preparation/train_global_reference_starts.npy",
+  "starts_sha256": "52bd374032ee5fd95bcc9135bae738a740dac5790ea3e4f34e3a44ddd6d86a42",
+  "num_starts": 1850815,
+  "action_mean_shape": [
+    1,
+    10
+  ],
+  "action_std_shape": [
+    1,
+    10
+  ],
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "action_steps": 3,
+  "normalization_samples": 1850815,
+  "sha256": {
+    "action_norm_stats": "fa893892f4362dcf36d091931eccf694b0af44da2cc6738f542035df8b28f67a",
+    "starts": "52bd374032ee5fd95bcc9135bae738a740dac5790ea3e4f34e3a44ddd6d86a42",
+    "data_file": "b6ebd9ac94bbe9e383f6e7a9cd92d74e9aa665ea57b758ed3717b0ee7df8d4fb",
+    "checkpoint": "f4b4b9bdf4cf6254a98f1ae73c182f884f449eb52436e5900157a5f463313b3a"
+  }
+}

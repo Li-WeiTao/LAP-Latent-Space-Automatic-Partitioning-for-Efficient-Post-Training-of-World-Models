@@ -1,0 +1,304 @@
+{
+  "schema_version": 1,
+  "scope": "pusht_subjepa_matrix_preflight",
+  "passed": true,
+  "errors": [],
+  "checks": {
+    "smoke_artifacts": {
+      "passed": true,
+      "verification_status.json": {
+        "path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/manifests/verification_status.json",
+        "sha256": "ebc14151014cb1733060d940d2d48d2d02a43e300a89805b661e95bc7d8a7a74"
+      },
+      "smoke_cache-equivalence.json": {
+        "path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/manifests/smoke_cache-equivalence.json",
+        "sha256": "07417297d7ab5727b7ba37326127ffd208c7e396c8bcb3559fa6575f41aac3e7"
+      },
+      "smoke_frozen-audit.json": {
+        "path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/manifests/smoke_frozen-audit.json",
+        "sha256": "d3c5b5d8b432589b5e3673f84867f4e4e64e38bc45ead6f83576ef4e8478b8fd"
+      },
+      "smoke_route-equivalence.json": {
+        "path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/manifests/smoke_route-equivalence.json",
+        "sha256": "e3f0864f25cd4e850feee89cb06132931363efd1453a3734f6120b6a2c173461"
+      },
+      "embedding_cache.npz": {
+        "path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/embedding_cache.npz",
+        "sha256": "3d2e75d1e347c1826b94ab47a474d8e97af0eb92a7a9f6f63a733dcb3177ec3e"
+      }
+    },
+    "material_passport": {
+      "path": "experiments/pusht/subjepa/formal/manifests/material_passport.json",
+      "verification_status": "VERIFIED",
+      "selected_branch": "global"
+    },
+    "full_cache_sha256": "a706adcef9f5d1d8a5044c2adb4cf868f48ff098b2aebf3f511d4565d8027ccd",
+    "replay_audit": {
+      "all_passed": true,
+      "replay_16": {
+        "phase": "cache-equivalence",
+        "verification_path": "production_unique_frame_reconstruction",
+        "num_samples": 16,
+        "cached_shape": [
+          16,
+          4,
+          192
+        ],
+        "recomputed_shape": [
+          16,
+          4,
+          192
+        ],
+        "starts_source": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/preparation/.encode_starts.npy",
+        "starts_sha256": "52bd374032ee5fd95bcc9135bae738a740dac5790ea3e4f34e3a44ddd6d86a42",
+        "cache_sha256": "a706adcef9f5d1d8a5044c2adb4cf868f48ff098b2aebf3f511d4565d8027ccd",
+        "selection_source_count": 1850815,
+        "passed": true,
+        "max_abs_diff": 0.0,
+        "mean_abs_diff": 0.0,
+        "allclose": true,
+        "per_sample_max_abs_diff": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "per_timestep_max_abs_diff": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "replay_64": {
+        "phase": "multi-batch-exact-replay",
+        "passed": true,
+        "num_samples": 64,
+        "max_abs_diff": 0.0,
+        "batch_shapes_observed": [],
+        "replay_detail": {
+          "phase": "cache-equivalence",
+          "verification_path": "production_unique_frame_reconstruction",
+          "num_samples": 64,
+          "cached_shape": [
+            64,
+            4,
+            192
+          ],
+          "recomputed_shape": [
+            64,
+            4,
+            192
+          ],
+          "starts_source": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/preparation/.encode_starts.npy",
+          "starts_sha256": "52bd374032ee5fd95bcc9135bae738a740dac5790ea3e4f34e3a44ddd6d86a42",
+          "cache_sha256": "a706adcef9f5d1d8a5044c2adb4cf868f48ff098b2aebf3f511d4565d8027ccd",
+          "selection_source_count": 1850815,
+          "passed": true,
+          "max_abs_diff": 0.0,
+          "mean_abs_diff": 0.0,
+          "allclose": true,
+          "per_sample_max_abs_diff": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "per_timestep_max_abs_diff": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    "gate_selected_branch": "global",
+    "gate_two_checks": {
+      "safety_pass": false,
+      "background_pass": false,
+      "selected_method": "global",
+      "reason": "safety_and_background_checks_failed"
+    },
+    "pre_execution_lock": {
+      "schema_version": 2,
+      "gate_selected_branch": "global",
+      "auto_lap_source": {
+        "type": "global",
+        "partition_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/gate/partition",
+        "training_template": "global/train{train_seed}",
+        "eval_template": "global/train{train_seed}/eval{eval_seed}",
+        "note": "Auto-LAP symlinks Global-FT checkpoints; rollout results must match Global-FT exactly per train seed."
+      },
+      "forced_spectral_partition": {
+        "formal_root": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/partitions/spectral",
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "complete": true,
+        "matrix_root": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix/partitions/spectral"
+      },
+      "gate_status": "VERIFIED",
+      "gate_passport": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/manifests/material_passport.json",
+      "deployment_seed": 0,
+      "formal_producer_commit": "87f811da41833c7780965e01d4535e601265d764",
+      "matrix_runner_commit": "87f811da41833c7780965e01d4535e601265d764",
+      "sha256": {
+        "dataset": "b6ebd9ac94bbe9e383f6e7a9cd92d74e9aa665ea57b758ed3717b0ee7df8d4fb",
+        "checkpoint": "f4b4b9bdf4cf6254a98f1ae73c182f884f449eb52436e5900157a5f463313b3a",
+        "full_cache": "a706adcef9f5d1d8a5044c2adb4cf868f48ff098b2aebf3f511d4565d8027ccd",
+        "task_spec": "68ee20804e308c3725176f95acc61432e7ab3cf6be3c6b56cfb65e86f9e33fd4"
+      },
+      "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/pusht.json",
+      "eval_config_name": "pusht",
+      "replay_audit": {
+        "all_passed": true,
+        "replay_16_passed": true,
+        "replay_16_max_abs_diff": 0.0,
+        "replay_64_passed": true,
+        "replay_64_max_abs_diff": 0.0
+      },
+      "gate_checks": {
+        "safety_pass": false,
+        "background_pass": false,
+        "selected_method": "global",
+        "reason": "safety_and_background_checks_failed"
+      },
+      "smoke_artifact_bindings": {
+        "verification_status.json": {
+          "path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/manifests/verification_status.json",
+          "sha256": "ebc14151014cb1733060d940d2d48d2d02a43e300a89805b661e95bc7d8a7a74"
+        },
+        "smoke_cache-equivalence.json": {
+          "path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/manifests/smoke_cache-equivalence.json",
+          "sha256": "07417297d7ab5727b7ba37326127ffd208c7e396c8bcb3559fa6575f41aac3e7"
+        },
+        "smoke_frozen-audit.json": {
+          "path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/manifests/smoke_frozen-audit.json",
+          "sha256": "d3c5b5d8b432589b5e3673f84867f4e4e64e38bc45ead6f83576ef4e8478b8fd"
+        },
+        "smoke_route-equivalence.json": {
+          "path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/manifests/smoke_route-equivalence.json",
+          "sha256": "e3f0864f25cd4e850feee89cb06132931363efd1453a3734f6120b6a2c173461"
+        },
+        "embedding_cache.npz": {
+          "path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/preparation/embedding_cache.npz",
+          "sha256": "3d2e75d1e347c1826b94ab47a474d8e97af0eb92a7a9f6f63a733dcb3177ec3e"
+        }
+      },
+      "paired_start_hashes": {
+        "short": {
+          "0": "f214d93573ee1a7b6dff0220a33687e0201c45f150e39402d188f6376c58ec59",
+          "1": "82d8a03b8a7023053235caefeb10569853e53a5ec9562f17d2f0b806021d140a",
+          "2": "99dee1ddc2a9067f5d74ac5e995a5b72df80a5c9345431ac57aa97379f52e908",
+          "3": "6c991ccd14fef011eeaa27a45036269e1360e897a9e08013c9fd1ec5ebe71503",
+          "4": "5f8a263efbec977f80f498d37ad4cb6c6c4d8aecf5782fd248d01801aa9f1d89"
+        },
+        "long": {
+          "0": "1e3883e8e7c2d1bb118c98d025492fda8adc4780c6dbb5b8f9e8c377e2108891",
+          "1": "78942a52ff908480b5537022f0c95d7cccd86065db62c56e5744edd58663a653",
+          "2": "33b26957d0dd8328145079fef33fdaca5a4c33382f8c5a16868a1058dee39b79",
+          "3": "7c70e931dd718e76531b60b253d7a5e764bed3f7190d7eb5c483a394aea42d43",
+          "4": "441899358ff0f1a97a0a90ba27b9087bacf73cddea565c43758ddd01c234739b"
+        }
+      },
+      "paired_start_sources": {
+        "short": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/matrix/eval/official",
+        "long": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/matrix_long/eval/official"
+      },
+      "auto_partition_symlink_source": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/gate/partition"
+    },
+    "auto_lap_mapping": {
+      "gate_selected_branch": "global",
+      "auto_lap_source": {
+        "type": "global",
+        "partition_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/gate/partition",
+        "training_template": "global/train{train_seed}",
+        "eval_template": "global/train{train_seed}/eval{eval_seed}",
+        "note": "Auto-LAP symlinks Global-FT checkpoints; rollout results must match Global-FT exactly per train seed."
+      },
+      "auto_partition_link": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/gate/partition",
+      "auto_partition_target": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/gate/partition",
+      "expected_training_glob": "training/global/train{train_seed}"
+    },
+    "commit_note": "formal producer and matrix runner on same commit",
+    "prelock_validation": {
+      "passed": true,
+      "gate_selected_branch": "global"
+    }
+  }
+}

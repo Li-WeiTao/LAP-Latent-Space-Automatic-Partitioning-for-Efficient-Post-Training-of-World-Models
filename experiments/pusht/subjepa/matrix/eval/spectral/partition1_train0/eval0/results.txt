@@ -1,0 +1,125 @@
+==== CONFIG ====
+cache_dir: /data/sicong/weitao/.stableworldmodel/subjepa/pusht
+solver:
+  _target_: stable_worldmodel.solver.CEMSolver
+  model: ???
+  batch_size: 1
+  num_samples: 300
+  var_scale: 1.0
+  n_steps: 30
+  topk: 30
+  device: cuda
+  seed: ${seed}
+world:
+  env_name: swm/PushT-v1
+  num_envs: ${eval.num_eval}
+  max_episode_steps: 100
+dataset:
+  stats: ${eval.dataset_name}
+  keys_to_cache:
+  - action
+  - proprio
+  - state
+seed: 0
+policy: random
+plan_config:
+  horizon: 5
+  receding_horizon: 5
+  action_block: 5
+eval:
+  num_eval: 50
+  goal_offset_steps: 50
+  eval_budget: 50
+  img_size: 224
+  dataset_name: pusht_expert_train
+  callables:
+  - method: _set_state
+    args:
+      state:
+        value: state
+  - method: _set_goal_state
+    args:
+      goal_state:
+        value: goal_state
+output:
+  filename: pusht_results.txt
+
+==== MODEL ====
+{
+  "mode": "lap",
+  "base_encoder_checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
+  "lap_run_dir": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix/training/spectral/partition1_train0",
+  "lap_manifest": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix/training/spectral/partition1_train0/manifest.json",
+  "cluster_predictors": {
+    "cluster0": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix/training/spectral/partition1_train0/P_train_cluster0_object.ckpt",
+    "cluster1": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix/training/spectral/partition1_train0/P_train_cluster1_object.ckpt",
+    "cluster2": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix/training/spectral/partition1_train0/P_train_cluster2_object.ckpt"
+  },
+  "num_clusters": 3,
+  "num_routing_prototypes": 48,
+  "partition_metadata": {
+    "algorithm": "landmark_spectral_voronoi",
+    "num_clusters": 3,
+    "seed": 1,
+    "num_landmarks": 20000,
+    "knn": 30,
+    "neighbor_search": {
+      "backend": "torch_cuda_exact_cosine",
+      "device": "cuda:0",
+      "query_chunk": 2048,
+      "sec": 0.04933911300031468,
+      "peak_cuda_allocated_mb": 335.9921875
+    },
+    "graph": {
+      "effective_knn": 30,
+      "num_undirected_nonzeros": 722300,
+      "num_connected_components": 1,
+      "component_fractions": [
+        1.0
+      ],
+      "sigma_floor": 0.04095125794410706,
+      "degree_min": 6.543476656079292,
+      "degree_mean": 18.88615390477553,
+      "degree_max": 31.715060025453568
+    },
+    "spectral": {
+      "eigensolver_sec": 0.3399325740028871,
+      "spectral_kmeans_sec": 0.18368850400293013,
+      "normalized_adjacency_eigenvalues_desc": [
+        0.9999999999999976,
+        0.9935892728164588,
+        0.9910608120548999,
+        0.98902330948228,
+        0.9884293103242208
+      ],
+      "laplacian_eigenvalues_asc": [
+        2.4424906541753444e-15,
+        0.006410727183541187,
+        0.008939187945100069,
+        0.01097669051771999,
+        0.011570689675779233
+      ],
+      "eigengap_after_k": 0.0020375025726199203,
+      "spectral_kmeans_inertia": 3695.692138671875,
+      "spectral_kmeans_n_iter": 6
+    },
+    "laplacian_eigenvalues": [
+      2.4424906541753444e-15,
+      0.006410727183541187,
+      0.008939187945100069,
+      0.01097669051771999,
+      0.011570689675779233
+    ],
+    "routing": "zscore_l2_spherical_voronoi"
+  },
+  "switch_timing": "once per MPC replan from the observed latent",
+  "latent_routing": "mpc"
+}
+==== RESULTS ====
+metrics: {'success_rate': 42.0, 'episode_successes': array([ True, False,  True,  True, False, False,  True, False, False,
+       False,  True,  True, False, False, False, False,  True, False,
+        True, False, False, False, False, False,  True, False, False,
+       False, False, False,  True,  True, False,  True, False, False,
+        True,  True,  True,  True,  True,  True,  True, False,  True,
+        True, False, False, False, False]), 'seeds': None}
+evaluation_time: 117.73394536972046 seconds

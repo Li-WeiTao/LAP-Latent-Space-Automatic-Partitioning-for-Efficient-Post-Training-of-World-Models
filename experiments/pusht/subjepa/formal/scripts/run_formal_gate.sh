@@ -7,9 +7,11 @@ cd "$ROOT"
 # shellcheck source=/dev/null
 source "$ROOT/experiments/pusht/subjepa/env.sh"
 
+FORMAL_LIB="$ROOT/experiments/pusht/subjepa/formal/scripts/pusht_formal_lib.py"
 GPU_ID="${GPU_ID:-0}"
 export CUDA_VISIBLE_DEVICES="$GPU_ID"
 FORMAL_GIT_BASELINE="${FORMAL_GIT_BASELINE:-$(git rev-parse HEAD)}"
+FORMAL_PRODUCER_COMMIT="$(git rev-parse HEAD)"
 
 WORK_ROOT="$FORMAL"
 PREP="$WORK_ROOT/preparation"
@@ -20,53 +22,70 @@ mkdir -p "$LOG_DIR" "$WORK_ROOT/manifests"
 log() { echo "[pusht-formal-gate] $*" | tee -a "$LOG_DIR/formal_gate.log"; }
 
 verify_smoke_untouched() {
-  local current smoke_cache="$ROOT/$SMOKE_ROOT/preparation/embedding_cache.npz"
-  current="$(sha256sum "$smoke_cache" | awk '{print $1}')"
-  if [[ "$current" != "$SMOKE_CACHE_SHA256" ]]; then
-    echo "STOP: smoke cache SHA changed ($current != $SMOKE_CACHE_SHA256)" >&2
-    exit 1
-  fi
-}
-
-require_smoke_verified() {
-  local status_file="$ROOT/$SMOKE_ROOT/manifests/verification_status.json"
-  [[ -f "$status_file" ]] || { echo "missing smoke verification: $status_file" >&2; exit 1; }
-  "$PYTHON" -c "
-import json, sys
-s = json.load(open('$status_file'))
-if s.get('status') != 'VERIFIED':
-    sys.exit('smoke status is not VERIFIED: ' + str(s.get('status')))
-"
+  "$PYTHON" "$FORMAL_LIB" \
+    --phase verify-smoke \
+    --smoke-root "$SMOKE_ROOT" \
+    --formal-root "$WORK_ROOT" \
+    --expected-smoke-cache-sha256 "$SMOKE_CACHE_SHA256" >/dev/null
 }
 
 phase_prepare() {
-  log "phase=prepare (no max_train_starts cap)"
-  require_smoke_verified
+  log "phase=prepare (no max_train_starts cap; writes only under $WORK_ROOT)"
   verify_smoke_untouched
-  env MODEL_FAMILY=subjepa GPU_ID="$GPU_ID" PYTHON="$PYTHON" \
-    bash experiments/control_matrix/scripts/run_subjepa_matrix.sh \
-    --task-spec "$TASK_SPEC" \
+
+  reusable_json="$("$PYTHON" "$FORMAL_LIB" \
+    --phase cache-reusable \
+    --smoke-root "$SMOKE_ROOT" \
+    --formal-root "$WORK_ROOT" \
     --dataset "$DATASET" \
     --checkpoint "$CHECKPOINT" \
-    --eval-config-name pusht \
-    --work-root "$WORK_ROOT" \
-    --phase prepare \
-    2>&1 | tee "$LOG_DIR/prepare.log"
-  "$PYTHON" "$TWOROOM_FORMAL_SCRIPTS/formal_cache_audit.py" \
-    --phase augment-manifest \
-    --work-root "$WORK_ROOT" \
-    --git-baseline "$FORMAL_GIT_BASELINE"
-  "$PYTHON" "$TWOROOM_FORMAL_SCRIPTS/formal_cache_audit.py" \
-    --phase all-replay-audits \
-    --work-root "$WORK_ROOT" \
-    --checkpoint "$CHECKPOINT" \
-    --dataset "$DATASET"
+    --task-spec "$TASK_SPEC" \
+    --expected-smoke-cache-sha256 "$SMOKE_CACHE_SHA256")"
+  reusable="$("$PYTHON" -c "import json,sys; print(json.load(sys.stdin).get('reusable', False))" <<<"$reusable_json")"
+
+  if [[ "$reusable" == "True" ]]; then
+    log "phase=prepare skipped — formal cache reusable (downstream script fixes do not require re-encode)"
+  else
+    env MODEL_FAMILY=subjepa GPU_ID="$GPU_ID" PYTHON="$PYTHON" \
+      bash experiments/control_matrix/scripts/run_subjepa_matrix.sh \
+      --task-spec "$TASK_SPEC" \
+      --dataset "$DATASET" \
+      --checkpoint "$CHECKPOINT" \
+      --eval-config-name pusht \
+      --work-root "$WORK_ROOT" \
+      --phase prepare \
+      2>&1 | tee "$LOG_DIR/prepare.log"
+  fi
+
+  if [[ ! -f "$PREP/embedding_cache.npz" ]]; then
+    echo "STOP: formal embedding cache missing after prepare: $PREP/embedding_cache.npz" >&2
+    exit 1
+  fi
+
+  if [[ ! -f "$WORK_ROOT/manifests/formal_cache_manifest.json" ]]; then
+    "$PYTHON" "$TWOROOM_FORMAL_SCRIPTS/formal_cache_audit.py" \
+      --phase augment-manifest \
+      --work-root "$WORK_ROOT" \
+      --git-baseline "$FORMAL_GIT_BASELINE"
+  fi
+  if [[ ! -f "$WORK_ROOT/manifests/replay_audit_summary.json" ]] || \
+     ! "$PYTHON" -c "import json,sys; r=json.load(open('$WORK_ROOT/manifests/replay_audit_summary.json')); sys.exit(0 if r.get('all_passed') else 1)"; then
+    "$PYTHON" "$TWOROOM_FORMAL_SCRIPTS/formal_cache_audit.py" \
+      --phase all-replay-audits \
+      --work-root "$WORK_ROOT" \
+      --checkpoint "$CHECKPOINT" \
+      --dataset "$DATASET"
+  fi
   verify_smoke_untouched
 }
 
 phase_gate() {
   log "phase=gate (method=auto, K=3, 9 graph configs)"
   verify_smoke_untouched
+  if [[ -f "$GATE_OUT/manifest.json" && -f "$WORK_ROOT/manifests/post_gate_audit.json" ]]; then
+    log "phase=gate skipped — existing gate artifacts present"
+    return 0
+  fi
   "$PYTHON" experiments/control_matrix/fit_partition.py \
     --method auto \
     --dataset-name pusht \
@@ -102,6 +121,13 @@ phase_passport() {
     --latent-cache "$PREP/embedding_cache.npz" \
     --git-baseline "$FORMAL_GIT_BASELINE" \
     --emit-passport-only
+  "$PYTHON" "$FORMAL_LIB" \
+    --phase augment-passport \
+    --smoke-root "$SMOKE_ROOT" \
+    --formal-root "$WORK_ROOT" \
+    --expected-smoke-cache-sha256 "$SMOKE_CACHE_SHA256" \
+    --formal-producer-commit "$FORMAL_PRODUCER_COMMIT"
+  verify_smoke_untouched
 }
 
 case "${1:-all}" in

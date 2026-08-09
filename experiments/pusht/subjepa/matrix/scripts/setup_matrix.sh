@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# PushT Sub-JEPA matrix setup — mirrors tworoom/subjepa/matrix/scripts/setup_matrix.sh.
+# PushT Sub-JEPA matrix setup — pre-lock, cache link, forced-Spectral materialization.
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../../.." && pwd)"
@@ -7,68 +7,30 @@ cd "$REPO_ROOT"
 # shellcheck source=/dev/null
 source "$REPO_ROOT/experiments/pusht/subjepa/env.sh"
 
+PUSH_MATRIX_SCRIPTS="$REPO_ROOT/experiments/pusht/subjepa/matrix/scripts"
+FORMAL_LIB="$REPO_ROOT/experiments/pusht/subjepa/formal/scripts/pusht_formal_lib.py"
+
 mkdir -p "$MATRIX/manifests" "$MATRIX/logs" "$MATRIX/partitions" "$MATRIX/training"
 
-"$PYTHON" - <<PY
-import json
-import hashlib
-import sys
-from pathlib import Path
+"$PYTHON" "$FORMAL_LIB" \
+  --phase verify-smoke \
+  --smoke-root "$SMOKE_ROOT" \
+  --formal-root "$FORMAL" \
+  --expected-smoke-cache-sha256 "$SMOKE_CACHE_SHA256" >/dev/null
 
-repo = Path(".")
-formal = repo / "$FORMAL"
-passport_path = formal / "manifests/material_passport.json"
-if not passport_path.is_file():
-    print(f"PRE-LOCK FAILED: missing passport: {passport_path}", file=sys.stderr)
-    sys.exit(1)
-passport = json.loads(passport_path.read_text(encoding="utf-8"))
-
-def sha256_file(path: Path) -> str:
-    h = hashlib.sha256()
-    with path.open("rb") as f:
-        for chunk in iter(lambda: f.read(8 * 1024 * 1024), b""):
-            h.update(chunk)
-    return h.hexdigest()
-
-errors = []
-if passport.get("verification_status") != "VERIFIED":
-    errors.append(f"gate not VERIFIED: {passport.get('verification_status')}")
-if passport.get("selected_branch") != "spectral":
-    errors.append(f"expected spectral branch, got {passport.get('selected_branch')}")
-gate = passport.get("gate_task_summary", {})
-if gate.get("deployment_seed") != 0:
-    errors.append(f"expected deployment_seed=0, got {gate.get('deployment_seed')}")
-if not passport.get("replay_audit", {}).get("all_passed"):
-    errors.append("replay audit not all_passed")
-
-cache_path = formal / "preparation/embedding_cache.npz"
-if not cache_path.exists():
-    errors.append(f"missing full cache: {cache_path}")
-cache_sha = sha256_file(cache_path) if cache_path.exists() else None
-if cache_sha != passport.get("full_cache_sha256"):
-    errors.append(f"cache sha mismatch: {cache_sha} != {passport.get('full_cache_sha256')}")
-
-if errors:
-    print("PRE-LOCK FAILED:", file=sys.stderr)
-    for item in errors:
-        print(f"  - {item}", file=sys.stderr)
-    sys.exit(1)
-print("[pre-lock] gate VERIFIED, spectral seed=0, cache hash ok")
-PY
-
-# --- read-only cache link ---
+# --- read-only cache link (formal only; never smoke preparation/) ---
 PREP="$MATRIX/preparation"
 rm -rf "$PREP"
 ln -sfn "$(realpath "$FORMAL/preparation")" "$PREP"
 
-# --- reuse formal spectral partitions (remap cluster_labels to global IDs) ---
+# --- forced-Spectral control partitions (independent of Auto-LAP branch) ---
 "$PYTHON" "$TWOROOM_MATRIX_SCRIPTS/materialize_spectral_partitions.py" \
   --formal-root "$FORMAL/partitions/spectral" \
   --matrix-root "$MATRIX/partitions/spectral" \
   --latent-cache "$FORMAL/preparation/embedding_cache.npz" \
   --seeds 0,1,2
 
-# --- paired evaluation starts from canonical PushT matrix official eval ---
+# --- canonical paired evaluation starts ---
 PAIR_SHORT="$MATRIX/paired_starts/canon_short/eval/official"
 PAIR_LONG="$MATRIX/paired_starts/canon_long/eval/official"
 mkdir -p "$PAIR_SHORT" "$PAIR_LONG"
@@ -82,46 +44,32 @@ for seed in 0 1 2 3 4; do
   cp "$long_src" "$PAIR_LONG/eval${seed}/results.json"
 done
 
+# --- pre-lock (gate branch read from passport; no CLI override) ---
 LOCK="$MATRIX/manifests/pre_execution_lock.json"
-"$PYTHON" - <<PY
-import json, hashlib, subprocess
-from pathlib import Path
+"$PYTHON" "$PUSH_MATRIX_SCRIPTS/matrix_prelock.py" \
+  --repo-root "$REPO_ROOT" \
+  --formal-root "$FORMAL" \
+  --matrix-root "$MATRIX" \
+  --smoke-root "$SMOKE_ROOT" \
+  --dataset "$DATASET" \
+  --checkpoint "$CHECKPOINT" \
+  --task-spec "$TASK_SPEC" \
+  --canon-short "$CANON_SHORT" \
+  --canon-long "$CANON_LONG" \
+  --expected-smoke-cache-sha256 "$SMOKE_CACHE_SHA256" \
+  --out "$LOCK"
 
-def sha256_file(p):
-    h = hashlib.sha256()
-    with open(p, "rb") as f:
-        for c in iter(lambda: f.read(8<<20), b""):
-            h.update(c)
-    return h.hexdigest()
+read -r SELECTED_BRANCH AUTO_PARTITION_SRC <<EOF
+$("$PYTHON" -c "
+import json
+lock = json.load(open('$LOCK'))
+print(lock['gate_selected_branch'], lock['auto_partition_symlink_source'])
+")
+EOF
 
-repo = Path("$REPO_ROOT")
-lock = {
-    "schema_version": 1,
-    "git_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
-    "gate_passport": str(repo / "$FORMAL/manifests/material_passport.json"),
-    "gate_status": "VERIFIED",
-    "selected_branch": "spectral",
-    "deployment_seed": 0,
-    "sha256": {
-        "dataset": sha256_file(Path("$DATASET")),
-        "checkpoint": sha256_file(Path("$CHECKPOINT")),
-        "full_cache": sha256_file(repo / "$FORMAL/preparation/embedding_cache.npz"),
-        "task_spec": sha256_file(repo / "$TASK_SPEC"),
-    },
-    "task_spec_path": str(repo / "$TASK_SPEC"),
-    "eval_config_name": "pusht",
-    "paired_start_sources": {
-        "short": str(repo / "$CANON_SHORT"),
-        "long": str(repo / "$CANON_LONG"),
-    },
-}
-out = repo / "$LOCK"
-out.parent.mkdir(parents=True, exist_ok=True)
-out.write_text(json.dumps(lock, indent=2) + "\\n", encoding="utf-8")
-print(json.dumps(lock, indent=2))
-PY
+echo "[setup] gate_selected_branch=$SELECTED_BRANCH"
 
-# --- global partition on full cache (once) ---
+# --- global partition on full cache (once; independent of gate branch) ---
 if [[ ! -f "$MATRIX/partitions/global/seed0/manifest.json" ]]; then
   echo "[setup] fitting global partition on full cache"
   CUDA_VISIBLE_DEVICES="${GPU_ID:-0}" "$PYTHON" experiments/control_matrix/fit_partition.py \
@@ -133,11 +81,12 @@ if [[ ! -f "$MATRIX/partitions/global/seed0/manifest.json" ]]; then
     --out-dir "$MATRIX/partitions/global/seed0"
 fi
 
-# --- auto-lap deployment partition symlink ---
+# --- Auto-LAP deployment partition symlink (from gate output, not re-fit) ---
 AUTO="$MATRIX/auto/partition"
 rm -rf "$AUTO"
 mkdir -p "$(dirname "$AUTO")"
-ln -sfn "$(realpath "$FORMAL/gate/partition")" "$AUTO"
+ln -sfn "$(realpath "$AUTO_PARTITION_SRC")" "$AUTO"
 
 echo "[setup] matrix ready under $MATRIX"
 echo "[setup] pre_execution_lock=$LOCK"
+echo "[setup] auto_lap branch=$SELECTED_BRANCH auto/partition -> $AUTO_PARTITION_SRC"

@@ -1,0 +1,76 @@
+{
+  "schema_version": 2,
+  "implementation_backend": "jepa_object",
+  "model_family": "subjepa",
+  "dataset_name": "pusht",
+  "data_file": "/home/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
+  "starts_file": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/preparation/train_global_reference_starts.npy",
+  "history_size": 3,
+  "num_preds": 1,
+  "frameskip": 5,
+  "encode_report": {
+    "method": "unique_frame_inverse_reconstruction",
+    "selection": {
+      "starts_source": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/preparation/.encode_starts.npy",
+      "samples": 1850815,
+      "source_offset": 0,
+      "source_count": 1850815,
+      "sequence_length": 4
+    },
+    "arrays": {
+      "emb": {
+        "shape": [
+          1850815,
+          4,
+          192
+        ],
+        "dtype": "float32",
+        "sha256": "6e3885a11d96f8926bc723ddfd5727ce3fa1b6603b909e20cac99e5a00314517"
+      },
+      "act_emb": {
+        "shape": [
+          1850815,
+          4,
+          192
+        ],
+        "dtype": "float32",
+        "sha256": "7477f870b1d81fe1b0bf2e3c7840ddbe40e65b536e4553adf137a652c19f6351"
+      },
+      "region_starts": {
+        "shape": [
+          1850815
+        ],
+        "dtype": "int64",
+        "sha256": "ba855e718be6259a58e9b8d7e86a5ee77e5aaf0e5fd47f97421bd38f825e843d"
+      }
+    }
+  },
+  "spectral_cache_stats": {
+    "cache": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/preparation/embedding_cache.npz",
+    "num_transitions": 1850815,
+    "num_expanded_latents": 7403260,
+    "num_unique_timesteps": 2315671,
+    "discarded_repeated_window_slots": 5087589,
+    "duplicate_policy": "stable_first_occurrence_per_timestep",
+    "latent_dim": 192,
+    "frameskip": 5
+  },
+  "reference_audit": null,
+  "git_commit": "87f811da41833c7780965e01d4535e601265d764",
+  "artifacts": {
+    "embedding_cache.npz": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/preparation/embedding_cache.npz",
+    "spectral_embedding_cache.npz": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/preparation/spectral_embedding_cache.npz",
+    "representation_manifest.json": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/preparation/representation_manifest.json",
+    "action_norm_stats.npz": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/preparation/action_norm_stats.npz",
+    "action_norm_manifest.json": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/preparation/action_norm_manifest.json"
+  },
+  "sha256": {
+    "data_file": "b6ebd9ac94bbe9e383f6e7a9cd92d74e9aa665ea57b758ed3717b0ee7df8d4fb",
+    "checkpoint": "f4b4b9bdf4cf6254a98f1ae73c182f884f449eb52436e5900157a5f463313b3a",
+    "starts": "52bd374032ee5fd95bcc9135bae738a740dac5790ea3e4f34e3a44ddd6d86a42",
+    "embedding_cache": "a706adcef9f5d1d8a5044c2adb4cf868f48ff098b2aebf3f511d4565d8027ccd",
+    "spectral_embedding_cache": "c2bd09219548ac3ed269cd010f166736b8b3e1e31b171709ebe2b2406b2381f6",
+    "action_norm_stats": "fa893892f4362dcf36d091931eccf694b0af44da2cc6738f542035df8b28f67a"
+  }
+}

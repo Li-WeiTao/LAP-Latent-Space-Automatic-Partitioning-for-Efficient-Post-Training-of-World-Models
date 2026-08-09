@@ -1,0 +1,11 @@
+horizon,method_id,method_label,mean_percent,sd_percent,num_finetuning_seeds,num_partition_seeds,num_eval_seeds,seed_type,source_scope
+short,baseline,Official Sub-JEPA,92.4,,0,0,5,eval_seed,"official checkpoint; five paired evaluation seeds"
+short,globalft50,Global-FT 50ep,94.53333333333335,1.0066445913694326,3,0,5,train_seed,"train seeds 0,42,625; five paired evaluation seeds"
+short,kmeans,K-means++ K3-50,94.4888888888889,0.15396007178389967,3,3,5,train_seed,"train seeds 0,42,625; partition seeds 0,1,2; five paired evaluation seeds"
+short,spectral,Spectral K3-50,94.40000000000002,0.2666666666666657,3,3,5,train_seed,"train seeds 0,42,625; partition seeds 0,1,2; five paired evaluation seeds"
+short,autolap,Auto-LAP,94.53333333333335,1.0066445913694326,3,1,5,train_seed,"gate-selected Global-FT branch; train seeds 0,42,625; five paired evaluation seeds"
+long,baseline,Official Sub-JEPA,38.8,,0,0,5,eval_seed,"official checkpoint; five paired evaluation seeds"
+long,globalft50,Global-FT 50ep,46.4,0.3999999999999986,3,0,5,train_seed,"train seeds 0,42,625; five paired evaluation seeds"
+long,kmeans,K-means++ K3-50,42.93333333333334,0.6928203230275526,3,3,5,train_seed,"train seeds 0,42,625; partition seeds 0,1,2; five paired evaluation seeds"
+long,spectral,Spectral K3-50,44.088888888888896,0.8877770824639198,3,3,5,train_seed,"train seeds 0,42,625; partition seeds 0,1,2; five paired evaluation seeds"
+long,autolap,Auto-LAP,46.4,0.3999999999999986,3,1,5,train_seed,"gate-selected Global-FT branch; train seeds 0,42,625; five paired evaluation seeds"

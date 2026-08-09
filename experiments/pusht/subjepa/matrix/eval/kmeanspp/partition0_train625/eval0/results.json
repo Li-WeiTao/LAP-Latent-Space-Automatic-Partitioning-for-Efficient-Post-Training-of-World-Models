@@ -1,0 +1,499 @@
+{
+  "mode": "lap",
+  "seed": 0,
+  "num_eval": 50,
+  "goal_offset_steps": 50,
+  "eval_budget": 50,
+  "base_encoder_checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/subjepa_object.ckpt",
+  "lap_run_dir": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix/training/kmeanspp/partition0_train625",
+  "lap_manifest": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix/training/kmeanspp/partition0_train625/manifest.json",
+  "cluster_predictors": {
+    "cluster0": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix/training/kmeanspp/partition0_train625/P_train_cluster0_object.ckpt",
+    "cluster1": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix/training/kmeanspp/partition0_train625/P_train_cluster1_object.ckpt",
+    "cluster2": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix/training/kmeanspp/partition0_train625/P_train_cluster2_object.ckpt"
+  },
+  "num_clusters": 3,
+  "num_routing_prototypes": 3,
+  "partition_metadata": {
+    "algorithm": "spherical_kmeanspp",
+    "num_clusters": 3,
+    "seed": 0,
+    "n_init": 50,
+    "selected_restart": 34,
+    "selected_objective": 0.13748955726623535,
+    "runs": [
+      {
+        "restart": 0,
+        "seed": 0,
+        "objective": 0.13291306793689728,
+        "niter": 191,
+        "converged": true
+      },
+      {
+        "restart": 1,
+        "seed": 1,
+        "objective": 0.13543358445167542,
+        "niter": 374,
+        "converged": true
+      },
+      {
+        "restart": 2,
+        "seed": 2,
+        "objective": 0.13466507196426392,
+        "niter": 196,
+        "converged": true
+      },
+      {
+        "restart": 3,
+        "seed": 3,
+        "objective": 0.13442976772785187,
+        "niter": 183,
+        "converged": true
+      },
+      {
+        "restart": 4,
+        "seed": 4,
+        "objective": 0.13303659856319427,
+        "niter": 145,
+        "converged": true
+      },
+      {
+        "restart": 5,
+        "seed": 5,
+        "objective": 0.134396031498909,
+        "niter": 103,
+        "converged": true
+      },
+      {
+        "restart": 6,
+        "seed": 6,
+        "objective": 0.1331699937582016,
+        "niter": 167,
+        "converged": true
+      },
+      {
+        "restart": 7,
+        "seed": 7,
+        "objective": 0.13491855561733246,
+        "niter": 362,
+        "converged": true
+      },
+      {
+        "restart": 8,
+        "seed": 8,
+        "objective": 0.13486142456531525,
+        "niter": 530,
+        "converged": true
+      },
+      {
+        "restart": 9,
+        "seed": 9,
+        "objective": 0.13523779809474945,
+        "niter": 217,
+        "converged": true
+      },
+      {
+        "restart": 10,
+        "seed": 10,
+        "objective": 0.13261209428310394,
+        "niter": 329,
+        "converged": true
+      },
+      {
+        "restart": 11,
+        "seed": 11,
+        "objective": 0.13542203605175018,
+        "niter": 189,
+        "converged": true
+      },
+      {
+        "restart": 12,
+        "seed": 12,
+        "objective": 0.13379503786563873,
+        "niter": 490,
+        "converged": true
+      },
+      {
+        "restart": 13,
+        "seed": 13,
+        "objective": 0.1347755342721939,
+        "niter": 435,
+        "converged": true
+      },
+      {
+        "restart": 14,
+        "seed": 14,
+        "objective": 0.13540297746658325,
+        "niter": 422,
+        "converged": true
+      },
+      {
+        "restart": 15,
+        "seed": 15,
+        "objective": 0.13414418697357178,
+        "niter": 263,
+        "converged": true
+      },
+      {
+        "restart": 16,
+        "seed": 16,
+        "objective": 0.13339470326900482,
+        "niter": 201,
+        "converged": true
+      },
+      {
+        "restart": 17,
+        "seed": 17,
+        "objective": 0.13254576921463013,
+        "niter": 358,
+        "converged": true
+      },
+      {
+        "restart": 18,
+        "seed": 18,
+        "objective": 0.13512538373470306,
+        "niter": 249,
+        "converged": true
+      },
+      {
+        "restart": 19,
+        "seed": 19,
+        "objective": 0.136274054646492,
+        "niter": 220,
+        "converged": true
+      },
+      {
+        "restart": 20,
+        "seed": 20,
+        "objective": 0.1339920163154602,
+        "niter": 619,
+        "converged": true
+      },
+      {
+        "restart": 21,
+        "seed": 21,
+        "objective": 0.13388441503047943,
+        "niter": 180,
+        "converged": true
+      },
+      {
+        "restart": 22,
+        "seed": 22,
+        "objective": 0.13308237493038177,
+        "niter": 484,
+        "converged": true
+      },
+      {
+        "restart": 23,
+        "seed": 23,
+        "objective": 0.13285855948925018,
+        "niter": 292,
+        "converged": true
+      },
+      {
+        "restart": 24,
+        "seed": 24,
+        "objective": 0.1358165740966797,
+        "niter": 193,
+        "converged": true
+      },
+      {
+        "restart": 25,
+        "seed": 25,
+        "objective": 0.1357203722000122,
+        "niter": 279,
+        "converged": true
+      },
+      {
+        "restart": 26,
+        "seed": 26,
+        "objective": 0.1347973346710205,
+        "niter": 306,
+        "converged": true
+      },
+      {
+        "restart": 27,
+        "seed": 27,
+        "objective": 0.13536697626113892,
+        "niter": 162,
+        "converged": true
+      },
+      {
+        "restart": 28,
+        "seed": 28,
+        "objective": 0.13509663939476013,
+        "niter": 157,
+        "converged": true
+      },
+      {
+        "restart": 29,
+        "seed": 29,
+        "objective": 0.1347491443157196,
+        "niter": 100,
+        "converged": true
+      },
+      {
+        "restart": 30,
+        "seed": 30,
+        "objective": 0.13487203419208527,
+        "niter": 229,
+        "converged": true
+      },
+      {
+        "restart": 31,
+        "seed": 31,
+        "objective": 0.1343987137079239,
+        "niter": 557,
+        "converged": true
+      },
+      {
+        "restart": 32,
+        "seed": 32,
+        "objective": 0.1335999071598053,
+        "niter": 169,
+        "converged": true
+      },
+      {
+        "restart": 33,
+        "seed": 33,
+        "objective": 0.134196475148201,
+        "niter": 372,
+        "converged": true
+      },
+      {
+        "restart": 34,
+        "seed": 34,
+        "objective": 0.13748955726623535,
+        "niter": 217,
+        "converged": true
+      },
+      {
+        "restart": 35,
+        "seed": 35,
+        "objective": 0.13551552593708038,
+        "niter": 278,
+        "converged": true
+      },
+      {
+        "restart": 36,
+        "seed": 36,
+        "objective": 0.13381682336330414,
+        "niter": 246,
+        "converged": true
+      },
+      {
+        "restart": 37,
+        "seed": 37,
+        "objective": 0.13496500253677368,
+        "niter": 339,
+        "converged": true
+      },
+      {
+        "restart": 38,
+        "seed": 38,
+        "objective": 0.1349143534898758,
+        "niter": 221,
+        "converged": true
+      },
+      {
+        "restart": 39,
+        "seed": 39,
+        "objective": 0.13436411321163177,
+        "niter": 290,
+        "converged": true
+      },
+      {
+        "restart": 40,
+        "seed": 40,
+        "objective": 0.13420483469963074,
+        "niter": 392,
+        "converged": true
+      },
+      {
+        "restart": 41,
+        "seed": 41,
+        "objective": 0.1343725472688675,
+        "niter": 316,
+        "converged": true
+      },
+      {
+        "restart": 42,
+        "seed": 42,
+        "objective": 0.13384856283664703,
+        "niter": 205,
+        "converged": true
+      },
+      {
+        "restart": 43,
+        "seed": 43,
+        "objective": 0.13447082042694092,
+        "niter": 789,
+        "converged": true
+      },
+      {
+        "restart": 44,
+        "seed": 44,
+        "objective": 0.13430991768836975,
+        "niter": 184,
+        "converged": true
+      },
+      {
+        "restart": 45,
+        "seed": 45,
+        "objective": 0.13446973264217377,
+        "niter": 202,
+        "converged": true
+      },
+      {
+        "restart": 46,
+        "seed": 46,
+        "objective": 0.13372749090194702,
+        "niter": 344,
+        "converged": true
+      },
+      {
+        "restart": 47,
+        "seed": 47,
+        "objective": 0.13324402272701263,
+        "niter": 187,
+        "converged": true
+      },
+      {
+        "restart": 48,
+        "seed": 48,
+        "objective": 0.13439282774925232,
+        "niter": 270,
+        "converged": true
+      },
+      {
+        "restart": 49,
+        "seed": 49,
+        "objective": 0.13561329245567322,
+        "niter": 168,
+        "converged": true
+      }
+    ],
+    "routing": "zscore_l2_spherical_voronoi"
+  },
+  "switch_timing": "once per MPC replan from the observed latent",
+  "latent_routing": "mpc",
+  "inference_classify_count": 83,
+  "inference_classify_assignments": 83,
+  "inference_classify_timed_calls": 83,
+  "inference_classify_timed_assignments": 83,
+  "inference_classify_time_sample_sec": 0.11116543874144551,
+  "inference_classify_per_call_ms": 1.3393426354391025,
+  "inference_classify_per_assignment_us": 1339.3426354391027,
+  "inference_classify_timing_backend": "cuda_events",
+  "inference_mpc_route_cache_hits": 2407,
+  "inference_mpc_route_cache_misses": 83,
+  "metrics": {
+    "success_rate": 38.0,
+    "episode_successes": [
+      true,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+    ],
+    "seeds": null
+  },
+  "eval_start_indices": [
+    7090,
+    13507,
+    20119,
+    41630,
+    58199,
+    71870,
+    82805,
+    99067,
+    177277,
+    190716,
+    210330,
+    306467,
+    415670,
+    416568,
+    604884,
+    630536,
+    645045,
+    695118,
+    719993,
+    927018,
+    946223,
+    998400,
+    1135224,
+    1195011,
+    1212538,
+    1245272,
+    1277888,
+    1282563,
+    1304761,
+    1318965,
+    1419237,
+    1436930,
+    1475693,
+    1490412,
+    1512587,
+    1517336,
+    1564455,
+    1565343,
+    1693956,
+    1694239,
+    1780207,
+    1895998,
+    1901631,
+    1977728,
+    1988531,
+    2002662,
+    2013918,
+    2127582,
+    2178090,
+    2255515
+  ],
+  "evaluation_time_sec": 119.54688787460327
+}

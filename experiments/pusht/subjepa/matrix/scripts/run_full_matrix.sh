@@ -75,18 +75,38 @@ run_parallel() {
     "${JEPA_BASE[@]}" "$@"
 }
 
-SETUP="$REPO_ROOT/experiments/pusht/subjepa/matrix/scripts/setup_matrix.sh"
+PUSH_MATRIX_SCRIPTS="$REPO_ROOT/experiments/pusht/subjepa/matrix/scripts"
+SETUP="$PUSH_MATRIX_SCRIPTS/setup_matrix.sh"
+PREFLIGHT="$PUSH_MATRIX_SCRIPTS/matrix_preflight.py"
+LINK_AUTO_LAP="$PUSH_MATRIX_SCRIPTS/link_auto_lap.sh"
+
+run_preflight() {
+  "$PYTHON" "$PREFLIGHT" \
+    --formal-root "$FORMAL" \
+    --matrix-root "$WORK_ROOT" \
+    --smoke-root "$SMOKE_ROOT" \
+    --dataset "$DATASET" \
+    --checkpoint "$CHECKPOINT" \
+    --task-spec "$TASK_SPEC" \
+    --canon-short "$CANON_SHORT" \
+    --canon-long "$CANON_LONG" \
+    --expected-smoke-cache-sha256 "$SMOKE_CACHE_SHA256" \
+    --out "$WORK_ROOT/manifests/preflight_report.json"
+}
 
 case "${1:-training}" in
   setup)
     bash "$SETUP"
     ;;
+  preflight)
+    bash "$SETUP"
+    run_preflight
+    ;;
   training)
     bash "$SETUP"
+    run_preflight
     START_STAGE=partition END_STAGE=training run_parallel
-    DEPLOYMENT_SEED="$DEPLOYMENT_SEED" \
-      bash "$TWOROOM_MATRIX_SCRIPTS/link_auto_lap.sh" \
-      "$WORK_ROOT" training
+    DEPLOYMENT_SEED="$DEPLOYMENT_SEED" bash "$LINK_AUTO_LAP" "$WORK_ROOT" training
     ;;
   eval-short)
     bash "$SETUP"
@@ -97,9 +117,7 @@ case "${1:-training}" in
       SHORT_GOAL_OFFSET=25 \
       START_STAGE=eval_short END_STAGE=eval_short \
       run_parallel
-    DEPLOYMENT_SEED="$DEPLOYMENT_SEED" \
-      bash "$TWOROOM_MATRIX_SCRIPTS/link_auto_lap.sh" \
-      "$WORK_ROOT" eval
+    DEPLOYMENT_SEED="$DEPLOYMENT_SEED" bash "$LINK_AUTO_LAP" "$WORK_ROOT" eval
     snapshot_eval_horizon short
     ;;
   eval-long)
@@ -111,9 +129,7 @@ case "${1:-training}" in
       LONG_GOAL_OFFSET=50 \
       START_STAGE=eval_long END_STAGE=eval_long \
       run_parallel
-    DEPLOYMENT_SEED="$DEPLOYMENT_SEED" \
-      bash "$TWOROOM_MATRIX_SCRIPTS/link_auto_lap.sh" \
-      "$WORK_ROOT" eval
+    DEPLOYMENT_SEED="$DEPLOYMENT_SEED" bash "$LINK_AUTO_LAP" "$WORK_ROOT" eval
     snapshot_eval_horizon long
     ;;
   aggregate)
@@ -147,10 +163,9 @@ case "${1:-training}" in
     bash "$0" eval-long
     bash "$0" audit
     bash "$0" aggregate
-    bash "$0" bootstrap
     ;;
   *)
-    echo "usage: $0 {setup|training|eval-short|eval-long|audit|aggregate|bootstrap|all-post-train}" >&2
+    echo "usage: $0 {setup|preflight|training|eval-short|eval-long|audit|aggregate|bootstrap|all-post-train}" >&2
     exit 2
     ;;
 esac

@@ -1,0 +1,2 @@
+candidate_gap_min,perturbation_threshold_max,retained_safety_fraction,robust_residual_gap,background_threshold,safety_pass,background_pass,selected_branch,reason,deployment_seed
+0.14887969128088124,0.11816413353530303,0.20631126704601532,0.030715557745578215,0.15944341782637342,false,false,global,safety_and_background_checks_failed,0

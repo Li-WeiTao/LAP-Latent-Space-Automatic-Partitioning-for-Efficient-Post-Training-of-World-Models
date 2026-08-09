@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "dataset": "tworoom",
+  "method": "spectral",
+  "selected_method": "spectral",
+  "matrix_materialization": {
+    "source": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/partitions/spectral/seed0",
+    "sample_id_mode": "remapped_from_dense_index",
+    "cache_stats": {
+      "cache": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/preparation/embedding_cache.npz",
+      "num_transitions": 1850815,
+      "num_expanded_latents": 7403260,
+      "num_unique_timesteps": 2315671,
+      "discarded_repeated_window_slots": 5087589,
+      "duplicate_policy": "stable_first_occurrence_per_timestep",
+      "latent_dim": 192,
+      "frameskip": 5
+    }
+  }
+}
