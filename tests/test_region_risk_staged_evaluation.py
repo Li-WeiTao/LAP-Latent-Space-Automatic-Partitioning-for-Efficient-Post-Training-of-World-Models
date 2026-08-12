@@ -17,6 +17,7 @@ from backends.lewm.cache import LeWMLatentCache
 from experiments.control_matrix.evaluate_region_conditional_risk import (
     _bootstrap_chunk_job,
     _resume_matches,
+    _validated_raw_paths,
     parse_args,
     run_finalize_stage,
 )
@@ -29,6 +30,7 @@ from experiments.control_matrix.region_risk_lib import (
     multi_horizon_open_loop_rollout_losses,
     nested_paired_bootstrap_draws,
     precompute_episode_summaries,
+    sha256_file,
     stable_json_sha256,
     start_index_map,
 )
@@ -126,6 +128,23 @@ class StagedRegionRiskTest(unittest.TestCase):
             )
             with self.assertRaises(ValueError):
                 _resume_matches(path, "different", resume=True, kind="raw rollout")
+
+    def test_manifest_raw_inputs_exclude_stale_files_and_verify_hashes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            out_dir = Path(directory)
+            declared = out_dir / "raw" / "trainseed0_h1_valid.npz"
+            stale = out_dir / "raw" / "trainseed42_h1_valid.npz"
+            atomic_savez_compressed(declared, values=np.asarray([1.0]))
+            atomic_savez_compressed(stale, values=np.asarray([42.0]))
+            manifest = {
+                "raw_files": [
+                    {"path": str(declared), "sha256": sha256_file(declared)}
+                ]
+            }
+            self.assertEqual(_validated_raw_paths(out_dir, manifest), [declared])
+            manifest["raw_files"][0]["sha256"] = "0" * 64
+            with self.assertRaisesRegex(ValueError, "hash mismatch"):
+                _validated_raw_paths(out_dir, manifest)
 
     def test_episode_preaggregation_matches_legacy_bootstrap(self) -> None:
         blocks = [
@@ -225,8 +244,9 @@ class StagedRegionRiskTest(unittest.TestCase):
                 ],
                 dtype=np.float64,
             )
+            raw_path = raw_dir / "trainseed0_h1_valid.npz"
             atomic_savez_compressed(
-                raw_dir / "trainseed0_h1_valid.npz",
+                raw_path,
                 metadata_json=np.asarray(json.dumps(metadata)),
                 anchors=np.asarray([0, 1, 2]),
                 episode_ids=np.asarray([0, 1, 2]),
@@ -236,7 +256,14 @@ class StagedRegionRiskTest(unittest.TestCase):
             )
             atomic_write_json(
                 out_dir / "rollout_manifest.json",
-                {"audit": {"formal": True}, "num_regions": 3, "horizons": [1]},
+                {
+                    "audit": {"formal": True},
+                    "num_regions": 3,
+                    "horizons": [1],
+                    "raw_files": [
+                        {"path": str(raw_path), "sha256": sha256_file(raw_path)}
+                    ],
+                },
             )
             chunk = chunk_dir / "h1_mean_trajectory_chunk00000.npz"
             atomic_savez_compressed(

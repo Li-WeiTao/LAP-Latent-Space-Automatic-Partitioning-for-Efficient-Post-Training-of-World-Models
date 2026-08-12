@@ -1296,6 +1296,44 @@ def _raw_path(raw_dir: Path, train_seed: int, support_horizon: int) -> Path:
     return raw_dir / f"trainseed{train_seed}_h{support_horizon}_valid.npz"
 
 
+def _validated_raw_paths(
+    out_dir: Path, rollout_manifest: Mapping[str, Any]
+) -> list[Path]:
+    """Resolve the exact manifest-declared raw inputs and verify their hashes."""
+    raw_root = (out_dir / "raw").resolve()
+    entries = rollout_manifest.get("raw_files")
+    if not isinstance(entries, list) or not entries:
+        raise ValueError("rollout_manifest.json must declare a non-empty raw_files list")
+    paths: list[Path] = []
+    seen: set[Path] = set()
+    for index, entry in enumerate(entries):
+        if not isinstance(entry, Mapping):
+            raise ValueError(f"raw_files[{index}] must be an object")
+        stored_path = entry.get("path")
+        expected_hash = entry.get("sha256")
+        if not stored_path or not expected_hash:
+            raise ValueError(f"raw_files[{index}] must contain path and sha256")
+        candidate = Path(str(stored_path))
+        if not candidate.is_absolute():
+            candidate = out_dir / candidate
+        path = candidate.resolve(strict=True)
+        try:
+            path.relative_to(raw_root)
+        except ValueError as exc:
+            raise ValueError(f"manifest raw file is outside {raw_root}: {path}") from exc
+        if path in seen:
+            raise ValueError(f"duplicate manifest raw file: {path}")
+        actual_hash = sha256_file(path)
+        if actual_hash != expected_hash:
+            raise ValueError(
+                f"raw rollout hash mismatch for {path}: "
+                f"expected={expected_hash} actual={actual_hash}"
+            )
+        seen.add(path)
+        paths.append(path)
+    return sorted(paths)
+
+
 def _resume_matches(path: Path, fingerprint: str, *, resume: bool, kind: str) -> bool:
     if not path.exists():
         return False
@@ -1789,9 +1827,13 @@ def run_rollout_stage(args: argparse.Namespace) -> None:
 
 
 def _seed_blocks_from_raw(
-    raw_dir: Path, *, horizon: int, loss_kind: str
+    raw_paths: Sequence[Path], *, horizon: int, loss_kind: str
 ) -> tuple[list[dict[str, Any]], list[Path]]:
-    paths = sorted(raw_dir.glob(f"trainseed*_h{horizon}_valid.npz"))
+    paths = [
+        path
+        for path in raw_paths
+        if int(_npz_metadata(path)["support_horizon"]) == horizon
+    ]
     blocks: list[dict[str, Any]] = []
     for path in paths:
         with np.load(path, allow_pickle=False) as data:
@@ -1846,12 +1888,21 @@ def _bootstrap_chunk_job(job: Mapping[str, Any]) -> str:
 
 def run_bootstrap_stage(args: argparse.Namespace) -> None:
     out_dir = args.out_dir.resolve()
-    raw_dir = out_dir / "raw"
     if not (out_dir / "rollout_manifest.json").exists():
         raise FileNotFoundError("rollout_manifest.json is required before bootstrap")
+    rollout_manifest = json.loads(
+        (out_dir / "rollout_manifest.json").read_text(encoding="utf-8")
+    )
+    manifest_raw_paths = _validated_raw_paths(out_dir, rollout_manifest)
     if args.bootstrap_chunk_size <= 0 or args.bootstrap_workers <= 0:
         raise ValueError("bootstrap chunk size and workers must be positive")
     horizons = [int(value) for value in args.horizons.split(",") if value]
+    manifest_horizons = list(map(int, rollout_manifest["horizons"]))
+    if sorted(horizons) != sorted(manifest_horizons):
+        raise ValueError(
+            f"bootstrap horizons do not match rollout manifest: "
+            f"requested={horizons} manifest={manifest_horizons}"
+        )
     chunk_dir = out_dir / "bootstrap_chunks"
     chunk_dir.mkdir(parents=True, exist_ok=True)
     jobs: list[dict[str, Any]] = []
@@ -1859,8 +1910,8 @@ def run_bootstrap_stage(args: argparse.Namespace) -> None:
     for horizon in horizons:
         loss_kinds = ("mean_trajectory",) if horizon == 1 else ("mean_trajectory", "terminal")
         for loss_kind in loss_kinds:
-            blocks, raw_paths = _seed_blocks_from_raw(
-                raw_dir, horizon=horizon, loss_kind=loss_kind
+            blocks, selected_raw_paths = _seed_blocks_from_raw(
+                manifest_raw_paths, horizon=horizon, loss_kind=loss_kind
             )
             if not blocks:
                 raise FileNotFoundError(f"no raw rollout blocks for horizon={horizon}")
@@ -1874,7 +1925,7 @@ def run_bootstrap_stage(args: argparse.Namespace) -> None:
                 )
                 for key in metric_keys
             }
-            raw_hashes = {str(path): sha256_file(path) for path in raw_paths}
+            raw_hashes = {str(path): sha256_file(path) for path in selected_raw_paths}
             chunks: list[str] = []
             for chunk_id, begin in enumerate(
                 range(0, args.bootstrap_reps, args.bootstrap_chunk_size)
@@ -1998,7 +2049,7 @@ def run_finalize_stage(args: argparse.Namespace) -> None:
     weighted_rows: list[dict[str, Any]] = []
     common_region_rows: list[dict[str, Any]] = []
     common_weighted_rows: list[dict[str, Any]] = []
-    raw_paths = sorted((out_dir / "raw").glob("trainseed*_h*_valid.npz"))
+    raw_paths = _validated_raw_paths(out_dir, rollout_manifest)
     for path in raw_paths:
         with np.load(path, allow_pickle=False) as data:
             metadata = json.loads(str(data["metadata_json"].item()))
