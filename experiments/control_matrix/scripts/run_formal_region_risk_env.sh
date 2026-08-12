@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Shared runtime for formal region-risk experiments.
+# Shared runtime for Held-out Region-Risk Analysis.
+# "formal" in this filename is an internal compatibility term.
 # Source this file; do not execute directly.
 set -euo pipefail
 
@@ -11,7 +12,7 @@ export PYTHON="${PYTHON:-$LEWM_VENV}"
 export PYTHONPATH="${ROOT}:${ROOT}/experiments/tworoom${PYTHONPATH:+:$PYTHONPATH}"
 
 if [[ ! -x "$PYTHON" ]]; then
-  echo "[formal-env] missing python: $PYTHON" >&2
+  echo "[held-out-region-risk] missing python: $PYTHON" >&2
   exit 1
 fi
 
@@ -22,14 +23,14 @@ import torch
 import stable_worldmodel  # noqa: F401
 
 print(
-    f"[formal-env] python={sys.executable} "
+    f"[held-out-region-risk] python={sys.executable} "
     f"torch={torch.__version__} cuda={torch.version.cuda} "
     f"stable_worldmodel=ok"
 )
 if os.environ.get("CUDA_VISIBLE_DEVICES") is not None:
     if not torch.cuda.is_available():
         raise SystemExit(f"CUDA unavailable for {sys.executable}")
-    print(f"[formal-env] device={torch.cuda.get_device_name(0)} CUDA_VISIBLE_DEVICES={os.environ['CUDA_VISIBLE_DEVICES']}")
+    print(f"[held-out-region-risk] device={torch.cuda.get_device_name(0)} CUDA_VISIBLE_DEVICES={os.environ['CUDA_VISIBLE_DEVICES']}")
 else:
-    print("[formal-env] per-worker CUDA_VISIBLE_DEVICES set by parallel controller")
+    print("[held-out-region-risk] per-worker CUDA_VISIBLE_DEVICES set by parallel controller")
 PY

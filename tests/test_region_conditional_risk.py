@@ -424,6 +424,7 @@ class RegionConditionalRiskTest(unittest.TestCase):
             ],
             dtype=torch.float32,
         )
+        emb = emb[:, :4]
         act_emb = emb.clone()
         cache = LeWMLatentCache(
             emb,
@@ -432,7 +433,7 @@ class RegionConditionalRiskTest(unittest.TestCase):
             route_index=0,
         )
         contract = load_cache_contract(
-            cache, history_size=3, num_preds=3, frameskip=1
+            cache, history_size=3, num_preds=1, frameskip=1
         )
         models = [StepPredictor(1.0), StepPredictor(2.0)]
         anchors = np.asarray([0, 1], dtype=np.int64)
@@ -441,13 +442,13 @@ class RegionConditionalRiskTest(unittest.TestCase):
             models,
             cache,
             anchors,
-            horizons=[2, 3],
+            horizons=[1, 2, 3],
             contract=contract,
             start_map=start_map,
             device=torch.device("cpu"),
             batch_size=2,
         )
-        for horizon in (2, 3):
+        for horizon in (1, 2, 3):
             single = open_loop_rollout_losses(
                 models,
                 cache,

@@ -332,6 +332,9 @@ class FormalRegionRiskPipelineTest(unittest.TestCase):
                 task="pusht",
                 train_seeds="0",
                 bootstrap_reps=100,
+                bootstrap_chunk_size=25,
+                bootstrap_workers=2,
+                resume=True,
                 encoding_batch_size=128,
                 device="cuda",
                 smoke_only=True,
@@ -344,6 +347,11 @@ class FormalRegionRiskPipelineTest(unittest.TestCase):
             self.assertIn("--forced-spectral-partition-dir", command)
             self.assertIn(str(paths.partition_forced_spectral), command)
             self.assertIn("--smoke-only", command)
+            self.assertIn("--stage", command)
+            self.assertIn("all", command)
+            self.assertIn("--resume", command)
+            self.assertIn("--bootstrap-chunk-size", command)
+            self.assertIn("--bootstrap-workers", command)
 
     def test_evaluate_command_sets_paper_eligible_for_full_run(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
