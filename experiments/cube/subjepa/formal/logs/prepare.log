@@ -1,0 +1,150 @@
+{
+  "model_family": "subjepa",
+  "implementation_backend": "jepa_object",
+  "task_name": "cube",
+  "dataset_name": "cube",
+  "dataset": "/home/sicong/weitao/datasets/lewm/cube_single_expert.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/cube/subjepa_object.ckpt",
+  "eval_config_name": "cube",
+  "eval_config": null,
+  "eval_dataset_name": "ogbench/cube_single_expert",
+  "work_root": "experiments/cube/subjepa/formal",
+  "cache_dir": "/data/sicong/weitao/.stableworldmodel/subjepa/cube",
+  "paired_start_root": null,
+  "paired_start_root_short": null,
+  "paired_start_root_long": null,
+  "phase": "prepare",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "img_size": 224,
+  "short_goal_offset": 25,
+  "long_goal_offset": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "max_train_starts": 0,
+  "dry_run": false,
+  "task_spec_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/configs/experiments/tasks/cube.json",
+  "train_seeds": "0,42,625",
+  "partition_seeds": "0,1,2",
+  "eval_seeds": "0,1,2,3,4",
+  "methods": "random_voronoi,kmeanspp,spectral",
+  "skip_joint": true,
+  "python": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/.venv/bin/python",
+  "cpu_threads": 4,
+  "gpu_id": "5",
+  "sources": {
+    "model_family": "cli",
+    "dataset_name": "task_spec",
+    "task_name": "task_spec",
+    "eval_config_name": "cli",
+    "eval_dataset_name": "task_spec",
+    "work_root": "cli",
+    "cache_dir": "cli",
+    "phase": "cli",
+    "skip_joint": "default",
+    "frameskip": "task_spec",
+    "short_goal_offset": "task_spec",
+    "long_goal_offset": "task_spec",
+    "eval_budget": "task_spec",
+    "num_eval": "task_spec",
+    "train_seeds": "default",
+    "partition_seeds": "default",
+    "eval_seeds": "default",
+    "methods": "default",
+    "python": "cli",
+    "cpu_threads": "cli",
+    "gpu_id": "env"
+  }
+}
+[jepa-matrix] model_family=subjepa phase=prepare work_root=experiments/cube/subjepa/formal
+[jepa-matrix] resolved_config=experiments/cube/subjepa/formal/manifests/resolved_config.json
+[prepare-starts] common: 1674000 -> /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/cube/subjepa/formal/preparation/P_train_common_starts.npy
+[prepare-starts] complete; no embeddings or predictors were trained
+[index] samples=1674000 frame_slots=6696000 unique_frames=1998682 encoded_keys=1998695
+[batch-shape] batch=64 keys=31
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+[frames] batch 1/1 (31/31)
+[batch-shape] batch=512 keys=1998664
+[frames] batch 50/3904 (25600/1998664)
+[frames] batch 100/3904 (51200/1998664)
+[frames] batch 150/3904 (76800/1998664)
+[frames] batch 200/3904 (102400/1998664)
+[frames] batch 250/3904 (128000/1998664)
+[frames] batch 300/3904 (153600/1998664)
+[frames] batch 350/3904 (179200/1998664)
+[frames] batch 400/3904 (204800/1998664)
+[frames] batch 450/3904 (230400/1998664)
+[frames] batch 500/3904 (256000/1998664)
+[frames] batch 550/3904 (281600/1998664)
+[frames] batch 600/3904 (307200/1998664)
+[frames] batch 650/3904 (332800/1998664)
+[frames] batch 700/3904 (358400/1998664)
+[frames] batch 750/3904 (384000/1998664)
+[frames] batch 800/3904 (409600/1998664)
+[frames] batch 850/3904 (435200/1998664)
+[frames] batch 900/3904 (460800/1998664)
+[frames] batch 950/3904 (486400/1998664)
+[frames] batch 1000/3904 (512000/1998664)
+[frames] batch 1050/3904 (537600/1998664)
+[frames] batch 1100/3904 (563200/1998664)
+[frames] batch 1150/3904 (588800/1998664)
+[frames] batch 1200/3904 (614400/1998664)
+[frames] batch 1250/3904 (640000/1998664)
+[frames] batch 1300/3904 (665600/1998664)
+[frames] batch 1350/3904 (691200/1998664)
+[frames] batch 1400/3904 (716800/1998664)
+[frames] batch 1450/3904 (742400/1998664)
+[frames] batch 1500/3904 (768000/1998664)
+[frames] batch 1550/3904 (793600/1998664)
+[frames] batch 1600/3904 (819200/1998664)
+[frames] batch 1650/3904 (844800/1998664)
+[frames] batch 1700/3904 (870400/1998664)
+[frames] batch 1750/3904 (896000/1998664)
+[frames] batch 1800/3904 (921600/1998664)
+[frames] batch 1850/3904 (947200/1998664)
+[frames] batch 1900/3904 (972800/1998664)
+[frames] batch 1950/3904 (998400/1998664)
+[frames] batch 2000/3904 (1024000/1998664)
+[frames] batch 2050/3904 (1049600/1998664)
+[frames] batch 2100/3904 (1075200/1998664)
+[frames] batch 2150/3904 (1100800/1998664)
+[frames] batch 2200/3904 (1126400/1998664)
+[frames] batch 2250/3904 (1152000/1998664)
+[frames] batch 2300/3904 (1177600/1998664)
+[frames] batch 2350/3904 (1203200/1998664)
+[frames] batch 2400/3904 (1228800/1998664)
+[frames] batch 2450/3904 (1254400/1998664)
+[frames] batch 2500/3904 (1280000/1998664)
+[frames] batch 2550/3904 (1305600/1998664)
+[frames] batch 2600/3904 (1331200/1998664)
+[frames] batch 2650/3904 (1356800/1998664)
+[frames] batch 2700/3904 (1382400/1998664)
+[frames] batch 2750/3904 (1408000/1998664)
+[frames] batch 2800/3904 (1433600/1998664)
+[frames] batch 2850/3904 (1459200/1998664)
+[frames] batch 2900/3904 (1484800/1998664)
+[frames] batch 2950/3904 (1510400/1998664)
+[frames] batch 3000/3904 (1536000/1998664)
+[frames] batch 3050/3904 (1561600/1998664)
+[frames] batch 3100/3904 (1587200/1998664)
+[frames] batch 3150/3904 (1612800/1998664)
+[frames] batch 3200/3904 (1638400/1998664)
+[frames] batch 3250/3904 (1664000/1998664)
+[frames] batch 3300/3904 (1689600/1998664)
+[frames] batch 3350/3904 (1715200/1998664)
+[frames] batch 3400/3904 (1740800/1998664)
+[frames] batch 3450/3904 (1766400/1998664)
+[frames] batch 3500/3904 (1792000/1998664)
+[frames] batch 3550/3904 (1817600/1998664)
+[frames] batch 3600/3904 (1843200/1998664)
+[frames] batch 3650/3904 (1868800/1998664)
+[frames] batch 3700/3904 (1894400/1998664)
+[frames] batch 3750/3904 (1920000/1998664)
+[frames] batch 3800/3904 (1945600/1998664)
+[frames] batch 3850/3904 (1971200/1998664)
+[frames] batch 3900/3904 (1996800/1998664)
+[frames] batch 3904/3904 (1998664/1998664)
+[saved] cache=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/cube/subjepa/formal/preparation/embedding_cache.npz
+[saved] report=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/cube/subjepa/formal/preparation/embedding_cache.npz.report.json
+[prepare] wrote matrix cache artifacts under /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/cube/subjepa/formal/preparation

@@ -226,6 +226,60 @@ matrix, `setup_matrix.sh` will copy those in instead of bootstrapping. Cube
 never reads, copies, or resamples from PushT's (or any other task's) starts
 — verified (see "Verification").
 
+## Sub-JEPA results
+
+The full Sub-JEPA matrix completed on 2026-08-12. Both `eval_short/` and
+`eval_long/` contain 110/110 result cells.
+
+### Paired control success rate
+
+Short uses `goal_offset=25`; long uses `goal_offset=50`. Both use five
+evaluation seeds and 50 episodes per seed. Error bars are sample SD across
+the three fine-tuning seeds after averaging partition and evaluation seeds.
+
+| Method | Short success (%) | Long success (%) |
+|---|---:|---:|
+| Official baseline | 69.20 | 51.20 |
+| Global-FT50 | 64.40 ± 0.69 | 49.07 ± 1.97 |
+| K-means++ K3-50 | 66.80 ± 1.04 | 46.98 ± 1.37 |
+| Spectral K3-50 | 67.20 ± 0.58 | 48.00 ± 0.83 |
+| Auto-LAP | 64.40 ± 0.69 | 49.07 ± 1.97 |
+
+Sources:
+`subjepa/matrix/manifests/matrix_summary_short.json` and
+`subjepa/matrix/manifests/matrix_summary_long.json`.
+
+The automatic gate selected `global`, so Auto-LAP is expected to equal
+Global-FT50. `deployment_seed=0` is the deployment partition seed, not a
+predictor training seed; Auto-LAP still evaluates train seeds `0,42,625`.
+
+### Held-out one-step latent prediction MSE
+
+This uses the matrix training protocol's transition-level 90/10 split
+(`split_seed=3072`): 1,674,000 training transitions and 186,000 held-out
+transitions with zero transition overlap. It is not episode-disjoint.
+Official and all three Auto-LAP/global fine-tuned predictors are evaluated on
+the same Sub-JEPA-encoded held-out cache (`history_size=3`, `num_preds=1`,
+`frameskip=5`).
+
+| Predictor | Held-out one-step MSE |
+|---|---:|
+| Official baseline | 0.00145984 |
+| Auto-LAP train seed 0 | 0.00057817 |
+| Auto-LAP train seed 42 | 0.00057285 |
+| Auto-LAP train seed 625 | 0.00057323 |
+| Auto-LAP mean ± sample SD | 0.00057475 ± 0.00000297 |
+
+Auto-LAP reduces mean held-out one-step MSE by **60.63%** relative to the
+Official baseline. Results are stored under
+`subjepa/matrix/heldout/official_vs_auto_lap_train{0,42,625}_one_step.json`;
+the shared held-out latent cache is
+`subjepa/matrix/heldout/cube_subjepa_heldout_eval_latent_cache.npz`.
+
+The one-step MSE improvement does not by itself imply better MPC success:
+the latent prediction objective and downstream planning/control objective
+are distinct, and the control results above should be reported separately.
+
 ## Excluded audits (explicitly not added/copied for this task)
 
 - Frozen audit, one-step MSE audit, cache-equivalence audit
@@ -250,8 +304,8 @@ never reads, copies, or resamples from PushT's (or any other task's) starts
 
 ## Verification performed
 
-All read-only / non-destructive unless noted; no full 50-epoch multi-GPU run
-was started.
+The checks below describe the initial setup validation. The full 50-epoch
+Sub-JEPA matrix was subsequently run; its results are reported above.
 
 1. `bash -n` on all 16 new shell scripts under `experiments/cube/` — all
    passed.
@@ -330,7 +384,7 @@ CHECKPOINT=/path/to/lewm_object.ckpt GPU_IDS=5,6 \
 bash experiments/cube/scripts/launch_cube_matrix_parallel.sh
 ```
 
-### Sub-JEPA gate / training / eval (ready to run now)
+### Sub-JEPA gate / training / eval (completed; reproduction commands)
 
 ```bash
 # 1) formal prepare + LAP auto gate (full-scale latent cache)

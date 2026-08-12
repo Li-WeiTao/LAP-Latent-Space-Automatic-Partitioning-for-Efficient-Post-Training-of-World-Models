@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare Official vs Global-FT held-out latent prediction loss on Reacher."""
+"""Compare Official vs Global-FT held-out latent prediction loss."""
 
 from __future__ import annotations
 
@@ -17,6 +17,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(PROJECT_ROOT / "experiments" / "tworoom"))
 
 from backends.lewm.cache import LeWMLatentCache  # noqa: E402
+from backends.lewm.checkpoint_compat import load_jepa_object_checkpoint  # noqa: E402
 from backends.lewm.encoding import LeWMEncoderAdapter, make_hdf5_transition_dataset  # noqa: E402
 from experiments.control_matrix.evaluate_region_conditional_risk import (  # noqa: E402
     collect_limited_horizon_anchors,
@@ -27,7 +28,6 @@ from experiments.control_matrix.region_risk_lib import (  # noqa: E402
     episode_ids_at_starts,
     load_cache_contract,
     load_lewm_cache,
-    load_model,
     start_index_map,
 )
 from experiments.tworoom.gauge_drift import DATASETS, choose_state_key  # noqa: E402
@@ -42,8 +42,14 @@ def resolve_device(device_arg: str) -> torch.device:
     return torch.device(device_arg)
 
 
-def holdout_starts(data_file: Path, *, split_seed: int, train_fraction: float) -> np.ndarray:
-    spec = DATASETS["reacher"]
+def holdout_starts(
+    data_file: Path,
+    *,
+    dataset_name: str,
+    split_seed: int,
+    train_fraction: float,
+) -> np.ndarray:
+    spec = DATASETS[dataset_name]
     cfg = TrainConfig(
         history_size=3,
         num_preds=1,
@@ -70,6 +76,7 @@ def encode_eval_cache(
     history_size: int,
     num_preds: int,
     frameskip: int,
+    model_family: str,
     device: str,
     batch_size: int,
 ) -> None:
@@ -84,7 +91,11 @@ def encode_eval_cache(
         num_preds=num_preds,
         frameskip=frameskip,
     )
-    encoder = LeWMEncoderAdapter(img_size=224, frameskip=frameskip)
+    encoder = LeWMEncoderAdapter(
+        img_size=224,
+        frameskip=frameskip,
+        model_family=model_family,
+    )
     config = FastEncodingConfig(
         device=device,
         transition_batch_size=batch_size,
@@ -108,6 +119,7 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=Path("/data/sicong/weitao/datasets/lewm/reacher.h5"),
     )
+    parser.add_argument("--dataset-name", default="reacher", choices=sorted(DATASETS))
     parser.add_argument(
         "--pretrained-model",
         type=Path,
@@ -135,6 +147,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--history-size", type=int, default=3)
     parser.add_argument("--num-preds", type=int, default=1)
     parser.add_argument("--frameskip", type=int, default=5)
+    parser.add_argument("--model-family", default="lewm")
     parser.add_argument("--horizons", default="1,5,10")
     parser.add_argument("--encoding-batch-size", type=int, default=128)
     parser.add_argument("--batch-size", type=int, default=512)
@@ -158,6 +171,7 @@ def main() -> None:
 
     holdout = holdout_starts(
         args.data_file.resolve(),
+        dataset_name=args.dataset_name,
         split_seed=args.split_seed,
         train_fraction=args.train_fraction,
     )
@@ -181,6 +195,7 @@ def main() -> None:
             history_size=args.history_size,
             num_preds=args.num_preds,
             frameskip=args.frameskip,
+            model_family=args.model_family,
             device=str(device),
             batch_size=args.encoding_batch_size,
         )
@@ -206,8 +221,16 @@ def main() -> None:
         require_disjoint=False,
     )
 
-    official = load_model(args.pretrained_model.resolve()).to(device)
-    global_ft = load_model(args.global_ft_ckpt.resolve()).to(device)
+    official = load_jepa_object_checkpoint(
+        args.pretrained_model.resolve(),
+        model_family=args.model_family,
+        map_location=device,
+    ).to(device)
+    global_ft = load_jepa_object_checkpoint(
+        args.global_ft_ckpt.resolve(),
+        model_family=args.model_family,
+        map_location=device,
+    ).to(device)
     models = [official, global_ft]
     model_names = ["official", "global_ft50"]
 
@@ -227,6 +250,7 @@ def main() -> None:
     results: dict[str, object] = {
         "protocol": {
             "split": "transition_level_90_10",
+            "dataset_name": args.dataset_name,
             "split_seed": args.split_seed,
             "train_fraction": args.train_fraction,
             "num_holdout_transitions": int(len(eval_cache.sample_ids)),
@@ -234,6 +258,7 @@ def main() -> None:
             "eval_cache": str(eval_cache_path),
             "official_ckpt": str(args.pretrained_model.resolve()),
             "global_ft_ckpt": str(args.global_ft_ckpt.resolve()),
+            "model_family": args.model_family,
             "frameskip": args.frameskip,
             "history_size": args.history_size,
             "audit_episode_disjointness": audit,

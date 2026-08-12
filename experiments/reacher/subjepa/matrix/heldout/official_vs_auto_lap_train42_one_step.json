@@ -1,0 +1,66 @@
+{
+  "protocol": {
+    "split": "transition_level_90_10",
+    "dataset_name": "reacher",
+    "split_seed": 3072,
+    "train_fraction": 0.9,
+    "num_holdout_transitions": 186000,
+    "train_starts_path": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/reacher/subjepa/formal/preparation/train_global_reference_starts.npy",
+    "eval_cache": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/reacher/subjepa/matrix/heldout/reacher_subjepa_heldout_eval_latent_cache.npz",
+    "official_ckpt": "/data/sicong/weitao/.stable_worldmodel/reacher/subjepa_object.ckpt",
+    "global_ft_ckpt": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/reacher/subjepa/matrix/training/global/train42/P_train_cluster0_object.ckpt",
+    "model_family": "subjepa",
+    "frameskip": 5,
+    "history_size": 3,
+    "audit_episode_disjointness": {
+      "train_num_starts": 1674000,
+      "eval_num_starts": 186000,
+      "train_num_episodes": 10000,
+      "eval_num_episodes": 10000,
+      "episode_overlap_count": 10000,
+      "episode_overlap_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "region_start_overlap_count": 0,
+      "episode_disjoint": false,
+      "region_start_disjoint": true
+    },
+    "note": "Same 90/10 transition split as train_global_reference_starts; not episode-disjoint (matches matrix training contract)."
+  },
+  "horizons": {
+    "1": {
+      "num_anchors": 186000,
+      "mean_trajectory_mse": {
+        "official": 0.001316255431919251,
+        "global_ft50": 0.00082284901669028,
+        "delta_ft_minus_official": -0.0004934064152289709,
+        "ratio_ft_over_official": 0.6251438715739787
+      },
+      "terminal_step_mse": {
+        "official": 0.001316255431919251,
+        "global_ft50": 0.00082284901669028,
+        "delta_ft_minus_official": -0.0004934064152289709,
+        "ratio_ft_over_official": 0.6251438715739787
+      }
+    }
+  }
+}

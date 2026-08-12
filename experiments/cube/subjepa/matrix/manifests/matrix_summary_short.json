@@ -1,0 +1,68 @@
+{
+  "dataset": "cube",
+  "train_seeds": [
+    0,
+    42,
+    625
+  ],
+  "partition_seeds": [
+    0,
+    1,
+    2
+  ],
+  "eval_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "primary_error_bar": "sample SD across fine-tuning seeds after averaging partition and evaluation seeds",
+  "rows": [
+    {
+      "method": "Official baseline",
+      "mean_percent": 69.2,
+      "sd_across_finetuning_seeds_percent": null,
+      "num_finetuning_seeds": 0,
+      "num_partition_seeds": 0,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 5.932958789676531
+    },
+    {
+      "method": "Global-FT50",
+      "mean_percent": 64.39999999999999,
+      "sd_across_finetuning_seeds_percent": 0.6928203230275485,
+      "num_finetuning_seeds": 3,
+      "num_partition_seeds": 0,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 5.461553938996796
+    },
+    {
+      "method": "K-means++",
+      "mean_percent": 66.8,
+      "sd_across_finetuning_seeds_percent": 1.0413666234542187,
+      "num_finetuning_seeds": 3,
+      "num_partition_seeds": 3,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 6.301514969361804
+    },
+    {
+      "method": "Spectral",
+      "mean_percent": 67.2,
+      "sd_across_finetuning_seeds_percent": 0.5811865258054194,
+      "num_finetuning_seeds": 3,
+      "num_partition_seeds": 3,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 5.417144501068301
+    },
+    {
+      "method": "Auto-LAP",
+      "mean_percent": 64.39999999999999,
+      "sd_across_finetuning_seeds_percent": 0.6928203230275485,
+      "num_finetuning_seeds": 3,
+      "num_partition_seeds": 1,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 5.461553938996796
+    }
+  ]
+}

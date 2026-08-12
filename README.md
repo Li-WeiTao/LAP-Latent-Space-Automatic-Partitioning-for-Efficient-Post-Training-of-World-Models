@@ -362,6 +362,116 @@ Recreate both ggplot2 figures from the repository root:
 Rscript experiments/pusht/assets/subjepa_control_metrics/plot_pusht_subjepa_control_matrix.R
 ```
 
+## Reacher Sub-JEPA result snapshot
+
+The completed Reacher Sub-JEPA automatic gate selected the **global** branch with
+deployment seed 0. The perturbation-safety check passes, but the robust residual
+gap remains below the background threshold, so Auto-LAP reuses the Global-FT
+checkpoints and rollout results.
+
+| Gate quantity | Value | Decision |
+|---|---:|---|
+| `E_min` | 0.019028 | candidate minimum |
+| `T_max^E` | 0.006590 | perturbation envelope |
+| `S_task` | 0.653681 | passes `>= 0.5` (margin +0.153681) |
+| `R_K` | 0.012438 | fails background check |
+| `T_bg` | 0.316742 | `R_K - T_bg = -0.304304` |
+
+The gate manifest selects branch `global` with reason
+`residual_gap_not_above_background`.
+
+| Method | Short-horizon success rate | Long-horizon success rate |
+|---|---:|---:|
+| Official Sub-JEPA | 83.6% | 82.0% |
+| Global-FT50 | 85.07 ± 1.01% | 78.27 ± 0.83% |
+| K-means++ K3-50 | 84.00 ± 0.74% | 76.84 ± 1.34% |
+| Spectral K3-50 | 84.00 ± 1.99% | 76.53 ± 1.51% |
+| **Auto-LAP (Global-FT)** | **85.07 ± 1.01%** | **78.27 ± 0.83%** |
+
+![Reacher Sub-JEPA short-horizon results](experiments/reacher/assets/subjepa_control_metrics/reacher_subjepa_short_horizon_main.png)
+
+![Reacher Sub-JEPA long-horizon results](experiments/reacher/assets/subjepa_control_metrics/reacher_subjepa_long_horizon_main.png)
+
+The figures intentionally contain no gate annotation; the gate diagnostics are
+recorded above. Fine-tuned methods show the sample SD across train seeds 0, 42,
+and 625 after averaging the applicable partition seeds and five paired evaluation
+seeds. The official checkpoint has no fine-tuning seed and therefore no error bar.
+
+The held-out one-step predictor comparison uses the fixed seed-3072 90/10
+transition-level split and 186,000 held-out transitions. Auto-LAP reduces the
+mean one-step latent MSE from `0.0013162554` to
+`0.0008460748 ± 0.0000268800` across the three fine-tuning seeds: an absolute
+reduction of `0.0004701807` and a relative reduction of `35.72 ± 2.04%`.
+Training and held-out transition starts are disjoint, but this split is not
+episode-disjoint. This prediction-error improvement does not imply a long-horizon
+control improvement; the Auto-LAP long-horizon success rate remains below the
+official checkpoint in this run.
+
+Recreate both ggplot2 figures from the repository root:
+
+```bash
+Rscript experiments/control_matrix/scripts/plot_subjepa_control_matrix.R \
+  --task Reacher \
+  --input experiments/reacher/assets/subjepa_control_metrics/reacher_subjepa_control_summary.csv \
+  --output-dir experiments/reacher/assets/subjepa_control_metrics \
+  --file-prefix reacher_subjepa \
+  --auto-source globalft50
+```
+
+## OGBench-Cube Sub-JEPA result snapshot
+
+The completed OGBench-Cube Sub-JEPA automatic gate selected the **global** branch
+with deployment seed 0. The perturbation-safety check passes, while the robust
+residual gap narrowly remains below the background threshold; Auto-LAP therefore
+reuses the Global-FT checkpoints and rollout results.
+
+| Gate quantity | Value | Decision |
+|---|---:|---|
+| `E_min` | 0.289226 | candidate minimum |
+| `T_max^E` | 0.005777 | perturbation envelope |
+| `S_task` | 0.980025 | passes `>= 0.5` (margin +0.480025) |
+| `R_K` | 0.283449 | fails background check |
+| `T_bg` | 0.319416 | `R_K - T_bg = -0.035967` |
+
+The gate manifest selects branch `global` with reason
+`residual_gap_not_above_background`.
+
+| Method | Short-horizon success rate | Long-horizon success rate |
+|---|---:|---:|
+| Official Sub-JEPA | 69.2% | 51.2% |
+| Global-FT50 | 64.40 ± 0.69% | 49.07 ± 1.97% |
+| K-means++ K3-50 | 66.80 ± 1.04% | 46.98 ± 1.37% |
+| Spectral K3-50 | 67.20 ± 0.58% | 48.00 ± 0.83% |
+| **Auto-LAP (Global-FT)** | **64.40 ± 0.69%** | **49.07 ± 1.97%** |
+
+![OGBench-Cube Sub-JEPA short-horizon results](experiments/cube/assets/subjepa_control_metrics/cube_subjepa_short_horizon_main.png)
+
+![OGBench-Cube Sub-JEPA long-horizon results](experiments/cube/assets/subjepa_control_metrics/cube_subjepa_long_horizon_main.png)
+
+The figures intentionally contain no gate annotation; the gate diagnostics are
+recorded above. Fine-tuned methods use the same aggregation and error-bar protocol
+as Reacher.
+
+On the same fixed seed-3072 transition-level held-out protocol, Auto-LAP reduces
+the mean one-step latent MSE from `0.0014598376` to
+`0.0005747475 ± 0.0000029681` across the three fine-tuning seeds: an absolute
+reduction of `0.0008850900` and a relative reduction of `60.63 ± 0.20%`.
+The 186,000 held-out transition starts are disjoint from training starts, but the
+split is not episode-disjoint. As with Reacher, the large one-step MSE reduction
+does not translate into better short- or long-horizon control success than the
+official checkpoint in this run.
+
+Recreate both ggplot2 figures from the repository root:
+
+```bash
+Rscript experiments/control_matrix/scripts/plot_subjepa_control_matrix.R \
+  --task OGBench-Cube \
+  --input experiments/cube/assets/subjepa_control_metrics/cube_subjepa_control_summary.csv \
+  --output-dir experiments/cube/assets/subjepa_control_metrics \
+  --file-prefix cube_subjepa \
+  --auto-source globalft50
+```
+
 ## PushT result snapshot
 
 PushT uses the same three predictor fine-tuning seeds (`0`, `42`, and `625`),

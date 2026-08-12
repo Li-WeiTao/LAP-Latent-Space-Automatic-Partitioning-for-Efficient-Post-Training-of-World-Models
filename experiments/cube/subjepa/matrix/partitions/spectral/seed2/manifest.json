@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "dataset": "cube",
+  "method": "spectral",
+  "selected_method": "spectral",
+  "partition_seed": 2,
+  "num_clusters": 3,
+  "cluster_counts": [
+    629490,
+    554788,
+    814404
+  ],
+  "cluster_fractions": [
+    0.31495255373291,
+    0.2775769231923838,
+    0.4074705230747062
+  ],
+  "cache_stats": {
+    "cache": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/cube/subjepa/formal/preparation/embedding_cache.npz",
+    "num_transitions": 1674000,
+    "num_expanded_latents": 6696000,
+    "num_unique_timesteps": 1998682,
+    "discarded_repeated_window_slots": 4697318,
+    "duplicate_policy": "stable_first_occurrence_per_timestep",
+    "latent_dim": 192,
+    "frameskip": 5
+  },
+  "latent_cache_sha256": "243f071bebfb1b82bf5e9dc8384164ebb77e9f3bc9ce8dfd59acb9a639552d26",
+  "data_file": "/home/sicong/weitao/datasets/lewm/cube_single_expert.h5",
+  "method_metadata": {
+    "algorithm": "landmark_spectral_voronoi",
+    "num_clusters": 3,
+    "seed": 2,
+    "num_landmarks": 20000,
+    "knn": 30,
+    "neighbor_search": {
+      "backend": "torch_cuda_exact_cosine",
+      "device": "cuda:0",
+      "query_chunk": 2048,
+      "sec": 0.15321997698629275,
+      "peak_cuda_allocated_mb": 335.9921875
+    },
+    "graph": {
+      "effective_knn": 30,
+      "num_undirected_nonzeros": 718218,
+      "num_connected_components": 1,
+      "component_fractions": [
+        1.0
+      ],
+      "sigma_floor": 0.020321398973464966,
+      "degree_min": 6.076808739453554,
+      "degree_mean": 17.36520730233826,
+      "degree_max": 30.082902908325195
+    },
+    "spectral": {
+      "eigensolver_sec": 0.26219927601050586,
+      "spectral_kmeans_sec": 0.16167309597949497,
+      "normalized_adjacency_eigenvalues_desc": [
+        1.0000000000000004,
+        0.9978642587466968,
+        0.9926763645607433,
+        0.9892177517917501,
+        0.9875224942885621
+      ],
+      "laplacian_eigenvalues_asc": [
+        -4.440892098500626e-16,
+        0.0021357412533031805,
+        0.007323635439256737,
+        0.010782248208249912,
+        0.012477505711437908
+      ],
+      "eigengap_after_k": 0.0034586127689931745,
+      "spectral_kmeans_inertia": 2413.75439453125,
+      "spectral_kmeans_n_iter": 6
+    },
+    "laplacian_eigenvalues": [
+      -4.440892098500626e-16,
+      0.0021357412533031805,
+      0.007323635439256737,
+      0.010782248208249912,
+      0.012477505711437908
+    ],
+    "routing": "zscore_l2_spherical_voronoi"
+  },
+  "elapsed_sec": 59.06919413199648
+}

@@ -1,0 +1,2 @@
+task,official_mse,auto_lap_mean_mse,auto_lap_sample_sd_mse,mean_absolute_reduction,mean_relative_reduction_percent,relative_reduction_sample_sd_percent,num_finetuning_seeds,num_holdout_transitions,split,split_seed,episode_disjoint,region_start_disjoint
+reacher,0.001316255431919251,0.0008460747722804311,0.000026880043802234833,0.0004701806596388199,35.7210802885913,2.0421601423547893,3,186000,transition_level_90_10,3072,FALSE,TRUE

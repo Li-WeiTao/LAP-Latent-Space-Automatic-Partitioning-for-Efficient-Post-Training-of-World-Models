@@ -1,0 +1,11 @@
+horizon,method_id,method_label,mean_percent,sd_percent,num_finetuning_seeds,num_partition_seeds,num_eval_seeds,seed_type,source_scope
+short,baseline,Official Sub-JEPA,69.2,,0,0,5,evaluation_seed,official checkpoint
+short,globalft50,Global-FT 50ep,64.39999999999999,0.6928203230275485,3,0,5,fine_tuning_seed,three train seeds and five paired evaluation seeds
+short,kmeans,K-means++ K3-50,66.8,1.0413666234542187,3,3,5,fine_tuning_seed,three train seeds three partition seeds and five paired evaluation seeds
+short,spectral,Spectral K3-50,67.2,0.5811865258054194,3,3,5,fine_tuning_seed,three train seeds three partition seeds and five paired evaluation seeds
+short,autolap,Auto-LAP,64.39999999999999,0.6928203230275485,3,1,5,fine_tuning_seed,gate-selected Global-FT exact rollout reuse
+long,baseline,Official Sub-JEPA,51.2,,0,0,5,evaluation_seed,official checkpoint
+long,globalft50,Global-FT 50ep,49.06666666666666,1.9731531449265,3,0,5,fine_tuning_seed,three train seeds and five paired evaluation seeds
+long,kmeans,K-means++ K3-50,46.97777777777778,1.368427050519168,3,3,5,fine_tuning_seed,three train seeds three partition seeds and five paired evaluation seeds
+long,spectral,Spectral K3-50,48.0,0.8326663997864501,3,3,5,fine_tuning_seed,three train seeds three partition seeds and five paired evaluation seeds
+long,autolap,Auto-LAP,49.06666666666666,1.9731531449265,3,1,5,fine_tuning_seed,gate-selected Global-FT exact rollout reuse

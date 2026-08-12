@@ -1,0 +1,392 @@
+{
+  "schema_version": 1,
+  "dataset": "reacher",
+  "method": "kmeanspp",
+  "selected_method": "kmeanspp",
+  "partition_seed": 2,
+  "num_clusters": 3,
+  "cluster_counts": [
+    656869,
+    676011,
+    665802
+  ],
+  "cluster_fractions": [
+    0.32865108106242014,
+    0.33822839251066456,
+    0.33312052642691536
+  ],
+  "cache_stats": {
+    "cache": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/reacher/subjepa/formal/preparation/embedding_cache.npz",
+    "num_transitions": 1674000,
+    "num_expanded_latents": 6696000,
+    "num_unique_timesteps": 1998682,
+    "discarded_repeated_window_slots": 4697318,
+    "duplicate_policy": "stable_first_occurrence_per_timestep",
+    "latent_dim": 192,
+    "frameskip": 5
+  },
+  "latent_cache_sha256": "91a8fe88e13e47b5b636ea362eaec03b5376b55b3d639b14adea9764f31c3949",
+  "data_file": "/home/sicong/weitao/datasets/lewm/reacher.h5",
+  "method_metadata": {
+    "algorithm": "spherical_kmeanspp",
+    "num_clusters": 3,
+    "seed": 2,
+    "n_init": 50,
+    "selected_restart": 28,
+    "selected_objective": 0.1812163144350052,
+    "runs": [
+      {
+        "restart": 0,
+        "seed": 200000,
+        "objective": 0.1709306538105011,
+        "niter": 219,
+        "converged": true
+      },
+      {
+        "restart": 1,
+        "seed": 200001,
+        "objective": 0.17418193817138672,
+        "niter": 392,
+        "converged": true
+      },
+      {
+        "restart": 2,
+        "seed": 200002,
+        "objective": 0.17319223284721375,
+        "niter": 498,
+        "converged": true
+      },
+      {
+        "restart": 3,
+        "seed": 200003,
+        "objective": 0.1716599464416504,
+        "niter": 213,
+        "converged": true
+      },
+      {
+        "restart": 4,
+        "seed": 200004,
+        "objective": 0.17283935844898224,
+        "niter": 736,
+        "converged": true
+      },
+      {
+        "restart": 5,
+        "seed": 200005,
+        "objective": 0.17452025413513184,
+        "niter": 311,
+        "converged": true
+      },
+      {
+        "restart": 6,
+        "seed": 200006,
+        "objective": 0.17557483911514282,
+        "niter": 349,
+        "converged": true
+      },
+      {
+        "restart": 7,
+        "seed": 200007,
+        "objective": 0.17512907087802887,
+        "niter": 115,
+        "converged": true
+      },
+      {
+        "restart": 8,
+        "seed": 200008,
+        "objective": 0.17439645528793335,
+        "niter": 139,
+        "converged": true
+      },
+      {
+        "restart": 9,
+        "seed": 200009,
+        "objective": 0.17442870140075684,
+        "niter": 384,
+        "converged": true
+      },
+      {
+        "restart": 10,
+        "seed": 200010,
+        "objective": 0.1738208830356598,
+        "niter": 345,
+        "converged": true
+      },
+      {
+        "restart": 11,
+        "seed": 200011,
+        "objective": 0.17425435781478882,
+        "niter": 258,
+        "converged": true
+      },
+      {
+        "restart": 12,
+        "seed": 200012,
+        "objective": 0.17666876316070557,
+        "niter": 610,
+        "converged": true
+      },
+      {
+        "restart": 13,
+        "seed": 200013,
+        "objective": 0.1727662831544876,
+        "niter": 429,
+        "converged": true
+      },
+      {
+        "restart": 14,
+        "seed": 200014,
+        "objective": 0.177464559674263,
+        "niter": 445,
+        "converged": true
+      },
+      {
+        "restart": 15,
+        "seed": 200015,
+        "objective": 0.1772734373807907,
+        "niter": 180,
+        "converged": true
+      },
+      {
+        "restart": 16,
+        "seed": 200016,
+        "objective": 0.1721423715353012,
+        "niter": 147,
+        "converged": true
+      },
+      {
+        "restart": 17,
+        "seed": 200017,
+        "objective": 0.1766536831855774,
+        "niter": 127,
+        "converged": true
+      },
+      {
+        "restart": 18,
+        "seed": 200018,
+        "objective": 0.1768464744091034,
+        "niter": 527,
+        "converged": true
+      },
+      {
+        "restart": 19,
+        "seed": 200019,
+        "objective": 0.17375892400741577,
+        "niter": 256,
+        "converged": true
+      },
+      {
+        "restart": 20,
+        "seed": 200020,
+        "objective": 0.17080333828926086,
+        "niter": 144,
+        "converged": true
+      },
+      {
+        "restart": 21,
+        "seed": 200021,
+        "objective": 0.17866849899291992,
+        "niter": 359,
+        "converged": true
+      },
+      {
+        "restart": 22,
+        "seed": 200022,
+        "objective": 0.17406626045703888,
+        "niter": 367,
+        "converged": true
+      },
+      {
+        "restart": 23,
+        "seed": 200023,
+        "objective": 0.17560671269893646,
+        "niter": 779,
+        "converged": true
+      },
+      {
+        "restart": 24,
+        "seed": 200024,
+        "objective": 0.17302368581295013,
+        "niter": 358,
+        "converged": true
+      },
+      {
+        "restart": 25,
+        "seed": 200025,
+        "objective": 0.1732480376958847,
+        "niter": 249,
+        "converged": true
+      },
+      {
+        "restart": 26,
+        "seed": 200026,
+        "objective": 0.17347995936870575,
+        "niter": 228,
+        "converged": true
+      },
+      {
+        "restart": 27,
+        "seed": 200027,
+        "objective": 0.17245085537433624,
+        "niter": 169,
+        "converged": true
+      },
+      {
+        "restart": 28,
+        "seed": 200028,
+        "objective": 0.1812163144350052,
+        "niter": 86,
+        "converged": true
+      },
+      {
+        "restart": 29,
+        "seed": 200029,
+        "objective": 0.17385227978229523,
+        "niter": 362,
+        "converged": true
+      },
+      {
+        "restart": 30,
+        "seed": 200030,
+        "objective": 0.17788919806480408,
+        "niter": 635,
+        "converged": true
+      },
+      {
+        "restart": 31,
+        "seed": 200031,
+        "objective": 0.17470049858093262,
+        "niter": 266,
+        "converged": true
+      },
+      {
+        "restart": 32,
+        "seed": 200032,
+        "objective": 0.17403008043766022,
+        "niter": 495,
+        "converged": true
+      },
+      {
+        "restart": 33,
+        "seed": 200033,
+        "objective": 0.17805346846580505,
+        "niter": 112,
+        "converged": true
+      },
+      {
+        "restart": 34,
+        "seed": 200034,
+        "objective": 0.17714612185955048,
+        "niter": 429,
+        "converged": true
+      },
+      {
+        "restart": 35,
+        "seed": 200035,
+        "objective": 0.1743578016757965,
+        "niter": 268,
+        "converged": true
+      },
+      {
+        "restart": 36,
+        "seed": 200036,
+        "objective": 0.17528299987316132,
+        "niter": 306,
+        "converged": true
+      },
+      {
+        "restart": 37,
+        "seed": 200037,
+        "objective": 0.17514662444591522,
+        "niter": 262,
+        "converged": true
+      },
+      {
+        "restart": 38,
+        "seed": 200038,
+        "objective": 0.17223691940307617,
+        "niter": 109,
+        "converged": true
+      },
+      {
+        "restart": 39,
+        "seed": 200039,
+        "objective": 0.1756889820098877,
+        "niter": 163,
+        "converged": true
+      },
+      {
+        "restart": 40,
+        "seed": 200040,
+        "objective": 0.17296206951141357,
+        "niter": 116,
+        "converged": true
+      },
+      {
+        "restart": 41,
+        "seed": 200041,
+        "objective": 0.17574329674243927,
+        "niter": 254,
+        "converged": true
+      },
+      {
+        "restart": 42,
+        "seed": 200042,
+        "objective": 0.18014365434646606,
+        "niter": 383,
+        "converged": true
+      },
+      {
+        "restart": 43,
+        "seed": 200043,
+        "objective": 0.17726697027683258,
+        "niter": 235,
+        "converged": true
+      },
+      {
+        "restart": 44,
+        "seed": 200044,
+        "objective": 0.1769702136516571,
+        "niter": 224,
+        "converged": true
+      },
+      {
+        "restart": 45,
+        "seed": 200045,
+        "objective": 0.17016011476516724,
+        "niter": 212,
+        "converged": true
+      },
+      {
+        "restart": 46,
+        "seed": 200046,
+        "objective": 0.17543663084506989,
+        "niter": 174,
+        "converged": true
+      },
+      {
+        "restart": 47,
+        "seed": 200047,
+        "objective": 0.1751115322113037,
+        "niter": 233,
+        "converged": true
+      },
+      {
+        "restart": 48,
+        "seed": 200048,
+        "objective": 0.17642857134342194,
+        "niter": 899,
+        "converged": true
+      },
+      {
+        "restart": 49,
+        "seed": 200049,
+        "objective": 0.1757211983203888,
+        "niter": 439,
+        "converged": true
+      }
+    ],
+    "routing": "zscore_l2_spherical_voronoi"
+  },
+  "elapsed_sec": 231.74605498899473
+}

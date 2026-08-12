@@ -1,1 +1,4 @@
 [reacher-formal-gate] phase=prepare (full cache; writes only under experiments/reacher/subjepa/formal)
+[reacher-formal-gate] phase=gate (method=auto, K=3, LAP empirical spectral degeneracy gate)
+[reacher-formal-gate] phase=gate (method=auto, K=3, LAP empirical spectral degeneracy gate)
+[reacher-formal-gate] phase=gate complete — selected_method=global

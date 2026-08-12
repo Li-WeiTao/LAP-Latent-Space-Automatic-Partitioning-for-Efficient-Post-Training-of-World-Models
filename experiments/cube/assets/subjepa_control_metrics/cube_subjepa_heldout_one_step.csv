@@ -1,0 +1,4 @@
+train_seed,official_mse,auto_lap_mse,absolute_reduction,relative_reduction_percent,num_holdout_transitions,split,split_seed,episode_disjoint,region_start_disjoint,source_json
+0,0.0014598375561598845,0.0005781677912739049,0.0008816697648859796,60.395059790434466,186000,transition_level_90_10,3072,FALSE,TRUE,official_vs_auto_lap_train0_one_step.json
+42,0.0014598375561598845,0.0005728474213374675,0.000886990134822417,60.759509239894626,186000,transition_level_90_10,3072,FALSE,TRUE,official_vs_auto_lap_train42_one_step.json
+625,0.0014598375561598845,0.0005732274308166555,0.000886610125343229,60.73347829709661,186000,transition_level_90_10,3072,FALSE,TRUE,official_vs_auto_lap_train625_one_step.json

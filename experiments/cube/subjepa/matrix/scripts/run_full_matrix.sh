@@ -167,9 +167,9 @@ case "${1:-training}" in
   eval-short)
     bash "$SETUP"
     paired_short=""
-    [[ -f "$PAIR_SHORT/eval/official/eval0/results.json" ]] && paired_short="$(realpath "$PAIR_SHORT/eval/official")"
+    [[ -f "$PAIR_SHORT/eval/official/eval0/results.json" ]] && paired_short="$(realpath "$PAIR_SHORT")"
     [[ -n "$paired_short" ]] || ensure_official_eval_starts 25 "$PAIR_SHORT"
-    [[ -f "$PAIR_SHORT/eval/official/eval0/results.json" ]] && paired_short="$(realpath "$PAIR_SHORT/eval/official")"
+    [[ -f "$PAIR_SHORT/eval/official/eval0/results.json" ]] && paired_short="$(realpath "$PAIR_SHORT")"
     rm -rf "$WORK_ROOT/eval/official" "$WORK_ROOT/eval/global" \
       "$WORK_ROOT/eval/kmeanspp" "$WORK_ROOT/eval/spectral"
     RUN_ID="${RUN_ID}_short" \
@@ -183,9 +183,9 @@ case "${1:-training}" in
   eval-long)
     bash "$SETUP"
     paired_long=""
-    [[ -f "$PAIR_LONG/eval/official/eval0/results.json" ]] && paired_long="$(realpath "$PAIR_LONG/eval/official")"
+    [[ -f "$PAIR_LONG/eval/official/eval0/results.json" ]] && paired_long="$(realpath "$PAIR_LONG")"
     [[ -n "$paired_long" ]] || ensure_official_eval_starts 50 "$PAIR_LONG"
-    [[ -f "$PAIR_LONG/eval/official/eval0/results.json" ]] && paired_long="$(realpath "$PAIR_LONG/eval/official")"
+    [[ -f "$PAIR_LONG/eval/official/eval0/results.json" ]] && paired_long="$(realpath "$PAIR_LONG")"
     rm -rf "$WORK_ROOT/eval/official" "$WORK_ROOT/eval/global" \
       "$WORK_ROOT/eval/kmeanspp" "$WORK_ROOT/eval/spectral"
     RUN_ID="${RUN_ID}_long" \

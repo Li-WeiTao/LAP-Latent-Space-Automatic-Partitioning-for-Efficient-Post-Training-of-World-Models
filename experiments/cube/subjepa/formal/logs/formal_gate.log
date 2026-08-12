@@ -1,0 +1,3 @@
+[cube-formal-gate] phase=prepare (full cache; writes only under experiments/cube/subjepa/formal)
+[cube-formal-gate] phase=gate (method=auto, K=3, LAP empirical spectral degeneracy gate)
+[cube-formal-gate] phase=gate complete — selected_method=global

@@ -79,7 +79,23 @@ declare -a task_methods=()
 declare -a task_eval_seeds=()
 declare -a task_extra_args=()
 
+task_allowed() {
+  local name=$1
+  if [[ -z "${PARALLEL_TASKS:-}" ]]; then
+    return 0
+  fi
+  local allowed
+  IFS=, read -r -a allowed <<< "$PARALLEL_TASKS"
+  for candidate in "${allowed[@]}"; do
+    [[ "$candidate" == "$name" ]] && return 0
+  done
+  return 1
+}
+
 add_task() {
+  if ! task_allowed "$1"; then
+    return 0
+  fi
   task_names+=("$1")
   task_phases+=("$2")
   task_train_seeds+=("$3")

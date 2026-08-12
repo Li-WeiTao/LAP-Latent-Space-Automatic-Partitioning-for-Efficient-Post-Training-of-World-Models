@@ -1,0 +1,122 @@
+{
+  "arrays": {
+    "act_emb": {
+      "dtype": "float32",
+      "sha256": "94a65b92c7953bd018da121d16f137d54dd94c042bc6c8e47f82516acfcb62e5",
+      "shape": [
+        186000,
+        4,
+        192
+      ]
+    },
+    "emb": {
+      "dtype": "float32",
+      "sha256": "960a7671af67462c94bb96b012c1ad6ba58c67270742f7c1e806a7472ba571e9",
+      "shape": [
+        186000,
+        4,
+        192
+      ]
+    },
+    "region_starts": {
+      "dtype": "int64",
+      "sha256": "b1edcb59687f8c7db91b9ecb31ef5340d8431a726ba48143f7379cd0f822b40b",
+      "shape": [
+        186000
+      ]
+    }
+  },
+  "auxiliary": {
+    "frameskip": 5,
+    "normalization_samples": 1674000
+  },
+  "config": {
+    "chunk_aware": true,
+    "cpu_threads": 4,
+    "device": "cuda",
+    "exact_batch_shapes": true,
+    "frame_batch_size": 512,
+    "log_every": 50,
+    "max_samples": 0,
+    "num_workers": 2,
+    "prefetch_factor": 2,
+    "start_offset": 0,
+    "transition_batch_size": 128
+  },
+  "counts": {
+    "eliminated_duplicate_frames": 100132,
+    "encoded_frame_keys": 643868,
+    "frame_slots": 744000,
+    "padded_encoder_slots": 644160,
+    "unique_frames": 643866
+  },
+  "dataset": {
+    "action_key": "action",
+    "adapter": "backends.lewm.encoding:LeWMHDF5TransitionDataset",
+    "data_file": "/home/sicong/weitao/datasets/lewm/reacher.h5",
+    "frameskip": 5,
+    "history_size": 3,
+    "num_preds": 1,
+    "pixel_key": "pixels"
+  },
+  "efficiency": {
+    "actual_kernel_frame_reduction_fraction": 0.13419354838709674,
+    "actual_kernel_frame_speedup_after_padding": 1.1549925484351713,
+    "encoded_key_speedup_before_padding": 1.1555163480713437,
+    "ideal_unique_frame_speedup": 1.1555199373782743
+  },
+  "encoder": {
+    "adapter": "backends.lewm.encoding:LeWMEncoderAdapter",
+    "img_size": 224,
+    "requested_frameskip": 5
+  },
+  "environment": {
+    "cuda_runtime": "13.0",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3090",
+    "numpy": "2.2.6",
+    "python": "3.10.12 (main, Jun 22 2026, 18:55:27) [GCC 11.4.0]",
+    "torch": "2.12.1+cu130"
+  },
+  "frame_groups": {
+    "512": {
+      "encoded_keys": 643813,
+      "padded_encoder_slots": 644096,
+      "timing_sec": {
+        "loader_wait_sec": 0.8270921310177073,
+        "preprocess_encode_d2h_sec": 1153.8703716900782,
+        "total_sec": 1154.889495832962
+      }
+    },
+    "64": {
+      "encoded_keys": 55,
+      "padded_encoder_slots": 64,
+      "timing_sec": {
+        "loader_wait_sec": 0.1299009519862011,
+        "preprocess_encode_d2h_sec": 0.4264685220550746,
+        "total_sec": 0.6437120659975335
+      }
+    }
+  },
+  "method": "unique_frame_inverse_reconstruction",
+  "pretrained_model": "/data/sicong/weitao/.stable_worldmodel/reacher/subjepa_object.ckpt",
+  "schema_version": 2,
+  "selection": {
+    "samples": 186000,
+    "sequence_length": 4,
+    "source_count": 186000,
+    "source_offset": 0,
+    "starts_source": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/reacher/subjepa/matrix/heldout/reacher_subjepa_heldout_eval_latent_cache.starts.npy"
+  },
+  "timing_sec": {
+    "auxiliary_encode": 2.2929422160377726,
+    "inverse_reconstruct": 0.20489744300721213,
+    "model_load_and_prepare": 0.2538737010327168,
+    "npz_save": 39.07847850496182,
+    "reference_validation": 0.0,
+    "total": 1198.2623339720303,
+    "unique_frame_encode": 1155.8293440219713,
+    "unique_index": 0.6009140260284767
+  },
+  "validation": null
+}

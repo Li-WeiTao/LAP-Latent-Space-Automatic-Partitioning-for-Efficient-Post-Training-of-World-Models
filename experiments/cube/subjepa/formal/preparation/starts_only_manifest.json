@@ -1,0 +1,33 @@
+{
+  "mode": "prepare_starts_only",
+  "dataset": "cube",
+  "data_file": "/home/sicong/weitao/datasets/lewm/cube_single_expert.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/cube/subjepa_object.ckpt",
+  "train_config": {
+    "history_size": 3,
+    "num_preds": 1,
+    "frameskip": 5,
+    "img_size": 224,
+    "train_fraction": 0.9,
+    "split_seed": 3072,
+    "seed": 42,
+    "max_starts": 0,
+    "min_region_samples": 256,
+    "batch_size": 128,
+    "epochs": 30,
+    "lr": 5e-05,
+    "weight_decay": 0.001
+  },
+  "num_all_starts": 1860000,
+  "num_train_global_reference_starts": 1674000,
+  "training_data": "train_split_intersection",
+  "predictor_prefix": "train_",
+  "region_split_mode": "quantile",
+  "region_thresholds": null,
+  "regions": {
+    "common": {
+      "num_starts": 1674000,
+      "starts_file": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/cube/subjepa/formal/preparation/P_train_common_starts.npy"
+    }
+  }
+}

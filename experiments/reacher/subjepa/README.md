@@ -11,10 +11,61 @@ eval config, and canonical evaluation starts. It writes only under
   Reacher LeWM results — read-only reused for canonical paired starts),
 - any other already-completed experiment directory.
 
-**Status as of this change: code, config, and static checks only. No cache
-preparation, gate, partition fit, training, evaluation, or aggregation has
-been run.** No GPU was used; the Sub-JEPA Reacher checkpoint is still
-downloading and its final path is not yet confirmed.
+**Status (2026-08-12): complete.** Full cache preparation, Auto-LAP gate,
+matrix partitioning/training, paired short/long evaluation, aggregation, and
+held-out one-step prediction evaluation have been run. Both evaluation
+horizons contain 110/110 result cells.
+
+## Results
+
+### Paired control success rate
+
+Short uses `goal_offset=25`; long uses `goal_offset=50`. Both use five
+evaluation seeds and 50 episodes per seed. Error bars are sample SD across
+the three fine-tuning seeds after averaging partition and evaluation seeds.
+
+| Method | Short success (%) | Long success (%) |
+|---|---:|---:|
+| Official baseline | 83.60 | 82.00 |
+| Global-FT50 | 85.07 ± 1.01 | 78.27 ± 0.83 |
+| K-means++ K3-50 | 84.00 ± 0.74 | 76.84 ± 1.34 |
+| Spectral K3-50 | 84.00 ± 1.99 | 76.53 ± 1.51 |
+| Auto-LAP | 85.07 ± 1.01 | 78.27 ± 0.83 |
+
+Sources:
+`matrix/manifests/matrix_summary_short.json` and
+`matrix/manifests/matrix_summary_long.json`.
+
+The automatic gate selected `global`, so Auto-LAP is expected to equal
+Global-FT50. `deployment_seed=0` is the deployment partition seed, not a
+predictor training seed; Auto-LAP still evaluates train seeds `0,42,625`.
+
+### Held-out one-step latent prediction MSE
+
+This uses the matrix training protocol's transition-level 90/10 split
+(`split_seed=3072`): 1,674,000 training transitions and 186,000 held-out
+transitions with zero transition overlap. It is not episode-disjoint.
+Official and all three Auto-LAP/global fine-tuned predictors are evaluated on
+the same Sub-JEPA-encoded held-out cache (`history_size=3`, `num_preds=1`,
+`frameskip=5`).
+
+| Predictor | Held-out one-step MSE |
+|---|---:|
+| Official baseline | 0.00131626 |
+| Auto-LAP train seed 0 | 0.00083986 |
+| Auto-LAP train seed 42 | 0.00082285 |
+| Auto-LAP train seed 625 | 0.00087552 |
+| Auto-LAP mean ± sample SD | 0.00084607 ± 0.00002688 |
+
+Auto-LAP reduces mean held-out one-step MSE by **35.72%** relative to the
+Official baseline. These prediction results are stored under
+`matrix/heldout/official_vs_auto_lap_train{0,42,625}_one_step.json`; the
+shared held-out latent cache is
+`matrix/heldout/reacher_subjepa_heldout_eval_latent_cache.npz`.
+
+The one-step MSE improvement does not by itself imply better MPC success:
+the latent prediction objective and downstream planning/control objective
+are distinct, and the control results above should be reported separately.
 
 ## Why this is not a copy-paste of PushT
 
@@ -61,17 +112,17 @@ downloading and its final path is not yet confirmed.
 | `matrix/scripts/launch_eval_long_detached.sh` | Detached eval-long-only launcher. **Created only, not run.** |
 | `../../../configs/experiments/tasks/reacher.json` | Reacher task spec (schema matches `experiments/control_matrix/task_spec.py`). |
 
-## Checkpoint: not yet provided
+## Checkpoint
 
-Every script sources `env.sh` and then calls `require_checkpoint` right
-before the checkpoint is actually needed (never merely on source). If
-`CHECKPOINT` is unset, the script fails immediately with a clear message; it
-never guesses, downloads, loads, or hardcodes a path. Set it explicitly once
-the Sub-JEPA Reacher checkpoint is available:
+The completed experiment used:
 
 ```bash
-export CHECKPOINT=/path/to/subjepa_reacher_object.ckpt
+export CHECKPOINT=/data/sicong/weitao/.stable_worldmodel/reacher/subjepa_object.ckpt
 ```
+
+Every script sources `env.sh` and calls `require_checkpoint` immediately
+before the checkpoint is needed. `CHECKPOINT` remains an explicit input and
+can be overridden if the artifact moves.
 
 ## Protocol (must match the current PushT Sub-JEPA formal scripts; unchanged here)
 
@@ -104,9 +155,9 @@ evaluate from identical initial `qpos`/`qvel`/`goal_qpos` states:
 `PAIRED_START_ROOT_SHORT` / `PAIRED_START_ROOT_LONG` are also accepted
 directly by the generic driver if you want to point at a different root.
 
-## Reproduction (after checkpoint download completes and a GPU is available)
+## Reproduction
 
-**Not executed in this change.** Recommended order once `CHECKPOINT` is set:
+The following sequence was executed for the completed results above:
 
 ```bash
 export PYTHON="${PYTHON:-$REPO_ROOT/.venv/bin/python}"   # override to use a different interpreter
