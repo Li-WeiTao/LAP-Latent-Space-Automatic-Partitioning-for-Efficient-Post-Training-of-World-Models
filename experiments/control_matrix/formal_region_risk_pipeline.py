@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Strict 90/10 formal region-conditioned prediction risk experiment pipeline."""
+"""Orchestrate the 90/10 Held-out Region-Conditional Prediction-Risk Analysis.
+
+``formal`` is retained as an internal audit/provenance and compatibility term;
+it is not the public experiment name.
+"""
 
 from __future__ import annotations
 
@@ -37,6 +41,8 @@ from experiments.control_matrix.region_risk_lib import (  # noqa: E402
     git_commit,
     runtime_provenance,
     sha256_file,
+    PUBLIC_ANALYSIS_NAME,
+    PUBLIC_ANALYSIS_SHORT_NAME,
 )
 from lap.encoding.fast import FastEncodingConfig, FastLatentCacheEncoder  # noqa: E402
 
@@ -106,6 +112,9 @@ def parse_args() -> argparse.Namespace:
             "partition-forced-spectral",
             "partition-finalize",
             "train-one",
+            "evaluate-rollout",
+            "evaluate-bootstrap",
+            "evaluate-finalize",
             "evaluate",
             "finalize",
             "dry-run",
@@ -122,6 +131,13 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--epochs", type=int, default=50)
     parser.add_argument("--bootstrap-reps", type=int, default=50000)
+    parser.add_argument("--bootstrap-chunk-size", type=int, default=1000)
+    parser.add_argument("--bootstrap-workers", type=int, default=1)
+    parser.add_argument(
+        "--resume",
+        action="store_true",
+        help="Resume fingerprint-matching Held-out Region-Risk Analysis artifacts.",
+    )
     parser.add_argument("--max-train-starts", type=int, default=0)
     parser.add_argument("--max-eval-starts", type=int, default=0)
     parser.add_argument("--max-anchors", type=int, default=0)
@@ -540,6 +556,8 @@ def evaluate_command(
     args: argparse.Namespace,
     cfg: dict[str, str],
     paths: PipelinePaths,
+    *,
+    stage: str = "all",
 ) -> list[str]:
     split_manifest = load_split_manifest(paths.split_manifest)
     split_paths = split_paths_from_manifest(split_manifest)
@@ -587,6 +605,12 @@ def evaluate_command(
         str(args.bootstrap_reps),
         "--bootstrap-seed",
         str(FORMAL_BOOTSTRAP_SEED),
+        "--bootstrap-chunk-size",
+        str(getattr(args, "bootstrap_chunk_size", 1000)),
+        "--bootstrap-workers",
+        str(getattr(args, "bootstrap_workers", 1)),
+        "--stage",
+        stage,
         "--encoding-batch-size",
         str(args.encoding_batch_size),
         "--device",
@@ -602,6 +626,8 @@ def evaluate_command(
         command.extend(["--smoke-only"])
     elif is_full_formal_run(args, split_manifest=split_manifest):
         command.extend(["--paper-eligible"])
+    if getattr(args, "resume", False):
+        command.append("--resume")
     return command
 
 
@@ -611,8 +637,9 @@ def phase_evaluate(
     cfg: dict[str, str],
     *,
     dry_run: bool,
+    stage: str = "all",
 ) -> None:
-    run_command(evaluate_command(args, cfg, paths), dry_run=dry_run)
+    run_command(evaluate_command(args, cfg, paths, stage=stage), dry_run=dry_run)
 
 
 def write_pipeline_manifest(
@@ -625,6 +652,9 @@ def write_pipeline_manifest(
         paths.root / "pipeline_manifest.json",
         {
             "task": args.task,
+            "public_analysis_name": PUBLIC_ANALYSIS_NAME,
+            "public_analysis_short_name": PUBLIC_ANALYSIS_SHORT_NAME,
+            "internal_pipeline_name": "formal_region_risk",
             "phase": args.phase,
             "work_root": str(paths.root.resolve()),
             "data_file": cfg["data_file"],
@@ -676,8 +706,14 @@ def main() -> None:
         phase_partition_finalize(args, paths)
     elif args.phase == "train-one":
         phase_train_one(args, paths, cfg, dry_run=False)
+    elif args.phase == "evaluate-rollout":
+        phase_evaluate(args, paths, cfg, dry_run=False, stage="rollout")
+    elif args.phase == "evaluate-bootstrap":
+        phase_evaluate(args, paths, cfg, dry_run=False, stage="bootstrap")
+    elif args.phase == "evaluate-finalize":
+        phase_evaluate(args, paths, cfg, dry_run=False, stage="finalize")
     elif args.phase == "evaluate":
-        phase_evaluate(args, paths, cfg, dry_run=False)
+        phase_evaluate(args, paths, cfg, dry_run=False, stage="all")
     elif args.phase == "finalize":
         write_pipeline_manifest(args, paths, cfg)
     elif args.phase == "dry-run":
@@ -686,7 +722,10 @@ def main() -> None:
         phase_evaluate(args, paths, cfg, dry_run=True)
     else:
         raise ValueError(f"unsupported phase: {args.phase}")
-    print(f"[done] phase={args.phase} work_root={paths.root}", flush=True)
+    print(
+        f"[done] {PUBLIC_ANALYSIS_SHORT_NAME}: phase={args.phase} work_root={paths.root}",
+        flush=True,
+    )
 
 
 if __name__ == "__main__":

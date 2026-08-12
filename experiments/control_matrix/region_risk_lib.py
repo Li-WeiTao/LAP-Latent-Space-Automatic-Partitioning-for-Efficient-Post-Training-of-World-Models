@@ -7,6 +7,7 @@ import json
 import os
 import subprocess
 import sys
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -24,8 +25,14 @@ try:
 except ImportError:
     pass
 
-# Formal region-risk runs hold out episodes from LAP partition/post-training only.
-# The shared official LeWM checkpoint may have seen all dataset episodes at pretraining.
+# Public experiment terminology. ``formal`` remains an internal audit/provenance
+# term and is not the public experiment name.
+PUBLIC_ANALYSIS_NAME = "Held-out Region-Conditional Prediction-Risk Analysis"
+PUBLIC_ANALYSIS_SHORT_NAME = "Held-out Region-Risk Analysis"
+
+# Held-out Region-Risk Analysis holds evaluation episodes out from LAP
+# partition fitting and predictor post-training. The shared official LeWM
+# checkpoint may have seen those episodes during base world-model pretraining.
 FORMAL_CLAIM_SCOPE = "held_out_from_LAP_partition_and_posttraining"
 FORMAL_BASE_PRETRAINING_EPISODE_DISJOINT = False
 
@@ -66,6 +73,22 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(8 * 1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def stable_json_sha256(payload: Mapping[str, Any]) -> str:
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def atomic_savez_compressed(path: Path, **arrays: Any) -> None:
+    """Atomically write a compressed NPZ without leaving a valid partial file."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(
+        mode="wb", prefix=f".{path.name}.", suffix=".tmp", dir=path.parent, delete=False
+    ) as handle:
+        temporary = Path(handle.name)
+        np.savez_compressed(handle, **arrays)
+    os.replace(temporary, path)
 
 
 def git_commit() -> str | None:
@@ -472,9 +495,9 @@ def multi_horizon_open_loop_rollout_losses(
     device: torch.device,
     batch_size: int = 512,
 ) -> MultiHorizonRolloutLosses:
-    horizon_values = sorted({int(value) for value in horizons if int(value) > 1})
+    horizon_values = sorted({int(value) for value in horizons if int(value) >= 1})
     if not horizon_values:
-        raise ValueError("horizons must include at least one value > 1")
+        raise ValueError("horizons must include at least one positive value")
     max_horizon = max(horizon_values)
     history = contract.history_size
     fs = contract.frameskip
@@ -716,48 +739,23 @@ def nested_paired_bootstrap_ci(
 ) -> list[dict[str, Any]]:
     rng = np.random.default_rng(seed)
     keys = list(metric_keys)
-    draws = {key: [] for key in keys}
     if not seed_losses:
         return []
-    for _ in range(reps):
-        chosen_seeds = rng.choice(len(seed_losses), size=len(seed_losses), replace=True)
-        episode_universe = np.unique(
-            np.concatenate(
-                [np.asarray(seed_losses[int(index)]["episode_ids"], dtype=np.int64) for index in chosen_seeds]
-            )
-        )
-        chosen_episodes = rng.choice(episode_universe, size=len(episode_universe), replace=True)
-        per_key_values = {key: [] for key in keys}
-        replicate_valid = False
-        for seed_index in chosen_seeds:
-            block = seed_losses[int(seed_index)]
-            episode_ids = np.asarray(block["episode_ids"], dtype=np.int64)
-            row_indices: list[int] = []
-            for episode in chosen_episodes:
-                row_indices.extend(np.flatnonzero(episode_ids == episode).tolist())
-            if not row_indices:
-                continue
-            replicate_valid = True
-            for key in keys:
-                per_key_values[key].append(float(np.mean(block[key][row_indices])))
-        if not replicate_valid:
-            continue
-        for key in keys:
-            if per_key_values[key]:
-                draws[key].append(float(np.mean(per_key_values[key])))
-    estimates = {
-        key: float(np.mean([np.mean(block[key]) for block in seed_losses])) for key in keys
-    }
-    rows: list[dict[str, Any]] = []
     pair_specs = pairs or [
         ("correct_minus_global", "correct", "global"),
         ("correct_minus_wrong_mean", "correct", "wrong_mean"),
         ("correct_minus_wrong_best", "correct", "wrong_best"),
     ]
+    draws, estimates = nested_paired_bootstrap_draws(
+        seed_losses,
+        reps=reps,
+        rng=rng,
+        metric_keys=keys,
+        pairs=pair_specs,
+    )
+    rows: list[dict[str, Any]] = []
     for label, left, right in pair_specs:
-        delta = np.asarray(draws[left], dtype=np.float64) - np.asarray(
-            draws[right], dtype=np.float64
-        )
+        delta = draws[label]
         rows.append(
             {
                 "metric": label,
@@ -768,6 +766,131 @@ def nested_paired_bootstrap_ci(
             }
         )
     return rows
+
+
+def precompute_episode_summaries(
+    seed_losses: Sequence[Mapping[str, Any]],
+    *,
+    metric_keys: Sequence[str],
+) -> list[dict[str, Any]]:
+    """Precompute episode sums/counts once for episode-aware bootstrap."""
+    summaries: list[dict[str, Any]] = []
+    for block in seed_losses:
+        episode_ids = np.asarray(block["episode_ids"], dtype=np.int64)
+        episodes, inverse = np.unique(episode_ids, return_inverse=True)
+        counts = np.bincount(inverse, minlength=len(episodes)).astype(np.int64)
+        sums = {
+            key: np.bincount(
+                inverse,
+                weights=np.asarray(block[key], dtype=np.float64),
+                minlength=len(episodes),
+            ).astype(np.float64)
+            for key in metric_keys
+        }
+        summaries.append(
+            {
+                "episodes": episodes,
+                "counts": counts,
+                "sums": sums,
+                "episode_to_index": {int(value): index for index, value in enumerate(episodes)},
+            }
+        )
+    return summaries
+
+
+def nested_paired_bootstrap_draws(
+    seed_losses: Sequence[Mapping[str, Any]],
+    *,
+    reps: int,
+    rng: np.random.Generator,
+    metric_keys: Sequence[str] = ("global", "correct", "wrong_mean", "wrong_best"),
+    pairs: Sequence[tuple[str, str, str]] | None = None,
+) -> tuple[dict[str, np.ndarray], dict[str, float]]:
+    """Return paired bootstrap delta draws using precomputed episode sums/counts."""
+    keys = list(metric_keys)
+    pair_specs = list(
+        pairs
+        or (
+            ("correct_minus_global", "correct", "global"),
+            ("correct_minus_wrong_mean", "correct", "wrong_mean"),
+            ("correct_minus_wrong_best", "correct", "wrong_best"),
+        )
+    )
+    if not seed_losses:
+        return {label: np.asarray([], dtype=np.float64) for label, _, _ in pair_specs}, {}
+    summaries = precompute_episode_summaries(seed_losses, metric_keys=keys)
+    estimates = {
+        key: float(np.mean([np.mean(np.asarray(block[key], dtype=np.float64)) for block in seed_losses]))
+        for key in keys
+    }
+    draws = nested_paired_bootstrap_draws_from_summaries(
+        summaries,
+        reps=reps,
+        rng=rng,
+        metric_keys=keys,
+        pairs=pair_specs,
+    )
+    return draws, estimates
+
+
+def nested_paired_bootstrap_draws_from_summaries(
+    summaries: Sequence[Mapping[str, Any]],
+    *,
+    reps: int,
+    rng: np.random.Generator,
+    metric_keys: Sequence[str] = ("global", "correct", "wrong_mean", "wrong_best"),
+    pairs: Sequence[tuple[str, str, str]] | None = None,
+) -> dict[str, np.ndarray]:
+    """Draw from compact per-seed/per-episode sums and counts."""
+    keys = list(metric_keys)
+    pair_specs = list(
+        pairs
+        or (
+            ("correct_minus_global", "correct", "global"),
+            ("correct_minus_wrong_mean", "correct", "wrong_mean"),
+            ("correct_minus_wrong_best", "correct", "wrong_best"),
+        )
+    )
+    if not summaries:
+        return {label: np.asarray([], dtype=np.float64) for label, _, _ in pair_specs}
+    pair_draws = {label: np.empty(reps, dtype=np.float64) for label, _, _ in pair_specs}
+    valid_reps = 0
+    for _ in range(reps):
+        chosen_seeds = rng.choice(len(summaries), size=len(summaries), replace=True)
+        episode_universe = np.unique(
+            np.concatenate([summaries[int(index)]["episodes"] for index in chosen_seeds])
+        )
+        chosen_episodes = rng.choice(
+            episode_universe, size=len(episode_universe), replace=True
+        )
+        selected_episodes, multiplicities = np.unique(chosen_episodes, return_counts=True)
+        per_key_values = {key: [] for key in keys}
+        for seed_index in chosen_seeds:
+            summary = summaries[int(seed_index)]
+            local_indices: list[int] = []
+            local_multiplicities: list[int] = []
+            for episode, multiplicity in zip(selected_episodes, multiplicities):
+                local = summary["episode_to_index"].get(int(episode))
+                if local is not None:
+                    local_indices.append(int(local))
+                    local_multiplicities.append(int(multiplicity))
+            if not local_indices:
+                continue
+            indices = np.asarray(local_indices, dtype=np.int64)
+            weights = np.asarray(local_multiplicities, dtype=np.float64)
+            denominator = float(np.sum(weights * summary["counts"][indices]))
+            if denominator <= 0:
+                continue
+            for key in keys:
+                numerator = float(np.sum(weights * summary["sums"][key][indices]))
+                per_key_values[key].append(numerator / denominator)
+        if not per_key_values[keys[0]]:
+            continue
+        replicate = {key: float(np.mean(per_key_values[key])) for key in keys}
+        for label, left, right in pair_specs:
+            pair_draws[label][valid_reps] = replicate[left] - replicate[right]
+        valid_reps += 1
+    return {key: value[:valid_reps] for key, value in pair_draws.items()}
 
 
 def validate_manifest(
@@ -895,4 +1018,14 @@ def audit_formal_posttraining(
 
 def atomic_write_json(path: Path, payload: Mapping[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    with tempfile.NamedTemporaryFile(
+        mode="w",
+        encoding="utf-8",
+        prefix=f".{path.name}.",
+        suffix=".tmp",
+        dir=path.parent,
+        delete=False,
+    ) as handle:
+        temporary = Path(handle.name)
+        handle.write(json.dumps(payload, indent=2) + "\n")
+    os.replace(temporary, path)
