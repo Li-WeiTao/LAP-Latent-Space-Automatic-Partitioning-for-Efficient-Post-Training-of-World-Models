@@ -755,3 +755,18 @@ latest clean-checkout verification boundary.
 
 LAP-specific code is released under Apache-2.0. Vendored or adapted LeWM files
 remain under the upstream MIT license identified above.
+
+## Held-out Region-Risk Analysis
+
+The full public name is **Held-out Region-Conditional Prediction-Risk
+Analysis**. It is a held-out mechanistic analysis, not the main
+planning-performance experiment. Evaluation episodes are excluded from LAP
+partition fitting and predictor post-training; they are not guaranteed to have
+been excluded from base world-model pretraining.
+
+The implementation supports resumable GPU rollout, CPU bootstrap, and
+finalization stages. See
+[`experiments/control_matrix/REGION_RISK_ANALYSIS.md`](experiments/control_matrix/REGION_RISK_ANALYSIS.md)
+for commands and artifact contracts. `formal` remains an internal
+audit/provenance term and is not the public experiment name; compatibility
+filenames, paths, CLI flags, and audit fields retain that identifier.

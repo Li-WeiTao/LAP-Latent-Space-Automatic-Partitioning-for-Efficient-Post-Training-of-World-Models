@@ -19,11 +19,12 @@ COMMON=(
   --batch-size 256
   --device cuda
   --allow-in-cache
-  # Formal runs: drop --allow-in-cache and pass explicit train action-norm starts, e.g.
+  # Held-out Region-Risk Analysis: drop --allow-in-cache and pass explicit
+  # train action-norm starts. The --formal flag remains an internal audit interface.
   # --action-norm-starts experiments/pusht/matrix/preparation/train_global_reference_starts.npy
 )
 
-echo "[region-risk] PushT eval cache + analysis"
+echo "[Held-out Region-Risk Analysis] PushT eval cache + analysis"
 $PYTHON experiments/control_matrix/evaluate_region_conditional_risk.py \
   --task pusht \
   --data-file /data/sicong/weitao/datasets/lewm/pusht_expert_train.h5 \
@@ -37,7 +38,7 @@ $PYTHON experiments/control_matrix/evaluate_region_conditional_risk.py \
   "${COMMON[@]}" \
   --out-dir experiments/control_matrix/assets/region_risk/pusht
 
-echo "[region-risk] TwoRoom eval cache + analysis"
+echo "[Held-out Region-Risk Analysis] TwoRoom eval cache + analysis"
 $PYTHON experiments/control_matrix/evaluate_region_conditional_risk.py \
   --task tworoom \
   --data-file /data/sicong/weitao/datasets/lewm/tworoom.h5 \
@@ -51,4 +52,4 @@ $PYTHON experiments/control_matrix/evaluate_region_conditional_risk.py \
   "${COMMON[@]}" \
   --out-dir experiments/control_matrix/assets/region_risk/tworoom
 
-echo "[region-risk] complete"
+echo "[Held-out Region-Risk Analysis] complete"

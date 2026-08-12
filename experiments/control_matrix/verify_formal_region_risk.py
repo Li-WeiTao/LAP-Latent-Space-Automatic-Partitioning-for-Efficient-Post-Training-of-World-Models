@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Verify formal region-risk run acceptance criteria."""
+"""Verify Held-out Region-Risk Analysis acceptance criteria.
+
+``formal`` is retained in this filename and audit schema as an internal
+audit/provenance term, not as the public experiment name.
+"""
 
 from __future__ import annotations
 
@@ -109,7 +113,7 @@ def main() -> None:
         assert runtime.get("torch_version"), runtime
         assert runtime.get("git_commit"), runtime
 
-    print(f"[verify] formal acceptance ok -> {root}")
+    print(f"[verify] Held-out Region-Risk Analysis acceptance ok -> {root}")
 
 
 if __name__ == "__main__":

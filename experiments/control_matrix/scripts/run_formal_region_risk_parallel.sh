@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Multi-GPU controller for formal region-risk experiments.
+# Multi-GPU controller for Held-out Region-Risk Analysis.
+# "formal" in compatibility paths and filenames remains internal provenance.
 # Each worker gets one physical GPU via CUDA_VISIBLE_DEVICES; tasks are round-robin
 # assigned so no output directory has concurrent writers.
 

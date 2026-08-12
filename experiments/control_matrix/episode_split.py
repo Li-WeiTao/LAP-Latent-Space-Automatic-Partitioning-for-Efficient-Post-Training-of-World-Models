@@ -1,4 +1,7 @@
-"""Episode-level train/eval split utilities for formal region-risk experiments."""
+"""Episode-level split utilities for Held-out Region-Risk Analysis.
+
+The ``FORMAL_*`` constants are retained as internal provenance identifiers.
+"""
 
 from __future__ import annotations
 

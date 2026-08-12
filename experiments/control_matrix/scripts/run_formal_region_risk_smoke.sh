@@ -5,8 +5,8 @@ ROOT="/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-Worl
 source "$ROOT/experiments/control_matrix/scripts/run_formal_region_risk_env.sh"
 cd "$ROOT"
 
-echo "[formal-smoke] unit tests"
-$PYTHON -m pytest tests/test_region_conditional_risk.py tests/test_formal_region_risk_pipeline.py -q
+echo "[Held-out Region-Risk Analysis] unit tests"
+$PYTHON -m pytest tests/test_region_conditional_risk.py tests/test_formal_region_risk_pipeline.py tests/test_region_risk_staged_evaluation.py tests/test_region_risk_public_terminology.py -q
 
 export TASK=pusht
 export WORK_ROOT="experiments/control_matrix/assets/formal_region_risk/smoke/pusht"
