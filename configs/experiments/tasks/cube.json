@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "task_name": "cube",
+  "dataset_name": "cube",
+  "eval_config_name": "cube",
+  "eval_dataset_name": "ogbench/cube_single_expert",
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "img_size": 224,
+  "short_goal_offset": 25,
+  "long_goal_offset": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "plan_horizon": 5,
+  "plan_receding_horizon": 5,
+  "plan_action_block": 5
+}

@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
-# Detached Reacher Sub-JEPA matrix training (nohup + setsid).
-# Created for future use only; not executed as part of this change.
+# Detached OGBench Cube Sub-JEPA matrix training (nohup + setsid).
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../../.." && pwd)"
 cd "$REPO_ROOT"
 # shellcheck source=/dev/null
-source "$REPO_ROOT/experiments/reacher/subjepa/env.sh"
+source "$REPO_ROOT/experiments/cube/subjepa/env.sh"
 
 GPU_IDS="${GPU_IDS:-0}"
 CPU_THREADS="${CPU_THREADS:-4}"
@@ -33,14 +32,14 @@ launch_cmd=(
   GPU_ID="${GPU_ID:-${GPU_IDS%%,*}}"
   CPU_THREADS="$CPU_THREADS"
   RUN_ID="$RUN_ID"
-  bash "$REPO_ROOT/experiments/reacher/subjepa/matrix/scripts/run_full_matrix.sh" training
+  bash "$REPO_ROOT/experiments/cube/subjepa/matrix/scripts/run_full_matrix.sh" training
 )
 
 setsid nohup "${launch_cmd[@]}" >>"$LOG" 2>&1 &
 pid=$!
 echo "$pid" >"$PID_FILE"
 
-echo "[reacher-matrix] pid=$pid"
-echo "[reacher-matrix] log=$LOG"
-echo "[reacher-matrix] tail: tail -f $LOG"
-echo "[reacher-matrix] stop: kill $pid"
+echo "[cube-matrix] pid=$pid"
+echo "[cube-matrix] log=$LOG"
+echo "[cube-matrix] tail: tail -f $LOG"
+echo "[cube-matrix] stop: kill $pid"

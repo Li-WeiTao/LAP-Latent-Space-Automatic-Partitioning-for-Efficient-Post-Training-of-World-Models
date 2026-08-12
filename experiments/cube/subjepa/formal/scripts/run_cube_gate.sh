@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
-# Reacher Sub-JEPA formal stage: full-cache preparation + LAP empirical
-# spectral gate. Mirrors experiments/pusht/subjepa/formal/scripts/run_formal_gate.sh
-# but drops all smoke/passport/replay-audit steps (see repo-level task note:
-# this migration intentionally adds no new audit workflow). The LAP gate
-# itself (fit_partition.py --method auto) is the experimental method, not an
-# audit step, and is preserved as-is.
+# OGBench Cube Sub-JEPA formal stage: full-cache preparation + LAP empirical
+# spectral gate. Mirrors experiments/reacher/subjepa/formal/scripts/run_reacher_gate.sh
+# (audit-free: no smoke/passport/replay-audit steps). The LAP gate itself
+# (fit_partition.py --method auto) is the experimental method, not an audit
+# step, and is preserved as-is with the spectral-gate parameters specified in
+# the task brief (K=3, 20000 landmarks, nominal kNN 30, perturbed kNN 27/33,
+# retention threshold 0.5, background gap count 10, MAD multiplier 3.0).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../../.." && pwd)"
 cd "$ROOT"
 # shellcheck source=/dev/null
-source "$ROOT/experiments/reacher/subjepa/env.sh"
+source "$ROOT/experiments/cube/subjepa/env.sh"
 
 GPU_ID="${GPU_ID:-0}"
 export CUDA_VISIBLE_DEVICES="$GPU_ID"
@@ -22,7 +23,7 @@ GATE_OUT="$WORK_ROOT/gate/partition"
 LOG_DIR="$WORK_ROOT/logs"
 mkdir -p "$LOG_DIR" "$WORK_ROOT/manifests"
 
-log() { echo "[reacher-formal-gate] $*" | tee -a "$LOG_DIR/formal_gate.log"; }
+log() { echo "[cube-formal-gate] $*" | tee -a "$LOG_DIR/formal_gate.log"; }
 
 phase_prepare() {
   log "phase=prepare (full cache; writes only under $WORK_ROOT)"
@@ -39,7 +40,7 @@ phase_prepare() {
     --task-spec "$TASK_SPEC" \
     --dataset "$DATASET" \
     --checkpoint "$CHECKPOINT" \
-    --eval-config-name reacher \
+    --eval-config-name cube \
     --work-root "$WORK_ROOT" \
     --cache-dir "$CACHE_DIR" \
     --python "$PYTHON" \
@@ -67,7 +68,7 @@ phase_gate() {
 
   "$PYTHON" experiments/control_matrix/fit_partition.py \
     --method auto \
-    --dataset-name reacher \
+    --dataset-name cube \
     --data-file "$DATASET" \
     --latent-cache "$PREP/embedding_cache.npz" \
     --frameskip 5 \

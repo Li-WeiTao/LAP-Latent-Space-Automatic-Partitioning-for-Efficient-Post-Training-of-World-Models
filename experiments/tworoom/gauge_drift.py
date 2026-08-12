@@ -294,6 +294,17 @@ def reacher_splits(cols: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
     return {"common": np.ones(state.shape[0], dtype=bool)}
 
 
+def cube_splits(cols: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
+    # Matrix protocol parity with PushT/Reacher: no manually designed
+    # partition for OGBench Cube, only the "common" region needed to seed the
+    # global training-start pool. Regional splits (if any) come from LAP's
+    # automatic spectral partitioning on the latent cache, not from this file.
+    state = get_first_available(cols, ("observation", "qpos"))
+    if state is None:
+        return {}
+    return {"common": np.ones(state.shape[0], dtype=bool)}
+
+
 DATASETS = {
     "tworoom": DatasetSpec(
         name="tworoom",
@@ -315,6 +326,13 @@ DATASETS = {
         pixel_key="pixels",
         state_keys=("observation", "qpos", "finger_pos"),
         split_fn=reacher_splits,
+    ),
+    "cube": DatasetSpec(
+        name="cube",
+        default_file="cube_single_expert.h5",
+        pixel_key="pixels",
+        state_keys=("observation", "qpos"),
+        split_fn=cube_splits,
     ),
 }
 

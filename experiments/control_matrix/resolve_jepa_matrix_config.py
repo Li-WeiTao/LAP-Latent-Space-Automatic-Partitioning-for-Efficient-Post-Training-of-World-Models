@@ -361,7 +361,17 @@ def resolve_config(args: argparse.Namespace) -> ResolvedMatrixConfig:
                 sources=sources,
             )
         ),
-        num_eval=int(spec.get("num_eval", 50)),
+        num_eval=int(
+            _assign(
+                "num_eval",
+                None,
+                cli_value=args.num_eval,
+                env_value=os.environ.get("NUM_EVAL"),
+                spec_value=spec.get("num_eval"),
+                default_value=50,
+                sources=sources,
+            )
+        ),
         max_train_starts=int(args.max_train_starts or os.environ.get("PREPARE_MAX_STARTS") or 0),
         dry_run=bool(args.dry_run),
         task_spec_path=str(Path(args.task_spec).resolve()) if args.task_spec else None,
@@ -469,6 +479,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--short-goal-offset", type=int, default=None)
     parser.add_argument("--long-goal-offset", type=int, default=None)
     parser.add_argument("--eval-budget", type=int, default=None)
+    parser.add_argument("--num-eval", type=int, default=None)
     parser.add_argument("--max-train-starts", type=int, default=0)
     parser.add_argument("--train-seeds", default=None)
     parser.add_argument("--partition-seeds", default=None)

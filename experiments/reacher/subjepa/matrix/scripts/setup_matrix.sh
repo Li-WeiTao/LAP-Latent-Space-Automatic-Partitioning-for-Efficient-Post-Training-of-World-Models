@@ -47,11 +47,12 @@ done
 # --- global partition on full cache (once; independent of gate branch) ---
 if [[ ! -f "$WORK_ROOT/partitions/global/seed0/manifest.json" && -f "$FORMAL/preparation/embedding_cache.npz" ]]; then
   echo "[setup] fitting global partition on full cache"
-  "$PYTHON" experiments/control_matrix/fit_partition.py \
+  CUDA_VISIBLE_DEVICES="${GPU_ID:-0}" "$PYTHON" experiments/control_matrix/fit_partition.py \
     --method global \
     --dataset-name reacher \
     --latent-cache "$FORMAL/preparation/embedding_cache.npz" \
     --frameskip 5 \
+    --gpu-id 0 \
     --cpu-threads "${CPU_THREADS:-4}" \
     --out-dir "$WORK_ROOT/partitions/global/seed0"
 fi

@@ -1,0 +1,13 @@
+# OGBench Cube closed-loop eval (swm/OGBCube-v0).
+# Versions recorded from the adjacent reference Le-WM environment
+# (/data/sicong/weitao/.venv) where swm/OGBCube-v0 imports successfully.
+# Installed into this repo's own .venv on 2026-08-10 via:
+#   uv pip install --python .venv/bin/python mujoco==3.10.0 dm_control==1.0.43 ogbench==1.2.1 dm-env==1.6
+# Verified: `import mujoco, dm_control, ogbench, dm_env` and
+# `gym.make("swm/OGBCube-v0", env_type="single", ob_type="states")` both
+# succeed in this repo's .venv (see experiments/cube/README.md "Verification").
+-r tworoom.txt
+mujoco==3.10.0
+dm_control==1.0.43
+ogbench==1.2.1
+dm-env==1.6
