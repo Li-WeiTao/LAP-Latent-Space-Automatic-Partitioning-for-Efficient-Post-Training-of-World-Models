@@ -1,0 +1,22 @@
+{
+  "train_cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/formal_region_risk/pusht_formal_v1/train_latent_cache.npz",
+  "eval_cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/formal_region_risk/pusht_formal_v1/eval_latent_cache.npz",
+  "action_norm_starts": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/formal_region_risk/pusht_formal_v1/action_norm_starts.npy",
+  "pretrained_model": "/data/sicong/weitao/.stable_worldmodel/pusht/lewm_object.ckpt",
+  "pretrained_model_sha256": "e727d64a8b3535c3152dc72688bb7565c536c1b1317c56d04072cf7cc1183cc2",
+  "runtime": {
+    "python_executable": "/data/sicong/weitao/le-wm/.venv/bin/python",
+    "torch_version": "2.12.1+cu130",
+    "cuda_available": true,
+    "cuda_version": "13.0",
+    "cuda_device_name": "NVIDIA GeForce RTX 4090",
+    "cuda_visible_devices": "0",
+    "stable_worldmodel_version": "/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/stable_worldmodel/__init__.py",
+    "git_commit": "dd4530d98d276258682e728759fe20ea48db7294"
+  },
+  "sha256": {
+    "train_cache": "a3f88ae7cb677aab75a88093a8054f2b02bd20ee03be216fe354f2af5664e139",
+    "eval_cache": "5f0a04ee9d2dc9e7d8d4fe19e0a2fd630e5a4a4985fc48875c687a345fd1b7e0",
+    "action_norm_starts": "5e5a66aef9abe3e0546755fcf3e4249190d004e648314e1b76f82a12682f0355"
+  }
+}

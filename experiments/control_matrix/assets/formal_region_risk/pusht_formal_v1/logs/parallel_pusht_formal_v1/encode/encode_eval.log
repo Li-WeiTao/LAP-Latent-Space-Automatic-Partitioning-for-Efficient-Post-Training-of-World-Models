@@ -1,0 +1,25 @@
+[index] samples=203891 frame_slots=815564 unique_frames=231926 encoded_keys=231941
+[batch-shape] batch=460 keys=145
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+[frames] batch 1/1 (145/145)
+[batch-shape] batch=512 keys=231796
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+/data/sicong/anaconda3/lib/python3.10/multiprocessing/popen_fork.py:66: RuntimeWarning: lancedb fork support is experimental: the internal async runtime has been reset in the forked child, but a small chance of deadlock remains if other state was mid-operation at fork time. The 'forkserver' or 'spawn' multiprocessing start method is likely a safer alternative.
+  self.pid = os.fork()
+[frames] batch 50/453 (25600/231796)
+[frames] batch 100/453 (51200/231796)
+[frames] batch 150/453 (76800/231796)
+[frames] batch 200/453 (102400/231796)
+[frames] batch 250/453 (128000/231796)
+[frames] batch 300/453 (153600/231796)
+[frames] batch 350/453 (179200/231796)
+[frames] batch 400/453 (204800/231796)
+[frames] batch 450/453 (230400/231796)
+[frames] batch 453/453 (231796/231796)
+[saved] cache=/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/formal_region_risk/pusht_formal_v1/eval_latent_cache.npz
+[saved] report=/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/formal_region_risk/pusht_formal_v1/eval_latent_cache.npz.report.json
+[done] phase=encode-eval work_root=/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/formal_region_risk/pusht_formal_v1
