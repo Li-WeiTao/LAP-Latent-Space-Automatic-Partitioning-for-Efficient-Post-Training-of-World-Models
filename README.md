@@ -956,3 +956,35 @@ finalization stages. See
 for commands and artifact contracts. `formal` remains an internal
 audit/provenance term and is not the public experiment name; compatibility
 filenames, paths, CLI flags, and audit fields retain that identifier.
+
+### TwoRoom held-out result
+
+The completed TwoRoom analysis uses an episode-disjoint 90/10 split (9,000
+post-training episodes and 1,000 evaluation episodes), three predictor seeds,
+horizons 1/5/10, and 50,000 deterministic episode-aware bootstrap replicates.
+The training-side automatic gate selects **Spectral K3**. The final audit is
+paper-eligible (`smoke_only = false`), with zero train/evaluation episode
+overlap. As stated above, this holdout applies to LAP partition fitting and
+predictor post-training, not necessarily to base world-model pretraining.
+
+| Horizon | Global MSE | Correct-region MSE | Wrong-region mean MSE | Correct minus Global (95% CI) |
+|---:|---:|---:|---:|---:|
+| 1 | 0.003831 | 0.004440 | 0.126224 | +0.000610 [0.000226, 0.000987] |
+| 5 | 0.014807 | 0.021288 | 0.438631 | +0.006482 [0.004742, 0.008312] |
+| 10 | 0.024424 | 0.055455 | 0.770317 | +0.031031 [0.024260, 0.038228] |
+
+The wrong-region intervention incurs a large prediction-error penalty at all
+three horizons, establishing that the region-specific predictors are
+mechanistically non-interchangeable. However, the correctly routed regional
+predictor is also worse than the Global predictor, and every bootstrap
+confidence interval for `Correct minus Global` is strictly positive. Thus this
+held-out analysis supports region-conditioned specialization, but it does
+**not** show a held-out prediction-risk advantage over Global fine-tuning.
+
+The committed result package is under
+[`experiments/control_matrix/assets/formal_region_risk/tworoom_formal_v1/evaluation`](experiments/control_matrix/assets/formal_region_risk/tworoom_formal_v1/evaluation/).
+It contains the full audit and manifest, seed/region summary tables,
+episode-level metrics, bootstrap estimates, and the
+[`main effect figure`](experiments/control_matrix/assets/formal_region_risk/tworoom_formal_v1/evaluation/region_risk.pdf)
+and
+[`bootstrap forest figure`](experiments/control_matrix/assets/formal_region_risk/tworoom_formal_v1/evaluation/region_risk_forest.pdf).

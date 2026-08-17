@@ -1,0 +1,26 @@
+{
+  "task": "tworoom",
+  "public_analysis_name": "Held-out Region-Conditional Prediction-Risk Analysis",
+  "public_analysis_short_name": "Held-out Region-Risk Analysis",
+  "internal_pipeline_name": "formal_region_risk",
+  "phase": "finalize",
+  "work_root": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/formal_region_risk/tworoom_formal_v1",
+  "data_file": "/data/sicong/weitao/datasets/lewm/tworoom.h5",
+  "pretrained_model": "/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt",
+  "pretrained_model_sha256": "18b5764492c74de5487efdadb66adab11876cb230952765b17c0815fa87b13ff",
+  "train_seeds": "0,42,625",
+  "epochs": 50,
+  "bootstrap_reps": 50000,
+  "device": "cuda:6",
+  "runtime": {
+    "python_executable": "/data/sicong/weitao/le-wm/.venv/bin/python",
+    "torch_version": "2.12.1+cu130",
+    "cuda_available": true,
+    "cuda_version": "13.0",
+    "cuda_device_name": "NVIDIA GeForce RTX 4090",
+    "cuda_visible_devices": null,
+    "stable_worldmodel_version": "/data/sicong/weitao/le-wm/.venv/lib/python3.10/site-packages/stable_worldmodel/__init__.py",
+    "git_commit": null
+  },
+  "git_commit": null
+}
