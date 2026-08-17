@@ -499,6 +499,82 @@ one-region Global-FT branch. The plotted values, underlying seed-level results,
 gate manifests, and plotting source are committed under `experiments/pusht/`.
 See `experiments/pusht/README.md` for the exact protocols and interpretation.
 
+## LeWM spectral-partition stability: positive vs negative task
+
+The paired UMAP audit uses the frozen **LeWM** latent caches for both tasks, so
+the comparison does not confound task geometry with a different world-model
+family. TwoRoom is the positive case where the automatic gate deploys Spectral
+K3; PushT is the negative case where the gate rejects the spectral candidate
+and deploys Global-FT.
+
+| Task | `S_task` | `R_K` | `T_bg` | Gate branch | Mean 9-way label agreement | Stable across all 9 runs |
+|---|---:|---:|---:|---|---:|---:|
+| TwoRoom | 0.994984 | 0.570656 | 0.335785 | **Spectral K3** | **99.13%** | **97.32%** |
+| PushT | 0.012015 | 0.001709 | 0.223952 | **Global-FT** | **88.37%** | **65.43%** |
+
+![LeWM TwoRoom versus PushT paired UMAP](experiments/control_matrix/assets/lewm_paired_umap/figures/lewm_tworoom_pusht_paired_umap_main.png)
+
+Color denotes the nominal seed-0/kNN-30 Spectral K3 candidate. Cluster IDs are
+unordered, so each of the other eight candidates is aligned to the nominal
+labels with maximum-overlap Hungarian matching. A point retains its nominal
+region color only if all nine runs agree; a point is highlighted in purple if
+its aligned label changes in at least one of the `3 landmark seeds × 3 kNN
+graphs`. The fraction stable across all nine runs is displayed after each
+dataset name.
+
+The PushT candidate is shown **for diagnosis only**. Its nominal draw can still
+form visually coherent large regions, so visual separation from a single UMAP
+must not be treated as evidence that the partition should be deployed. The
+stability audit exposes the relevant difference: TwoRoom remains nearly
+unchanged across all nine draws, whereas PushT changes substantially under
+landmark seed 2 (ARI against the nominal draw ranges from 0.389 to 0.499).
+
+The complete aligned diagnostic grids are shown below.
+
+![TwoRoom LeWM nine spectral diagnostics](experiments/control_matrix/assets/lewm_paired_umap/figures/lewm_tworoom_spectral_diagnostic_grid.png)
+
+![PushT LeWM nine rejected spectral candidates](experiments/control_matrix/assets/lewm_paired_umap/figures/lewm_pusht_spectral_diagnostic_grid.png)
+
+For each task, the audit uniformly samples 20,000 unique global timesteps after
+excluding the union of all 60,000 requested landmark slots across diagnostic
+seeds. The UMAP coordinates do not read cluster labels: each task independently
+uses `StandardScaler → PCA(50) → UMAP`, with identical UMAP parameters
+(`n_neighbors=50`, `min_dist=0.1`, Euclidean metric, seed `20260812`). The
+nominal labels recomputed by the audit match the current reference partition
+artifacts exactly (`ARI = 1.0`). No predictor training or control evaluation is
+performed.
+
+The parameterized data-generation script and ggplot2 renderer are committed
+with the CSV/JSON audit record. Example reproduction commands from the
+repository root are:
+
+```bash
+FIGURE_PYTHON=/data/sicong/anaconda3/envs/easysteer/bin/python
+export PYTHONPATH=/data/sicong/weitao/.cache/lap-figure-python
+
+"$FIGURE_PYTHON" experiments/control_matrix/assets/lewm_paired_umap/compute_paired_umap.py \
+  --task tworoom \
+  --latent-cache experiments/tworoom/results/auto_gate_complete_k3/tworoom_lewm_train_latent_cache.npz \
+  --data-file /data/sicong/weitao/datasets/lewm/tworoom.h5 \
+  --gate-manifest experiments/tworoom/results/auto_gate_complete_k3/auto/partition/manifest.json \
+  --reference-nominal-labels experiments/tworoom/results/auto_gate_complete_k3/auto/partition/cluster_labels.npz \
+  --output-dir experiments/control_matrix/assets/lewm_paired_umap/tworoom \
+  --gpu-id 0
+
+"$FIGURE_PYTHON" experiments/control_matrix/assets/lewm_paired_umap/compute_paired_umap.py \
+  --task pusht \
+  --latent-cache experiments/pusht/matrix/pusht_lewm_train_latent_cache.npz \
+  --data-file /data/sicong/weitao/datasets/lewm/pusht_expert_train.h5 \
+  --gate-manifest experiments/pusht/results/auto_gate_complete_k3/auto/partition/manifest.json \
+  --reference-nominal-labels experiments/pusht/matrix/partitions/spectral/seed0/cluster_labels.npz \
+  --output-dir experiments/control_matrix/assets/lewm_paired_umap/pusht \
+  --gpu-id 0
+
+Rscript experiments/control_matrix/assets/lewm_paired_umap/plot_paired_umap.R \
+  --input-dir experiments/control_matrix/assets/lewm_paired_umap \
+  --output-dir experiments/control_matrix/assets/lewm_paired_umap/figures
+```
+
 ## Reacher result snapshot
 
 Reacher uses the same three predictor fine-tuning seeds (`0`, `42`, and `625`),
