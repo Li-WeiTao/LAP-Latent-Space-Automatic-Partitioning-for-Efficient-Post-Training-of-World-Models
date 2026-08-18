@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "train_seeds": [0, 42, 625],
+  "partition_seeds": [0, 1, 2],
+  "eval_seeds": [0, 1, 2, 3, 4],
+  "eval_budget": 50,
+  "num_eval": 50,
+  "horizons": {
+    "short": {"goal_offset_steps": 25},
+    "long": {"goal_offset_steps": 50}
+  },
+  "exclude_eval_dirs": [
+    "training",
+    "partitions",
+    "paired_starts",
+    "heldout",
+    "logs",
+    "manifests",
+    "scripts",
+    "auto_gate_holdout_proxy"
+  ],
+  "method_labels": {
+    "official": "Official baseline",
+    "joint": "Joint-Continue 3ep",
+    "global": "Global-FT50",
+    "random_voronoi": "Random-Voronoi",
+    "kmeanspp": "K-means++",
+    "spectral": "Spectral",
+    "autolap": "Auto-LAP",
+    "rooms3": "Human partition rooms3-50"
+  },
+  "subjepa_official_label": "Official Sub-JEPA",
+  "cells": {
+    "lewm": {
+      "tworoom": {
+        "loader": "tworoom_results",
+        "results_root": "experiments/tworoom/results",
+        "gate_manifest": "experiments/tworoom/results/auto_gate_complete_k3/auto/partition/manifest.json",
+        "reference_summary": {
+          "short": "experiments/tworoom/assets/short_horizon_metrics/tworoom_short_horizon_method_summary_from_results.csv",
+          "long": "experiments/tworoom/assets/long_horizon_metrics/tworoom_long_horizon_method_summary_from_results.csv"
+        },
+        "main_methods": [
+          "official",
+          "joint",
+          "global",
+          "random_voronoi",
+          "kmeanspp",
+          "spectral",
+          "rooms3",
+          "autolap"
+        ]
+      },
+      "pusht": {
+        "loader": "matrix_eval",
+        "matrix_roots": {
+          "short": "experiments/pusht/matrix",
+          "long": "experiments/pusht/matrix_long"
+        },
+        "gate_manifest": "experiments/pusht/results/auto_gate_complete_k3/auto/partition/manifest.json",
+        "reference_summary": "experiments/pusht/assets/control_metrics/pusht_control_method_summary.csv",
+        "main_methods": [
+          "official",
+          "joint",
+          "global",
+          "random_voronoi",
+          "kmeanspp",
+          "spectral",
+          "autolap"
+        ]
+      },
+      "reacher": {
+        "loader": "matrix_eval",
+        "matrix_roots": {
+          "short": "experiments/reacher/matrix",
+          "long": "experiments/reacher/matrix_long"
+        },
+        "gate_manifest": "experiments/reacher/results/auto_gate_complete_k3/auto/partition/manifest.json",
+        "reference_summary": "experiments/reacher/assets/control_metrics/reacher_control_method_summary.csv",
+        "main_methods": [
+          "official",
+          "joint",
+          "global",
+          "random_voronoi",
+          "kmeanspp",
+          "spectral",
+          "autolap"
+        ]
+      },
+      "cube": {
+        "loader": "matrix_eval",
+        "matrix_roots": {
+          "short": "experiments/cube/matrix",
+          "long": "experiments/cube/matrix_long"
+        },
+        "pending_if_roots_missing": true
+      }
+    },
+    "subjepa": {
+      "tworoom": {
+        "loader": "subjepa_matrix",
+        "matrix_root": "experiments/tworoom/subjepa/matrix",
+        "gate_manifest": "experiments/tworoom/subjepa/formal/gate/partition/manifest.json",
+        "reference_summary": "experiments/tworoom/assets/subjepa_control_metrics/tworoom_subjepa_control_summary.csv",
+        "main_methods": ["official", "global", "kmeanspp", "spectral", "autolap"]
+      },
+      "pusht": {
+        "loader": "subjepa_matrix",
+        "matrix_root": "experiments/pusht/subjepa/matrix",
+        "gate_manifest": "experiments/pusht/subjepa/formal/gate/partition/manifest.json",
+        "reference_summary": "experiments/pusht/assets/subjepa_control_metrics/pusht_subjepa_control_summary.csv",
+        "main_methods": ["official", "global", "kmeanspp", "spectral", "autolap"]
+      },
+      "reacher": {
+        "loader": "subjepa_matrix",
+        "matrix_root": "experiments/reacher/subjepa/matrix",
+        "gate_manifest": "experiments/reacher/subjepa/formal/gate/partition/manifest.json",
+        "reference_summary": "experiments/reacher/assets/subjepa_control_metrics/reacher_subjepa_control_summary.csv",
+        "main_methods": ["official", "global", "kmeanspp", "spectral", "autolap"]
+      },
+      "cube": {
+        "loader": "subjepa_matrix",
+        "matrix_root": "experiments/cube/subjepa/matrix",
+        "gate_manifest": "experiments/cube/subjepa/formal/gate/partition/manifest.json",
+        "reference_summary": "experiments/cube/assets/subjepa_control_metrics/cube_subjepa_control_summary.csv",
+        "main_methods": ["official", "global", "kmeanspp", "spectral", "autolap"]
+      }
+    }
+  }
+}

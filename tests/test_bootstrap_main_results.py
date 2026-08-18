@@ -1,0 +1,104 @@
+#!/usr/bin/env python3
+"""Minimal tests for main-experiment bootstrap pipeline."""
+
+from __future__ import annotations
+
+import json
+import sys
+import unittest
+from pathlib import Path
+
+import numpy as np
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SCRIPTS = REPO_ROOT / "experiments" / "scripts"
+sys.path.insert(0, str(SCRIPTS))
+
+from bootstrap_lib.loader import (  # noqa: E402
+    load_cell,
+    point_estimate,
+)
+from bootstrap_lib.resample import bootstrap_cell_with_contrasts  # noqa: E402
+
+
+class BootstrapMainResultsTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.config = json.loads((SCRIPTS / "bootstrap_config.json").read_text(encoding="utf-8"))
+
+    def test_subjepa_tworoom_short_loads_and_matches_reference(self) -> None:
+        cell = load_cell(
+            repo_root=REPO_ROOT,
+            config=self.config,
+            model="subjepa",
+            task="tworoom",
+            horizon="short",
+        )
+        self.assertEqual(cell.status, "ok")
+        self.assertIn("autolap", cell.methods)
+        autolap = cell.methods["autolap"]
+        est = point_estimate(autolap.blocks, official=False)
+        ref = cell.reference_estimates["autolap"]
+        self.assertLessEqual(abs(est - ref), 0.01)
+        self.assertEqual(autolap.partition_policy, "deployment")
+
+    def test_lewm_cube_pending_non_strict(self) -> None:
+        cell = load_cell(
+            repo_root=REPO_ROOT,
+            config=self.config,
+            model="lewm",
+            task="cube",
+            horizon="short",
+        )
+        self.assertEqual(cell.status, "pending")
+        self.assertEqual(cell.methods, {})
+
+    def test_hierarchical_bootstrap_reproducible(self) -> None:
+        cell = load_cell(
+            repo_root=REPO_ROOT,
+            config=self.config,
+            model="subjepa",
+            task="pusht",
+            horizon="short",
+        )
+        r1, c1 = bootstrap_cell_with_contrasts(
+            cell, n_bootstrap=200, seed=123, batch_size=64, resampling_unit="eval-block"
+        )
+        r2, _ = bootstrap_cell_with_contrasts(
+            cell, n_bootstrap=200, seed=123, batch_size=64, resampling_unit="eval-block"
+        )
+        self.assertEqual(r1["global"].bootstrap_mean, r2["global"].bootstrap_mean)
+        self.assertEqual(r1["autolap"].ci_low, r2["autolap"].ci_low)
+        self.assertTrue(c1)
+
+    def test_paired_contrast_uses_shared_indices(self) -> None:
+        cell = load_cell(
+            repo_root=REPO_ROOT,
+            config=self.config,
+            model="subjepa",
+            task="reacher",
+            horizon="long",
+        )
+        results, contrasts = bootstrap_cell_with_contrasts(
+            cell,
+            n_bootstrap=500,
+            seed=999,
+            batch_size=128,
+            resampling_unit="eval-block",
+            save_draws=True,
+        )
+        auto = results["autolap"].draws
+        base = results["global"].draws
+        self.assertIsNotNone(auto)
+        self.assertIsNotNone(base)
+        delta = auto - base  # type: ignore[operator]
+        match = [c for c in contrasts if c.baseline_method == "global"][0]
+        np.testing.assert_allclose(delta, match.draws, rtol=0, atol=1e-12)
+
+    def test_synthetic_loader_point_estimate(self) -> None:
+        blocks = np.array([[80.0, 90.0], [85.0, 95.0]], dtype=np.float64)
+        self.assertAlmostEqual(point_estimate(blocks, official=False), 87.5)
+
+
+if __name__ == "__main__":
+    unittest.main()

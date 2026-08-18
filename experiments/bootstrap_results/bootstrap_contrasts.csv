@@ -1,0 +1,71 @@
+model,task,horizon,method_a,method_b,point_difference_pp,ci_low_pp,ci_high_pp,pr_delta_gt_zero,n_common_eval_blocks,n_bootstrap,resampling_unit
+lewm,pusht,long,Auto-LAP,Official baseline,3.1999999999999957,0.13333333333333286,6.0,0.97532,5,50000,eval-block
+lewm,pusht,long,Auto-LAP,Joint-Continue 3ep,3.866666666666667,1.06666666666667,6.399999999999999,0.99266,5,50000,eval-block
+lewm,pusht,long,Auto-LAP,Global-FT50,0.0,0.0,0.0,0.0,5,50000,eval-block
+lewm,pusht,long,Auto-LAP,Random-Voronoi,0.7999999999999972,-1.5111111111111128,2.62222222222222,0.83768,5,50000,eval-block
+lewm,pusht,long,Auto-LAP,K-means++,0.9777777777777743,-1.2888888888888914,3.3333333333333357,0.8376,5,50000,eval-block
+lewm,pusht,long,Auto-LAP,Spectral,1.8222222222222229,-0.79999999999999,3.866666666666667,0.91906,5,50000,eval-block
+lewm,pusht,short,Auto-LAP,Official baseline,7.733333333333334,4.666666666666657,11.733333333333334,1.0,5,50000,eval-block
+lewm,pusht,short,Auto-LAP,Joint-Continue 3ep,4.666666666666671,0.4000000000000057,8.399999999999991,0.98206,5,50000,eval-block
+lewm,pusht,short,Auto-LAP,Global-FT50,0.0,0.0,0.0,0.0,5,50000,eval-block
+lewm,pusht,short,Auto-LAP,Random-Voronoi,0.9333333333333371,-1.3333333333333428,2.8444444444444343,0.8342,5,50000,eval-block
+lewm,pusht,short,Auto-LAP,K-means++,0.26666666666667993,-1.6444444444444457,1.7777777777777715,0.6587,5,50000,eval-block
+lewm,pusht,short,Auto-LAP,Spectral,0.26666666666667993,-1.2000000000000028,1.6000000000000085,0.65362,5,50000,eval-block
+lewm,reacher,long,Auto-LAP,Official baseline,1.8666666666666742,-3.3333333333333286,6.400000000000006,0.76784,5,50000,eval-block
+lewm,reacher,long,Auto-LAP,Joint-Continue 3ep,1.86666666666666,-5.733333333333334,9.200000000000003,0.6767,5,50000,eval-block
+lewm,reacher,long,Auto-LAP,Global-FT50,0.0,0.0,0.0,0.0,5,50000,eval-block
+lewm,reacher,long,Auto-LAP,Random-Voronoi,1.4666666666666828,-1.4666666666666544,4.488888888888894,0.86832,5,50000,eval-block
+lewm,reacher,long,Auto-LAP,K-means++,0.08888888888888857,-3.867777777777779,3.7777777777777857,0.52264,5,50000,eval-block
+lewm,reacher,long,Auto-LAP,Spectral,0.75555555555556,-4.088888888888903,4.666666666666671,0.66192,5,50000,eval-block
+lewm,reacher,short,Auto-LAP,Official baseline,-4.266666666666666,-6.666666666666671,-2.0,0.0,5,50000,eval-block
+lewm,reacher,short,Auto-LAP,Joint-Continue 3ep,-1.5999999999999943,-6.933333333333337,4.799999999999997,0.27524,5,50000,eval-block
+lewm,reacher,short,Auto-LAP,Global-FT50,0.0,0.0,0.0,0.0,5,50000,eval-block
+lewm,reacher,short,Auto-LAP,Random-Voronoi,-1.0222222222222257,-6.40000000000002,3.200000000000003,0.37228,5,50000,eval-block
+lewm,reacher,short,Auto-LAP,K-means++,-2.799999999999997,-7.244444444444454,2.35555555555554,0.13156,5,50000,eval-block
+lewm,reacher,short,Auto-LAP,Spectral,-1.1555555555555515,-6.0,4.133333333333326,0.31442,5,50000,eval-block
+lewm,tworoom,long,Auto-LAP,Official baseline,12.399999999999999,8.399999999999999,17.46666666666667,1.0,5,50000,eval-block
+lewm,tworoom,long,Auto-LAP,Joint-Continue 3ep,8.533333333333339,3.866666666666667,14.000000000000007,0.99988,5,50000,eval-block
+lewm,tworoom,long,Auto-LAP,Global-FT50,3.4666666666666757,-0.3999999999999986,7.066666666666663,0.9591,5,50000,eval-block
+lewm,tworoom,long,Auto-LAP,Random-Voronoi,2.2666666666666657,-1.86666666666666,5.73333333333332,0.8783,5,50000,eval-block
+lewm,tworoom,long,Auto-LAP,K-means++,3.1555555555555515,1.4210854715202004e-14,6.44444444444445,0.9762,5,50000,eval-block
+lewm,tworoom,long,Auto-LAP,Spectral,0.22222222222222854,-1.4666666666666544,2.1777777777777843,0.61808,5,50000,eval-block
+lewm,tworoom,long,Auto-LAP,Human partition rooms3-50,1.7333333333333343,-1.6000000000000014,4.266666666666673,0.8584,5,50000,eval-block
+lewm,tworoom,short,Auto-LAP,Official baseline,1.0666666666666487,-2.0,4.0,0.721,5,50000,eval-block
+lewm,tworoom,short,Auto-LAP,Joint-Continue 3ep,0.5333333333333314,-2.933333333333337,4.266666666666666,0.57724,5,50000,eval-block
+lewm,tworoom,short,Auto-LAP,Global-FT50,1.3333333333333286,-1.2000000000000028,3.6000000000000085,0.87052,5,50000,eval-block
+lewm,tworoom,short,Auto-LAP,Random-Voronoi,-2.842170943040401e-14,-1.8222222222222229,1.73333333333332,0.49374,5,50000,eval-block
+lewm,tworoom,short,Auto-LAP,K-means++,-0.04444444444445139,-1.8666666666666742,2.0,0.45136,5,50000,eval-block
+lewm,tworoom,short,Auto-LAP,Spectral,0.04444444444443718,-0.8000000000000114,1.1111111111111,0.52776,5,50000,eval-block
+lewm,tworoom,short,Auto-LAP,Human partition rooms3-50,-0.4000000000000057,-2.0,1.4666666666666686,0.28208,5,50000,eval-block
+subjepa,cube,long,Auto-LAP,Official Sub-JEPA,-2.13333333333334,-5.733333333333327,1.7333333333333343,0.12628,5,50000,eval-block
+subjepa,cube,long,Auto-LAP,Global-FT50,0.0,0.0,0.0,0.0,5,50000,eval-block
+subjepa,cube,long,Auto-LAP,K-means++,2.0888888888888815,0.13333333333333286,4.178888888888967,0.97974,5,50000,eval-block
+subjepa,cube,long,Auto-LAP,Spectral,1.0666666666666629,-2.13333333333334,4.222222222222207,0.74074,5,50000,eval-block
+subjepa,cube,short,Auto-LAP,Official Sub-JEPA,-4.800000000000011,-7.199999999999996,-2.3999999999999915,0.0,5,50000,eval-block
+subjepa,cube,short,Auto-LAP,Global-FT50,0.0,0.0,0.0,0.0,5,50000,eval-block
+subjepa,cube,short,Auto-LAP,K-means++,-2.4000000000000057,-5.466666666666669,0.7111111111111086,0.05464,5,50000,eval-block
+subjepa,cube,short,Auto-LAP,Spectral,-2.8000000000000114,-5.066666666666663,-0.22222222222221433,0.01864,5,50000,eval-block
+subjepa,pusht,long,Auto-LAP,Official Sub-JEPA,7.600000000000001,6.0,9.06666666666667,1.0,5,50000,eval-block
+subjepa,pusht,long,Auto-LAP,Global-FT50,0.0,0.0,0.0,0.0,5,50000,eval-block
+subjepa,pusht,long,Auto-LAP,K-means++,3.4666666666666686,1.5555555555555571,5.777777777777786,0.99962,5,50000,eval-block
+subjepa,pusht,long,Auto-LAP,Spectral,2.311111111111117,0.17777777777777004,4.844444444444463,0.98286,5,50000,eval-block
+subjepa,pusht,short,Auto-LAP,Official Sub-JEPA,2.13333333333334,-1.3333333333333286,5.333333333333343,0.8794,5,50000,eval-block
+subjepa,pusht,short,Auto-LAP,Global-FT50,0.0,0.0,0.0,0.0,5,50000,eval-block
+subjepa,pusht,short,Auto-LAP,K-means++,0.0444444444444656,-2.08888888888886,1.7777777777777857,0.5445,5,50000,eval-block
+subjepa,pusht,short,Auto-LAP,Spectral,0.13333333333332575,-1.0666666666666629,1.37777777777778,0.5818,5,50000,eval-block
+subjepa,reacher,long,Auto-LAP,Official Sub-JEPA,-3.7333333333333343,-6.400000000000006,-1.066666666666677,0.0051,5,50000,eval-block
+subjepa,reacher,long,Auto-LAP,Global-FT50,0.0,0.0,0.0,0.0,5,50000,eval-block
+subjepa,reacher,long,Auto-LAP,K-means++,1.4222222222222172,-2.1777777777777914,4.35555555555554,0.819,5,50000,eval-block
+subjepa,reacher,long,Auto-LAP,Spectral,1.73333333333332,-1.6444444444444457,5.6000000000000085,0.84628,5,50000,eval-block
+subjepa,reacher,short,Auto-LAP,Official Sub-JEPA,1.4666666666666686,-4.933333333333323,8.400000000000006,0.6598,5,50000,eval-block
+subjepa,reacher,short,Auto-LAP,Global-FT50,0.0,0.0,0.0,0.0,5,50000,eval-block
+subjepa,reacher,short,Auto-LAP,K-means++,1.0666666666666629,-3.200000000000017,5.377777777777766,0.70088,5,50000,eval-block
+subjepa,reacher,short,Auto-LAP,Spectral,1.0666666666666629,-3.8666666666666742,6.222222222222214,0.68266,5,50000,eval-block
+subjepa,tworoom,long,Auto-LAP,Official Sub-JEPA,1.4666666666666615,-2.3999999999999986,5.333333333333329,0.74882,5,50000,eval-block
+subjepa,tworoom,long,Auto-LAP,Global-FT50,0.13333333333333286,-2.3999999999999986,2.799999999999997,0.51272,5,50000,eval-block
+subjepa,tworoom,long,Auto-LAP,K-means++,0.7999999999999972,-1.37777777777778,2.75555555555556,0.7654,5,50000,eval-block
+subjepa,tworoom,long,Auto-LAP,Spectral,0.3999999999999915,-0.7555555555555671,1.5999999999999943,0.73786,5,50000,eval-block
+subjepa,tworoom,short,Auto-LAP,Official Sub-JEPA,-0.13333333333332575,-0.5333333333333456,0.0,0.0,5,50000,eval-block
+subjepa,tworoom,short,Auto-LAP,Global-FT50,-0.9333333333333229,-2.0,0.0,0.0,5,50000,eval-block
+subjepa,tworoom,short,Auto-LAP,K-means++,1.4210854715202004e-14,-0.6222222222222058,0.4444444444444713,0.52418,5,50000,eval-block
+subjepa,tworoom,short,Auto-LAP,Spectral,-0.08888888888888857,-0.5333333333333314,0.3555555555555401,0.19922,5,50000,eval-block
