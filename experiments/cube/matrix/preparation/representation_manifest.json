@@ -1,0 +1,76 @@
+{
+  "schema_version": 2,
+  "implementation_backend": "jepa_object",
+  "model_family": "lewm",
+  "dataset_name": "cube",
+  "data_file": "/data/sicong/weitao/datasets/lewm/cube_single_expert.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/cube/lewm_object.ckpt",
+  "starts_file": "/data/sicong/weitao/LAP-region-risk-main/experiments/cube/matrix/preparation/train_global_reference_starts.npy",
+  "history_size": 3,
+  "num_preds": 1,
+  "frameskip": 5,
+  "encode_report": {
+    "method": "unique_frame_inverse_reconstruction",
+    "selection": {
+      "starts_source": "/data/sicong/weitao/LAP-region-risk-main/experiments/cube/matrix/preparation/.encode_starts.npy",
+      "samples": 1674000,
+      "source_offset": 0,
+      "source_count": 1674000,
+      "sequence_length": 4
+    },
+    "arrays": {
+      "emb": {
+        "shape": [
+          1674000,
+          4,
+          192
+        ],
+        "dtype": "float32",
+        "sha256": "d58d0317d8a7d1989bf184701a45569cc30916a3e94d1c94db7ef134dce1199b"
+      },
+      "act_emb": {
+        "shape": [
+          1674000,
+          4,
+          192
+        ],
+        "dtype": "float32",
+        "sha256": "4cd0d92349828af45c7701e2c731db296ad659193b66f0b258a9780e5f42f316"
+      },
+      "region_starts": {
+        "shape": [
+          1674000
+        ],
+        "dtype": "int64",
+        "sha256": "171aaaabad74f7269d0449bd29e2fdc5528f4a5bc26f9e084ce79671204d6889"
+      }
+    }
+  },
+  "spectral_cache_stats": {
+    "cache": "/data/sicong/weitao/LAP-region-risk-main/experiments/cube/matrix/preparation/embedding_cache.npz",
+    "num_transitions": 1674000,
+    "num_expanded_latents": 6696000,
+    "num_unique_timesteps": 1998682,
+    "discarded_repeated_window_slots": 4697318,
+    "duplicate_policy": "stable_first_occurrence_per_timestep",
+    "latent_dim": 192,
+    "frameskip": 5
+  },
+  "reference_audit": null,
+  "git_commit": "3e4aeeee76490eb346b2171b3d45d193ebae7e61",
+  "artifacts": {
+    "embedding_cache.npz": "/data/sicong/weitao/LAP-region-risk-main/experiments/cube/matrix/preparation/embedding_cache.npz",
+    "spectral_embedding_cache.npz": "/data/sicong/weitao/LAP-region-risk-main/experiments/cube/matrix/preparation/spectral_embedding_cache.npz",
+    "representation_manifest.json": "/data/sicong/weitao/LAP-region-risk-main/experiments/cube/matrix/preparation/representation_manifest.json",
+    "action_norm_stats.npz": "/data/sicong/weitao/LAP-region-risk-main/experiments/cube/matrix/preparation/action_norm_stats.npz",
+    "action_norm_manifest.json": "/data/sicong/weitao/LAP-region-risk-main/experiments/cube/matrix/preparation/action_norm_manifest.json"
+  },
+  "sha256": {
+    "data_file": "0664d507c4ff12009010644c9ae950836f954e700c172ccf22e7423af1a55625",
+    "checkpoint": "2c00552d586b9cbc03ec43c216d84f2e0f38d47b6b5dda6d81ec35163731f581",
+    "starts": "04de7faf07580f4a0239e0e0235b0b76893e5c23ce54e97005dbb850a5815065",
+    "embedding_cache": "94aa8b4371a0251cb7e3ad3519be041de2458d72671ece821edac51d640534e7",
+    "spectral_embedding_cache": "07d493f0c93115b999eedae6db247d6b85c4827615ee797b30479944ef80f51a",
+    "action_norm_stats": "675a656d3bd8a40e7496633cbc5ad2f8d33c27b7a2f88cb2bb182c239ffea2f0"
+  }
+}

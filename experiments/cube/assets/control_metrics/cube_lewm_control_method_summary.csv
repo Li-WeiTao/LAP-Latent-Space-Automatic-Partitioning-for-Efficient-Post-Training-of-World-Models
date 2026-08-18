@@ -1,0 +1,27 @@
+"horizon","method_id","method_label","mean_percent","sd_percent","num_finetuning_seeds","num_partition_seeds","num_eval_seeds","source_method","x_position","lower","upper"
+"short","baseline","Official
+baseline",64.8,NA,0,0,5,"Official baseline",1,NA,NA
+"short","joint3","Joint-Continue
+3ep",64.5333333333333,1.4047538337137,3,0,5,"Joint-Continue 3ep",2,63.1285794996196,65.938087167047
+"short","globalft50","Global-FT
+50ep",64.5333333333333,2.20302821891444,3,0,5,"Global-FT50",3,62.3303051144189,66.7363615522478
+"short","random","Random-Voronoi
+K3-50",66.2666666666667,0.461880215351699,3,3,5,"Random-Voronoi",4,65.804786451315,66.7285468820184
+"short","kmeans","K-means++
+K3-50",65.0222222222222,0.203670030886929,3,3,5,"K-means++",5,64.8185521913353,65.2258922531092
+"short","spectral","Spectral
+K3-50",64.7111111111111,1.79050996253188,3,3,5,"Spectral",6,62.9206011485792,66.501621073643
+"short","autolap","Auto-LAP",64.5333333333333,2.20302821891444,3,0,5,"Global-FT50",7,62.3303051144189,66.7363615522478
+"long","baseline","Official
+baseline",50.4,NA,0,0,5,"Official baseline",1,NA,NA
+"long","joint3","Joint-Continue
+3ep",51.6,0.800000000000001,3,0,5,"Joint-Continue 3ep",2,50.8,52.4
+"long","globalft50","Global-FT
+50ep",48.1333333333333,0.923760430703402,3,0,5,"Global-FT50",3,47.2095729026299,49.0570937640367
+"long","random","Random-Voronoi
+K3-50",50.8,0.811035004039764,3,3,5,"Random-Voronoi",4,49.9889649959602,51.6110350040398
+"long","kmeans","K-means++
+K3-50",49.9555555555556,0.538860251243649,3,3,5,"K-means++",5,49.4166953043119,50.4944158067992
+"long","spectral","Spectral
+K3-50",49.6888888888889,0.335548197123143,3,3,5,"Spectral",6,49.3533406917657,50.024437086012
+"long","autolap","Auto-LAP",48.1333333333333,0.923760430703402,3,0,5,"Global-FT50",7,47.2095729026299,49.0570937640367

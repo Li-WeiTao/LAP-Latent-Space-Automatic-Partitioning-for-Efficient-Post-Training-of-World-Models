@@ -1,0 +1,77 @@
+{
+  "dataset": "cube",
+  "train_seeds": [
+    0,
+    42,
+    625
+  ],
+  "partition_seeds": [
+    0,
+    1,
+    2
+  ],
+  "eval_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "primary_error_bar": "sample SD across fine-tuning seeds after averaging partition and evaluation seeds",
+  "rows": [
+    {
+      "method": "Official baseline",
+      "mean_percent": 50.4,
+      "sd_across_finetuning_seeds_percent": null,
+      "num_finetuning_seeds": 0,
+      "num_partition_seeds": 0,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 8.294576541331088
+    },
+    {
+      "method": "Joint-Continue 3ep",
+      "mean_percent": 51.6,
+      "sd_across_finetuning_seeds_percent": 0.8000000000000007,
+      "num_finetuning_seeds": 3,
+      "num_partition_seeds": 0,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 7.971377367987113
+    },
+    {
+      "method": "Global-FT50",
+      "mean_percent": 48.13333333333333,
+      "sd_across_finetuning_seeds_percent": 0.9237604307034021,
+      "num_finetuning_seeds": 3,
+      "num_partition_seeds": 0,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 8.86297810853558
+    },
+    {
+      "method": "Random-Voronoi",
+      "mean_percent": 50.800000000000004,
+      "sd_across_finetuning_seeds_percent": 0.8110350040397638,
+      "num_finetuning_seeds": 3,
+      "num_partition_seeds": 3,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 7.548630218908473
+    },
+    {
+      "method": "K-means++",
+      "mean_percent": 49.955555555555556,
+      "sd_across_finetuning_seeds_percent": 0.5388602512436488,
+      "num_finetuning_seeds": 3,
+      "num_partition_seeds": 3,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 7.2424115633209665
+    },
+    {
+      "method": "Spectral",
+      "mean_percent": 49.68888888888889,
+      "sd_across_finetuning_seeds_percent": 0.3355481971231432,
+      "num_finetuning_seeds": 3,
+      "num_partition_seeds": 3,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 7.235713893981407
+    }
+  ]
+}

@@ -418,6 +418,64 @@ Rscript experiments/control_matrix/scripts/plot_subjepa_control_matrix.R \
   --auto-source globalft50
 ```
 
+## OGBench-Cube LeWM result snapshot
+
+The completed OGBench-Cube LeWM automatic gate selected the **global** branch
+with deployment seed 0. The perturbation-safety check passes, but the robust
+residual gap remains below the background threshold; Auto-LAP therefore reuses
+the Global-FT checkpoints and rollout results.
+
+| Gate quantity | Value | Decision |
+|---|---:|---|
+| `E_min` | 0.294489 | candidate minimum |
+| `T_max^E` | 0.003708 | perturbation envelope |
+| `S_task` | 0.987407 | passes `>= 0.5` (margin +0.487407) |
+| `R_K` | 0.290781 | fails background check |
+| `T_bg` | 0.412607 | `R_K - T_bg = -0.121827` |
+
+The gate manifest selects branch `global` with reason
+`residual_gap_not_above_background`.
+
+Short- and long-horizon success rates use fine-tuning seeds 0, 42, and 625.
+For partitioned methods, each fine-tuning-seed value is first averaged over
+three partition seeds and five paired evaluation seeds; the reported error bar
+is the sample standard deviation across the three fine-tuning seeds. The
+official checkpoint has no post-training seed and therefore no error bar.
+
+| Method | Short-horizon success rate | Long-horizon success rate |
+|---|---:|---:|
+| Official baseline | 64.8% | 50.4% |
+| Joint-Continue FP32, 3 epochs | 64.53 ± 1.40% | 51.60 ± 0.80% |
+| Global-FT, 50 epochs | 64.53 ± 2.20% | 48.13 ± 0.92% |
+| Random-Voronoi K3, 50 epochs | 66.27 ± 0.46% | 50.80 ± 0.81% |
+| K-means++ K3, 50 epochs | 65.02 ± 0.20% | 49.96 ± 0.54% |
+| Spectral K3, 50 epochs | 64.71 ± 1.79% | 49.69 ± 0.34% |
+| **Auto-LAP (Global-FT)** | **64.53 ± 2.20%** | **48.13 ± 0.92%** |
+
+![OGBench-Cube LeWM short-horizon results](experiments/cube/assets/control_metrics/cube_short_horizon_main.png)
+
+![OGBench-Cube LeWM long-horizon results](experiments/cube/assets/control_metrics/cube_long_horizon_main.png)
+
+The figures intentionally contain no perturbation-safety or background-check
+values; those gate diagnostics are recorded in the table above. Each horizon
+contains 170 completed evaluation groups and uses the aggregation protocol
+stated above.
+
+Recreate both ggplot2 figures from the repository root:
+
+```bash
+Rscript experiments/control_matrix/scripts/plot_lewm_control_matrix.R \
+  --task OGBench-Cube \
+  --model-name LeWM \
+  --short-input experiments/cube/matrix/matrix_summary.csv \
+  --long-input experiments/cube/matrix_long/matrix_summary.csv \
+  --output-dir experiments/cube/assets/control_metrics \
+  --file-prefix cube \
+  --summary-output cube_lewm_control_method_summary.csv \
+  --auto-source globalft50 \
+  --deployment-seed 0
+```
+
 ## OGBench-Cube Sub-JEPA result snapshot
 
 The completed OGBench-Cube Sub-JEPA automatic gate selected the **global** branch

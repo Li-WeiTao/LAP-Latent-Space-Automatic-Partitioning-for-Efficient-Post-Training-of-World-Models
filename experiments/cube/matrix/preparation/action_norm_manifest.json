@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "dataset_name": "cube",
+  "data_file": "/data/sicong/weitao/datasets/lewm/cube_single_expert.h5",
+  "checkpoint": "/data/sicong/weitao/.stable_worldmodel/cube/lewm_object.ckpt",
+  "starts_file": "/data/sicong/weitao/LAP-region-risk-main/experiments/cube/matrix/preparation/train_global_reference_starts.npy",
+  "starts_sha256": "04de7faf07580f4a0239e0e0235b0b76893e5c23ce54e97005dbb850a5815065",
+  "num_starts": 1674000,
+  "action_mean_shape": [
+    1,
+    25
+  ],
+  "action_std_shape": [
+    1,
+    25
+  ],
+  "frameskip": 5,
+  "history_size": 3,
+  "num_preds": 1,
+  "action_steps": 3,
+  "normalization_samples": 1674000,
+  "sha256": {
+    "action_norm_stats": "675a656d3bd8a40e7496633cbc5ad2f8d33c27b7a2f88cb2bb182c239ffea2f0",
+    "starts": "04de7faf07580f4a0239e0e0235b0b76893e5c23ce54e97005dbb850a5815065",
+    "data_file": "0664d507c4ff12009010644c9ae950836f954e700c172ccf22e7423af1a55625",
+    "checkpoint": "2c00552d586b9cbc03ec43c216d84f2e0f38d47b6b5dda6d81ec35163731f581"
+  }
+}

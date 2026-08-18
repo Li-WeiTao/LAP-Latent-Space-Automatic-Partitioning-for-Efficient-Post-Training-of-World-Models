@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "dataset": "cube",
+  "method": "global",
+  "selected_method": "global",
+  "partition_seed": 0,
+  "num_clusters": 1,
+  "cluster_counts": [
+    1998682
+  ],
+  "cluster_fractions": [
+    1.0
+  ],
+  "cache_stats": {
+    "cache": "/data/sicong/weitao/LAP-region-risk-main/experiments/cube/matrix/preparation/embedding_cache.npz",
+    "num_transitions": 1674000,
+    "num_expanded_latents": 6696000,
+    "num_unique_timesteps": 1998682,
+    "discarded_repeated_window_slots": 4697318,
+    "duplicate_policy": "stable_first_occurrence_per_timestep",
+    "latent_dim": 192,
+    "frameskip": 5
+  },
+  "latent_cache_sha256": "94aa8b4371a0251cb7e3ad3519be041de2458d72671ece821edac51d640534e7",
+  "data_file": null,
+  "method_metadata": {
+    "algorithm": "global_single_region",
+    "num_clusters": 1,
+    "routing": "constant_region_0"
+  },
+  "elapsed_sec": 29.908749850001186
+}

@@ -183,6 +183,52 @@ def component_parameter_counts(model: torch.nn.Module) -> dict[str, int]:
     }
 
 
+def action_encoder_input_dim(action_encoder: torch.nn.Module) -> int:
+    """Return the raw action width consumed by an action encoder.
+
+    LeWM's ``Embedder`` exposes this as ``input_dim`` and first applies a
+    ``Conv1d(input_dim, patch_dim, 1)``.  Looking at the first nested Linear
+    instead reports ``patch_dim`` (10 for the released Cube checkpoint), not
+    the raw action width (25).  Keep fallbacks for older/simple encoders that
+    do not expose the public attribute.
+    """
+
+    explicit = getattr(action_encoder, "input_dim", None)
+    if isinstance(explicit, (int, np.integer)) and not isinstance(explicit, bool):
+        if int(explicit) > 0:
+            return int(explicit)
+
+    patch_embed = getattr(action_encoder, "patch_embed", None)
+    if isinstance(patch_embed, torch.nn.modules.conv._ConvNd):
+        return int(patch_embed.in_channels)
+
+    convolution = next(
+        (
+            module
+            for module in action_encoder.modules()
+            if isinstance(module, torch.nn.modules.conv._ConvNd)
+        ),
+        None,
+    )
+    if convolution is not None:
+        return int(convolution.in_channels)
+
+    linear = next(
+        (
+            module
+            for module in action_encoder.modules()
+            if isinstance(module, torch.nn.Linear)
+        ),
+        None,
+    )
+    if linear is not None:
+        return int(linear.in_features)
+
+    raise RuntimeError(
+        "Cannot infer action input dimension from checkpoint action encoder"
+    )
+
+
 def main() -> None:
     args = parse_args()
     if args.epochs < 1:
@@ -226,14 +272,10 @@ def main() -> None:
 
     model = load_encoder(str(args.checkpoint), device, None, model_family=args.model_family)
     expected_action_dim = args.frameskip * int(dataset.get_dim("action"))
-    action_linear = next(
-        module
-        for module in model.action_encoder.modules()
-        if isinstance(module, torch.nn.Linear)
-    )
-    if action_linear.in_features != expected_action_dim:
+    checkpoint_action_dim = action_encoder_input_dim(model.action_encoder)
+    if checkpoint_action_dim != expected_action_dim:
         raise RuntimeError(
-            f"Action dimension mismatch: checkpoint={action_linear.in_features}, "
+            f"Action dimension mismatch: checkpoint={checkpoint_action_dim}, "
             f"dataset={expected_action_dim}"
         )
     for parameter in model.parameters():

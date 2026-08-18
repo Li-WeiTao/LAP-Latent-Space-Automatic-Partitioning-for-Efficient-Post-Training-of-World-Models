@@ -1,4 +1,16 @@
 model,task,horizon,method_a,method_b,point_difference_pp,ci_low_pp,ci_high_pp,pr_delta_gt_zero,n_common_eval_blocks,n_bootstrap,resampling_unit
+lewm,cube,long,Auto-LAP,Official baseline,-2.2666666666666657,-5.866666666666667,0.4000000000000057,0.04904,5,50000,eval-block
+lewm,cube,long,Auto-LAP,Joint-Continue 3ep,-3.4666666666666686,-6.936666666666652,0.93333333333333,0.04792,5,50000,eval-block
+lewm,cube,long,Auto-LAP,Global-FT50,0.0,0.0,0.0,0.0,5,50000,eval-block
+lewm,cube,long,Auto-LAP,Random-Voronoi,-2.666666666666657,-5.866666666666653,0.3555555555555685,0.04022,5,50000,eval-block
+lewm,cube,long,Auto-LAP,K-means++,-1.8222222222222229,-4.666666666666664,1.20000000000001,0.10454,5,50000,eval-block
+lewm,cube,long,Auto-LAP,Spectral,-1.5555555555555571,-4.8444444444444414,1.4666666666666757,0.16594,5,50000,eval-block
+lewm,cube,short,Auto-LAP,Official baseline,-0.2666666666666657,-3.3333333333333357,2.5333333333333314,0.43346,5,50000,eval-block
+lewm,cube,short,Auto-LAP,Joint-Continue 3ep,-1.4210854715202004e-14,-4.666666666666671,3.6000000000000014,0.52884,5,50000,eval-block
+lewm,cube,short,Auto-LAP,Global-FT50,0.0,0.0,0.0,0.0,5,50000,eval-block
+lewm,cube,short,Auto-LAP,Random-Voronoi,-1.7333333333333343,-4.977777777777774,0.8000000000000114,0.13372,5,50000,eval-block
+lewm,cube,short,Auto-LAP,K-means++,-0.48888888888889426,-3.6444444444444457,2.1777777777777914,0.37178,5,50000,eval-block
+lewm,cube,short,Auto-LAP,Spectral,-0.17777777777776294,-2.266666666666673,1.6000000000000156,0.44694,5,50000,eval-block
 lewm,pusht,long,Auto-LAP,Official baseline,3.1999999999999957,0.13333333333333286,6.0,0.97532,5,50000,eval-block
 lewm,pusht,long,Auto-LAP,Joint-Continue 3ep,3.866666666666667,1.06666666666667,6.399999999999999,0.99266,5,50000,eval-block
 lewm,pusht,long,Auto-LAP,Global-FT50,0.0,0.0,0.0,0.0,5,50000,eval-block

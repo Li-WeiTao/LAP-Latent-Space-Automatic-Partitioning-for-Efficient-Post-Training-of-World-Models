@@ -42,7 +42,7 @@ class BootstrapMainResultsTests(unittest.TestCase):
         self.assertLessEqual(abs(est - ref), 0.01)
         self.assertEqual(autolap.partition_policy, "deployment")
 
-    def test_lewm_cube_pending_non_strict(self) -> None:
+    def test_lewm_cube_loads_and_matches_matrix_summary(self) -> None:
         cell = load_cell(
             repo_root=REPO_ROOT,
             config=self.config,
@@ -50,8 +50,24 @@ class BootstrapMainResultsTests(unittest.TestCase):
             task="cube",
             horizon="short",
         )
-        self.assertEqual(cell.status, "pending")
-        self.assertEqual(cell.methods, {})
+        self.assertEqual(cell.status, "ok")
+        self.assertIn("autolap", cell.methods)
+        for method_id in ("official", "global", "autolap", "random_voronoi"):
+            est = point_estimate(cell.methods[method_id].blocks, official=method_id == "official")
+            if method_id == "official":
+                self.assertAlmostEqual(est, 64.8, places=1)
+            elif method_id in ("global", "autolap"):
+                self.assertAlmostEqual(est, 64.53333333333333, places=1)
+            elif method_id == "random_voronoi":
+                self.assertAlmostEqual(est, 66.26666666666667, places=1)
+        self.assertEqual(
+            cell.methods["autolap"].partition_policy,
+            cell.methods["global"].partition_policy,
+        )
+        self.assertEqual(cell.gate_info.get("branch"), "global")
+        self.assertEqual(cell.gate_info.get("deployment_seed"), 0)
+        self.assertAlmostEqual(cell.reference_estimates["official"], 64.8, places=1)
+        self.assertAlmostEqual(cell.reference_estimates["autolap"], 64.53333333333333, places=1)
 
     def test_hierarchical_bootstrap_reproducible(self) -> None:
         cell = load_cell(
