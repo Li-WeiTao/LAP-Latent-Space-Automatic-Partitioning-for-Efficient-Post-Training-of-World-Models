@@ -52,10 +52,13 @@ python experiments/scripts/bootstrap_main_results.py \
 
 `bootstrap_config.json` maps each model–task pair to its results root and main
 methods. LeWM–Cube is marked pending when `experiments/cube/matrix*` is absent;
-non-`--strict` runs mark those cells **Pending** and continue with the other 15.
+non-`--strict` runs mark those cells **Pending** and continue with the other 14.
 
 ## Tests
 
 ```bash
 python -m pytest tests/test_bootstrap_main_results.py -q
 ```
+
+Optional: save all bootstrap replicate draws to compressed NPZ files under
+`{output_dir}/replicates/{model}_{task}_{horizon}/` with `--save-replicates`.

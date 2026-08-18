@@ -99,6 +99,37 @@ class BootstrapMainResultsTests(unittest.TestCase):
         blocks = np.array([[80.0, 90.0], [85.0, 95.0]], dtype=np.float64)
         self.assertAlmostEqual(point_estimate(blocks, official=False), 87.5)
 
+    def test_lewm_cube_config_has_main_methods(self) -> None:
+        cube = self.config["cells"]["lewm"]["cube"]
+        self.assertIn("main_methods", cube)
+        self.assertIn("gate_manifest", cube)
+        self.assertIn("autolap", cube["main_methods"])
+
+    def test_episode_mode_runs_with_shared_pairing(self) -> None:
+        cell = load_cell(
+            repo_root=REPO_ROOT,
+            config=self.config,
+            model="subjepa",
+            task="tworoom",
+            horizon="short",
+        )
+        self.assertTrue(cell.has_episode_data)
+        results, contrasts = bootstrap_cell_with_contrasts(
+            cell,
+            n_bootstrap=64,
+            seed=42,
+            batch_size=32,
+            resampling_unit="episode",
+            save_draws=True,
+        )
+        self.assertIn("autolap", results)
+        auto = results["autolap"].draws
+        base = results["global"].draws
+        self.assertIsNotNone(auto)
+        self.assertIsNotNone(base)
+        match = [c for c in contrasts if c.baseline_method == "global"][0]
+        np.testing.assert_allclose(auto - base, match.draws, rtol=0, atol=1e-12)
+
 
 if __name__ == "__main__":
     unittest.main()

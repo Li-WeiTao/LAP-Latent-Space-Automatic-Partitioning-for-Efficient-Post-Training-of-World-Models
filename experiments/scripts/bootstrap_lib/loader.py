@@ -67,7 +67,21 @@ def _starts_digest(starts: list[int]) -> str:
     return hashlib.sha256(payload.encode("ascii")).hexdigest()
 
 
-def _read_run(path: Path, *, eval_seed: int, goal_offset: int) -> RunRecord:
+def _rel_path(path: Path, repo_root: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(repo_root.resolve()))
+    except ValueError:
+        return str(path)
+
+
+def _read_run(
+    path: Path,
+    *,
+    eval_seed: int,
+    goal_offset: int,
+    num_eval: int,
+    eval_budget: int,
+) -> RunRecord:
     payload = _load_json(path)
     if payload.get("seed") != eval_seed:
         raise ValueError(f"{path}: seed mismatch expected {eval_seed}, got {payload.get('seed')}")
@@ -76,12 +90,27 @@ def _read_run(path: Path, *, eval_seed: int, goal_offset: int) -> RunRecord:
             f"{path}: goal_offset_steps mismatch expected {goal_offset}, "
             f"got {payload.get('goal_offset_steps')}"
         )
+    if payload.get("num_eval") != num_eval:
+        raise ValueError(
+            f"{path}: num_eval mismatch expected {num_eval}, got {payload.get('num_eval')}"
+        )
+    if payload.get("eval_budget") != eval_budget:
+        raise ValueError(
+            f"{path}: eval_budget mismatch expected {eval_budget}, got {payload.get('eval_budget')}"
+        )
     metrics = payload["metrics"]
     rate = float(metrics["success_rate"])
     episodes_raw = metrics.get("episode_successes")
     episodes = None
     if episodes_raw is not None:
         episodes = np.asarray(episodes_raw, dtype=np.float64)
+        if episodes.shape[0] != num_eval:
+            raise ValueError(
+                f"{path}: expected {num_eval} episode_successes, got {episodes.shape[0]}"
+            )
+        unique_vals = np.unique(episodes)
+        if not np.all(np.isin(unique_vals, [0.0, 1.0])):
+            raise ValueError(f"{path}: episode_successes must be binary 0/1, got {unique_vals}")
         recomputed = float(episodes.mean() * 100.0)
         if abs(recomputed - rate) > 1e-9:
             raise ValueError(
@@ -89,6 +118,12 @@ def _read_run(path: Path, *, eval_seed: int, goal_offset: int) -> RunRecord:
             )
     starts = payload.get("eval_start_indices")
     starts_list = [int(v) for v in starts] if starts is not None else None
+    if starts_list is not None and len(starts_list) != num_eval:
+        raise ValueError(
+            f"{path}: expected {num_eval} eval_start_indices, got {len(starts_list)}"
+        )
+    if starts_list is not None and episodes is not None and len(starts_list) != episodes.shape[0]:
+        raise ValueError(f"{path}: eval_start_indices and episode_successes length mismatch")
     return RunRecord(
         path=path,
         success_rate=rate,
@@ -100,7 +135,7 @@ def _read_run(path: Path, *, eval_seed: int, goal_offset: int) -> RunRecord:
     )
 
 
-def load_gate_manifest(path: Path | None) -> dict[str, Any]:
+def load_gate_manifest(path: Path | None, *, repo_root: Path | None = None) -> dict[str, Any]:
     if path is None or not path.is_file():
         return {"branch": None, "deployment_seed": 0, "source": None}
     payload = _load_json(path)
@@ -113,11 +148,12 @@ def load_gate_manifest(path: Path | None) -> dict[str, Any]:
         or meta.get("deployment_seed", 0)
     )
     post_training = auto.get("selected_post_training") or meta.get("selected_post_training")
+    source = _rel_path(path, repo_root) if repo_root else str(path)
     return {
         "branch": branch,
         "deployment_seed": deployment_seed,
         "selected_post_training": post_training,
-        "source": str(path),
+        "source": source,
     }
 
 
@@ -219,16 +255,19 @@ def _collect_matrix_eval(
     partition_seeds: tuple[int, ...],
     eval_seeds: tuple[int, ...],
     goal_offset: int,
+    num_eval: int,
+    eval_budget: int,
     partition_policy: str,
     deployment_seed: int | None,
     gate_info: dict[str, Any] | None = None,
     autolap_eval_root: Path | None = None,
 ) -> dict[tuple[int | None, int | None, int], RunRecord]:
+    read_kw = {"goal_offset": goal_offset, "num_eval": num_eval, "eval_budget": eval_budget}
     runs: dict[tuple[int | None, int | None, int], RunRecord] = {}
     if method_id == "official":
         for es in eval_seeds:
             path = eval_root / "official" / f"eval{es}" / "results.json"
-            rec = _read_run(path, eval_seed=es, goal_offset=goal_offset)
+            rec = _read_run(path, eval_seed=es, **read_kw)
             runs[(None, None, es)] = rec
         return runs
 
@@ -241,7 +280,7 @@ def _collect_matrix_eval(
             for ts in train_seeds:
                 for es in eval_seeds:
                     path = auto_base / f"train{ts}" / f"eval{es}" / "results.json"
-                    rec = _read_run(path, eval_seed=es, goal_offset=goal_offset)
+                    rec = _read_run(path, eval_seed=es, **read_kw)
                     rec.train_seed = ts
                     rec.partition_seed = deployment_seed
                     key = (ts, deployment_seed if partition_policy == "deployment" else None, es)
@@ -255,6 +294,8 @@ def _collect_matrix_eval(
             partition_seeds=partition_seeds,
             eval_seeds=eval_seeds,
             goal_offset=goal_offset,
+            num_eval=num_eval,
+            eval_budget=eval_budget,
             partition_policy="deployment" if source == "spectral" else "none",
             deployment_seed=deployment_seed,
             gate_info=gate_info,
@@ -270,7 +311,7 @@ def _collect_matrix_eval(
             for ps in seeds_to_use:
                 for es in eval_seeds:
                     path = base / f"partition{ps}_train{ts}" / f"eval{es}" / "results.json"
-                    rec = _read_run(path, eval_seed=es, goal_offset=goal_offset)
+                    rec = _read_run(path, eval_seed=es, **read_kw)
                     rec.train_seed = ts
                     rec.partition_seed = ps
                     runs[(ts, ps, es)] = rec
@@ -279,7 +320,7 @@ def _collect_matrix_eval(
     for ts in train_seeds:
         for es in eval_seeds:
             path = base / f"train{ts}" / f"eval{es}" / "results.json"
-            rec = _read_run(path, eval_seed=es, goal_offset=goal_offset)
+            rec = _read_run(path, eval_seed=es, **read_kw)
             rec.train_seed = ts
             runs[(ts, None, es)] = rec
     return runs
@@ -323,10 +364,13 @@ def _collect_tworoom_results(
     partition_seeds: tuple[int, ...],
     eval_seeds: tuple[int, ...],
     goal_offset: int,
+    num_eval: int,
+    eval_budget: int,
     partition_policy: str,
     deployment_seed: int | None,
     repo_root: Path,
 ) -> dict[tuple[int | None, int | None, int], RunRecord]:
+    read_kw = {"goal_offset": goal_offset, "num_eval": num_eval, "eval_budget": eval_budget}
     agg = _import_tworoom_paths(repo_root)
     tw_method = _tworoom_method_map(method_id)
     runs: dict[tuple[int | None, int | None, int], RunRecord] = {}
@@ -334,7 +378,7 @@ def _collect_tworoom_results(
     if tw_method == "baseline":
         for es in eval_seeds:
             path = agg.path_for(results_root, horizon, "baseline", None, es)
-            rec = _read_run(path, eval_seed=es, goal_offset=goal_offset)
+            rec = _read_run(path, eval_seed=es, **read_kw)
             runs[(None, None, es)] = rec
         return runs
 
@@ -356,7 +400,7 @@ def _collect_tworoom_results(
                     es,
                     ps if ps is not None else None,
                 )
-                rec = _read_run(path, eval_seed=es, goal_offset=goal_offset)
+                rec = _read_run(path, eval_seed=es, **read_kw)
                 rec.train_seed = ts
                 rec.partition_seed = ps
                 key = (ts, ps, es) if ps is not None else (ts, None, es)
@@ -464,6 +508,9 @@ def load_cell(
     partition_seeds = tuple(config["partition_seeds"])
     eval_seeds = tuple(config["eval_seeds"])
     goal_offset = config["horizons"][horizon]["goal_offset_steps"]
+    num_eval = int(config["num_eval"])
+    eval_budget = int(config["eval_budget"])
+    expected_methods = list(cell_cfg.get("main_methods", []))
     eval_root = _resolve_eval_root(cell_cfg, horizon, repo_root)
 
     if _cell_pending(cell_cfg, eval_root):
@@ -485,7 +532,10 @@ def load_cell(
         )
 
     gate_path = cell_cfg.get("gate_manifest")
-    gate_info = load_gate_manifest(repo_root / gate_path if gate_path else None)
+    gate_info = load_gate_manifest(
+        repo_root / gate_path if gate_path else None,
+        repo_root=repo_root,
+    )
     deployment_seed = int(gate_info.get("deployment_seed", 0))
 
     ref_path = cell_cfg.get("reference_summary")
@@ -500,7 +550,9 @@ def load_cell(
     pairing_digests: dict[int, set[str]] = {es: set() for es in eval_seeds}
     validation_issues: list[str] = []
 
-    for method_id in cell_cfg.get("main_methods", []):
+    missing_methods: list[str] = []
+
+    for method_id in expected_methods:
         pp = _partition_policy(method_id, gate_info)
         try:
             if cell_cfg["loader"] == "tworoom_results":
@@ -512,6 +564,8 @@ def load_cell(
                     partition_seeds=partition_seeds,
                     eval_seeds=eval_seeds,
                     goal_offset=goal_offset,
+                    num_eval=num_eval,
+                    eval_budget=eval_budget,
                     partition_policy=pp,
                     deployment_seed=deployment_seed,
                     repo_root=repo_root,
@@ -528,6 +582,8 @@ def load_cell(
                     partition_seeds=partition_seeds,
                     eval_seeds=eval_seeds,
                     goal_offset=goal_offset,
+                    num_eval=num_eval,
+                    eval_budget=eval_budget,
                     partition_policy=pp,
                     deployment_seed=deployment_seed,
                     gate_info=gate_info,
@@ -535,6 +591,7 @@ def load_cell(
                 )
         except (FileNotFoundError, ValueError) as exc:
             validation_issues.append(f"{method_id}: {exc}")
+            missing_methods.append(method_id)
             continue
 
         official = method_id == "official"
@@ -560,7 +617,7 @@ def load_cell(
             deployment_seed=deployment_seed if method_id == "autolap" else None,
             blocks=blocks,
             episodes=episodes,
-            files_read=files,
+            files_read=[_rel_path(Path(f), repo_root) for f in files],
             n_partition_seeds=n_part,
         )
 
@@ -571,6 +628,9 @@ def load_cell(
     ]
     validation_issues.extend(pairing_issues)
 
+    if missing_methods:
+        validation_issues.insert(0, f"missing_methods: {missing_methods}")
+
     for mid, mdata in methods.items():
         est = point_estimate(mdata.blocks, official=mdata.official)
         ref = reference.get(mid)
@@ -580,11 +640,14 @@ def load_cell(
                 f"(diff {abs(est - ref):.4f} pp)"
             )
 
-    status = "ok"
     if not methods:
         status = "failed"
-    elif pairing_issues:
+    elif missing_methods or pairing_issues:
         status = "incomplete"
+    elif validation_issues:
+        status = "incomplete"
+    else:
+        status = "ok"
 
     return CellData(
         model=model,
@@ -599,6 +662,9 @@ def load_cell(
         gate_info=gate_info,
         validation={
             "issues": validation_issues,
+            "missing_methods": missing_methods,
+            "expected_methods": expected_methods,
+            "loaded_methods": sorted(methods.keys()),
             "pairing_by_eval_seed": {str(k): len(v) for k, v in pairing_digests.items()},
         },
         reference_estimates=reference,

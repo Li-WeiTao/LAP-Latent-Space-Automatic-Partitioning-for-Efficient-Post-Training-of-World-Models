@@ -93,6 +93,17 @@
           "short": "experiments/cube/matrix",
           "long": "experiments/cube/matrix_long"
         },
+        "gate_manifest": "experiments/cube/results/auto_gate_complete_k3/auto/partition/manifest.json",
+        "reference_summary": "experiments/cube/assets/control_metrics/cube_control_method_summary.csv",
+        "main_methods": [
+          "official",
+          "joint",
+          "global",
+          "random_voronoi",
+          "kmeanspp",
+          "spectral",
+          "autolap"
+        ],
         "pending_if_roots_missing": true
       }
     },

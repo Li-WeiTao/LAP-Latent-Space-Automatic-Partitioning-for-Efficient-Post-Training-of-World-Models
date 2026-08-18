@@ -73,6 +73,35 @@ def resolve_workers(spec: str) -> int:
     return max(1, int(spec))
 
 
+def _save_replicates(
+    out_dir: Path,
+    *,
+    model: str,
+    task: str,
+    horizon: str,
+    results: dict[str, Any],
+    contrasts: list[Any],
+) -> list[str]:
+    import numpy as np
+
+    rep_dir = out_dir / "replicates" / f"{model}_{task}_{horizon}"
+    rep_dir.mkdir(parents=True, exist_ok=True)
+    saved: list[str] = []
+    for mid, res in results.items():
+        if res.draws is None:
+            continue
+        path = rep_dir / f"{mid}.npz"
+        np.savez_compressed(path, draws=res.draws)
+        saved.append(str(path))
+    for contrast in contrasts:
+        if contrast.draws is None:
+            continue
+        path = rep_dir / f"contrast_autolap_vs_{contrast.baseline_method}.npz"
+        np.savez_compressed(path, draws=contrast.draws)
+        saved.append(str(path))
+    return saved
+
+
 def _process_cell(payload: dict[str, Any]) -> dict[str, Any]:
     repo_root = Path(payload["repo_root"])
     config = payload["config"]
@@ -91,9 +120,27 @@ def _process_cell(payload: dict[str, Any]) -> dict[str, Any]:
             "status": "pending",
             "summary_rows": [],
             "contrast_rows": [],
+            "replicate_files": [],
             "metadata": {
                 "elapsed_sec": elapsed_load,
                 "validation": cell.validation,
+            },
+        }
+
+    if cell.status != "ok":
+        return {
+            "model": model,
+            "task": task,
+            "horizon": horizon,
+            "status": cell.status,
+            "summary_rows": [],
+            "contrast_rows": [],
+            "replicate_files": [],
+            "metadata": {
+                "elapsed_sec": elapsed_load,
+                "validation": cell.validation,
+                "gate_info": cell.gate_info,
+                "reference_estimates": cell.reference_estimates,
             },
         }
 
@@ -154,6 +201,23 @@ def _process_cell(payload: dict[str, Any]) -> dict[str, Any]:
         )
 
     files_read = sorted({f for m in cell.methods.values() for f in m.files_read})
+    replicate_files: list[str] = []
+    if payload["save_replicates"]:
+        out_dir = Path(payload["output_dir"])
+        if not out_dir.is_absolute():
+            out_dir = repo_root / out_dir
+        replicate_files = _save_replicates(
+            out_dir,
+            model=model,
+            task=task,
+            horizon=horizon,
+            results=results,
+            contrasts=contrasts,
+        )
+        replicate_files = [
+            str(Path(p).resolve().relative_to(repo_root.resolve())) for p in replicate_files
+        ]
+
     return {
         "model": model,
         "task": task,
@@ -161,6 +225,7 @@ def _process_cell(payload: dict[str, Any]) -> dict[str, Any]:
         "status": cell.status,
         "summary_rows": summary_rows,
         "contrast_rows": contrast_rows,
+        "replicate_files": replicate_files,
         "metadata": {
             "elapsed_sec": elapsed_load + elapsed_boot,
             "load_sec": elapsed_load,
@@ -207,6 +272,7 @@ def main() -> None:
     worker_payloads = [
         {
             "repo_root": str(repo_root),
+            "output_dir": str(args.output_dir),
             "config": config,
             "model": model,
             "task": task,
@@ -240,6 +306,7 @@ def main() -> None:
     cell_metadata: dict[str, Any] = {}
     pending: list[str] = []
     failures: list[str] = []
+    validation_failures: list[str] = []
 
     for res in results:
         key = f"{res['model']}/{res['task']}/{res['horizon']}"
@@ -269,6 +336,9 @@ def main() -> None:
             continue
         if res["status"] in {"failed", "incomplete"}:
             failures.append(key)
+        issues = res["metadata"].get("validation", {}).get("issues", [])
+        if issues:
+            validation_failures.append(f"{key}: {issues}")
         summary_rows.extend(res["summary_rows"])
         contrast_rows.extend(res["contrast_rows"])
 
@@ -308,6 +378,7 @@ def main() -> None:
     out_dir = args.output_dir
     if not out_dir.is_absolute():
         out_dir = repo_root / out_dir
+    out_dir_rel = str(out_dir.resolve().relative_to(repo_root.resolve()))
     write_csv(out_dir / "bootstrap_summary.csv", summary_rows, summary_fields)
     write_csv(out_dir / "bootstrap_contrasts.csv", contrast_rows, contrast_fields)
 
@@ -322,6 +393,7 @@ def main() -> None:
     metadata = {
         "git_commit": git_commit(repo_root),
         "command": cmd,
+        "output_dir": out_dir_rel,
         "seed": args.seed,
         "n_bootstrap": args.n_bootstrap,
         "batch_size": args.batch_size,
@@ -332,10 +404,11 @@ def main() -> None:
         "cells": cell_metadata,
         "pending_cells": pending,
         "failed_or_incomplete_cells": failures,
+        "validation_failures": validation_failures,
         "episode_data_note": (
             "Block-level CSV/rates only; episode_successes used when present."
             if args.resampling_unit == "eval-block"
-            else "Episode-level resampling enabled."
+            else "Episode-level resampling enabled with shared episode indices."
         ),
     }
     (out_dir / "bootstrap_metadata.json").write_text(
@@ -343,11 +416,21 @@ def main() -> None:
         encoding="utf-8",
     )
 
-    print(json.dumps({"output_dir": str(out_dir), "total_sec": total_sec, "pending": pending}, indent=2))
+    print(
+        json.dumps(
+            {
+                "output_dir": out_dir_rel,
+                "total_sec": total_sec,
+                "pending": pending,
+                "failures": failures,
+            },
+            indent=2,
+        )
+    )
 
-    if args.strict and (pending or failures):
-        issues = pending + failures
-        raise SystemExit(f"strict mode: unresolved cells: {issues}")
+    if args.strict and (pending or failures or validation_failures):
+        issues = pending + failures + [str(v) for v in validation_failures]
+        raise SystemExit(f"strict mode: unresolved cells or validation issues: {issues}")
 
 
 if __name__ == "__main__":
