@@ -391,27 +391,52 @@ class LatentClusterSwitchJEPA(JEPA):
         self._active_cluster = key
         return key
 
+    def _predict_dense(
+        self,
+        emb: torch.Tensor,
+        act_emb: torch.Tensor,
+        cluster_id: int,
+    ) -> torch.Tensor:
+        """Run one expert on a contiguous batch (same last-step projection as scatter)."""
+        key = self.cluster_names[cluster_id]
+        raw = self.cluster_predictor[key](emb, act_emb)
+        return self.cluster_pred_proj[key](raw[:, -1, :]).unsqueeze(1)
+
     def _predict_routed(
         self,
         emb: torch.Tensor,
         act_emb: torch.Tensor,
         cluster_ids: torch.Tensor,
     ) -> torch.Tensor:
-        """Predict one next latent for each candidate with its assigned expert."""
+        """Predict one next latent for each candidate with its assigned expert.
+
+        Homogeneous routes (typical MPC: one expert for all CEM candidates) use a
+        single dense forward. Mixed routes still run one dense forward per unique
+        cluster, then scatter back to candidate order.
+        """
+        if cluster_ids.numel() == 0:
+            return torch.empty(
+                (0, 1, emb.size(-1)),
+                dtype=emb.dtype,
+                device=emb.device,
+            )
+        first_id = cluster_ids[0]
+        if bool((cluster_ids == first_id).all()):
+            return self._predict_dense(emb, act_emb, int(first_id.item()))
+
         pred_emb = torch.empty(
             (emb.size(0), 1, emb.size(-1)),
             dtype=emb.dtype,
             device=emb.device,
         )
-        for cluster_id, key in enumerate(self.cluster_names):
+        for cluster_id in torch.unique(cluster_ids).tolist():
+            cluster_id = int(cluster_id)
             indices = torch.nonzero(cluster_ids == cluster_id, as_tuple=False).flatten()
-            if indices.numel() == 0:
-                continue
-            raw = self.cluster_predictor[key](
+            projected = self._predict_dense(
                 emb.index_select(0, indices),
                 act_emb.index_select(0, indices),
+                cluster_id,
             )
-            projected = self.cluster_pred_proj[key](raw[:, -1, :]).unsqueeze(1)
             pred_emb.index_copy_(0, indices, projected)
         return pred_emb
 

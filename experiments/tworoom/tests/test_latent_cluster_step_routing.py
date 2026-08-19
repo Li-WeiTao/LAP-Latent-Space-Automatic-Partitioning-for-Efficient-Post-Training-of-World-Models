@@ -146,6 +146,119 @@ def test_zscore_l2_torch_transform_matches_definition():
     torch.testing.assert_close(model._transform_latent(latent), expected)
 
 
+def test_homogeneous_route_matches_scatter_and_uses_one_dense_forward():
+    encoder = DummyEncoder()
+    action_encoder = IdentityActionEncoder()
+    base = _jepa(encoder, action_encoder, [0.0, 0.0])
+    cluster_models = {
+        "cluster0": _jepa(encoder, action_encoder, [-2.0, 0.0]),
+        "cluster1": _jepa(encoder, action_encoder, [2.0, 0.0]),
+        "cluster2": _jepa(encoder, action_encoder, [0.0, 3.0]),
+    }
+    model = LatentClusterSwitchJEPA(
+        base,
+        cluster_models,
+        centroids=torch.tensor([[1.0, 0.0], [-1.0, 0.0], [0.0, 1.0]]).numpy(),
+        spherical=True,
+        routing_mode="mpc",
+    )
+    emb = torch.tensor(
+        [[1.0, 0.0], [1.25, 0.0], [0.5, 0.1]],
+        dtype=torch.float32,
+    ).unsqueeze(1)
+    act = torch.zeros(3, 1, 1)
+    cluster_ids = torch.tensor([1, 1, 1])
+
+    dense = model._predict_dense(emb, act, 1)
+    routed = model._predict_routed(emb, act, cluster_ids)
+    scatter = torch.empty_like(dense)
+    for cluster_id in (0, 1, 2):
+        indices = torch.nonzero(cluster_ids == cluster_id, as_tuple=False).flatten()
+        if indices.numel() == 0:
+            continue
+        scatter.index_copy_(
+            0,
+            indices,
+            model._predict_dense(
+                emb.index_select(0, indices),
+                act.index_select(0, indices),
+                cluster_id,
+            ),
+        )
+    torch.testing.assert_close(routed, dense)
+    torch.testing.assert_close(routed, scatter)
+
+    calls = {"cluster0": 0, "cluster1": 0, "cluster2": 0}
+    original = {
+        name: model.cluster_predictor[name].forward
+        for name in model.cluster_names
+    }
+
+    def _wrap(name, fn):
+        def wrapped(*args, **kwargs):
+            calls[name] += 1
+            return fn(*args, **kwargs)
+
+        return wrapped
+
+    for name, fn in original.items():
+        model.cluster_predictor[name].forward = _wrap(name, fn)
+    model._predict_routed(emb, act, cluster_ids)
+    assert calls == {"cluster0": 0, "cluster1": 1, "cluster2": 0}
+
+
+def test_mixed_route_runs_one_dense_forward_per_unique_cluster():
+    encoder = DummyEncoder()
+    action_encoder = IdentityActionEncoder()
+    base = _jepa(encoder, action_encoder, [0.0, 0.0])
+    cluster_models = {
+        "cluster0": _jepa(encoder, action_encoder, [-2.0, 0.0]),
+        "cluster1": _jepa(encoder, action_encoder, [2.0, 0.0]),
+        "cluster2": _jepa(encoder, action_encoder, [0.0, 3.0]),
+    }
+    model = LatentClusterSwitchJEPA(
+        base,
+        cluster_models,
+        centroids=torch.eye(3, 2).numpy(),
+        spherical=True,
+        routing_mode="mpc",
+    )
+    emb = torch.tensor(
+        [[1.0, 0.0], [1.0, 0.0], [-1.0, 0.0], [-1.0, 0.0]],
+        dtype=torch.float32,
+    ).unsqueeze(1)
+    act = torch.zeros(4, 1, 1)
+    cluster_ids = torch.tensor([0, 0, 1, 1])
+    routed = model._predict_routed(emb, act, cluster_ids)
+    expected = torch.stack(
+        [
+            model._predict_dense(emb[0:1], act[0:1], 0).squeeze(0),
+            model._predict_dense(emb[1:2], act[1:2], 0).squeeze(0),
+            model._predict_dense(emb[2:3], act[2:3], 1).squeeze(0),
+            model._predict_dense(emb[3:4], act[3:4], 1).squeeze(0),
+        ]
+    )
+    torch.testing.assert_close(routed, expected)
+
+    calls = {"cluster0": 0, "cluster1": 0, "cluster2": 0}
+    original = {
+        name: model.cluster_predictor[name].forward
+        for name in model.cluster_names
+    }
+
+    def _wrap(name, fn):
+        def wrapped(*args, **kwargs):
+            calls[name] += 1
+            return fn(*args, **kwargs)
+
+        return wrapped
+
+    for name, fn in original.items():
+        model.cluster_predictor[name].forward = _wrap(name, fn)
+    model._predict_routed(emb, act, cluster_ids)
+    assert calls == {"cluster0": 1, "cluster1": 1, "cluster2": 0}
+
+
 def test_mpc_routes_each_environment_and_reuses_route_across_cem_calls():
     encoder = DummyEncoder()
     action_encoder = IdentityActionEncoder()
@@ -206,6 +319,8 @@ if __name__ == "__main__":
     test_step_routing_switches_expert_from_predicted_latent()
     test_step_history3_routes_from_latest_predicted_state()
     test_zscore_l2_torch_transform_matches_definition()
+    test_homogeneous_route_matches_scatter_and_uses_one_dense_forward()
+    test_mixed_route_runs_one_dense_forward_per_unique_cluster()
     test_mpc_routes_each_environment_and_reuses_route_across_cem_calls()
     test_tensor_identity_supports_inference_tensors()
-    print("5 routing tests passed")
+    print("7 routing tests passed")
