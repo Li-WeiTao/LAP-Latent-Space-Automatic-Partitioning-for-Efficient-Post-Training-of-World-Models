@@ -20,6 +20,18 @@ def _pct_overhead(base: float, value: float) -> float:
     return (value - base) / base * 100.0
 
 
+def _routing_csv_value(summary: dict[str, Any] | None) -> str:
+    if not summary:
+        return "N/A"
+    return f"{summary['mean']:.6f}"
+
+
+def _routing_tex_value(summary: dict[str, Any] | None) -> str:
+    if not summary:
+        return "--"
+    return f"{summary['mean']:.4f}"
+
+
 def build_reports(
     *,
     output_dir: Path,
@@ -136,17 +148,13 @@ def build_reports(
             continue
         base_mean = base["planning_summary"]["mean"]
         lap_mean = lap_item["planning_summary"]["mean"]
-        route_mean = (
-            lap_item["routing_summary"]["mean"]
-            if lap_item.get("routing_summary")
-            else float("nan")
-        )
+        route_summary = lap_item.get("routing_summary")
         inference_rows.append(
             {
                 "task": task,
                 "original_lewm_planning_sec": base_mean,
                 "lap_planning_sec": lap_mean,
-                "routing_sec": route_mean,
+                "routing_sec": _routing_csv_value(route_summary),
                 "absolute_overhead_sec": lap_mean - base_mean,
                 "relative_overhead_pct": _pct_overhead(base_mean, lap_mean),
                 "original_peak_gpu_gb": base["peak_memory"]["peak_allocated_gb"],
@@ -166,8 +174,8 @@ def build_reports(
             {
                 "task": task,
                 "component": "routing_only",
-                "lewm_sec": float("nan"),
-                "lap_sec": route_mean,
+                "lewm_sec": "N/A",
+                "lap_sec": _routing_csv_value(route_summary),
             }
         )
 
@@ -247,9 +255,14 @@ def build_reports(
         if row.get("status") != "ok":
             lines.append(f"{row['task']} & pending & pending & pending & pending \\\\")
             continue
+        route_tex = (
+            "--"
+            if row["routing_sec"] == "N/A"
+            else f"{float(row['routing_sec']):.4f}"
+        )
         lines.append(
             f"{row['task']} & {row['original_lewm_planning_sec']:.3f} & {row['lap_planning_sec']:.3f} & "
-            f"{row['routing_sec']:.4f} & {row['relative_overhead_pct']:.2f}\\% \\\\"
+            f"{route_tex} & {row['relative_overhead_pct']:.2f}\\% \\\\"
         )
     lines.extend(["\\bottomrule", "\\end{tabular}", ""])
     tex.write_text("\n".join(lines) + "\n", encoding="utf-8")

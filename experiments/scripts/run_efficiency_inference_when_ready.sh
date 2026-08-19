@@ -10,7 +10,7 @@ GPU_INDEX="${GPU_INDEX:-}"
 LOG="${REPO}/experiments/efficiency_results/inference_wait.log"
 
 cd "${REPO}"
-export PYTHONPATH="experiments/scripts:.:experiments/tworoom"
+export PYTHONPATH="experiments/scripts:.:experiments/tworoom:/data/sicong/weitao/le-wm"
 
 if [[ -f "${REPO}/experiments/efficiency_results/inference_run.log" ]]; then
   mv -f "${REPO}/experiments/efficiency_results/inference_run.log" \
@@ -36,5 +36,9 @@ echo "[inference-wait] starting formal inference on cuda:${selected}" | tee -a "
   --inference-tasks tworoom,pusht,reacher,cube \
   --output-dir experiments/efficiency_results \
   2>&1 | tee "${REPO}/experiments/efficiency_results/inference_run.log"
+
+"${PYTHON}" experiments/scripts/benchmark_efficiency.py \
+  --aggregate-only \
+  --output-dir experiments/efficiency_results
 
 echo "[inference-wait] done on cuda:${selected}" | tee -a "${LOG}"

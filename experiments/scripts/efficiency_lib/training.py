@@ -302,10 +302,10 @@ def benchmark_lap_regional_training(
         )
 
         reset_peak_memory(dev)
-        result = trainer.fit_region(backend, region_id, region_transitions, training)
+        fit_result = trainer.fit_region(backend, region_id, region_transitions, training)
         expert_peak = read_peak_memory(dev)
         global_peak = _merge_peak(global_peak, expert_peak)
-        epoch_timings = result.metrics.get("epoch_timings", [])
+        epoch_timings = list(fit_result.metrics.get("epoch_timings", []))
         if len(epoch_timings) != cfg.timing_epochs:
             raise RuntimeError(
                 f"region {region_id} returned {len(epoch_timings)} epoch timings, "
@@ -314,6 +314,8 @@ def benchmark_lap_regional_training(
         for row in epoch_timings:
             epoch_no = int(row["epoch"])
             elapsed = float(row["epoch_wall_sec"])
+            optimizer_steps = int(row.get("optimizer_steps") or 0)
+            processed_samples = optimizer_steps * cfg.batch_size
             expert_epoch_times[region_id].append(elapsed)
             per_expert_rows.append(
                 {
@@ -321,14 +323,17 @@ def benchmark_lap_regional_training(
                     "lap_epoch": epoch_no,
                     "expert_id": region_id,
                     "region_sample_count": int(len(indices)),
-                    "optimizer_steps": row.get("optimizer_steps"),
+                    "optimizer_steps": optimizer_steps,
+                    "processed_samples": processed_samples,
                     "setup_wall_sec": setup_sec if epoch_no == 1 else 0.0,
                     "epoch_wall_sec": elapsed,
-                    "transitions_per_sec": len(indices) / max(elapsed, 1e-9),
+                    "transitions_per_sec": processed_samples / max(elapsed, 1e-9),
                     **expert_peak.as_dict(),
                 }
             )
-        del backend, trainer
+        del fit_result
+        del backend
+        del trainer
         if dev.type == "cuda":
             torch.cuda.empty_cache()
 
@@ -367,6 +372,7 @@ def benchmark_lap_regional_training(
         ),
         "timing_protocol": {
             "primary_metric": "sum_k pure_predictor_training_epoch_sec",
+            "peak_memory_metric": "max_over_experts_after_predictor_release",
             "epochs": cfg.timing_epochs,
             "discard_warmup_epochs": cfg.discard_warmup_epochs,
             "cuda_synchronize": True,

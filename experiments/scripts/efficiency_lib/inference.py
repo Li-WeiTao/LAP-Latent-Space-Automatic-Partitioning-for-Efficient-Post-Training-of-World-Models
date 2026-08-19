@@ -58,6 +58,24 @@ def _clone_info_fresh(source: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _source_eval_num_envs(info: dict[str, Any]) -> int:
+    for value in info.values():
+        if torch.is_tensor(value) and value.ndim >= 1:
+            return int(value.shape[0])
+    return 1
+
+
+def _slice_info_single_env(info: dict[str, Any]) -> dict[str, Any]:
+    """Reduce a batched evaluator info dict to a single-environment template."""
+    sliced: dict[str, Any] = {}
+    for key, value in info.items():
+        if torch.is_tensor(value) and value.ndim >= 1 and value.shape[0] > 1:
+            sliced[key] = value[:1].detach().clone()
+        else:
+            sliced[key] = value.detach().clone() if torch.is_tensor(value) else copy.deepcopy(value)
+    return sliced
+
+
 def _task_action_space(repo_root: Path, cfg) -> tuple[Any, int]:
     import stable_worldmodel as swm
 
@@ -224,6 +242,8 @@ def benchmark_inference_task(
         device=device,
         lap_run_dir=lap_run_dir,
     )
+    source_eval_num_envs = _source_eval_num_envs(captured_info)
+    single_info_template = _slice_info_single_env(captured_info)
 
     with hydra.initialize_config_dir(
         version_base=None, config_dir=str(repo_root / "config" / "eval")
@@ -277,17 +297,18 @@ def benchmark_inference_task(
     if hasattr(model, "classify_timing_sample_limit"):
         model.classify_timing_sample_limit = 0
     solver = hydra.utils.instantiate(cfg.solver, model=model)
-    action_space, n_envs = _task_action_space(repo_root, cfg)
+    action_space, _ = _task_action_space(repo_root, cfg)
+    timed_num_envs = 1
     solver.configure(
         action_space=action_space,
-        n_envs=n_envs,
+        n_envs=timed_num_envs,
         config=swm.PlanConfig(**cfg.plan_config),
     )
 
     reset_peak_memory(device)
 
     total_clones = warmup + repeats
-    info_clones = [_clone_info_fresh(captured_info) for _ in range(total_clones)]
+    info_clones = [_clone_info_fresh(single_info_template) for _ in range(total_clones)]
 
     for info in info_clones[:warmup]:
         solver.solve(info)
@@ -308,7 +329,7 @@ def benchmark_inference_task(
         and hasattr(model, "_assign_clusters")
     ):
         with torch.no_grad():
-            ref_info = _clone_info_fresh(captured_info)
+            ref_info = _clone_info_fresh(single_info_template)
             encoded = model.encode(ref_info)
             routing_latent_template = encoded["emb"][:, 0, :].detach()
         route_clones = [
@@ -349,6 +370,9 @@ def benchmark_inference_task(
         "model_meta": model_meta,
         "timing_protocol": {
             "fresh_observation_clones": total_clones,
+            "source_eval_num_envs": source_eval_num_envs,
+            "timed_num_envs": timed_num_envs,
+            "single_env_planning_latency": True,
             "routing_measured_per_mpc_cycle": gate_branch != "global_predictor",
             "routing_excludes_encoder": True,
             "eval_dataset_name": str(cfg.eval.dataset_name),

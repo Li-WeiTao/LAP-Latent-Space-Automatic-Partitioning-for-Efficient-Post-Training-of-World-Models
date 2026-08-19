@@ -8,6 +8,7 @@ import json
 from dataclasses import replace
 from pathlib import Path
 
+from efficiency_lib.aggregate import load_scratch_results, merge_phase_results
 from efficiency_lib.config import ANCHOR_TRAINING, inference_tasks
 from efficiency_lib.gate_partition import measure_gate_and_partition
 from efficiency_lib.inference import benchmark_inference_task
@@ -41,6 +42,11 @@ def parse_args() -> argparse.Namespace:
         default="joint,lap",
         help="Comma-separated training benchmarks: joint,lap",
     )
+    parser.add_argument(
+        "--aggregate-only",
+        action="store_true",
+        help="Rebuild summary tables from scratch/*.json without rerunning benchmarks",
+    )
     return parser.parse_args()
 
 
@@ -50,6 +56,27 @@ def main() -> None:
     output_dir = (repo_root / args.output_dir).resolve()
     scratch = output_dir / "scratch"
     scratch.mkdir(parents=True, exist_ok=True)
+
+    if args.aggregate_only:
+        merged = load_scratch_results(scratch)
+        build_reports(
+            output_dir=output_dir,
+            joint=merged["joint_training"],
+            lap=merged["lap_regional_training"],
+            gate_partition=merged["gate_partition"],
+            inference=merged["inference"],
+        )
+        payload = {
+            "joint_training": merged["joint_training"],
+            "lap_regional_training": merged["lap_regional_training"],
+            "gate_partition": merged["gate_partition"],
+            "inference": merged["inference"],
+        }
+        (output_dir / "efficiency_payload.json").write_text(
+            json.dumps(payload, indent=2) + "\n", encoding="utf-8"
+        )
+        print(f"[done] aggregated scratch results into {output_dir}", flush=True)
+        return
 
     measures = {part.strip() for part in args.measure.split(",") if part.strip()}
     timing_epochs = max(args.joint_epochs, args.lap_epochs)
@@ -134,21 +161,22 @@ def main() -> None:
                 )
             )
 
-    payload = {
-        "joint_training": joint_result,
-        "lap_regional_training": lap_result,
-        "gate_partition": gate_result,
-        "inference": inference_results,
-    }
+    payload = merge_phase_results(
+        scratch,
+        joint=joint_result,
+        lap=lap_result,
+        gate_partition=gate_result,
+        inference=inference_results if inference_results else None,
+    )
     (output_dir / "efficiency_payload.json").write_text(
         json.dumps(payload, indent=2) + "\n", encoding="utf-8"
     )
     build_reports(
         output_dir=output_dir,
-        joint=joint_result,
-        lap=lap_result,
-        gate_partition=gate_result,
-        inference=inference_results,
+        joint=payload["joint_training"],
+        lap=payload["lap_regional_training"],
+        gate_partition=payload["gate_partition"],
+        inference=payload["inference"],
     )
     write_metadata(output_dir / "metadata.json", metadata)
     print(f"[done] wrote results to {output_dir}", flush=True)

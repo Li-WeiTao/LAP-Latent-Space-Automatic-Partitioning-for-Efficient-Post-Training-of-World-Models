@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import tempfile
 import unittest
+import json
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -13,9 +14,10 @@ import sys
 sys.path.insert(0, str(SCRIPTS))
 
 from efficiency_lib.config import ANCHOR_TRAINING, inference_tasks  # noqa: E402
-from efficiency_lib.inference import _clone_info_fresh  # noqa: E402
+from efficiency_lib.inference import _clone_info_fresh, _slice_info_single_env  # noqa: E402
 from efficiency_lib.report import build_reports  # noqa: E402
 from efficiency_lib.stats import bootstrap_ci, summarize  # noqa: E402
+from efficiency_lib.aggregate import merge_phase_results  # noqa: E402
 from efficiency_lib.validation import (  # noqa: E402
     LEWM_CHECKPOINT_SHA256,
     read_gate_branch,
@@ -106,6 +108,28 @@ class EfficiencyBenchmarkTests(unittest.TestCase):
         clone_b = _clone_info_fresh(source)
         self.assertTrue(torch.equal(source["pixels"], clone_a["pixels"]))
         self.assertFalse(clone_a["pixels"].data_ptr() == clone_b["pixels"].data_ptr())
+
+    def test_slice_info_single_env(self) -> None:
+        import torch
+
+        batched = {"pixels": torch.zeros(50, 3, 4, 4), "action": torch.zeros(50, 2)}
+        single = _slice_info_single_env(batched)
+        self.assertEqual(single["pixels"].shape[0], 1)
+        self.assertEqual(single["action"].shape[0], 1)
+
+    def test_merge_phase_results_preserves_prior_training(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            scratch = Path(tmp)
+            (scratch / "training").mkdir(parents=True)
+            (scratch / "inference").mkdir(parents=True)
+            lap = {"method": "lap_regional", "stable_epoch_summary": {"mean_sec": 1.0}}
+            (scratch / "training" / "lap_regional_training.json").write_text(
+                json.dumps(lap) + "\n", encoding="utf-8"
+            )
+            joint = {"method": "joint", "stable_epoch_summary": {"mean_sec": 2.0}}
+            merged = merge_phase_results(scratch, joint=joint, lap=None, inference=[])
+            self.assertEqual(merged["joint_training"], joint)
+            self.assertEqual(merged["lap_regional_training"], lap)
 
     def test_build_reports_writes_files(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
