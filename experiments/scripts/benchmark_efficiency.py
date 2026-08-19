@@ -31,8 +31,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--repeats", type=int, default=50)
     parser.add_argument("--seed", type=int, default=20260819)
     parser.add_argument("--device", default="cuda:0")
-    parser.add_argument("--joint-epochs", type=int, default=3)
-    parser.add_argument("--lap-epochs", type=int, default=1)
+    parser.add_argument("--joint-epochs", type=int, default=5)
+    parser.add_argument("--lap-epochs", type=int, default=5)
+    parser.add_argument("--discard-warmup-epochs", type=int, default=1)
     parser.add_argument("--output-dir", type=Path, default=Path("experiments/efficiency_results"))
     parser.add_argument("--skip-gate-rerun", action="store_true")
     parser.add_argument(
@@ -51,10 +52,11 @@ def main() -> None:
     scratch.mkdir(parents=True, exist_ok=True)
 
     measures = {part.strip() for part in args.measure.split(",") if part.strip()}
+    timing_epochs = max(args.joint_epochs, args.lap_epochs)
     train_cfg = replace(
         ANCHOR_TRAINING,
-        joint_epochs=args.joint_epochs,
-        lap_epochs_per_expert=args.lap_epochs,
+        timing_epochs=timing_epochs,
+        discard_warmup_epochs=args.discard_warmup_epochs,
         seed=args.seed,
     )
 
@@ -71,8 +73,8 @@ def main() -> None:
     metadata["benchmark"] = {
         "warmup": args.warmup,
         "repeats": args.repeats,
-        "joint_epochs": args.joint_epochs,
-        "lap_epochs_per_expert": args.lap_epochs,
+        "timing_epochs": timing_epochs,
+        "discard_warmup_epochs": args.discard_warmup_epochs,
         "measures": sorted(measures),
     }
 

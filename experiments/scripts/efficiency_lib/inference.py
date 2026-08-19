@@ -17,6 +17,12 @@ from stable_worldmodel.solver import CEMSolver
 from .config import InferenceTaskConfig
 from .memory import read_peak_memory, reset_peak_memory
 from .stats import summarize
+from .validation import (
+    materialize_tworoom_lap_run_dir,
+    read_gate_branch,
+    validate_lap_predictor_manifest,
+    validate_lewm_checkpoint,
+)
 
 _CAPTURED_INFO: dict[str, Any] | None = None
 _ORIG_SOLVE = CEMSolver.solve
@@ -44,12 +50,12 @@ def _sync(device: str) -> None:
         torch.cuda.synchronize()
 
 
-def _time_call(fn) -> float:
-    _sync(fn.__self__.device if hasattr(fn, "__self__") else "cuda")
-    t0 = time.perf_counter()
-    fn()
-    _sync("cuda")
-    return time.perf_counter() - t0
+def _clone_info_fresh(source: dict[str, Any]) -> dict[str, Any]:
+    """Clone planning inputs with new tensor storage (fresh MPC observation identity)."""
+    return {
+        key: value.detach().clone() if torch.is_tensor(value) else copy.deepcopy(value)
+        for key, value in source.items()
+    }
 
 
 def _task_action_space(repo_root: Path, cfg) -> tuple[Any, int]:
@@ -61,13 +67,77 @@ def _task_action_space(repo_root: Path, cfg) -> tuple[Any, int]:
     return world.envs.action_space, int(world.envs.num_envs)
 
 
+def _resolve_lap_run_dir(
+    repo_root: Path,
+    task_cfg: InferenceTaskConfig,
+    *,
+    scratch_dir: Path,
+) -> Path:
+    if task_cfg.lap_partition_root is not None:
+        return materialize_tworoom_lap_run_dir(
+            predictor_dir=task_cfg.lap_run_dir,
+            partition_root=task_cfg.lap_partition_root,
+            scratch_dir=scratch_dir / "lap_assembly",
+        )
+    return task_cfg.lap_run_dir.resolve(strict=True)
+
+
+def _resolve_lap_model(
+    task_cfg: InferenceTaskConfig,
+    checkpoint: Path,
+    device: torch.device,
+    proprio_processor,
+    *,
+    lap_run_dir: Path,
+):
+    from tworoom_success_rate_eval import load_object_checkpoint, resolve_model
+
+    gate_branch = read_gate_branch(task_cfg.gate_manifest)
+    if gate_branch == "global_predictor":
+        validate_lap_predictor_manifest(
+            lap_run_dir,
+            checkpoint=checkpoint,
+            expect_regional=False,
+        )
+        global_ckpt = lap_run_dir / "P_train_cluster0_object.ckpt"
+        model = load_object_checkpoint(
+            global_ckpt, device, model_family="lewm"
+        )
+        meta = {
+            "mode": "global_ft",
+            "gate_branch": gate_branch,
+            "lap_run_dir": str(lap_run_dir),
+            "predictor_checkpoint": str(global_ckpt),
+            "router": None,
+        }
+        return model, meta
+
+    validate_lap_predictor_manifest(
+        lap_run_dir,
+        checkpoint=checkpoint,
+        expect_regional=True,
+    )
+    model, meta = resolve_model(
+        "lap",
+        checkpoint,
+        device,
+        proprio_processor,
+        lap_run_dir=lap_run_dir,
+        latent_routing="mpc",
+        model_family="lewm",
+    )
+    meta["gate_branch"] = gate_branch
+    return model, meta
+
+
 def _capture_planning_info(
     repo_root: Path,
     task_cfg: InferenceTaskConfig,
     *,
     mode: str,
     device: str,
-) -> tuple[Any, Any, dict[str, Any], dict[str, Any]]:
+    lap_run_dir: Path | None = None,
+) -> tuple[Any, dict[str, Any]]:
     global _CAPTURED_INFO
     _CAPTURED_INFO = None
     CEMSolver.solve = _patched_solve
@@ -75,7 +145,8 @@ def _capture_planning_info(
         from tworoom_success_rate_eval import run_eval
 
         with hydra.initialize_config_dir(
-            version_base=None, config_dir=str(repo_root / "config" / "eval")
+            version_base=None, config_dir=str(repo_root / "config" / "eval"
+        )
         ):
             cfg = hydra.compose(config_name=task_cfg.config_name)
         cfg.seed = 42
@@ -83,14 +154,24 @@ def _capture_planning_info(
         scratch = repo_root / "experiments/efficiency_results/scratch/inference_capture"
         scratch.mkdir(parents=True, exist_ok=True)
         kwargs = {
-            "checkpoint": task_cfg.checkpoint,
             "eval_start_indices_path": task_cfg.eval_starts,
             "latent_routing": "mpc",
             "model_family": "lewm",
         }
+        capture_mode = mode
+        capture_checkpoint = task_cfg.checkpoint
         if mode == "lap":
-            kwargs["lap_run_dir"] = task_cfg.lap_run_dir
-        run_eval(cfg, scratch / f"{task_cfg.task}_{mode}", mode, **kwargs)
+            resolved = lap_run_dir or _resolve_lap_run_dir(
+                repo_root, task_cfg, scratch_dir=scratch / "lap_assembly"
+            )
+            gate_branch = read_gate_branch(task_cfg.gate_manifest)
+            if gate_branch == "global_predictor":
+                capture_mode = "baseline"
+                capture_checkpoint = resolved / "P_train_cluster0_object.ckpt"
+            else:
+                kwargs["lap_run_dir"] = resolved
+        kwargs["checkpoint"] = capture_checkpoint
+        run_eval(cfg, scratch / f"{task_cfg.task}_{mode}", capture_mode, **kwargs)
     finally:
         CEMSolver.solve = _ORIG_SOLVE
     if _CAPTURED_INFO is None:
@@ -110,19 +191,33 @@ def benchmark_inference_task(
 ) -> dict[str, Any]:
     _ensure_import_paths(repo_root)
     scratch_dir.mkdir(parents=True, exist_ok=True)
+    validate_lewm_checkpoint(task_cfg.checkpoint)
     if not task_cfg.checkpoint.is_file():
         return {"task": task_cfg.task, "mode": mode, "status": "pending", "reason": "missing checkpoint"}
-    if mode == "lap" and not task_cfg.lap_run_dir.is_dir():
-        return {"task": task_cfg.task, "mode": mode, "status": "pending", "reason": "missing lap run dir"}
 
-    from tworoom_success_rate_eval import resolve_model, _state_processor, img_transform
+    lap_run_dir: Path | None = None
+    if mode == "lap":
+        if not task_cfg.lap_run_dir.is_dir():
+            return {
+                "task": task_cfg.task,
+                "mode": mode,
+                "status": "pending",
+                "reason": "missing lap run dir",
+            }
+        lap_run_dir = _resolve_lap_run_dir(repo_root, task_cfg, scratch_dir=scratch_dir)
+
     import numpy as np
     import stable_worldmodel as swm
     from sklearn import preprocessing
+    from tworoom_success_rate_eval import _state_processor
 
     reset_peak_memory(device)
     cfg, captured_info = _capture_planning_info(
-        repo_root, task_cfg, mode=mode, device=device
+        repo_root,
+        task_cfg,
+        mode=mode,
+        device=device,
+        lap_run_dir=lap_run_dir,
     )
 
     with hydra.initialize_config_dir(
@@ -151,12 +246,28 @@ def benchmark_inference_task(
         if col != "action":
             process[f"goal_{col}"] = processor
 
-    kwargs = {"latent_routing": "mpc", "model_family": "lewm"}
     if mode == "lap":
-        kwargs["lap_run_dir"] = task_cfg.lap_run_dir
-    model, model_meta = resolve_model(
-        mode, task_cfg.checkpoint, dev, _state_processor(process), **kwargs
-    )
+        assert lap_run_dir is not None
+        model, model_meta = _resolve_lap_model(
+            task_cfg,
+            task_cfg.checkpoint,
+            dev,
+            _state_processor(process),
+            lap_run_dir=lap_run_dir,
+        )
+    else:
+        from tworoom_success_rate_eval import resolve_model
+
+        model, model_meta = resolve_model(
+            "baseline",
+            task_cfg.checkpoint,
+            dev,
+            _state_processor(process),
+            latent_routing="mpc",
+            model_family="lewm",
+        )
+        model_meta["gate_branch"] = read_gate_branch(task_cfg.gate_manifest)
+
     model.eval()
     if hasattr(model, "classify_timing_sample_limit"):
         model.classify_timing_sample_limit = 0
@@ -170,16 +281,14 @@ def benchmark_inference_task(
 
     reset_peak_memory(device)
 
-    info = {
-        key: value.detach().clone() if torch.is_tensor(value) else copy.deepcopy(value)
-        for key, value in captured_info.items()
-    }
+    total_clones = warmup + repeats
+    info_clones = [_clone_info_fresh(captured_info) for _ in range(total_clones)]
 
-    for _ in range(warmup):
+    for info in info_clones[:warmup]:
         solver.solve(info)
 
     solve_times = []
-    for _ in range(repeats):
+    for info in info_clones[warmup:]:
         _sync(device)
         t0 = time.perf_counter()
         solver.solve(info)
@@ -187,15 +296,15 @@ def benchmark_inference_task(
         solve_times.append(time.perf_counter() - t0)
 
     routing_times = []
-    if mode == "lap" and hasattr(model, "_current_latent"):
-        route_info = {k: (v.clone() if torch.is_tensor(v) else v) for k, v in info.items()}
-        for _ in range(warmup):
-            latent = model._current_latent(route_info)
-            model._assign_clusters(latent)
-        for _ in range(repeats):
+    gate_branch = model_meta.get("gate_branch")
+    if mode == "lap" and gate_branch != "global_predictor" and hasattr(model, "_current_latent"):
+        route_clones = [_clone_info_fresh(captured_info) for _ in range(total_clones)]
+        for info in route_clones[:warmup]:
+            model._assign_clusters(model._current_latent(info))
+        for info in route_clones[warmup:]:
             _sync(device)
             t0 = time.perf_counter()
-            model._assign_clusters(model._current_latent(route_info))
+            model._assign_clusters(model._current_latent(info))
             _sync(device)
             routing_times.append(time.perf_counter() - t0)
 
@@ -205,7 +314,8 @@ def benchmark_inference_task(
         "mode": mode,
         "status": "ok",
         "checkpoint": str(task_cfg.checkpoint),
-        "lap_run_dir": str(task_cfg.lap_run_dir) if mode == "lap" else None,
+        "lap_run_dir": str(lap_run_dir) if mode == "lap" and lap_run_dir else None,
+        "gate_branch": gate_branch,
         "cem": {
             "num_samples": int(cfg.solver.num_samples),
             "n_steps": int(cfg.solver.n_steps),
@@ -222,6 +332,10 @@ def benchmark_inference_task(
         "routing_summary": summarize(routing_times) if routing_times else None,
         "peak_memory": peak.as_dict(),
         "model_meta": model_meta,
+        "timing_protocol": {
+            "fresh_observation_clones": total_clones,
+            "routing_measured_per_mpc_cycle": gate_branch != "global_predictor",
+        },
     }
     out = scratch_dir / f"inference_{task_cfg.task}_{mode}.json"
     out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")

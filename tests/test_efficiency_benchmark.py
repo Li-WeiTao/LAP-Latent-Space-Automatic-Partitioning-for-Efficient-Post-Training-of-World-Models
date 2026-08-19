@@ -13,8 +13,14 @@ import sys
 
 sys.path.insert(0, str(SCRIPTS))
 
-from efficiency_lib.stats import bootstrap_ci, summarize  # noqa: E402
+from efficiency_lib.config import ANCHOR_TRAINING, inference_tasks  # noqa: E402
+from efficiency_lib.inference import _clone_info_fresh  # noqa: E402
 from efficiency_lib.report import build_reports  # noqa: E402
+from efficiency_lib.stats import bootstrap_ci, summarize  # noqa: E402
+from efficiency_lib.validation import (  # noqa: E402
+    read_gate_branch,
+    validate_training_latent_cache,
+)
 
 
 class EfficiencyBenchmarkTests(unittest.TestCase):
@@ -25,6 +31,56 @@ class EfficiencyBenchmarkTests(unittest.TestCase):
         low, high = bootstrap_ci(values, seed=0)
         self.assertLess(low, summary["mean"])
         self.assertGreater(high, summary["mean"])
+
+    def test_anchor_training_uses_lewm_cache_not_subjepa(self) -> None:
+        self.assertNotIn("subjepa", str(ANCHOR_TRAINING.training_latent_cache))
+        self.assertIn("P_train_global_merged_embeddings.npz", str(ANCHOR_TRAINING.training_latent_cache))
+        self.assertIn("tworoom_lewm_train_latent_cache.npz", str(ANCHOR_TRAINING.latent_cache))
+
+    def test_tworoom_inference_points_to_lewm_spectral_seed0(self) -> None:
+        tworoom = inference_tasks(REPO_ROOT)["tworoom"]
+        self.assertIn("tworoom_latent_spectral", str(tworoom.lap_run_dir))
+        self.assertNotIn("subjepa", str(tworoom.lap_run_dir))
+        self.assertIsNotNone(tworoom.lap_partition_root)
+
+    def test_validate_training_latent_cache_rejects_subjepa(self) -> None:
+        subjepa_cache = (
+            REPO_ROOT / "experiments/tworoom/subjepa/formal/preparation/embedding_cache.npz"
+        )
+        if not subjepa_cache.is_file():
+            self.skipTest("subjepa cache missing")
+        with self.assertRaises(ValueError):
+            validate_training_latent_cache(
+                subjepa_cache,
+                partition_dir=ANCHOR_TRAINING.partition_dir,
+            )
+
+    def test_validate_training_latent_cache_accepts_lewm_merged(self) -> None:
+        cache = ANCHOR_TRAINING.training_latent_cache
+        if not cache.is_file():
+            self.skipTest("LeWM merged training cache missing")
+        report = validate_training_latent_cache(
+            cache,
+            partition_dir=ANCHOR_TRAINING.partition_dir,
+            checkpoint=ANCHOR_TRAINING.checkpoint,
+        )
+        self.assertEqual(report["num_transitions"], 693728)
+        self.assertEqual(report["emb_shape"][1], 4)
+
+    def test_gate_branch_labels(self) -> None:
+        tworoom = read_gate_branch(ANCHOR_TRAINING.gate_manifest)
+        pusht = read_gate_branch(inference_tasks(REPO_ROOT)["pusht"].gate_manifest)
+        self.assertEqual(tworoom, "regional_predictors")
+        self.assertEqual(pusht, "global_predictor")
+
+    def test_fresh_info_clone_changes_tensor_storage(self) -> None:
+        import torch
+
+        source = {"pixels": torch.zeros(2, 3, 4, 4)}
+        clone_a = _clone_info_fresh(source)
+        clone_b = _clone_info_fresh(source)
+        self.assertTrue(torch.equal(source["pixels"], clone_a["pixels"]))
+        self.assertFalse(clone_a["pixels"].data_ptr() == clone_b["pixels"].data_ptr())
 
     def test_build_reports_writes_files(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -65,7 +121,7 @@ class EfficiencyBenchmarkTests(unittest.TestCase):
                 output_dir=out,
                 joint=joint,
                 lap=lap,
-                gate_partition={"gate_wall_sec": 22.0, "partition_wall_sec": 23.0},
+                gate_partition={"gate_wall_sec": 22.0, "partition_wall_sec": 23.0, "selected_branch": "spectral"},
                 inference=inference,
             )
             self.assertTrue((out / "training_comparison.csv").is_file())
@@ -73,6 +129,7 @@ class EfficiencyBenchmarkTests(unittest.TestCase):
             self.assertTrue((out / "efficiency_table.tex").is_file())
             payload = (out / "efficiency_raw.jsonl").read_text(encoding="utf-8")
             self.assertIn("training", payload)
+            self.assertIn("gate_partition", payload)
 
 
 if __name__ == "__main__":

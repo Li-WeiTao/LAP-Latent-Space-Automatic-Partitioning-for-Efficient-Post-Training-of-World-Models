@@ -15,6 +15,7 @@ from torch.utils.data import DataLoader
 
 from .config import TrainingAnchorConfig
 from .memory import GPUMemorySnapshot, read_peak_memory, reset_peak_memory
+from .validation import validate_lewm_checkpoint, validate_training_latent_cache
 
 
 def _ensure_import_paths(repo_root: Path) -> None:
@@ -31,6 +32,22 @@ def _merge_peak(a: GPUMemorySnapshot, b: GPUMemorySnapshot) -> GPUMemorySnapshot
     )
 
 
+def _stable_epoch_summary(
+    epoch_rows: list[dict[str, Any]],
+    *,
+    discard_warmup_epochs: int,
+) -> dict[str, float]:
+    stable = epoch_rows[discard_warmup_epochs:] if len(epoch_rows) > discard_warmup_epochs else epoch_rows
+    stable_times = [row["epoch_wall_sec"] for row in stable]
+    return {
+        "mean_sec": float(np.mean(stable_times)),
+        "median_sec": float(np.median(stable_times)),
+        "std_sec": float(np.std(stable_times)),
+        "count_epochs": len(stable_times),
+        "discarded_warmup_epochs": discard_warmup_epochs,
+    }
+
+
 def benchmark_joint_training(
     repo_root: Path,
     cfg: TrainingAnchorConfig,
@@ -43,6 +60,7 @@ def benchmark_joint_training(
     from joint_continue_tworoom import component_parameter_counts, prepare_dataset, set_seed
     from module import SIGReg
 
+    validate_lewm_checkpoint(cfg.checkpoint)
     scratch_dir.mkdir(parents=True, exist_ok=True)
     set_seed(cfg.seed)
     torch.set_num_threads(cfg.cpu_threads)
@@ -92,7 +110,7 @@ def benchmark_joint_training(
     epoch_rows: list[dict[str, Any]] = []
     training_t0 = time.perf_counter()
     global_peak = read_peak_memory(dev)
-    for epoch in range(cfg.joint_epochs):
+    for epoch in range(cfg.timing_epochs):
         reset_peak_memory(dev)
         epoch_t0 = time.perf_counter()
         epoch_steps = 0
@@ -139,8 +157,6 @@ def benchmark_joint_training(
         )
 
     training_sec = time.perf_counter() - training_t0
-    stable_epochs = epoch_rows[1:] if len(epoch_rows) > 1 else epoch_rows
-    stable_times = [row["epoch_wall_sec"] for row in stable_epochs]
     result = {
         "method": "joint",
         "dataset_file": str(cfg.dataset_file),
@@ -151,10 +167,14 @@ def benchmark_joint_training(
         "training_wall_sec": training_sec,
         "epochs": epoch_rows,
         "peak_memory": global_peak.as_dict(),
-        "stable_epoch_summary": {
-            "mean_sec": float(np.mean(stable_times)),
-            "median_sec": float(np.median(stable_times)),
-            "std_sec": float(np.std(stable_times)),
+        "stable_epoch_summary": _stable_epoch_summary(
+            epoch_rows, discard_warmup_epochs=cfg.discard_warmup_epochs
+        ),
+        "timing_protocol": {
+            "primary_metric": "pure_training_epoch_sec",
+            "epochs": cfg.timing_epochs,
+            "discard_warmup_epochs": cfg.discard_warmup_epochs,
+            "excludes": ["dataset_setup", "model_load", "optimizer_init"],
         },
     }
     (scratch_dir / "joint_training.json").write_text(
@@ -174,6 +194,14 @@ def benchmark_lap_regional_training(
     from backends.lewm import LeWMBackendFactory, LeWMLatentCache, LeWMRegionalPredictorTrainer
     from backends.lewm.checkpoint_compat import load_jepa_object_checkpoint
     from lap.partition import IndexedPartitioner, PartitionArtifact
+
+    validate_lewm_checkpoint(cfg.checkpoint)
+    cache_provenance = validate_training_latent_cache(
+        cfg.training_latent_cache,
+        partition_dir=cfg.partition_dir,
+        expected_model=cfg.model,
+        checkpoint=cfg.checkpoint,
+    )
 
     scratch_dir.mkdir(parents=True, exist_ok=True)
     dev = torch.device(device)
@@ -198,6 +226,7 @@ def benchmark_lap_regional_training(
 
     per_expert_rows: list[dict[str, Any]] = []
     lap_epoch_rows: list[dict[str, Any]] = []
+    setup_rows: list[dict[str, Any]] = []
     global_peak = read_peak_memory(dev)
 
     def load_pretrained(path: str | Path) -> torch.nn.Module:
@@ -205,12 +234,13 @@ def benchmark_lap_regional_training(
 
     from lap.interfaces import RegionalTrainingConfig
 
-    for lap_epoch in range(1, cfg.lap_epochs_per_expert + 1):
+    for lap_epoch in range(1, cfg.timing_epochs + 1):
         lap_epoch_t0 = time.perf_counter()
         lap_epoch_peak = read_peak_memory(dev)
+        lap_epoch_train_sec = 0.0
         for region_id in range(artifact.num_regions):
             reset_peak_memory(dev)
-            expert_t0 = time.perf_counter()
+            setup_t0 = time.perf_counter()
             training = RegionalTrainingConfig(
                 train_seed=cfg.seed,
                 epochs=1,
@@ -228,12 +258,29 @@ def benchmark_lap_regional_training(
             backend = LeWMBackendFactory(load_pretrained).load(
                 cfg.checkpoint.resolve(strict=True)
             )
-            trainer = LeWMRegionalPredictorTrainer(dev, select_best_by_eval=True)
+            trainer = LeWMRegionalPredictorTrainer(
+                dev,
+                select_best_by_eval=False,
+                eval_each_epoch=False,
+            )
+            setup_sec = time.perf_counter() - setup_t0
+            setup_rows.append(
+                {
+                    "lap_epoch": lap_epoch,
+                    "expert_id": region_id,
+                    "setup_wall_sec": setup_sec,
+                    "region_sample_count": int(len(indices)),
+                }
+            )
+
+            reset_peak_memory(dev)
+            train_t0 = time.perf_counter()
             trainer.fit_region(backend, region_id, region_transitions, training)
+            train_sec = time.perf_counter() - train_t0
             expert_peak = read_peak_memory(dev)
             lap_epoch_peak = _merge_peak(lap_epoch_peak, expert_peak)
             global_peak = _merge_peak(global_peak, expert_peak)
-            elapsed = time.perf_counter() - expert_t0
+            lap_epoch_train_sec += train_sec
             per_expert_rows.append(
                 {
                     "method": "lap_regional",
@@ -241,8 +288,9 @@ def benchmark_lap_regional_training(
                     "expert_id": region_id,
                     "region_sample_count": int(len(indices)),
                     "optimizer_steps": None,
-                    "epoch_wall_sec": elapsed,
-                    "transitions_per_sec": len(indices) / max(elapsed, 1e-9),
+                    "setup_wall_sec": setup_sec,
+                    "epoch_wall_sec": train_sec,
+                    "transitions_per_sec": len(indices) / max(train_sec, 1e-9),
                     **expert_peak.as_dict(),
                 }
             )
@@ -254,25 +302,45 @@ def benchmark_lap_regional_training(
             {
                 "method": "lap_regional",
                 "lap_epoch": lap_epoch,
-                "total_wall_sec": time.perf_counter() - lap_epoch_t0,
+                "total_wall_sec": lap_epoch_train_sec,
+                "total_setup_sec": sum(
+                    row["setup_wall_sec"]
+                    for row in setup_rows
+                    if row["lap_epoch"] == lap_epoch
+                ),
                 "experts": [row for row in per_expert_rows if row["lap_epoch"] == lap_epoch],
                 **lap_epoch_peak.as_dict(),
             }
         )
+        _ = lap_epoch_t0
 
-    stable_times = [row["total_wall_sec"] for row in lap_epoch_rows]
+    stable_rows = [
+        {"epoch_wall_sec": row["total_wall_sec"]} for row in lap_epoch_rows
+    ]
     result = {
         "method": "lap_regional",
         "latent_cache": str(cache_path),
+        "cache_provenance": cache_provenance,
         "partition_dir": str(partition_dir),
         "num_regions": artifact.num_regions,
         "lap_epochs": lap_epoch_rows,
         "expert_epochs": per_expert_rows,
+        "expert_setup": setup_rows,
         "peak_memory": global_peak.as_dict(),
-        "stable_epoch_summary": {
-            "mean_sec": float(np.mean(stable_times)),
-            "median_sec": float(np.median(stable_times)),
-            "std_sec": float(np.std(stable_times)),
+        "stable_epoch_summary": _stable_epoch_summary(
+            stable_rows, discard_warmup_epochs=cfg.discard_warmup_epochs
+        ),
+        "timing_protocol": {
+            "primary_metric": "sum_k pure_predictor_training_epoch_sec",
+            "epochs": cfg.timing_epochs,
+            "discard_warmup_epochs": cfg.discard_warmup_epochs,
+            "excludes": [
+                "checkpoint_load",
+                "backend_construction",
+                "trainer_construction",
+                "per_epoch_eval",
+                "checkpoint_selection",
+            ],
         },
     }
     (scratch_dir / "lap_regional_training.json").write_text(

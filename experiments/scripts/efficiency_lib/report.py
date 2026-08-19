@@ -46,6 +46,15 @@ def build_reports(
                     "peak_allocated_bytes": row.get("peak_allocated_bytes"),
                 }
             )
+    if gate_partition:
+        raw_lines.append(
+            {
+                "benchmark": "gate_partition",
+                "gate_wall_sec": gate_partition.get("gate_wall_sec"),
+                "partition_wall_sec": gate_partition.get("partition_wall_sec"),
+                "selected_branch": gate_partition.get("selected_branch"),
+            }
+        )
     for item in inference:
         if item.get("status") != "ok":
             raw_lines.append({"benchmark": "inference", **item})

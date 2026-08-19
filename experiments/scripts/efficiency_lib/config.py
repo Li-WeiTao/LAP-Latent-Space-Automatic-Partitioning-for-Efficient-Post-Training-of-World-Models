@@ -28,8 +28,8 @@ class TrainingAnchorConfig:
     train_fraction: float
     split_seed: int
     seed: int
-    lap_epochs_per_expert: int
-    joint_epochs: int
+    timing_epochs: int
+    discard_warmup_epochs: int
 
 
 @dataclass(frozen=True)
@@ -41,24 +41,31 @@ class InferenceTaskConfig:
     lap_run_dir: Path
     gate_manifest: Path
     eval_starts: Path | None
+    lap_partition_root: Path | None = None
 
 
 REPO_ROOT = Path("/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models")
+LEWM_ROOT = Path("/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results")
+CKPT_ROOT = Path("/data/sicong/weitao/.stable_worldmodel")
+
+TWOROOM_AUTO_GATE = REPO_ROOT / "experiments/tworoom/results/auto_gate_complete_k3"
+TWOROOM_LEWM_PREDICTORS = (
+    LEWM_ROOT / "tworoom_latent_spectral_spectral_M20000_k30_P16_seed0_trainseed0"
+)
+TWOROOM_LEWM_TRAINING_CACHE = (
+    TWOROOM_LEWM_PREDICTORS / "P_train_global_merged_embeddings.npz"
+)
 
 
 ANCHOR_TRAINING = TrainingAnchorConfig(
     model="lewm",
     task="tworoom",
     dataset_file=Path("/data/sicong/weitao/datasets/lewm/tworoom.h5"),
-    checkpoint=Path("/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt"),
-    latent_cache=REPO_ROOT
-    / "experiments/tworoom/results/auto_gate_complete_k3/tworoom_lewm_train_latent_cache.npz",
-    training_latent_cache=REPO_ROOT
-    / "experiments/tworoom/subjepa/formal/preparation/embedding_cache.npz",
-    partition_dir=REPO_ROOT
-    / "experiments/tworoom/results/auto_gate_complete_k3/auto/partition",
-    gate_manifest=REPO_ROOT
-    / "experiments/tworoom/results/auto_gate_complete_k3/auto/partition/manifest.json",
+    checkpoint=CKPT_ROOT / "tworoom/lewm_object.ckpt",
+    latent_cache=TWOROOM_AUTO_GATE / "tworoom_lewm_train_latent_cache.npz",
+    training_latent_cache=TWOROOM_LEWM_TRAINING_CACHE,
+    partition_dir=TWOROOM_AUTO_GATE / "auto/partition",
+    gate_manifest=TWOROOM_AUTO_GATE / "auto/partition/manifest.json",
     data_file=Path("/data/sicong/weitao/datasets/lewm/tworoom.h5"),
     batch_size=128,
     num_workers=4,
@@ -71,23 +78,21 @@ ANCHOR_TRAINING = TrainingAnchorConfig(
     train_fraction=0.9,
     split_seed=3072,
     seed=42,
-    lap_epochs_per_expert=1,
-    joint_epochs=3,
+    timing_epochs=5,
+    discard_warmup_epochs=1,
 )
 
 
 def inference_tasks(repo_root: Path) -> dict[str, InferenceTaskConfig]:
-    ckpt_root = Path("/data/sicong/weitao/.stable_worldmodel")
     return {
         "tworoom": InferenceTaskConfig(
             task="tworoom",
             config_name="tworoom",
             dataset_tag="tworoom",
-            checkpoint=ckpt_root / "tworoom/lewm_object.ckpt",
-            lap_run_dir=repo_root
-            / "experiments/tworoom/subjepa/training/spectral/partition0_train0",
-            gate_manifest=repo_root
-            / "experiments/tworoom/results/auto_gate_complete_k3/auto/partition/manifest.json",
+            checkpoint=CKPT_ROOT / "tworoom/lewm_object.ckpt",
+            lap_run_dir=TWOROOM_LEWM_PREDICTORS,
+            lap_partition_root=TWOROOM_AUTO_GATE / "auto/partition",
+            gate_manifest=TWOROOM_AUTO_GATE / "auto/partition/manifest.json",
             eval_starts=repo_root
             / "experiments/tworoom/results/tworoom_success_rate_baseline_seed42/results.json",
         ),
@@ -95,7 +100,7 @@ def inference_tasks(repo_root: Path) -> dict[str, InferenceTaskConfig]:
             task="pusht",
             config_name="pusht",
             dataset_tag="pusht",
-            checkpoint=ckpt_root / "pusht/lewm_object.ckpt",
+            checkpoint=CKPT_ROOT / "pusht/lewm_object.ckpt",
             lap_run_dir=repo_root / "experiments/pusht/matrix/training/global/train0",
             gate_manifest=repo_root
             / "experiments/pusht/results/auto_gate_complete_k3/auto/partition/manifest.json",
@@ -106,7 +111,7 @@ def inference_tasks(repo_root: Path) -> dict[str, InferenceTaskConfig]:
             task="reacher",
             config_name="reacher",
             dataset_tag="reacher",
-            checkpoint=ckpt_root / "reacher/lewm_object.ckpt",
+            checkpoint=CKPT_ROOT / "reacher/lewm_object.ckpt",
             lap_run_dir=repo_root / "experiments/reacher/matrix/training/global/train0",
             gate_manifest=repo_root
             / "experiments/reacher/results/auto_gate_complete_k3/auto/partition/manifest.json",
@@ -117,7 +122,7 @@ def inference_tasks(repo_root: Path) -> dict[str, InferenceTaskConfig]:
             task="cube",
             config_name="cube",
             dataset_tag="cube",
-            checkpoint=ckpt_root / "cube/lewm_object.ckpt",
+            checkpoint=CKPT_ROOT / "cube/lewm_object.ckpt",
             lap_run_dir=repo_root / "experiments/cube/matrix/training/global/train0",
             gate_manifest=repo_root
             / "experiments/cube/results/auto_gate_complete_k3/auto/partition/manifest.json",

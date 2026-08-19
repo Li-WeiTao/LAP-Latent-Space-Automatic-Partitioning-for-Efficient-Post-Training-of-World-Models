@@ -25,8 +25,9 @@ echo "[joint-wait] starting Joint training benchmark on cuda:${selected}" | tee 
 "${PYTHON}" experiments/scripts/benchmark_efficiency.py \
   --measure train \
   --training-methods joint \
-  --joint-epochs 3 \
-  --lap-epochs 1 \
+  --joint-epochs 5 \
+  --lap-epochs 5 \
+  --discard-warmup-epochs 1 \
   --device "cuda:${selected}" \
   --output-dir experiments/efficiency_results \
   2>&1 | tee -a "${REPO}/experiments/efficiency_results/joint_train.log"

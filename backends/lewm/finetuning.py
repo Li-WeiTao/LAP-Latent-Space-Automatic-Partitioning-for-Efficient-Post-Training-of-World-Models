@@ -188,6 +188,7 @@ def train_region_predictor(
     region: str | None = None,
     name_prefix: str = "",
     select_best_by_eval: bool = False,
+    eval_each_epoch: bool = True,
 ) -> tuple[torch.nn.Module, dict[str, Any]]:
     """Train with the exact historical ordering, loss, and selection rule."""
 
@@ -230,7 +231,10 @@ def train_region_predictor(
             epoch_losses.append(float(loss.detach().cpu()))
         epoch_no = epoch + 1
         train_loss = float(np.mean(epoch_losses))
-        eval_loss = eval_predictor_loss(model, emb, act_emb, cfg, device)
+        if eval_each_epoch:
+            eval_loss = eval_predictor_loss(model, emb, act_emb, cfg, device)
+        else:
+            eval_loss = float("nan")
         history.append(
             {"epoch": epoch_no, "loss": train_loss, "eval_loss": eval_loss}
         )
@@ -286,9 +290,16 @@ def train_region_predictor(
 class LeWMRegionalPredictorTrainer:
     """Bridge the generic regional trainer protocol to exact LeWM FP32 FT."""
 
-    def __init__(self, device: torch.device, *, select_best_by_eval: bool = True):
+    def __init__(
+        self,
+        device: torch.device,
+        *,
+        select_best_by_eval: bool = True,
+        eval_each_epoch: bool = True,
+    ):
         self.device = device
         self.select_best_by_eval = select_best_by_eval
+        self.eval_each_epoch = eval_each_epoch
 
     def fit_region(
         self,
@@ -318,5 +329,6 @@ class LeWMRegionalPredictorTrainer:
             region=f"cluster{region_id}",
             name_prefix="train_",
             select_best_by_eval=self.select_best_by_eval,
+            eval_each_epoch=self.eval_each_epoch,
         )
         return PredictorTrainingResult(predictor=model, metrics=metrics)
