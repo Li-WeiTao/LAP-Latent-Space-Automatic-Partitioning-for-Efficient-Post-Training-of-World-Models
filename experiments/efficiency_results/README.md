@@ -4,10 +4,18 @@
 
 | Phase | Status |
 |---|---|
-| LAP Regional-FT (TwoRoom) | **Pending / invalid preliminary run** — prior scratch used Sub-JEPA cache; do not cite |
+| CPU dry-run (provenance + pool alignment) | **Complete** — `experiments/scripts/dry_run_efficiency.py` |
+| LAP Regional-FT (TwoRoom) | **Pending** — waits for idle GPU |
 | Gate / Partition (one-time) | **Complete** — committed manifest via `--skip-gate-rerun` |
 | Joint training (5 epochs, discard epoch 1) | **Pending** — waits for idle GPU via `run_efficiency_joint_when_ready.sh` |
-| Inference (4 tasks × 50 repeats) | **Pending** — use `run_efficiency_inference_when_ready.sh` after script fixes |
+| Inference (4 tasks × 50 repeats) | **Pending** — use `run_efficiency_inference_when_ready.sh` |
+
+CPU validation before GPU:
+
+```bash
+cd /data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models
+/data/sicong/weitao/le-wm/.venv/bin/python experiments/scripts/dry_run_efficiency.py
+```
 
 Formal inference/training require an **idle GPU**: free ≥ 20 GiB and utilization ≤ 10% (configurable via `MIN_FREE_MIB`, `MAX_UTIL_PCT`).
 
@@ -17,7 +25,7 @@ Full benchmark:
 
 ```bash
 cd /data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models
-PYTHONPATH=experiments/scripts:.:experiments/tworoom \
+PYTHONPATH=experiments/scripts:.:experiments/tworoom:/data/sicong/weitao/le-wm \
 /data/sicong/weitao/le-wm/.venv/bin/python experiments/scripts/benchmark_efficiency.py \
   --measure train,gate,partition,inference \
   --skip-gate-rerun \
@@ -32,7 +40,7 @@ Split runs:
 
 ```bash
 # LAP regional training only
-PYTHONPATH=experiments/scripts:.:experiments/tworoom \
+PYTHONPATH=experiments/scripts:.:experiments/tworoom:/data/sicong/weitao/le-wm \
 /data/sicong/weitao/le-wm/.venv/bin/python experiments/scripts/benchmark_efficiency.py \
   --measure train --training-methods lap --device cuda:0 --output-dir experiments/efficiency_results
 

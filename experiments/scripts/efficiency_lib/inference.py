@@ -21,7 +21,7 @@ from .validation import (
     materialize_tworoom_lap_run_dir,
     read_gate_branch,
     validate_lap_predictor_manifest,
-    validate_lewm_checkpoint,
+    validate_task_checkpoint,
 )
 
 _CAPTURED_INFO: dict[str, Any] | None = None
@@ -96,6 +96,7 @@ def _resolve_lap_model(
     if gate_branch == "global_predictor":
         validate_lap_predictor_manifest(
             lap_run_dir,
+            task=task_cfg.task,
             checkpoint=checkpoint,
             expect_regional=False,
         )
@@ -114,6 +115,7 @@ def _resolve_lap_model(
 
     validate_lap_predictor_manifest(
         lap_run_dir,
+        task=task_cfg.task,
         checkpoint=checkpoint,
         expect_regional=True,
     )
@@ -191,9 +193,12 @@ def benchmark_inference_task(
 ) -> dict[str, Any]:
     _ensure_import_paths(repo_root)
     scratch_dir.mkdir(parents=True, exist_ok=True)
-    validate_lewm_checkpoint(task_cfg.checkpoint)
     if not task_cfg.checkpoint.is_file():
         return {"task": task_cfg.task, "mode": mode, "status": "pending", "reason": "missing checkpoint"}
+    try:
+        validate_task_checkpoint(task_cfg.task, task_cfg.checkpoint)
+    except (FileNotFoundError, ValueError) as exc:
+        return {"task": task_cfg.task, "mode": mode, "status": "pending", "reason": str(exc)}
 
     lap_run_dir: Path | None = None
     if mode == "lap":
@@ -230,7 +235,7 @@ def benchmark_inference_task(
 
     cache_dir = Path(cfg.cache_dir or swm.data.utils.get_cache_dir())
     dataset = swm.data.HDF5Dataset(
-        task_cfg.dataset_tag,
+        cfg.eval.dataset_name,
         keys_to_cache=cfg.dataset.keys_to_cache,
         cache_dir=cache_dir,
     )
@@ -297,14 +302,24 @@ def benchmark_inference_task(
 
     routing_times = []
     gate_branch = model_meta.get("gate_branch")
-    if mode == "lap" and gate_branch != "global_predictor" and hasattr(model, "_current_latent"):
-        route_clones = [_clone_info_fresh(captured_info) for _ in range(total_clones)]
-        for info in route_clones[:warmup]:
-            model._assign_clusters(model._current_latent(info))
-        for info in route_clones[warmup:]:
+    if (
+        mode == "lap"
+        and gate_branch != "global_predictor"
+        and hasattr(model, "_assign_clusters")
+    ):
+        with torch.no_grad():
+            ref_info = _clone_info_fresh(captured_info)
+            encoded = model.encode(ref_info)
+            routing_latent_template = encoded["emb"][:, 0, :].detach()
+        route_clones = [
+            routing_latent_template.detach().clone() for _ in range(total_clones)
+        ]
+        for latent in route_clones[:warmup]:
+            model._assign_clusters(latent)
+        for latent in route_clones[warmup:]:
             _sync(device)
             t0 = time.perf_counter()
-            model._assign_clusters(model._current_latent(info))
+            model._assign_clusters(latent)
             _sync(device)
             routing_times.append(time.perf_counter() - t0)
 
@@ -335,6 +350,8 @@ def benchmark_inference_task(
         "timing_protocol": {
             "fresh_observation_clones": total_clones,
             "routing_measured_per_mpc_cycle": gate_branch != "global_predictor",
+            "routing_excludes_encoder": True,
+            "eval_dataset_name": str(cfg.eval.dataset_name),
         },
     }
     out = scratch_dir / f"inference_{task_cfg.task}_{mode}.json"

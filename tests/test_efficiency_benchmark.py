@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -18,7 +17,10 @@ from efficiency_lib.inference import _clone_info_fresh  # noqa: E402
 from efficiency_lib.report import build_reports  # noqa: E402
 from efficiency_lib.stats import bootstrap_ci, summarize  # noqa: E402
 from efficiency_lib.validation import (  # noqa: E402
+    LEWM_CHECKPOINT_SHA256,
     read_gate_branch,
+    validate_joint_train_pool_dataset,
+    validate_task_checkpoint,
     validate_training_latent_cache,
 )
 
@@ -32,10 +34,13 @@ class EfficiencyBenchmarkTests(unittest.TestCase):
         self.assertLess(low, summary["mean"])
         self.assertGreater(high, summary["mean"])
 
+    def test_per_task_checkpoint_sha_table(self) -> None:
+        self.assertEqual(set(LEWM_CHECKPOINT_SHA256.keys()), {"tworoom", "pusht", "reacher", "cube"})
+        validate_task_checkpoint("tworoom", ANCHOR_TRAINING.checkpoint)
+
     def test_anchor_training_uses_lewm_cache_not_subjepa(self) -> None:
         self.assertNotIn("subjepa", str(ANCHOR_TRAINING.training_latent_cache))
         self.assertIn("P_train_global_merged_embeddings.npz", str(ANCHOR_TRAINING.training_latent_cache))
-        self.assertIn("tworoom_lewm_train_latent_cache.npz", str(ANCHOR_TRAINING.latent_cache))
 
     def test_tworoom_inference_points_to_lewm_spectral_seed0(self) -> None:
         tworoom = inference_tasks(REPO_ROOT)["tworoom"]
@@ -63,9 +68,29 @@ class EfficiencyBenchmarkTests(unittest.TestCase):
             cache,
             partition_dir=ANCHOR_TRAINING.partition_dir,
             checkpoint=ANCHOR_TRAINING.checkpoint,
+            task="tworoom",
         )
         self.assertEqual(report["num_transitions"], 693728)
         self.assertEqual(report["emb_shape"][1], 4)
+
+    def test_joint_train_pool_matches_lap_cache(self) -> None:
+        cache = ANCHOR_TRAINING.training_latent_cache
+        if not cache.is_file():
+            self.skipTest("LeWM merged training cache missing")
+        if not ANCHOR_TRAINING.train_pool_starts.is_file():
+            self.skipTest("train pool starts missing")
+        report = validate_joint_train_pool_dataset(
+            train_pool_starts=ANCHOR_TRAINING.train_pool_starts,
+            training_latent_cache=cache,
+            data_file=ANCHOR_TRAINING.dataset_file,
+            dataset_name=ANCHOR_TRAINING.task,
+            history_size=ANCHOR_TRAINING.history_size,
+            num_preds=ANCHOR_TRAINING.num_preds,
+            frameskip=ANCHOR_TRAINING.frameskip,
+            img_size=ANCHOR_TRAINING.img_size,
+        )
+        self.assertEqual(report["num_windows"], 693728)
+        self.assertTrue(report["matches_cache"])
 
     def test_gate_branch_labels(self) -> None:
         tworoom = read_gate_branch(ANCHOR_TRAINING.gate_manifest)

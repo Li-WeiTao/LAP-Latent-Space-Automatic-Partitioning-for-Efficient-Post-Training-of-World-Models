@@ -6,6 +6,7 @@ import copy
 import json
 import os
 import random
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -189,6 +190,8 @@ def train_region_predictor(
     name_prefix: str = "",
     select_best_by_eval: bool = False,
     eval_each_epoch: bool = True,
+    run_final_eval: bool = True,
+    sync_batch_loss: bool = True,
 ) -> tuple[torch.nn.Module, dict[str, Any]]:
     """Train with the exact historical ordering, loss, and selection rule."""
 
@@ -228,9 +231,10 @@ def train_region_predictor(
             )
             loss.backward()
             optimizer.step()
-            epoch_losses.append(float(loss.detach().cpu()))
+            if sync_batch_loss:
+                epoch_losses.append(float(loss.detach().cpu()))
         epoch_no = epoch + 1
-        train_loss = float(np.mean(epoch_losses))
+        train_loss = float(np.mean(epoch_losses)) if epoch_losses else float("nan")
         if eval_each_epoch:
             eval_loss = eval_predictor_loss(model, emb, act_emb, cfg, device)
         else:
@@ -272,10 +276,14 @@ def train_region_predictor(
             f"(selected over {cfg.epochs} epochs)",
             flush=True,
         )
-    else:
+    elif run_final_eval:
         final_loss = eval_predictor_loss(model, emb, act_emb, cfg, device)
         best_epoch = cfg.epochs
         best_eval_loss = final_loss
+    else:
+        final_loss = float("nan")
+        best_epoch = cfg.epochs
+        best_eval_loss = float("nan")
     return model, {
         "epochs": cfg.epochs,
         "final_loss": final_loss,
@@ -287,6 +295,76 @@ def train_region_predictor(
     }
 
 
+def prepare_region_predictor_training(
+    base_model: torch.nn.Module,
+    emb: torch.Tensor,
+    act_emb: torch.Tensor,
+    cfg: LeWMTrainConfig,
+    device: torch.device,
+) -> tuple[torch.nn.Module, DataLoader, torch.optim.AdamW]:
+    """Construct a region predictor and optimizer outside epoch timing."""
+    model = copy.deepcopy(base_model).to(device)
+    freeze_encoder_path(model)
+    unfreeze_predictor_path(model)
+    params = trainable_predictor_params(model)
+    if not params:
+        raise RuntimeError("No trainable predictor parameters found")
+    set_training_seed(cfg.seed)
+    loader = DataLoader(
+        TensorDataset(emb, act_emb),
+        batch_size=cfg.batch_size,
+        shuffle=True,
+        drop_last=len(emb) >= cfg.batch_size,
+        generator=torch.Generator().manual_seed(cfg.seed),
+    )
+    optimizer = torch.optim.AdamW(
+        params, lr=cfg.lr, weight_decay=cfg.weight_decay
+    )
+    return model, loader, optimizer
+
+
+def _sync_device(device: torch.device) -> None:
+    if device.type == "cuda":
+        torch.cuda.synchronize(device)
+
+
+def train_predictor_epochs_timed(
+    model: torch.nn.Module,
+    loader: DataLoader,
+    optimizer: torch.optim.Optimizer,
+    cfg: LeWMTrainConfig,
+    device: torch.device,
+    *,
+    epochs: int,
+) -> list[dict[str, Any]]:
+    """Time pure predictor batch loops with symmetric CUDA synchronization."""
+    epoch_rows: list[dict[str, Any]] = []
+    for epoch in range(epochs):
+        _sync_device(device)
+        epoch_t0 = time.perf_counter()
+        epoch_steps = 0
+        for batch_emb, batch_act in loader:
+            batch_emb = batch_emb.to(device)
+            batch_act = batch_act.to(device)
+            optimizer.zero_grad(set_to_none=True)
+            loss = predictor_loss(
+                model, batch_emb, batch_act, cfg.history_size, cfg.num_preds
+            )
+            loss.backward()
+            optimizer.step()
+            epoch_steps += 1
+        _sync_device(device)
+        elapsed = time.perf_counter() - epoch_t0
+        epoch_rows.append(
+            {
+                "epoch": epoch + 1,
+                "epoch_wall_sec": elapsed,
+                "optimizer_steps": epoch_steps,
+            }
+        )
+    return epoch_rows
+
+
 class LeWMRegionalPredictorTrainer:
     """Bridge the generic regional trainer protocol to exact LeWM FP32 FT."""
 
@@ -296,10 +374,12 @@ class LeWMRegionalPredictorTrainer:
         *,
         select_best_by_eval: bool = True,
         eval_each_epoch: bool = True,
+        benchmark_pure_epochs: bool = False,
     ):
         self.device = device
         self.select_best_by_eval = select_best_by_eval
         self.eval_each_epoch = eval_each_epoch
+        self.benchmark_pure_epochs = benchmark_pure_epochs
 
     def fit_region(
         self,
@@ -320,6 +400,30 @@ class LeWMRegionalPredictorTrainer:
             lr=config.learning_rate,
             weight_decay=config.weight_decay,
         )
+        if self.benchmark_pure_epochs:
+            model, loader, optimizer = prepare_region_predictor_training(
+                backend.model,
+                transitions.payload.emb,
+                transitions.payload.act_emb,
+                cfg,
+                self.device,
+            )
+            epoch_rows = train_predictor_epochs_timed(
+                model,
+                loader,
+                optimizer,
+                cfg,
+                self.device,
+                epochs=config.epochs,
+            )
+            return PredictorTrainingResult(
+                predictor=model,
+                metrics={
+                    "epochs": config.epochs,
+                    "benchmark_pure_epochs": True,
+                    "epoch_timings": epoch_rows,
+                },
+            )
         model, metrics = train_region_predictor(
             backend.model,
             transitions.payload.emb,
@@ -330,5 +434,7 @@ class LeWMRegionalPredictorTrainer:
             name_prefix="train_",
             select_best_by_eval=self.select_best_by_eval,
             eval_each_epoch=self.eval_each_epoch,
+            run_final_eval=not self.benchmark_pure_epochs,
+            sync_batch_loss=not self.benchmark_pure_epochs,
         )
         return PredictorTrainingResult(predictor=model, metrics=metrics)

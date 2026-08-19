@@ -30,13 +30,13 @@ class TrainingAnchorConfig:
     seed: int
     timing_epochs: int
     discard_warmup_epochs: int
+    train_pool_starts: Path
 
 
 @dataclass(frozen=True)
 class InferenceTaskConfig:
     task: str
     config_name: str
-    dataset_tag: str
     checkpoint: Path
     lap_run_dir: Path
     gate_manifest: Path
@@ -80,6 +80,10 @@ ANCHOR_TRAINING = TrainingAnchorConfig(
     seed=42,
     timing_epochs=5,
     discard_warmup_epochs=1,
+    train_pool_starts=Path(
+        "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/"
+        "tworoom_geometry_train_region_predictors/train_global_reference_starts.npy"
+    ),
 )
 
 
@@ -88,7 +92,6 @@ def inference_tasks(repo_root: Path) -> dict[str, InferenceTaskConfig]:
         "tworoom": InferenceTaskConfig(
             task="tworoom",
             config_name="tworoom",
-            dataset_tag="tworoom",
             checkpoint=CKPT_ROOT / "tworoom/lewm_object.ckpt",
             lap_run_dir=TWOROOM_LEWM_PREDICTORS,
             lap_partition_root=TWOROOM_AUTO_GATE / "auto/partition",
@@ -99,7 +102,6 @@ def inference_tasks(repo_root: Path) -> dict[str, InferenceTaskConfig]:
         "pusht": InferenceTaskConfig(
             task="pusht",
             config_name="pusht",
-            dataset_tag="pusht",
             checkpoint=CKPT_ROOT / "pusht/lewm_object.ckpt",
             lap_run_dir=repo_root / "experiments/pusht/matrix/training/global/train0",
             gate_manifest=repo_root
@@ -110,7 +112,6 @@ def inference_tasks(repo_root: Path) -> dict[str, InferenceTaskConfig]:
         "reacher": InferenceTaskConfig(
             task="reacher",
             config_name="reacher",
-            dataset_tag="reacher",
             checkpoint=CKPT_ROOT / "reacher/lewm_object.ckpt",
             lap_run_dir=repo_root / "experiments/reacher/matrix/training/global/train0",
             gate_manifest=repo_root
@@ -121,7 +122,6 @@ def inference_tasks(repo_root: Path) -> dict[str, InferenceTaskConfig]:
         "cube": InferenceTaskConfig(
             task="cube",
             config_name="cube",
-            dataset_tag="cube",
             checkpoint=CKPT_ROOT / "cube/lewm_object.ckpt",
             lap_run_dir=repo_root / "experiments/cube/matrix/training/global/train0",
             gate_manifest=repo_root
