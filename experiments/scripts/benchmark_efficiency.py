@@ -11,8 +11,8 @@ from pathlib import Path
 from efficiency_lib.aggregate import load_scratch_results, merge_phase_results
 from efficiency_lib.config import ANCHOR_TRAINING, inference_tasks
 from efficiency_lib.gate_partition import measure_gate_and_partition
-from efficiency_lib.inference import benchmark_inference_task
-from efficiency_lib.metadata import collect_metadata, sha256_file, write_metadata
+from efficiency_lib.inference import benchmark_inference_task, load_or_capture_task_planning_info
+from efficiency_lib.metadata import collect_metadata, phase_provenance, sha256_file, write_metadata
 from efficiency_lib.report import build_reports
 from efficiency_lib.training import benchmark_joint_training, benchmark_lap_regional_training
 
@@ -115,12 +115,32 @@ def main() -> None:
         if "joint" in train_methods:
             print("[train] Joint training benchmark...", flush=True)
             joint_result = benchmark_joint_training(
-                repo_root, train_cfg, device=args.device, scratch_dir=scratch / "training"
+                repo_root,
+                train_cfg,
+                device=args.device,
+                scratch_dir=scratch / "training",
+                provenance=phase_provenance(
+                    repo_root,
+                    phase="joint_training",
+                    device=args.device,
+                    seed=args.seed,
+                    extra={"timing_epochs": timing_epochs},
+                ),
             )
         if "lap" in train_methods:
             print("[train] LAP Regional-FT benchmark...", flush=True)
             lap_result = benchmark_lap_regional_training(
-                repo_root, train_cfg, device=args.device, scratch_dir=scratch / "training"
+                repo_root,
+                train_cfg,
+                device=args.device,
+                scratch_dir=scratch / "training",
+                provenance=phase_provenance(
+                    repo_root,
+                    phase="lap_regional_training",
+                    device=args.device,
+                    seed=args.seed,
+                    extra={"timing_epochs": timing_epochs},
+                ),
             )
 
     if "gate" in measures or "partition" in measures:
@@ -130,12 +150,25 @@ def main() -> None:
             train_cfg,
             scratch_dir=scratch / "gate_partition",
             rerun=not args.skip_gate_rerun,
+            provenance=phase_provenance(
+                repo_root,
+                phase="gate_partition",
+                device=args.device,
+                seed=args.seed,
+            ),
         )
 
     if "inference" in measures:
         task_map = inference_tasks(repo_root)
+        inference_scratch = scratch / "inference"
         for task_name in [t.strip() for t in args.inference_tasks.split(",") if t.strip()]:
             task_cfg = task_map[task_name]
+            planning_info = load_or_capture_task_planning_info(
+                repo_root,
+                task_cfg,
+                device=args.device,
+                scratch_dir=inference_scratch,
+            )
             print(f"[inference] {task_name} baseline...", flush=True)
             inference_results.append(
                 benchmark_inference_task(
@@ -145,7 +178,15 @@ def main() -> None:
                     device=args.device,
                     warmup=args.warmup,
                     repeats=args.repeats,
-                    scratch_dir=scratch / "inference",
+                    scratch_dir=inference_scratch,
+                    planning_info=planning_info,
+                    provenance=phase_provenance(
+                        repo_root,
+                        phase=f"inference_{task_name}_baseline",
+                        device=args.device,
+                        seed=args.seed,
+                        extra={"warmup": args.warmup, "repeats": args.repeats},
+                    ),
                 )
             )
             print(f"[inference] {task_name} lap...", flush=True)
@@ -157,7 +198,15 @@ def main() -> None:
                     device=args.device,
                     warmup=args.warmup,
                     repeats=args.repeats,
-                    scratch_dir=scratch / "inference",
+                    scratch_dir=inference_scratch,
+                    planning_info=planning_info,
+                    provenance=phase_provenance(
+                        repo_root,
+                        phase=f"inference_{task_name}_lap",
+                        device=args.device,
+                        seed=args.seed,
+                        extra={"warmup": args.warmup, "repeats": args.repeats},
+                    ),
                 )
             )
 

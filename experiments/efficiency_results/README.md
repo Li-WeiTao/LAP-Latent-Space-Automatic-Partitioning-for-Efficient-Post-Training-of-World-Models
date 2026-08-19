@@ -57,13 +57,16 @@ Scratch artifacts (never overwritten across split runs):
 - `scratch/training/lap_regional_training.json`
 - `scratch/gate_partition/gate_partition.json`
 - `scratch/inference/inference_<task>_<mode>.json`
+- `scratch/inference/planning_info_<task>.pt` (shared B=1 capture reused by baseline/LAP)
 
 Do **not** run the 50-repeat inference benchmark on a shared/busy GPU; partial results are kept in `inference_run_shared_gpu.partial.log` only.
 
 Primary metrics:
 
-- **Training:** pure Joint training epoch vs sum of pure LAP regional predictor-training epochs (all K experts), peak GPU memory = max over experts after releasing each predictor; epoch 1 discarded; setup/eval excluded.
-- **Inference:** single-environment complete CEM planning latency (`timed_num_envs=1`); original LeWM vs deployed Auto-LAP on the same machine; each timed MPC cycle uses a fresh B=1 observation clone; global-gate tasks deploy Global-FT without a router (routing column = `N/A`).
+- **Training:** pure Joint training epoch vs sum of pure LAP regional predictor-training epochs (all K experts), peak GPU memory = max over experts after releasing each predictor and resetting CUDA peak stats between methods; epoch 1 discarded; setup/eval excluded.
+- **Inference:** single-environment complete CEM planning latency (`timed_num_envs=1`); solver timing prints suppressed during measurement; original LeWM vs deployed Auto-LAP on the same machine; each timed MPC cycle uses a fresh B=1 observation clone; global-gate tasks deploy Global-FT without a router (routing column = `N/A`).
+
+Each scratch JSON embeds its own `provenance` block (`git_commit`, `device`, `gpu_name`, `seed`, UTC timestamp).
 
 Gate and partition are one-time costs and are excluded from seconds/epoch.
 

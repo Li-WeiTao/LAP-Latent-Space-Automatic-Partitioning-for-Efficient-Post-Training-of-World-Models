@@ -13,7 +13,7 @@ import torch
 from torch.utils.data import DataLoader
 
 from .config import TrainingAnchorConfig
-from .memory import GPUMemorySnapshot, read_peak_memory, reset_peak_memory
+from .memory import GPUMemorySnapshot, read_peak_memory, release_training_gpu_state, reset_peak_memory
 from .train_pool import build_joint_train_pool_dataset
 from .validation import (
     assert_cache_matches_train_pool,
@@ -64,6 +64,7 @@ def benchmark_joint_training(
     *,
     device: str,
     scratch_dir: Path,
+    provenance: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     _ensure_import_paths(repo_root)
     from gauge_drift import load_encoder
@@ -203,9 +204,13 @@ def benchmark_joint_training(
         },
         "cache_provenance": cache_provenance,
     }
+    if provenance is not None:
+        result["provenance"] = provenance
     (scratch_dir / "joint_training.json").write_text(
         json.dumps(result, indent=2) + "\n", encoding="utf-8"
     )
+    del model, optimizer, sigreg, loader, train_set
+    release_training_gpu_state(dev)
     return result
 
 
@@ -215,6 +220,7 @@ def benchmark_lap_regional_training(
     *,
     device: str,
     scratch_dir: Path,
+    provenance: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     _ensure_import_paths(repo_root)
     from backends.lewm import LeWMBackendFactory, LeWMLatentCache, LeWMRegionalPredictorTrainer
@@ -256,6 +262,8 @@ def benchmark_lap_regional_training(
     )
     region_labels = partition_result.labels
 
+    release_training_gpu_state(dev)
+    reset_peak_memory(dev)
     per_expert_rows: list[dict[str, Any]] = []
     setup_rows: list[dict[str, Any]] = []
     global_peak = read_peak_memory(dev)
@@ -387,7 +395,10 @@ def benchmark_lap_regional_training(
             ],
         },
     }
+    if provenance is not None:
+        result["provenance"] = provenance
     (scratch_dir / "lap_regional_training.json").write_text(
         json.dumps(result, indent=2) + "\n", encoding="utf-8"
     )
+    release_training_gpu_state(dev)
     return result

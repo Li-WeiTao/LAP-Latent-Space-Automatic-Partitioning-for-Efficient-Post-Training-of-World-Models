@@ -21,6 +21,7 @@ def measure_gate_and_partition(
     *,
     scratch_dir: Path,
     rerun: bool = True,
+    provenance: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     scratch_dir.mkdir(parents=True, exist_ok=True)
     gate_manifest_path = cfg.gate_manifest.resolve(strict=True)
@@ -110,6 +111,8 @@ def measure_gate_and_partition(
         "gate_manifest": str(gate_manifest_path),
         "latent_cache": str(cfg.latent_cache),
     }
+    if provenance is not None:
+        result["provenance"] = provenance
     (scratch_dir / "gate_partition.json").write_text(
         json.dumps(result, indent=2) + "\n", encoding="utf-8"
     )

@@ -14,7 +14,12 @@ import sys
 sys.path.insert(0, str(SCRIPTS))
 
 from efficiency_lib.config import ANCHOR_TRAINING, inference_tasks  # noqa: E402
-from efficiency_lib.inference import _clone_info_fresh, _slice_info_single_env  # noqa: E402
+from efficiency_lib.inference import (  # noqa: E402
+    _clone_info_fresh,
+    _slice_info_single_env,
+    suppress_solver_logging,
+)
+from efficiency_lib.metadata import phase_provenance  # noqa: E402
 from efficiency_lib.report import build_reports  # noqa: E402
 from efficiency_lib.stats import bootstrap_ci, summarize  # noqa: E402
 from efficiency_lib.aggregate import merge_phase_results  # noqa: E402
@@ -116,6 +121,34 @@ class EfficiencyBenchmarkTests(unittest.TestCase):
         single = _slice_info_single_env(batched)
         self.assertEqual(single["pixels"].shape[0], 1)
         self.assertEqual(single["action"].shape[0], 1)
+
+    def test_suppress_solver_logging_filters_cem_print(self) -> None:
+        import io
+        import sys
+
+        buffer = io.StringIO()
+        with suppress_solver_logging():
+            old_stdout = sys.stdout
+            sys.stdout = buffer
+            try:
+                print("CEM solve time: 0.1234 seconds")
+                print("keep this")
+            finally:
+                sys.stdout = old_stdout
+        output = buffer.getvalue()
+        self.assertNotIn("CEM solve time", output)
+        self.assertIn("keep this", output)
+
+    def test_phase_provenance_includes_git_commit(self) -> None:
+        payload = phase_provenance(
+            REPO_ROOT,
+            phase="joint_training",
+            device="cuda:0",
+            seed=42,
+        )
+        self.assertEqual(payload["phase"], "joint_training")
+        self.assertEqual(payload["seed"], 42)
+        self.assertIn("git_commit", payload)
 
     def test_merge_phase_results_preserves_prior_training(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -8,6 +8,7 @@ import os
 import platform
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -67,3 +68,43 @@ def collect_metadata(repo_root: Path, *, seed: int, device: str) -> dict[str, An
 def write_metadata(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+
+
+def _gpu_name_for_device(device: str) -> str | None:
+    if not device.startswith("cuda"):
+        return None
+    index = device.split(":", 1)[1] if ":" in device else "0"
+    line = _run(
+        [
+            "nvidia-smi",
+            f"--id={index}",
+            "--query-gpu=name",
+            "--format=csv,noheader",
+        ]
+    )
+    return line.splitlines()[0].strip() if line else None
+
+
+def phase_provenance(
+    repo_root: Path,
+    *,
+    phase: str,
+    device: str,
+    seed: int,
+    extra: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Self-contained provenance stored inside each scratch artifact."""
+    payload: dict[str, Any] = {
+        "phase": phase,
+        "device": device,
+        "seed": seed,
+        "git_commit": _run(["git", "-C", str(repo_root), "rev-parse", "HEAD"]),
+        "git_status_short": _run(["git", "-C", str(repo_root), "status", "--short"]),
+        "gpu_name": _gpu_name_for_device(device),
+        "pytorch_version": torch.__version__,
+        "cuda_version": torch.version.cuda,
+        "recorded_at_utc": datetime.now(timezone.utc).isoformat(),
+    }
+    if extra:
+        payload.update(extra)
+    return payload

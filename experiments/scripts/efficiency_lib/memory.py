@@ -59,3 +59,12 @@ def read_peak_memory(device: torch.device | str | None = None) -> GPUMemorySnaps
         int(torch.cuda.max_memory_allocated(index)),
         int(torch.cuda.max_memory_reserved(index)),
     )
+
+
+def release_training_gpu_state(device: torch.device | str | None = None) -> None:
+    """Drop cached allocations and reset peak counters before the next benchmark phase."""
+    index = _cuda_index(device)
+    if index is None:
+        return
+    torch.cuda.empty_cache()
+    torch.cuda.reset_peak_memory_stats(index)

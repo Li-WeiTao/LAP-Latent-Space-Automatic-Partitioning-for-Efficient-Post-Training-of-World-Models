@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import builtins
 import copy
 import json
 import sys
 import time
+from contextlib import contextmanager
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 
 import hydra
 import torch
@@ -26,6 +28,30 @@ from .validation import (
 
 _CAPTURED_INFO: dict[str, Any] | None = None
 _ORIG_SOLVE = CEMSolver.solve
+_EXIT_AFTER_FIRST_CAPTURED_SOLVE = False
+
+
+class PlanningInfoCaptured(Exception):
+    """Stop evaluator after the first CEM solve inputs are captured."""
+
+
+@contextmanager
+def suppress_solver_logging() -> Iterator[None]:
+    """Drop solver timing prints from formal latency measurements."""
+    real_print = builtins.print
+
+    def filtered_print(*args: Any, **kwargs: Any) -> None:
+        if args:
+            message = " ".join(str(arg) for arg in args)
+            if "CEM solve time" in message or "iCEM solve time" in message:
+                return
+        real_print(*args, **kwargs)
+
+    builtins.print = filtered_print
+    try:
+        yield
+    finally:
+        builtins.print = real_print
 
 
 def _patched_solve(self, info_dict, init_action=None):
@@ -35,7 +61,10 @@ def _patched_solve(self, info_dict, init_action=None):
             key: value.detach().clone() if torch.is_tensor(value) else copy.deepcopy(value)
             for key, value in info_dict.items()
         }
-    return _ORIG_SOLVE(self, info_dict, init_action)
+    result = _ORIG_SOLVE(self, info_dict, init_action)
+    if _EXIT_AFTER_FIRST_CAPTURED_SOLVE:
+        raise PlanningInfoCaptured()
+    return result
 
 
 def _ensure_import_paths(repo_root: Path) -> None:
@@ -154,13 +183,14 @@ def _capture_planning_info(
     repo_root: Path,
     task_cfg: InferenceTaskConfig,
     *,
-    mode: str,
     device: str,
     lap_run_dir: Path | None = None,
 ) -> tuple[Any, dict[str, Any]]:
-    global _CAPTURED_INFO
+    global _CAPTURED_INFO, _EXIT_AFTER_FIRST_CAPTURED_SOLVE
     _CAPTURED_INFO = None
+    _EXIT_AFTER_FIRST_CAPTURED_SOLVE = True
     CEMSolver.solve = _patched_solve
+    cfg = None
     try:
         from tworoom_success_rate_eval import run_eval
 
@@ -177,26 +207,43 @@ def _capture_planning_info(
             "eval_start_indices_path": task_cfg.eval_starts,
             "latent_routing": "mpc",
             "model_family": "lewm",
+            "checkpoint": task_cfg.checkpoint,
         }
-        capture_mode = mode
-        capture_checkpoint = task_cfg.checkpoint
-        if mode == "lap":
-            resolved = lap_run_dir or _resolve_lap_run_dir(
-                repo_root, task_cfg, scratch_dir=scratch / "lap_assembly"
-            )
-            gate_branch = read_gate_branch(task_cfg.gate_manifest)
-            if gate_branch == "global_predictor":
-                capture_mode = "baseline"
-                capture_checkpoint = resolved / "P_train_cluster0_object.ckpt"
-            else:
-                kwargs["lap_run_dir"] = resolved
-        kwargs["checkpoint"] = capture_checkpoint
-        run_eval(cfg, scratch / f"{task_cfg.task}_{mode}", capture_mode, **kwargs)
+        try:
+            run_eval(cfg, scratch / f"{task_cfg.task}_capture", "baseline", **kwargs)
+        except PlanningInfoCaptured:
+            pass
     finally:
+        _EXIT_AFTER_FIRST_CAPTURED_SOLVE = False
         CEMSolver.solve = _ORIG_SOLVE
     if _CAPTURED_INFO is None:
         raise RuntimeError("Failed to capture planning info_dict from first CEM solve")
     return cfg, _CAPTURED_INFO
+
+
+def _planning_info_cache_path(scratch_dir: Path, task: str) -> Path:
+    return scratch_dir / f"planning_info_{task}.pt"
+
+
+def load_or_capture_task_planning_info(
+    repo_root: Path,
+    task_cfg: InferenceTaskConfig,
+    *,
+    device: str,
+    scratch_dir: Path,
+) -> dict[str, Any]:
+    cache_path = _planning_info_cache_path(scratch_dir, task_cfg.task)
+    if cache_path.is_file():
+        return torch.load(cache_path, map_location="cpu", weights_only=False)
+    _, captured_info = _capture_planning_info(
+        repo_root,
+        task_cfg,
+        device=device,
+        lap_run_dir=None,
+    )
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    torch.save(captured_info, cache_path)
+    return captured_info
 
 
 def benchmark_inference_task(
@@ -208,6 +255,8 @@ def benchmark_inference_task(
     warmup: int,
     repeats: int,
     scratch_dir: Path,
+    planning_info: dict[str, Any] | None = None,
+    provenance: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     _ensure_import_paths(repo_root)
     scratch_dir.mkdir(parents=True, exist_ok=True)
@@ -235,13 +284,15 @@ def benchmark_inference_task(
     from tworoom_success_rate_eval import _state_processor
 
     reset_peak_memory(device)
-    cfg, captured_info = _capture_planning_info(
-        repo_root,
-        task_cfg,
-        mode=mode,
-        device=device,
-        lap_run_dir=lap_run_dir,
-    )
+    if planning_info is None:
+        captured_info = load_or_capture_task_planning_info(
+            repo_root,
+            task_cfg,
+            device=device,
+            scratch_dir=scratch_dir,
+        )
+    else:
+        captured_info = planning_info
     source_eval_num_envs = _source_eval_num_envs(captured_info)
     single_info_template = _slice_info_single_env(captured_info)
 
@@ -310,16 +361,17 @@ def benchmark_inference_task(
     total_clones = warmup + repeats
     info_clones = [_clone_info_fresh(single_info_template) for _ in range(total_clones)]
 
-    for info in info_clones[:warmup]:
-        solver.solve(info)
+    with suppress_solver_logging():
+        for info in info_clones[:warmup]:
+            solver.solve(info)
 
-    solve_times = []
-    for info in info_clones[warmup:]:
-        _sync(device)
-        t0 = time.perf_counter()
-        solver.solve(info)
-        _sync(device)
-        solve_times.append(time.perf_counter() - t0)
+        solve_times = []
+        for info in info_clones[warmup:]:
+            _sync(device)
+            t0 = time.perf_counter()
+            solver.solve(info)
+            _sync(device)
+            solve_times.append(time.perf_counter() - t0)
 
     routing_times = []
     gate_branch = model_meta.get("gate_branch")
@@ -373,11 +425,14 @@ def benchmark_inference_task(
             "source_eval_num_envs": source_eval_num_envs,
             "timed_num_envs": timed_num_envs,
             "single_env_planning_latency": True,
+            "suppress_solver_logging": True,
             "routing_measured_per_mpc_cycle": gate_branch != "global_predictor",
             "routing_excludes_encoder": True,
             "eval_dataset_name": str(cfg.eval.dataset_name),
         },
     }
+    if provenance is not None:
+        result["provenance"] = provenance
     out = scratch_dir / f"inference_{task_cfg.task}_{mode}.json"
     out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     return result
