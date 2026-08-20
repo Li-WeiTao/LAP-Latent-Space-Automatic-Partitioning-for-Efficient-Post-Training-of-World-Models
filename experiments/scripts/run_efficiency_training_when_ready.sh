@@ -6,13 +6,15 @@ REPO="/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-Worl
 PYTHON="/data/sicong/weitao/le-wm/.venv/bin/python"
 MIN_FREE_MIB="${MIN_FREE_MIB:-20000}"
 MAX_UTIL_PCT="${MAX_UTIL_PCT:-10}"
-GPU_INDEX="${GPU_INDEX:-0}"
+# Pick any GPU that meets idle criteria (free + low util + stabilization).
+# Override with GPU_INDEX=N only for manual/debug runs.
+GPU_INDEX="${GPU_INDEX:-}"
 LOG="${REPO}/experiments/efficiency_results/training_wait.log"
 
 cd "${REPO}"
 export PYTHONPATH="experiments/scripts:.:experiments/tworoom:/data/sicong/weitao/le-wm"
 
-echo "[training-wait] waiting for idle GPU (free>=${MIN_FREE_MIB} MiB, util<=${MAX_UTIL_PCT}%)" | tee -a "${LOG}"
+echo "[training-wait] waiting for any idle GPU (free>=${MIN_FREE_MIB} MiB, util<=${MAX_UTIL_PCT}%, then 3-min stabilization)" | tee -a "${LOG}"
 selected="$(
   MIN_FREE_MIB="${MIN_FREE_MIB}" \
   MAX_UTIL_PCT="${MAX_UTIL_PCT}" \

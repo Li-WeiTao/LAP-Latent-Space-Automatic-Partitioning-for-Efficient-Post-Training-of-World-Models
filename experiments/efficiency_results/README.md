@@ -16,7 +16,7 @@ cd /data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-M
 /data/sicong/weitao/le-wm/.venv/bin/python experiments/scripts/dry_run_efficiency.py
 ```
 
-Formal inference/training require an **idle GPU**: free ≥ 20 GiB and utilization ≤ 10% (configurable via `MIN_FREE_MIB`, `MAX_UTIL_PCT`).
+Formal inference/training require a **fully idle GPU**: free ≥ 20 GiB, utilization ≤ 10%, then a **3 minute stabilization window** (4 checks every 60 s). `wait_for_gpu.sh` picks the idle GPU with the most free memory (or a specific index if `GPU_INDEX` is set). Joint/LAP and LeWM/LAP pairs still run back-to-back within the same session.
 
 ## Reproduction
 

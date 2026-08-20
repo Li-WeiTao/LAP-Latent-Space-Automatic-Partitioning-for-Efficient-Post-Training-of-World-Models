@@ -1,0 +1,100 @@
+{
+  "margin_pp": 2.0,
+  "margin_status": "post-hoc practical-sensitivity margin",
+  "margin_interpretation": "Each 50-start evaluation block corresponds to 2 percentage points per episode success; the 2 pp threshold is a post-hoc sensitivity analysis and is not predeclared, preregistered, or confirmatory.",
+  "long_horizon_cell_count": 8,
+  "pilot_cell_count": 2,
+  "non_pilot_cell_count": 6,
+  "overall_point_estimate_agreement_count": 7,
+  "overall_point_estimate_total": 8,
+  "pilot_point_estimate_agreement_count": 2,
+  "pilot_point_estimate_total": 2,
+  "non_pilot_point_estimate_agreement_count": 5,
+  "non_pilot_point_estimate_total": 6,
+  "non_pilot_mean_eol_pp": 0.5099597037037037,
+  "non_pilot_mean_practical_eol_pp": 0.10878785185185187,
+  "classification_counts": {
+    "practically_noninferior": 4,
+    "statistically_unresolved": 4
+  },
+  "max_p_harm": {
+    "value": 0.3682,
+    "model": "lewm",
+    "task": "cube"
+  },
+  "max_eol_pp": {
+    "value": 1.665659555555554,
+    "model": "lewm",
+    "task": "cube"
+  },
+  "ci_crosses_zero": [
+    {
+      "model": "lewm",
+      "task": "tworoom",
+      "ci_low_pp": -0.3999999999999986,
+      "ci_high_pp": 7.066666666666663
+    },
+    {
+      "model": "lewm",
+      "task": "pusht",
+      "ci_low_pp": -0.79999999999999,
+      "ci_high_pp": 3.866666666666667
+    },
+    {
+      "model": "lewm",
+      "task": "reacher",
+      "ci_low_pp": -4.088888888888903,
+      "ci_high_pp": 4.666666666666671
+    },
+    {
+      "model": "lewm",
+      "task": "cube",
+      "ci_low_pp": -4.8444444444444414,
+      "ci_high_pp": 1.4666666666666757
+    },
+    {
+      "model": "subjepa",
+      "task": "tworoom",
+      "ci_low_pp": -2.3999999999999986,
+      "ci_high_pp": 2.799999999999997
+    },
+    {
+      "model": "subjepa",
+      "task": "reacher",
+      "ci_low_pp": -1.6444444444444457,
+      "ci_high_pp": 5.6000000000000085
+    },
+    {
+      "model": "subjepa",
+      "task": "cube",
+      "ci_low_pp": -2.13333333333334,
+      "ci_high_pp": 4.222222222222207
+    }
+  ],
+  "subjepa_tworoom_long": {
+    "model": "subjepa",
+    "task": "tworoom",
+    "horizon": "long",
+    "pilot_status": "non-pilot",
+    "selected_branch": "spectral",
+    "rejected_branch": "global",
+    "selected_aggregation": "deployment partition seed",
+    "rejected_aggregation": "post-training-seed mean",
+    "delta_mean_pp": 0.12772000000000006,
+    "ci_low_pp": -2.3999999999999986,
+    "ci_high_pp": 2.799999999999997,
+    "point_estimate_favors_selected": true,
+    "p_harm": 0.04164,
+    "eol_pp": 0.42217066666666664,
+    "practical_eol_pp": 0.02814133333333333,
+    "margin_pp": 2.0,
+    "classification": "statistically_unresolved",
+    "n_bootstrap": 50000,
+    "rng_seed": 20260818,
+    "gate_source": "experiments/tworoom/subjepa/formal/gate/partition/manifest.json"
+  },
+  "command": "experiments/scripts/bootstrap_selection_risk.py --repo-root .",
+  "n_bootstrap": 50000,
+  "rng_seed": 20260818,
+  "resampling_unit": "eval-block"
+}
