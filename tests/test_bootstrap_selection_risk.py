@@ -132,6 +132,43 @@ class SelectionRiskTests(unittest.TestCase):
         )
         self.assertEqual(all_nonneg.eol_pp, 0.0)
 
+    def test_point_estimate_flag_uses_observed_mean_not_bootstrap_mean(self) -> None:
+        cell = load_cell(
+            repo_root=REPO_ROOT,
+            config=self.config,
+            model="subjepa",
+            task="tworoom",
+            horizon="long",
+        )
+        results, _ = bootstrap_cell_with_contrasts(
+            cell,
+            n_bootstrap=500,
+            seed=20260818,
+            batch_size=128,
+            resampling_unit="eval-block",
+            save_draws=True,
+        )
+        raw = {mid: res.draws for mid, res in results.items()}
+        delta = selection_delta_draws(cell, raw)
+        summary = summarize_selection_risk(
+            delta,
+            margin_pp=2.0,
+            model="subjepa",
+            task="tworoom",
+            horizon="long",
+            gate_info=cell.gate_info,
+            cell=cell,
+            n_bootstrap=500,
+            rng_seed=20260818,
+        )
+        rejected = resolve_rejected_method(cell.gate_info)
+        auto_point = point_estimate(cell.methods["autolap"].blocks, official=False)
+        rejected_point = point_estimate(cell.methods[rejected].blocks, official=False)
+        self.assertAlmostEqual(summary.point_delta_pp, auto_point - rejected_point, places=9)
+        self.assertAlmostEqual(summary.bootstrap_mean_delta_pp, float(delta.mean()), places=9)
+        self.assertEqual(summary.point_estimate_favors_selected, summary.point_delta_pp > 0.0)
+        self.assertTrue(verify_point_estimate_agreement(summary, cell))
+
     def test_classification_priority_order(self) -> None:
         self.assertEqual(
             classify_selection_risk(3.0, 5.0, margin_pp=2.0),

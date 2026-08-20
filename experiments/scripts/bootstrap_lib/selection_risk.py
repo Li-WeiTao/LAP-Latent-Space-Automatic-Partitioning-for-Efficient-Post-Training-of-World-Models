@@ -68,7 +68,8 @@ class SelectionRiskSummary:
     rejected_branch: str
     selected_aggregation: str
     rejected_aggregation: str
-    delta_mean_pp: float
+    point_delta_pp: float
+    bootstrap_mean_delta_pp: float
     ci_low_pp: float
     ci_high_pp: float
     point_estimate_favors_selected: bool
@@ -91,7 +92,8 @@ class SelectionRiskSummary:
             "rejected_branch": self.rejected_branch,
             "selected_aggregation": self.selected_aggregation,
             "rejected_aggregation": self.rejected_aggregation,
-            "delta_mean_pp": self.delta_mean_pp,
+            "point_delta_pp": self.point_delta_pp,
+            "bootstrap_mean_delta_pp": self.bootstrap_mean_delta_pp,
             "ci_low_pp": self.ci_low_pp,
             "ci_high_pp": self.ci_high_pp,
             "point_estimate_favors_selected": self.point_estimate_favors_selected,
@@ -129,7 +131,10 @@ def summarize_selection_risk(
     selected = resolve_selected_branch(gate_info)
     rejected = resolve_rejected_method(gate_info)
     ci_low_pp, ci_high_pp = (float(v) for v in np.quantile(delta, [0.025, 0.975]))
-    delta_mean_pp = float(delta.mean())
+    bootstrap_mean_delta_pp = float(delta.mean())
+    auto_point = point_estimate(cell.methods["autolap"].blocks, official=False)
+    rejected_point = point_estimate(cell.methods[rejected].blocks, official=False)
+    point_delta_pp = float(auto_point - rejected_point)
 
     return SelectionRiskSummary(
         model=model,
@@ -140,10 +145,11 @@ def summarize_selection_risk(
         rejected_branch=rejected,
         selected_aggregation=aggregation_label(cell.methods["autolap"].partition_policy),
         rejected_aggregation=aggregation_label(cell.methods[rejected].partition_policy),
-        delta_mean_pp=delta_mean_pp,
+        point_delta_pp=point_delta_pp,
+        bootstrap_mean_delta_pp=bootstrap_mean_delta_pp,
         ci_low_pp=ci_low_pp,
         ci_high_pp=ci_high_pp,
-        point_estimate_favors_selected=delta_mean_pp > 0.0,
+        point_estimate_favors_selected=point_delta_pp > 0.0,
         p_harm=float(np.mean(delta < -margin_pp)),
         eol_pp=float(np.mean(np.maximum(-delta, 0.0))),
         practical_eol_pp=float(np.mean(np.maximum(-margin_pp - delta, 0.0))),
@@ -173,7 +179,10 @@ def verify_point_estimate_agreement(summary: SelectionRiskSummary, cell: CellDat
     auto = point_estimate(cell.methods["autolap"].blocks, official=False)
     rejected = resolve_rejected_method(cell.gate_info)
     base = point_estimate(cell.methods[rejected].blocks, official=False)
-    observed_favors = auto > base
+    point_delta_pp = float(auto - base)
+    if abs(point_delta_pp - summary.point_delta_pp) > 1e-9:
+        return False
+    observed_favors = point_delta_pp > 0.0
     return observed_favors == summary.point_estimate_favors_selected
 
 
@@ -295,17 +304,18 @@ def render_selection_risk_report(
     lines.append("## Long-horizon diagnostics")
     lines.append("")
     lines.append(
-        "| Model | Task | Pilot | Selected | Rejected | Δ mean (pp) | 95% CI | "
+        "| Model | Task | Pilot | Selected | Rejected | Point Δ (pp) | Bootstrap mean Δ (pp) | 95% CI | "
         "Point favors selected | p_harm | EOL (pp) | Practical EOL (pp) | Classification |"
     )
     lines.append(
-        "|---|---|---|---|---|---:|---|---:|---:|---:|---:|---|"
+        "|---|---|---|---|---|---:|---:|---|---:|---:|---:|---:|---|"
     )
     for row in long_rows:
         ci = f"[{row.ci_low_pp:.2f}, {row.ci_high_pp:.2f}]"
         lines.append(
             f"| {row.model} | {row.task} | {row.pilot_status} | {row.selected_branch} "
-            f"| {row.rejected_branch} | {row.delta_mean_pp:.2f} | {ci} | "
+            f"| {row.rejected_branch} | {row.point_delta_pp:.2f} | "
+            f"{row.bootstrap_mean_delta_pp:.2f} | {ci} | "
             f"{str(row.point_estimate_favors_selected).lower()} | {row.p_harm:.4f} | "
             f"{row.eol_pp:.4f} | {row.practical_eol_pp:.4f} | {row.classification} |"
         )

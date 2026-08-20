@@ -11,16 +11,16 @@ This appendix-level sensitivity analysis supplements the descriptive 7-of-8 poin
 
 ## Long-horizon diagnostics
 
-| Model | Task | Pilot | Selected | Rejected | Δ mean (pp) | 95% CI | Point favors selected | p_harm | EOL (pp) | Practical EOL (pp) | Classification |
-|---|---|---|---|---|---:|---|---:|---:|---:|---:|---|
-| lewm | cube | non-pilot | global | spectral | -1.54 | [-4.84, 1.47] | false | 0.3682 | 1.6657 | 0.4332 | statistically_unresolved |
-| lewm | pusht | pilot | global | spectral | 1.83 | [-0.80, 3.87] | true | 0.0001 | 0.0553 | 0.0000 | practically_noninferior |
-| lewm | reacher | non-pilot | global | spectral | 0.75 | [-4.09, 4.67] | true | 0.1093 | 0.5847 | 0.1588 | statistically_unresolved |
-| lewm | tworoom | pilot | spectral | global | 3.46 | [-0.40, 7.07] | true | 0.0024 | 0.0285 | 0.0013 | practically_noninferior |
-| subjepa | cube | non-pilot | global | spectral | 1.08 | [-2.13, 4.22] | true | 0.0302 | 0.2440 | 0.0195 | statistically_unresolved |
-| subjepa | pusht | non-pilot | global | spectral | 2.30 | [0.18, 4.84] | true | 0.0000 | 0.0056 | 0.0000 | practically_noninferior |
-| subjepa | reacher | non-pilot | global | spectral | 1.74 | [-1.64, 5.60] | true | 0.0162 | 0.1377 | 0.0131 | practically_noninferior |
-| subjepa | tworoom | non-pilot | spectral | global | 0.13 | [-2.40, 2.80] | true | 0.0416 | 0.4222 | 0.0281 | statistically_unresolved |
+| Model | Task | Pilot | Selected | Rejected | Point Δ (pp) | Bootstrap mean Δ (pp) | 95% CI | Point favors selected | p_harm | EOL (pp) | Practical EOL (pp) | Classification |
+|---|---|---|---|---|---:|---:|---|---:|---:|---:|---:|---|
+| lewm | cube | non-pilot | global | spectral | -1.56 | -1.54 | [-4.84, 1.47] | false | 0.3682 | 1.6657 | 0.4332 | statistically_unresolved |
+| lewm | pusht | pilot | global | spectral | 1.82 | 1.83 | [-0.80, 3.87] | true | 0.0001 | 0.0553 | 0.0000 | practically_noninferior |
+| lewm | reacher | non-pilot | global | spectral | 0.76 | 0.75 | [-4.09, 4.67] | true | 0.1093 | 0.5847 | 0.1588 | statistically_unresolved |
+| lewm | tworoom | pilot | spectral | global | 3.47 | 3.46 | [-0.40, 7.07] | true | 0.0024 | 0.0285 | 0.0013 | practically_noninferior |
+| subjepa | cube | non-pilot | global | spectral | 1.07 | 1.08 | [-2.13, 4.22] | true | 0.0302 | 0.2440 | 0.0195 | statistically_unresolved |
+| subjepa | pusht | non-pilot | global | spectral | 2.31 | 2.30 | [0.18, 4.84] | true | 0.0000 | 0.0056 | 0.0000 | practically_noninferior |
+| subjepa | reacher | non-pilot | global | spectral | 1.73 | 1.74 | [-1.64, 5.60] | true | 0.0162 | 0.1377 | 0.0131 | practically_noninferior |
+| subjepa | tworoom | non-pilot | spectral | global | 0.13 | 0.13 | [-2.40, 2.80] | true | 0.0416 | 0.4222 | 0.0281 | statistically_unresolved |
 
 ## Aggregates
 
