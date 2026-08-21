@@ -29,6 +29,7 @@ launch_cmd=(
   GPU_IDS="$GPU_IDS"
   CPU_THREADS="$CPU_THREADS"
   RUN_ID="$RUN_ID"
+  NUM_CLUSTERS="${NUM_CLUSTERS:-3}"
   bash experiments/tworoom/subjepa/matrix/scripts/run_full_matrix.sh training
 )
 

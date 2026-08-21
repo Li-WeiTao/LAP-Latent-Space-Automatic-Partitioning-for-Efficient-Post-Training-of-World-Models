@@ -41,6 +41,11 @@ def parse_args() -> argparse.Namespace:
         help="Add Auto-LAP row from eval/auto (deployed Spectral partition seed).",
     )
     parser.add_argument(
+        "--skip-official",
+        action="store_true",
+        help="Omit official-baseline rows (K-ablation matrices that reuse paired starts).",
+    )
+    parser.add_argument(
         "--deployment-seed",
         type=int,
         default=0,
@@ -79,31 +84,33 @@ def main() -> None:
     evaluate = seeds(args.eval_seeds)
     raw_rows: list[dict] = []
 
-    official = [
-        rate(args.root / "eval" / "official" / f"eval{e}" / "results.json")
-        for e in evaluate
-    ]
-    rows = [
-        {
-            "method": "Official baseline",
-            "mean_percent": mean(official),
-            "sd_across_finetuning_seeds_percent": None,
-            "num_finetuning_seeds": 0,
-            "num_partition_seeds": 0,
-            "num_eval_seeds": len(evaluate),
-            "eval_seed_sd_percent": sd(official),
-        }
-    ]
-    for e, value in zip(evaluate, official):
-        raw_rows.append(
+    rows: list[dict] = []
+    if not args.skip_official:
+        official = [
+            rate(args.root / "eval" / "official" / f"eval{e}" / "results.json")
+            for e in evaluate
+        ]
+        rows.append(
             {
-                "method": "official",
-                "train_seed": "",
-                "partition_seed": "",
-                "eval_seed": e,
-                "success_rate_percent": value,
+                "method": "Official baseline",
+                "mean_percent": mean(official),
+                "sd_across_finetuning_seeds_percent": None,
+                "num_finetuning_seeds": 0,
+                "num_partition_seeds": 0,
+                "num_eval_seeds": len(evaluate),
+                "eval_seed_sd_percent": sd(official),
             }
         )
+        for e, value in zip(evaluate, official):
+            raw_rows.append(
+                {
+                    "method": "official",
+                    "train_seed": "",
+                    "partition_seed": "",
+                    "eval_seed": e,
+                    "success_rate_percent": value,
+                }
+            )
 
     for method, label in (("joint", "Joint-Continue 3ep"), ("global", "Global-FT50")):
         if args.skip_joint and method == "joint":

@@ -7,6 +7,9 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../../.." && pwd)"
 cd "$REPO_ROOT"
 
 PYTHON="${PYTHON:-/data/sicong/weitao/le-wm/.venv/bin/python}"
+if [[ ! -x "$PYTHON" ]]; then
+  PYTHON="$REPO_ROOT/.venv/bin/python"
+fi
 GPU_IDS="${GPU_IDS:-0,1,2,3,4,5,6,7}"
 CPU_THREADS="${CPU_THREADS:-4}"
 RUN_ID="${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ)}"
@@ -14,8 +17,12 @@ RUN_ID="${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ)}"
 TASK_SPEC="configs/experiments/tasks/tworoom.json"
 DATASET="/data/sicong/weitao/datasets/lewm/tworoom.h5"
 CHECKPOINT="/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt"
-WORK_ROOT="experiments/tworoom/subjepa/matrix"
+K3_MATRIX="${K3_MATRIX:-experiments/tworoom/subjepa/matrix}"
+MATRIX="${MATRIX:-$K3_MATRIX}"
+# shellcheck source=/dev/null
+source "$REPO_ROOT/experiments/control_matrix/scripts/subjepa_k_variant.sh"
 CACHE_DIR="${CACHE_DIR:-/data/sicong/weitao/.stable_worldmodel/subjepa/tworoom}"
+WORK_ROOT="$MATRIX"
 PAIR_SHORT="$WORK_ROOT/paired_starts/lewm_short"
 PAIR_LONG="$WORK_ROOT/paired_starts/lewm_long"
 
@@ -53,6 +60,7 @@ restore_eval_horizon() {
 aggregate_horizon() {
   local label=$1
   restore_eval_horizon "$label"
+  aggregate_k_variant_flags
   "$PYTHON" experiments/control_matrix/aggregate_matrix.py \
     --root "$WORK_ROOT" \
     --dataset-name tworoom \
@@ -61,8 +69,7 @@ aggregate_horizon() {
     --eval-seeds 0,1,2,3,4 \
     --methods "$MATRIX_METHODS" \
     --skip-joint \
-    --include-auto-lap \
-    --deployment-seed "$DEPLOYMENT_SEED"
+    "${AGG_EXTRA[@]}"
   mv "$WORK_ROOT/matrix_summary.json" "$WORK_ROOT/manifests/matrix_summary_${label}.json"
   mv "$WORK_ROOT/matrix_raw.csv" "$WORK_ROOT/manifests/matrix_raw_${label}.csv"
 }
@@ -75,6 +82,10 @@ run_parallel() {
     SHORT_GOAL_OFFSET="${SHORT_GOAL_OFFSET:-}" \
     LONG_GOAL_OFFSET="${LONG_GOAL_OFFSET:-}" \
     METHODS="$MATRIX_METHODS" SKIP_JOINT=1 \
+    NUM_CLUSTERS="$NUM_CLUSTERS" \
+    SKIP_OFFICIAL="$SKIP_OFFICIAL" \
+    SKIP_GLOBAL="$SKIP_GLOBAL" \
+    PARTITION_INCLUDE_SPECTRAL="$PARTITION_INCLUDE_SPECTRAL" \
     bash experiments/control_matrix/scripts/run_jepa_matrix_parallel.sh \
     "${JEPA_BASE[@]}" "$@"
 }
@@ -86,36 +97,42 @@ case "${1:-training}" in
   training)
     bash experiments/tworoom/subjepa/matrix/scripts/setup_matrix.sh
     START_STAGE=partition END_STAGE=training run_parallel
-    DEPLOYMENT_SEED="$DEPLOYMENT_SEED" \
-      bash experiments/tworoom/subjepa/matrix/scripts/link_auto_lap.sh \
-      "$WORK_ROOT" training
+    if [[ "$INCLUDE_AUTO_LAP" == "1" ]]; then
+      DEPLOYMENT_SEED="$DEPLOYMENT_SEED" \
+        bash experiments/tworoom/subjepa/matrix/scripts/link_auto_lap.sh \
+        "$WORK_ROOT" training
+    fi
     ;;
   eval-short)
     bash experiments/tworoom/subjepa/matrix/scripts/setup_matrix.sh
-    rm -rf "$WORK_ROOT/eval/official" "$WORK_ROOT/eval/global" \
-      "$WORK_ROOT/eval/kmeanspp" "$WORK_ROOT/eval/spectral"
+    wipe_eval_for_k_variant "$WORK_ROOT"
     RUN_ID="${RUN_ID}_short" \
       PAIRED_START_ROOT_SHORT="$(realpath "$PAIR_SHORT")" \
       SHORT_GOAL_OFFSET=25 \
       START_STAGE=eval_short END_STAGE=eval_short \
       run_parallel
-    DEPLOYMENT_SEED="$DEPLOYMENT_SEED" \
-      bash experiments/tworoom/subjepa/matrix/scripts/link_auto_lap.sh \
-      "$WORK_ROOT" eval
+    if [[ "$INCLUDE_AUTO_LAP" == "1" ]]; then
+      DEPLOYMENT_SEED="$DEPLOYMENT_SEED" \
+        bash experiments/tworoom/subjepa/matrix/scripts/link_auto_lap.sh \
+        "$WORK_ROOT" eval
+    fi
+    seed_reused_eval_from_k3 short "$WORK_ROOT"
     snapshot_eval_horizon short
     ;;
   eval-long)
     bash experiments/tworoom/subjepa/matrix/scripts/setup_matrix.sh
-    rm -rf "$WORK_ROOT/eval/official" "$WORK_ROOT/eval/global" \
-      "$WORK_ROOT/eval/kmeanspp" "$WORK_ROOT/eval/spectral"
+    wipe_eval_for_k_variant "$WORK_ROOT"
     RUN_ID="${RUN_ID}_long" \
       PAIRED_START_ROOT_LONG="$(realpath "$PAIR_LONG")" \
       LONG_GOAL_OFFSET=50 \
       START_STAGE=eval_long END_STAGE=eval_long \
       run_parallel
-    DEPLOYMENT_SEED="$DEPLOYMENT_SEED" \
-      bash experiments/tworoom/subjepa/matrix/scripts/link_auto_lap.sh \
-      "$WORK_ROOT" eval
+    if [[ "$INCLUDE_AUTO_LAP" == "1" ]]; then
+      DEPLOYMENT_SEED="$DEPLOYMENT_SEED" \
+        bash experiments/tworoom/subjepa/matrix/scripts/link_auto_lap.sh \
+        "$WORK_ROOT" eval
+    fi
+    seed_reused_eval_from_k3 long "$WORK_ROOT"
     snapshot_eval_horizon long
     ;;
   aggregate)

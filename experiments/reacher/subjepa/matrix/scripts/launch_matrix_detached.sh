@@ -8,6 +8,10 @@ cd "$REPO_ROOT"
 # shellcheck source=/dev/null
 source "$REPO_ROOT/experiments/reacher/subjepa/env.sh"
 
+K3_MATRIX="${K3_MATRIX:-$MATRIX}"
+# shellcheck source=/dev/null
+source "$REPO_ROOT/experiments/control_matrix/scripts/subjepa_k_variant.sh"
+
 GPU_IDS="${GPU_IDS:-0}"
 CPU_THREADS="${CPU_THREADS:-4}"
 RUN_ID="${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ)}"
@@ -33,6 +37,7 @@ launch_cmd=(
   GPU_ID="${GPU_ID:-${GPU_IDS%%,*}}"
   CPU_THREADS="$CPU_THREADS"
   RUN_ID="$RUN_ID"
+  NUM_CLUSTERS="$NUM_CLUSTERS"
   bash "$REPO_ROOT/experiments/reacher/subjepa/matrix/scripts/run_full_matrix.sh" training
 )
 

@@ -51,6 +51,9 @@ wandb/
 runs/
 experiments/**/matrix/logs/
 experiments/**/matrix/training/
+experiments/**/matrix_k*/logs/
+experiments/**/matrix_k*/training/
+experiments/**/matrix_k*/preparation/*
 # Matrix preparation: publish manifests/starts; ignore regenerable caches.
 experiments/**/matrix/preparation/*
 !experiments/**/matrix/preparation/P_train_common_starts.npy

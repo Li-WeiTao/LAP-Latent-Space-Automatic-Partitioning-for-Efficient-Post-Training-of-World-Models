@@ -40,6 +40,10 @@ PARTITION_SEEDS="${PARTITION_SEEDS:-0,1,2}"
 EVAL_SEEDS="${EVAL_SEEDS:-0,1,2,3,4}"
 METHODS="${METHODS:-kmeanspp,spectral}"
 SKIP_JOINT="${SKIP_JOINT:-1}"
+NUM_CLUSTERS="${NUM_CLUSTERS:-3}"
+SKIP_OFFICIAL="${SKIP_OFFICIAL:-0}"
+SKIP_GLOBAL="${SKIP_GLOBAL:-0}"
+PARTITION_INCLUDE_SPECTRAL="${PARTITION_INCLUDE_SPECTRAL:-0}"
 
 TMP_RESOLVED="$(mktemp)"
 "$PYTHON" experiments/control_matrix/resolve_jepa_matrix_config.py \
@@ -118,6 +122,10 @@ clear_tasks() {
 run_stage() {
   local stage=$1
   local task_count=${#task_names[@]}
+  if [[ "$task_count" -eq 0 ]]; then
+    echo "[stage] $stage skipped (no tasks)"
+    return 0
+  fi
   local worker_count=${#gpu_ids[@]}
   local max_attempts=${TASK_RETRIES}
   local -a worker_pids=()
@@ -152,6 +160,7 @@ run_stage() {
             METHODS="$leaf_methods" \
             EVAL_SEEDS="${task_eval_seeds[$index]}" \
             SKIP_JOINT="$SKIP_JOINT" \
+            NUM_CLUSTERS="$NUM_CLUSTERS" \
             RESOLVED_CONFIG_SKIP=1 \
             RESOLVED_CONFIG_LEAF="$LOG_ROOT/$stage/${name}.resolved.json" \
             OMP_NUM_THREADS="$CPU_THREADS" \
@@ -212,7 +221,11 @@ stage_enabled() {
   echo "partition_seeds=$PARTITION_SEEDS"
   echo "eval_seeds=$EVAL_SEEDS"
   echo "methods=$METHODS"
+  echo "num_clusters=$NUM_CLUSTERS"
   echo "skip_joint=$SKIP_JOINT"
+  echo "skip_official=$SKIP_OFFICIAL"
+  echo "skip_global=$SKIP_GLOBAL"
+  echo "partition_include_spectral=$PARTITION_INCLUDE_SPECTRAL"
   echo "start_stage=$START_STAGE"
   echo "end_stage=$END_STAGE"
   echo "git_commit=$(git rev-parse HEAD)"
@@ -222,9 +235,11 @@ echo "$$" >"$LOG_ROOT/controller.pid"
 
 if stage_enabled partition; then
   clear_tasks
-  add_task global partition_global "" "" "" "" ""
+  if [[ "$SKIP_GLOBAL" != "1" ]]; then
+    add_task global partition_global "" "" "" "" ""
+  fi
   for method in "${methods[@]}"; do
-    if [[ "$method" == "spectral" ]]; then
+    if [[ "$method" == "spectral" && "$PARTITION_INCLUDE_SPECTRAL" != "1" ]]; then
       continue
     fi
     for pseed in "${partition_seeds[@]}"; do
@@ -240,7 +255,9 @@ if stage_enabled training; then
     if [[ "$SKIP_JOINT" != "1" ]]; then
       add_task "joint_t${tseed}" train_joint "$tseed" "" "" "" ""
     fi
-    add_task "global_t${tseed}" train_global "$tseed" "" "" "" ""
+    if [[ "$SKIP_GLOBAL" != "1" ]]; then
+      add_task "global_t${tseed}" train_global "$tseed" "" "" "" ""
+    fi
     for method in "${methods[@]}"; do
       for pseed in "${partition_seeds[@]}"; do
         add_task "${method}_p${pseed}_t${tseed}" train_regions \
@@ -259,9 +276,13 @@ if stage_enabled eval_short; then
   # resolution treats GOAL_OFFSET as short_goal_offset and conflicts with task spec.
   short_env="EVAL_GOAL_OFFSET=${short_goal}"
   [[ -n "$short_paired" ]] && short_env+=" PAIRED_START_ROOT=${short_paired}"
-  add_task "official" eval_official "" "" "" "$EVAL_SEEDS" "$short_env"
+  if [[ "$SKIP_OFFICIAL" != "1" ]]; then
+    add_task "official" eval_official "" "" "" "$EVAL_SEEDS" "$short_env"
+  fi
   for tseed in "${train_seeds[@]}"; do
-    add_task "global_t${tseed}" eval_global "$tseed" "" "" "$EVAL_SEEDS" "$short_env"
+    if [[ "$SKIP_GLOBAL" != "1" ]]; then
+      add_task "global_t${tseed}" eval_global "$tseed" "" "" "$EVAL_SEEDS" "$short_env"
+    fi
     for method in "${methods[@]}"; do
       for pseed in "${partition_seeds[@]}"; do
         add_task "${method}_p${pseed}_t${tseed}" eval_regions \
@@ -278,9 +299,13 @@ if stage_enabled eval_long; then
   long_paired="${PAIRED_START_ROOT_LONG:-${PAIRED_START_ROOT:-}}"
   long_env="EVAL_GOAL_OFFSET=${long_goal}"
   [[ -n "$long_paired" ]] && long_env+=" PAIRED_START_ROOT=${long_paired}"
-  add_task "official" eval_official "" "" "" "$EVAL_SEEDS" "$long_env"
+  if [[ "$SKIP_OFFICIAL" != "1" ]]; then
+    add_task "official" eval_official "" "" "" "$EVAL_SEEDS" "$long_env"
+  fi
   for tseed in "${train_seeds[@]}"; do
-    add_task "global_t${tseed}" eval_global "$tseed" "" "" "$EVAL_SEEDS" "$long_env"
+    if [[ "$SKIP_GLOBAL" != "1" ]]; then
+      add_task "global_t${tseed}" eval_global "$tseed" "" "" "$EVAL_SEEDS" "$long_env"
+    fi
     for method in "${methods[@]}"; do
       for pseed in "${partition_seeds[@]}"; do
         add_task "${method}_p${pseed}_t${tseed}" eval_regions \
@@ -300,6 +325,7 @@ if stage_enabled aggregate; then
     METHODS="$METHODS" \
     EVAL_SEEDS="$EVAL_SEEDS" \
     SKIP_JOINT="$SKIP_JOINT" \
+    NUM_CLUSTERS="$NUM_CLUSTERS" \
     bash "$BASE_SCRIPT" \
     "${JEPA_ARGS[@]}" \
     --phase aggregate \

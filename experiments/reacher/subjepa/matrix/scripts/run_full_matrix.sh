@@ -13,6 +13,10 @@ cd "$REPO_ROOT"
 # shellcheck source=/dev/null
 source "$REPO_ROOT/experiments/reacher/subjepa/env.sh"
 
+K3_MATRIX="${K3_MATRIX:-$MATRIX}"
+# shellcheck source=/dev/null
+source "$REPO_ROOT/experiments/control_matrix/scripts/subjepa_k_variant.sh"
+
 GPU_IDS="${GPU_IDS:-0}"
 GPU_ID="${GPU_ID:-${GPU_IDS%%,*}}"
 CPU_THREADS="${CPU_THREADS:-4}"
@@ -65,6 +69,10 @@ run_parallel() {
     LONG_GOAL_OFFSET="${LONG_GOAL_OFFSET:-}" \
     METHODS="$MATRIX_METHODS" SKIP_JOINT=1 \
     TRAIN_SEEDS="$TRAIN_SEEDS" PARTITION_SEEDS="$PARTITION_SEEDS" EVAL_SEEDS="$EVAL_SEEDS" \
+    NUM_CLUSTERS="$NUM_CLUSTERS" \
+    SKIP_OFFICIAL="$SKIP_OFFICIAL" \
+    SKIP_GLOBAL="$SKIP_GLOBAL" \
+    PARTITION_INCLUDE_SPECTRAL="$PARTITION_INCLUDE_SPECTRAL" \
     bash experiments/control_matrix/scripts/run_jepa_matrix_parallel.sh \
     "${JEPA_BASE[@]}" \
     --train-seeds "$TRAIN_SEEDS" --partition-seeds "$PARTITION_SEEDS" --eval-seeds "$EVAL_SEEDS" \
@@ -90,6 +98,7 @@ restore_eval_horizon() {
 aggregate_horizon() {
   local label=$1
   restore_eval_horizon "$label"
+  aggregate_k_variant_flags
   "$PYTHON" experiments/control_matrix/aggregate_matrix.py \
     --root "$WORK_ROOT" \
     --dataset-name reacher \
@@ -98,8 +107,7 @@ aggregate_horizon() {
     --eval-seeds "$EVAL_SEEDS" \
     --methods "$MATRIX_METHODS" \
     --skip-joint \
-    --include-auto-lap \
-    --deployment-seed "$DEPLOYMENT_SEED"
+    "${AGG_EXTRA[@]}"
   mv "$WORK_ROOT/matrix_summary.json" "$WORK_ROOT/manifests/matrix_summary_${label}.json"
   mv "$WORK_ROOT/matrix_raw.csv" "$WORK_ROOT/manifests/matrix_raw_${label}.csv"
   echo "[aggregate] $label -> $WORK_ROOT/manifests/matrix_summary_${label}.json"
@@ -115,32 +123,42 @@ case "${1:-training}" in
     ;;
   training)
     bash "$SETUP"
-    run_partition
-    START_STAGE=training END_STAGE=training run_parallel
-    DEPLOYMENT_SEED="$DEPLOYMENT_SEED" bash "$LINK_AUTO_LAP" "$WORK_ROOT" training
+    if [[ "$NUM_CLUSTERS" == "3" ]]; then
+      run_partition
+      START_STAGE=training END_STAGE=training run_parallel
+    else
+      START_STAGE=partition END_STAGE=training run_parallel
+    fi
+    if [[ "$INCLUDE_AUTO_LAP" == "1" ]]; then
+      DEPLOYMENT_SEED="$DEPLOYMENT_SEED" bash "$LINK_AUTO_LAP" "$WORK_ROOT" training
+    fi
     ;;
   eval-short)
     bash "$SETUP"
-    rm -rf "$WORK_ROOT/eval/official" "$WORK_ROOT/eval/global" \
-      "$WORK_ROOT/eval/kmeanspp" "$WORK_ROOT/eval/spectral"
+    wipe_eval_for_k_variant "$WORK_ROOT"
     RUN_ID="${RUN_ID}_short" \
       PAIRED_START_ROOT_SHORT="$(realpath "$PAIR_SHORT")" \
       SHORT_GOAL_OFFSET=25 \
       START_STAGE=eval_short END_STAGE=eval_short \
       run_parallel
-    DEPLOYMENT_SEED="$DEPLOYMENT_SEED" bash "$LINK_AUTO_LAP" "$WORK_ROOT" eval
+    if [[ "$INCLUDE_AUTO_LAP" == "1" ]]; then
+      DEPLOYMENT_SEED="$DEPLOYMENT_SEED" bash "$LINK_AUTO_LAP" "$WORK_ROOT" eval
+    fi
+    seed_reused_eval_from_k3 short "$WORK_ROOT"
     snapshot_eval_horizon short
     ;;
   eval-long)
     bash "$SETUP"
-    rm -rf "$WORK_ROOT/eval/official" "$WORK_ROOT/eval/global" \
-      "$WORK_ROOT/eval/kmeanspp" "$WORK_ROOT/eval/spectral"
+    wipe_eval_for_k_variant "$WORK_ROOT"
     RUN_ID="${RUN_ID}_long" \
       PAIRED_START_ROOT_LONG="$(realpath "$PAIR_LONG")" \
       LONG_GOAL_OFFSET=50 \
       START_STAGE=eval_long END_STAGE=eval_long \
       run_parallel
-    DEPLOYMENT_SEED="$DEPLOYMENT_SEED" bash "$LINK_AUTO_LAP" "$WORK_ROOT" eval
+    if [[ "$INCLUDE_AUTO_LAP" == "1" ]]; then
+      DEPLOYMENT_SEED="$DEPLOYMENT_SEED" bash "$LINK_AUTO_LAP" "$WORK_ROOT" eval
+    fi
+    seed_reused_eval_from_k3 long "$WORK_ROOT"
     snapshot_eval_horizon long
     ;;
   aggregate)

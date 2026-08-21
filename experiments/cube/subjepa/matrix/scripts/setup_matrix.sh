@@ -26,6 +26,10 @@ cd "$REPO_ROOT"
 # shellcheck source=/dev/null
 source "$REPO_ROOT/experiments/cube/subjepa/env.sh"
 
+K3_MATRIX="${K3_MATRIX:-$MATRIX}"
+# shellcheck source=/dev/null
+source "$REPO_ROOT/experiments/control_matrix/scripts/subjepa_k_variant.sh"
+
 WORK_ROOT="$MATRIX"
 GATE_MANIFEST="$FORMAL/gate/partition/manifest.json"
 
@@ -61,6 +65,7 @@ canon_source_complete() {
   return 0
 }
 
+if ! reuse_k3_paired_starts "$K3_MATRIX" "$WORK_ROOT"; then
 if canon_source_complete "$CANON_SHORT" && canon_source_complete "$CANON_LONG"; then
   mkdir -p "$PAIR_SHORT" "$PAIR_LONG"
   for seed in 0 1 2 3 4; do
@@ -73,22 +78,25 @@ else
   echo "[setup] no complete external canonical paired-start set found (CANON_SHORT=$CANON_SHORT, CANON_LONG=$CANON_LONG)"
   echo "[setup] skipping paired-start setup (not required for partition/training; eval-short/eval-long handle official starts separately)"
 fi
+fi
 
 # --- global partition on full cache (once; independent of gate branch) ---
-if [[ ! -f "$WORK_ROOT/partitions/global/seed0/manifest.json" && -f "$FORMAL/preparation/embedding_cache.npz" ]]; then
-  echo "[setup] fitting global partition on full cache"
-  CUDA_VISIBLE_DEVICES="${GPU_ID:-0}" "$PYTHON" experiments/control_matrix/fit_partition.py \
-    --method global \
-    --dataset-name cube \
-    --latent-cache "$FORMAL/preparation/embedding_cache.npz" \
-    --frameskip 5 \
-    --gpu-id 0 \
-    --cpu-threads "${CPU_THREADS:-4}" \
-    --out-dir "$WORK_ROOT/partitions/global/seed0"
+if ! reuse_k3_global_artifacts "$K3_MATRIX" "$WORK_ROOT"; then
+  if [[ ! -f "$WORK_ROOT/partitions/global/seed0/manifest.json" && -f "$FORMAL/preparation/embedding_cache.npz" ]]; then
+    echo "[setup] fitting global partition on full cache"
+    CUDA_VISIBLE_DEVICES="${GPU_ID:-0}" "$PYTHON" experiments/control_matrix/fit_partition.py \
+      --method global \
+      --dataset-name cube \
+      --latent-cache "$FORMAL/preparation/embedding_cache.npz" \
+      --frameskip 5 \
+      --gpu-id 0 \
+      --cpu-threads "${CPU_THREADS:-4}" \
+      --out-dir "$WORK_ROOT/partitions/global/seed0"
+  fi
 fi
 
 # --- Auto-LAP branch: read directly from this task's own gate manifest ---
-if [[ -f "$GATE_MANIFEST" ]]; then
+if [[ "$INCLUDE_AUTO_LAP" == "1" && -f "$GATE_MANIFEST" ]]; then
   SELECTED_BRANCH="$("$PYTHON" -c "import json; print(json.load(open('$GATE_MANIFEST'))['selected_method'])")"
   echo "[setup] gate_selected_branch=$SELECTED_BRANCH (from $GATE_MANIFEST)"
 
@@ -97,8 +105,12 @@ if [[ -f "$GATE_MANIFEST" ]]; then
   rm -rf "$AUTO"
   ln -sfn "$(realpath "$FORMAL/gate/partition")" "$AUTO"
   echo "[setup] auto/partition -> $FORMAL/gate/partition"
-else
+elif [[ "$INCLUDE_AUTO_LAP" == "1" ]]; then
   echo "[setup] warning: gate manifest not found yet: $GATE_MANIFEST (run formal gate first)" >&2
+fi
+
+if [[ "$NUM_CLUSTERS" != "3" ]]; then
+  write_k_variant_lock "$WORK_ROOT"
 fi
 
 echo "[setup] matrix ready under $WORK_ROOT"

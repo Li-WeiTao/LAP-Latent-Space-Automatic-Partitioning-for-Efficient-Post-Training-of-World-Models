@@ -6,8 +6,14 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../../.." && pwd)"
 cd "$REPO_ROOT"
 
 PYTHON="${PYTHON:-/data/sicong/weitao/le-wm/.venv/bin/python}"
+if [[ ! -x "$PYTHON" ]]; then
+  PYTHON="$REPO_ROOT/.venv/bin/python"
+fi
 FORMAL="experiments/tworoom/subjepa/formal"
-MATRIX="experiments/tworoom/subjepa/matrix"
+K3_MATRIX="${K3_MATRIX:-experiments/tworoom/subjepa/matrix}"
+MATRIX="${MATRIX:-$K3_MATRIX}"
+# shellcheck source=/dev/null
+source "$REPO_ROOT/experiments/control_matrix/scripts/subjepa_k_variant.sh"
 RESULTS="experiments/tworoom/results"
 TASK_SPEC="configs/experiments/tasks/tworoom.json"
 DATASET="/data/sicong/weitao/datasets/lewm/tworoom.h5"
@@ -15,12 +21,13 @@ CHECKPOINT="/data/sicong/weitao/.stable_worldmodel/tworoom/subjepa_object.ckpt"
 
 mkdir -p "$MATRIX/manifests" "$MATRIX/logs" "$MATRIX/partitions" "$MATRIX/training"
 
-"$PYTHON" - <<'PY'
+"$PYTHON" - "$NUM_CLUSTERS" <<'PY'
 import json
 import hashlib
 import sys
 from pathlib import Path
 
+num_clusters = int(sys.argv[1])
 repo = Path(".")
 formal = repo / "experiments/tworoom/subjepa/formal"
 passport_path = formal / "manifests/material_passport.json"
@@ -36,13 +43,14 @@ def sha256_file(path: Path) -> str:
 errors = []
 if passport.get("verification_status") != "VERIFIED":
     errors.append(f"gate not VERIFIED: {passport.get('verification_status')}")
-if passport.get("selected_branch") != "spectral":
-    errors.append(f"expected spectral branch, got {passport.get('selected_branch')}")
-gate = passport.get("gate_task_summary", {})
-if gate.get("deployment_seed") != 0:
-    errors.append(f"expected deployment_seed=0, got {gate.get('deployment_seed')}")
-if not passport.get("replay_audit", {}).get("all_passed"):
-    errors.append("replay audit not all_passed")
+if num_clusters == 3:
+    if passport.get("selected_branch") != "spectral":
+        errors.append(f"expected spectral branch, got {passport.get('selected_branch')}")
+    gate = passport.get("gate_task_summary", {})
+    if gate.get("deployment_seed") != 0:
+        errors.append(f"expected deployment_seed=0, got {gate.get('deployment_seed')}")
+    if not passport.get("replay_audit", {}).get("all_passed"):
+        errors.append("replay audit not all_passed")
 
 cache_path = formal / "preparation/embedding_cache.npz"
 if not cache_path.exists():
@@ -67,34 +75,41 @@ rm -rf "$PREP"
 ln -sfn "$(realpath "$FORMAL/preparation")" "$PREP"
 
 # --- reuse formal spectral partitions (remap cluster_labels to global IDs) ---
-"$PYTHON" experiments/tworoom/subjepa/matrix/scripts/materialize_spectral_partitions.py \
-  --formal-root "$FORMAL/partitions/spectral" \
-  --matrix-root "$MATRIX/partitions/spectral" \
-  --latent-cache "$FORMAL/preparation/embedding_cache.npz" \
-  --seeds 0,1,2
+if [[ "$SKIP_SPECTRAL_MATERIALIZE" != "1" ]]; then
+  "$PYTHON" experiments/tworoom/subjepa/matrix/scripts/materialize_spectral_partitions.py \
+    --formal-root "$FORMAL/partitions/spectral" \
+    --matrix-root "$MATRIX/partitions/spectral" \
+    --latent-cache "$FORMAL/preparation/embedding_cache.npz" \
+    --seeds 0,1,2
+fi
 
 # --- LeWM paired evaluation starts (short + long) ---
-PAIR_SHORT="$MATRIX/paired_starts/lewm_short/eval/official"
-PAIR_LONG="$MATRIX/paired_starts/lewm_long/eval/official"
-mkdir -p "$PAIR_SHORT" "$PAIR_LONG"
-for seed in 0 1 2 3 4; do
-  short_src="$RESULTS/tworoom_success_rate_baseline_seed${seed}/results.json"
-  long_src="$RESULTS/tworoom_success_rate_baseline_exp6_seed${seed}/results.json"
-  [[ -f "$short_src" ]] || { echo "missing LeWM short baseline seed $seed: $short_src" >&2; exit 1; }
-  [[ -f "$long_src" ]] || { echo "missing LeWM long baseline seed $seed: $long_src" >&2; exit 1; }
-  mkdir -p "$PAIR_SHORT/eval${seed}" "$PAIR_LONG/eval${seed}"
-  cp "$short_src" "$PAIR_SHORT/eval${seed}/results.json"
-  cp "$long_src" "$PAIR_LONG/eval${seed}/results.json"
-done
+if ! reuse_k3_paired_starts "$K3_MATRIX" "$MATRIX"; then
+  PAIR_SHORT="$MATRIX/paired_starts/lewm_short/eval/official"
+  PAIR_LONG="$MATRIX/paired_starts/lewm_long/eval/official"
+  mkdir -p "$PAIR_SHORT" "$PAIR_LONG"
+  for seed in 0 1 2 3 4; do
+    short_src="$RESULTS/tworoom_success_rate_baseline_seed${seed}/results.json"
+    long_src="$RESULTS/tworoom_success_rate_baseline_exp6_seed${seed}/results.json"
+    [[ -f "$short_src" ]] || { echo "missing LeWM short baseline seed $seed: $short_src" >&2; exit 1; }
+    [[ -f "$long_src" ]] || { echo "missing LeWM long baseline seed $seed: $long_src" >&2; exit 1; }
+    mkdir -p "$PAIR_SHORT/eval${seed}" "$PAIR_LONG/eval${seed}"
+    cp "$short_src" "$PAIR_SHORT/eval${seed}/results.json"
+    cp "$long_src" "$PAIR_LONG/eval${seed}/results.json"
+  done
+fi
 
 # --- protocol parity vs canonical LeWM matrix (must pass before execution) ---
-env SKIP_JOINT=1 METHODS=kmeanspp,spectral \
-  "$PYTHON" experiments/tworoom/subjepa/matrix/scripts/protocol_parity.py \
-  --matrix-root "$MATRIX" \
-  --formal-cache-root "$FORMAL/preparation" \
-  --out "$MATRIX/manifests/protocol_parity.json"
+if [[ "$SKIP_PREFLIGHT" != "1" ]]; then
+  env SKIP_JOINT=1 METHODS=kmeanspp,spectral \
+    "$PYTHON" experiments/tworoom/subjepa/matrix/scripts/protocol_parity.py \
+    --matrix-root "$MATRIX" \
+    --formal-cache-root "$FORMAL/preparation" \
+    --out "$MATRIX/manifests/protocol_parity.json"
+fi
 
 LOCK="$MATRIX/manifests/pre_execution_lock.json"
+if [[ "$SKIP_PREFLIGHT" != "1" ]]; then
 "$PYTHON" - <<PY
 import json, hashlib, subprocess
 from pathlib import Path
@@ -129,24 +144,31 @@ out.parent.mkdir(parents=True, exist_ok=True)
 out.write_text(json.dumps(lock, indent=2) + "\\n", encoding="utf-8")
 print(json.dumps(lock, indent=2))
 PY
+else
+  write_k_variant_lock "$MATRIX"
+fi
 
 # --- global partition on full cache (once) ---
-if [[ ! -f "$MATRIX/partitions/global/seed0/manifest.json" ]]; then
-  echo "[setup] fitting global partition on full cache"
-  CUDA_VISIBLE_DEVICES="${GPU_ID:-0}" "$PYTHON" experiments/control_matrix/fit_partition.py \
-    --method global \
-    --dataset-name tworoom \
-    --latent-cache "$FORMAL/preparation/embedding_cache.npz" \
-    --frameskip 5 \
-    --cpu-threads 4 \
-    --out-dir "$MATRIX/partitions/global/seed0"
+if ! reuse_k3_global_artifacts "$K3_MATRIX" "$MATRIX"; then
+  if [[ ! -f "$MATRIX/partitions/global/seed0/manifest.json" ]]; then
+    echo "[setup] fitting global partition on full cache"
+    CUDA_VISIBLE_DEVICES="${GPU_ID:-0}" "$PYTHON" experiments/control_matrix/fit_partition.py \
+      --method global \
+      --dataset-name tworoom \
+      --latent-cache "$FORMAL/preparation/embedding_cache.npz" \
+      --frameskip 5 \
+      --cpu-threads 4 \
+      --out-dir "$MATRIX/partitions/global/seed0"
+  fi
 fi
 
 # --- auto-lap deployment partition symlink ---
-AUTO="$MATRIX/auto/partition"
-rm -rf "$AUTO"
-mkdir -p "$(dirname "$AUTO")"
-ln -sfn "$(realpath "$FORMAL/gate/partition")" "$AUTO"
+if [[ "$INCLUDE_AUTO_LAP" == "1" ]]; then
+  AUTO="$MATRIX/auto/partition"
+  rm -rf "$AUTO"
+  mkdir -p "$(dirname "$AUTO")"
+  ln -sfn "$(realpath "$FORMAL/gate/partition")" "$AUTO"
+fi
 
 echo "[setup] matrix ready under $MATRIX"
 echo "[setup] pre_execution_lock=$LOCK"
