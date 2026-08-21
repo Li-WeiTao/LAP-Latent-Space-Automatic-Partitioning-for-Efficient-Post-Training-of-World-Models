@@ -68,7 +68,9 @@ aggregate_horizon() {
 }
 
 run_parallel() {
-  env GPU_IDS="$GPU_IDS" CPU_THREADS="$CPU_THREADS" RUN_ID="$RUN_ID" \
+  local parallel_gpu_ids
+  parallel_gpu_ids="$(matrix_parallel_gpu_ids)"
+  env GPU_IDS="$parallel_gpu_ids" CPU_THREADS="$CPU_THREADS" RUN_ID="$RUN_ID" \
     START_STAGE="${START_STAGE:-partition}" END_STAGE="${END_STAGE:-training}" \
     PAIRED_START_ROOT_SHORT="${PAIRED_START_ROOT_SHORT:-}" \
     PAIRED_START_ROOT_LONG="${PAIRED_START_ROOT_LONG:-}" \
@@ -115,7 +117,12 @@ case "${1:-training}" in
     if [[ "$SKIP_PREFLIGHT" != "1" ]]; then
       run_preflight
     fi
-    START_STAGE=partition END_STAGE=training run_parallel
+    if matrix_train_needs_split; then
+      START_STAGE=partition END_STAGE=partition run_parallel
+      START_STAGE=training END_STAGE=training run_parallel
+    else
+      START_STAGE=partition END_STAGE=training run_parallel
+    fi
     if [[ "$INCLUDE_AUTO_LAP" == "1" ]]; then
       DEPLOYMENT_SEED="$DEPLOYMENT_SEED" bash "$LINK_AUTO_LAP" "$WORK_ROOT" training
     fi

@@ -155,4 +155,61 @@ aggregate_k_variant_flags() {
   fi
 }
 
+build_repeated_gpu_ids() {
+  local gpu=$1
+  local workers=$2
+  local i out=""
+  for ((i = 0; i < workers; i++)); do
+    out+="${gpu},"
+  done
+  echo "${out%,}"
+}
+
+resolve_train_gpu_ids() {
+  if [[ -n "${TRAIN_GPU_IDS:-}" ]]; then
+    echo "$TRAIN_GPU_IDS"
+    return 0
+  fi
+  local gpu="${TRAIN_GPU:-${GPU_IDS%%,*}}"
+  local workers="${TRAIN_WORKERS:-1}"
+  build_repeated_gpu_ids "$gpu" "$workers"
+}
+
+resolve_partition_gpu_ids() {
+  if [[ -n "${PARTITION_GPU_IDS:-}" ]]; then
+    echo "$PARTITION_GPU_IDS"
+    return 0
+  fi
+  echo "${EVAL_GPU_IDS:-${EVAL_GPU:-${GPU_IDS%%,*}}}"
+}
+
+resolve_eval_gpu_ids() {
+  if [[ -n "${EVAL_GPU_IDS:-}" ]]; then
+    echo "$EVAL_GPU_IDS"
+    return 0
+  fi
+  echo "${EVAL_GPU:-${GPU_IDS%%,*}}"
+}
+
+# Pick GPU_IDS for run_jepa_matrix_parallel.sh from START_STAGE and env.
+matrix_parallel_gpu_ids() {
+  case "${START_STAGE:-training}" in
+    partition)
+      resolve_partition_gpu_ids
+      ;;
+    eval_short|eval_long)
+      resolve_eval_gpu_ids
+      ;;
+    *)
+      resolve_train_gpu_ids
+      ;;
+  esac
+}
+
+# Partition fits are VRAM-heavy; training packs multiple low-VRAM jobs per GPU.
+matrix_train_needs_split() {
+  [[ -n "${TRAIN_GPU_IDS:-}" || -n "${TRAIN_WORKERS:-}" ]] \
+    && [[ "$(resolve_train_gpu_ids)" != "$(resolve_partition_gpu_ids)" ]]
+}
+
 apply_subjepa_k_variant
