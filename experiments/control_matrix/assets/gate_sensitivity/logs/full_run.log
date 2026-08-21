@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/gate_sensitivity_audit.py", line 692, in <module>
+    main()
+  File "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/gate_sensitivity_audit.py", line 570, in main
+    result = audit_pair(
+  File "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/gate_sensitivity_audit.py", line 377, in audit_pair
+    ari = float(adjusted_rand_score(reference_labels, aligned))
+NameError: name 'adjusted_rand_score' is not defined
+{
+  "output_dir": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/gate_sensitivity",
+  "pairs_ok": 5
+}

@@ -1,0 +1,9 @@
+{
+  "command": "experiments/control_matrix/gate_sensitivity_audit.py --repo-root . --output-dir experiments/control_matrix/assets/gate_sensitivity --pairs lewm_tworoom,lewm_pusht,lewm_reacher,lewm_cube --gpu-id 0",
+  "git": {
+    "commit": "9e69aff279c77efa3a33652a958d3a74d7f11c98",
+    "dirty": true
+  },
+  "smoke_test": false,
+  "output_dir": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/gate_sensitivity"
+}

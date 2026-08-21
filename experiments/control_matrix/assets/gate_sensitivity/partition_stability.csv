@@ -1,0 +1,17 @@
+model,task,varied_factor,varied_value,K,num_landmarks,nominal_knn,adjusted_rand_index,deployed,note
+lewm,tworoom,M,10000,3,10000,30,0.954195962399927,True,diagnosis-only candidate when deployed=false
+lewm,tworoom,M,15000,3,15000,30,0.9638874935819887,True,diagnosis-only candidate when deployed=false
+lewm,tworoom,kNN,"center=27,perturb=(24, 30)",3,20000,27,0.9795758879945617,True,diagnosis-only candidate when deployed=false
+lewm,tworoom,kNN,"center=33,perturb=(30, 36)",3,20000,33,0.9757086120650194,True,diagnosis-only candidate when deployed=false
+lewm,pusht,M,10000,3,10000,30,0.7238619263139946,False,diagnosis-only candidate when deployed=false
+lewm,pusht,M,15000,3,15000,30,0.7944281477884627,False,diagnosis-only candidate when deployed=false
+lewm,pusht,kNN,"center=27,perturb=(24, 30)",3,20000,27,0.8883163722590092,False,diagnosis-only candidate when deployed=false
+lewm,pusht,kNN,"center=33,perturb=(30, 36)",3,20000,33,0.8614773116425163,False,diagnosis-only candidate when deployed=false
+lewm,reacher,M,10000,3,10000,30,0.881523438650217,False,diagnosis-only candidate when deployed=false
+lewm,reacher,M,15000,3,15000,30,0.8851193905289216,False,diagnosis-only candidate when deployed=false
+lewm,reacher,kNN,"center=27,perturb=(24, 30)",3,20000,27,0.9579773025455309,False,diagnosis-only candidate when deployed=false
+lewm,reacher,kNN,"center=33,perturb=(30, 36)",3,20000,33,0.9284390730535295,False,diagnosis-only candidate when deployed=false
+lewm,cube,M,10000,3,10000,30,0.9210403607981166,False,diagnosis-only candidate when deployed=false
+lewm,cube,M,15000,3,15000,30,0.9472172257413769,False,diagnosis-only candidate when deployed=false
+lewm,cube,kNN,"center=27,perturb=(24, 30)",3,20000,27,0.9606954986844991,False,diagnosis-only candidate when deployed=false
+lewm,cube,kNN,"center=33,perturb=(30, 36)",3,20000,33,0.9491165205224894,False,diagnosis-only candidate when deployed=false

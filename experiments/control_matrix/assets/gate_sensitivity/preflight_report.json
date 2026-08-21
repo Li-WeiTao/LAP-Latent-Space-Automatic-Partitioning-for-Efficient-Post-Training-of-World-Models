@@ -1,0 +1,75 @@
+{
+  "pairs": [
+    {
+      "model": "lewm",
+      "task": "tworoom",
+      "ready": true,
+      "issues": [],
+      "manifest": "experiments/tworoom/results/auto_gate_complete_k3/auto/partition/manifest.json"
+    },
+    {
+      "model": "lewm",
+      "task": "pusht",
+      "ready": true,
+      "issues": [],
+      "manifest": "experiments/pusht/results/auto_gate_complete_k3/auto/partition/manifest.json"
+    },
+    {
+      "model": "lewm",
+      "task": "reacher",
+      "ready": true,
+      "issues": [],
+      "manifest": "experiments/reacher/results/auto_gate_complete_k3/auto/partition/manifest.json"
+    },
+    {
+      "model": "lewm",
+      "task": "cube",
+      "ready": true,
+      "issues": [],
+      "manifest": "experiments/cube/results/auto_gate_complete_k3/auto/partition/manifest.json"
+    },
+    {
+      "model": "subjepa",
+      "task": "tworoom",
+      "ready": true,
+      "issues": [],
+      "manifest": "experiments/tworoom/subjepa/formal/gate/partition/manifest.json"
+    },
+    {
+      "model": "subjepa",
+      "task": "pusht",
+      "ready": false,
+      "issues": [
+        "missing latent cache: /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/formal/preparation/embedding_cache.npz",
+        "missing data file: /home/sicong/weitao/datasets/lewm/pusht_expert_train.h5"
+      ],
+      "manifest": "experiments/pusht/subjepa/formal/gate/partition/manifest.json",
+      "run_command": "bash experiments/control_matrix/scripts/run_gate_sensitivity_audit.sh --pairs subjepa_pusht",
+      "note": "Resolve missing latent cache / data_file paths listed in issues, then rerun."
+    },
+    {
+      "model": "subjepa",
+      "task": "reacher",
+      "ready": false,
+      "issues": [
+        "missing latent cache: /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/reacher/subjepa/formal/preparation/embedding_cache.npz",
+        "missing data file: /home/sicong/weitao/datasets/lewm/reacher.h5"
+      ],
+      "manifest": "experiments/reacher/subjepa/formal/gate/partition/manifest.json",
+      "run_command": "bash experiments/control_matrix/scripts/run_gate_sensitivity_audit.sh --pairs subjepa_reacher",
+      "note": "Resolve missing latent cache / data_file paths listed in issues, then rerun."
+    },
+    {
+      "model": "subjepa",
+      "task": "cube",
+      "ready": false,
+      "issues": [
+        "missing latent cache: /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/cube/subjepa/formal/preparation/embedding_cache.npz",
+        "missing data file: /home/sicong/weitao/datasets/lewm/cube_single_expert.h5"
+      ],
+      "manifest": "experiments/cube/subjepa/formal/gate/partition/manifest.json",
+      "run_command": "bash experiments/control_matrix/scripts/run_gate_sensitivity_audit.sh --pairs subjepa_cube",
+      "note": "Resolve missing latent cache / data_file paths listed in issues, then rerun."
+    }
+  ]
+}
