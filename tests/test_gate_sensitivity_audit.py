@@ -19,17 +19,24 @@ sys.path.insert(0, str(REPO))
 sys.path.insert(0, str(REPO / "experiments" / "tworoom"))
 
 from experiments.control_matrix.gate_audit_lib import (  # noqa: E402
+    AUDIT_SOURCE_REL_PATHS,
     B_SEED_PREFIXES,
     CACHE_SCHEMA_VERSION,
+    ComputationProvenance,
+    MAX_EIGENVALUES,
     OATScenario,
+    PREPROCESSING_VERSION,
     SpectrumCacheIdentity,
     VersionedSpectrumCache,
+    audit_source_hashes,
     baseline_draw_bank,
     build_excluded_landmark_indices,
     build_oat_scenarios,
+    build_spectra_by_m,
     choose_held_out_audit_rows,
     collect_minimal_spectrum_requests,
     collect_non_k_boundary_cases,
+    combined_source_digest,
     config_from_manifest_dict,
     decision_agreement_rows,
     enumerate_seed_subsets,
@@ -40,11 +47,14 @@ from experiments.control_matrix.gate_audit_lib import (  # noqa: E402
     landmark_sweep_values,
     latex_escape,
     margins_from_result,
+    NeighborDrawCache,
     resolve_pair_inputs,
     result_row,
     scenario_spectra_bank,
+    NeighborDrawCache,
 )
 from experiments.control_matrix.gate_sensitivity_audit import (  # noqa: E402
+    promote_staging,
     render_paper_table,
 )
 from lap.partition import SpectralGateConfig, evaluate_spectral_gate_spectra  # noqa: E402
@@ -116,20 +126,128 @@ class GateSensitivityAuditTests(unittest.TestCase):
                 "num_landmarks": 100,
                 "landmark_seed": 0,
                 "knn": 30,
-                "eigenvalue_count": 16,
+                "eigenvalue_count": MAX_EIGENVALUES,
                 "eig_tol": 1e-4,
                 "eig_maxiter": 20_000,
-                "preprocessing_version": "zscore_l2_v1",
-                "source_code_id": "gate_audit_lib_v2",
+                "preprocessing_version": PREPROCESSING_VERSION,
+                "source_digest": "digest_v3",
             }
             identity = SpectrumCacheIdentity(**base)
-            values = np.arange(16, dtype=np.float64)
+            values = np.arange(MAX_EIGENVALUES, dtype=np.float64)
             cache._write(identity, values)
-            self.assertIsNotNone(cache._read(identity))
+            self.assertIsNotNone(cache._load(identity))
             for field in ("latent_cache_sha256", "group_ids_hash", "eigenvalue_count", "eig_tol", "schema_version"):
                 mutated = dict(base)
                 mutated[field] = mutated[field] + "_x" if isinstance(mutated[field], str) else mutated[field] + 1
-                self.assertIsNone(cache._read(SpectrumCacheIdentity(**mutated)))
+                self.assertIsNone(cache._load(SpectrumCacheIdentity(**mutated)))
+
+    def test_cold_warm_cache_smoke(self) -> None:
+        rng = np.random.default_rng(0)
+        transformed = rng.standard_normal((400, 12)).astype(np.float32)
+        group_ids = np.repeat(np.arange(4), 100)
+        baseline = SpectralGateConfig(num_landmarks=80, diagnostic_seeds=(0, 1, 2))
+        requests = {
+            (80, seed, knn)
+            for seed in baseline.diagnostic_seeds
+            for knn in baseline.graph_knn_values
+        }
+        source_digest = combined_source_digest(audit_source_hashes(REPO))
+        identity_base = {
+            "latent_cache_sha256": "latent_smoke",
+            "group_ids_hash": "group_smoke",
+            "model": "lewm",
+            "task": "smoke",
+            "source_digest": source_digest,
+        }
+
+        with tempfile.TemporaryDirectory() as tmp:
+            cache_root = Path(tmp) / "cache"
+            cold_cache = VersionedSpectrumCache(cache_root)
+            neighbor_cache = NeighborDrawCache()
+            cold_bank, cold_hits = build_spectra_by_m(
+                cold_cache,
+                identity_base=identity_base,
+                transformed=transformed,
+                group_ids=group_ids,
+                baseline_config=baseline,
+                requests=requests,
+                neighbor_cache=neighbor_cache,
+                max_k=max(baseline.graph_knn_values),
+            )
+            self.assertEqual(cold_cache.hits, 0)
+            self.assertEqual(cold_cache.misses, len(requests))
+            self.assertEqual(cold_cache.eigensolves, len(requests))
+            self.assertFalse(any(cold_hits.values()))
+
+            warm_cache = VersionedSpectrumCache(cache_root)
+            warm_bank, warm_hits = build_spectra_by_m(
+                warm_cache,
+                identity_base=identity_base,
+                transformed=transformed,
+                group_ids=group_ids,
+                baseline_config=baseline,
+                requests=requests,
+                neighbor_cache=NeighborDrawCache(),
+                max_k=max(baseline.graph_knn_values),
+            )
+            self.assertEqual(warm_cache.hits, len(requests))
+            self.assertEqual(warm_cache.misses, 0)
+            self.assertEqual(warm_cache.eigensolves, 0)
+            self.assertTrue(all(warm_hits.values()))
+
+            cold_result = evaluate_config(baseline, scenario_spectra_bank(cold_bank, baseline))
+            warm_result = evaluate_config(baseline, scenario_spectra_bank(warm_bank, baseline))
+            self.assertEqual(cold_result.selected_method, warm_result.selected_method)
+            self.assertEqual(cold_result.reason, warm_result.reason)
+            self.assertAlmostEqual(
+                cold_result.candidate_gap_min,
+                warm_result.candidate_gap_min,
+            )
+
+    def test_load_does_not_change_cache_counters(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            cache = VersionedSpectrumCache(Path(tmp))
+            identity = SpectrumCacheIdentity(
+                schema_version=CACHE_SCHEMA_VERSION,
+                latent_cache_sha256="abc",
+                group_ids_hash="grp",
+                model="lewm",
+                task="tworoom",
+                num_landmarks=50,
+                landmark_seed=0,
+                knn=30,
+                eigenvalue_count=MAX_EIGENVALUES,
+                eig_tol=1e-4,
+                eig_maxiter=20_000,
+                preprocessing_version=PREPROCESSING_VERSION,
+                source_digest="digest",
+            )
+            values = np.arange(MAX_EIGENVALUES, dtype=np.float64)
+            cache._write(identity, values)
+            self.assertEqual(cache.hits, 0)
+            self.assertIsNotNone(cache._load(identity))
+            self.assertEqual(cache.hits, 0)
+
+    def test_computation_provenance_lists_all_audit_sources(self) -> None:
+        provenance = ComputationProvenance.capture(REPO)
+        self.assertEqual(set(provenance.source_hashes), set(AUDIT_SOURCE_REL_PATHS))
+        self.assertEqual(
+            provenance.combined_source_digest,
+            combined_source_digest(provenance.source_hashes),
+        )
+        self.assertTrue(provenance.combined_source_digest)
+
+    def test_promote_staging_leaves_final_output_dir(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            staging = root / "staging"
+            final = root / "final"
+            staging.mkdir()
+            (staging / "baseline_margins.csv").write_text("model,task\n", encoding="utf-8")
+            promote_staging(staging, final)
+            self.assertTrue(final.is_dir())
+            self.assertFalse(staging.exists())
+            self.assertTrue((final / "baseline_margins.csv").is_file())
 
     def test_k_excluded_from_agreement_and_boundary(self) -> None:
         baseline = SpectralGateConfig(num_landmarks=100)
@@ -251,6 +369,8 @@ class GateSensitivityAuditTests(unittest.TestCase):
         )
         self.assertNotIn("/data/", text)
         self.assertIn("${REPO_ROOT}", text)
+        self.assertIn("${CACHE_DIR}", text)
+        self.assertIn("--cache-dir", text)
 
     def test_minimal_spectrum_requests_skip_threshold_only(self) -> None:
         baseline = SpectralGateConfig(num_landmarks=100)

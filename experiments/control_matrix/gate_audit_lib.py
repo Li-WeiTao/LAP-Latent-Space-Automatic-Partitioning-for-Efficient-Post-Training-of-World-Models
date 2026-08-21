@@ -28,9 +28,8 @@ from lap.partition.landmark import (
 )
 from lap.partition.spectral import build_self_tuned_graph, l2_normalize_rows, spectral_labels
 
-CACHE_SCHEMA_VERSION = 2
+CACHE_SCHEMA_VERSION = 3
 PREPROCESSING_VERSION = "zscore_l2_v1"
-SOURCE_CODE_ID = "gate_audit_lib_v2"
 MAX_K = 5
 MAX_BACKGROUND_GAP = 10
 MAX_EIGENVALUES = MAX_K + MAX_BACKGROUND_GAP + 1
@@ -103,7 +102,7 @@ class SpectrumCacheIdentity:
     eig_tol: float
     eig_maxiter: int
     preprocessing_version: str
-    source_code_id: str
+    source_digest: str
 
     def digest(self) -> str:
         payload = json.dumps(asdict(self), sort_keys=True)
@@ -138,9 +137,45 @@ def hash_group_ids(group_ids: np.ndarray | None) -> str:
 AUDIT_SOURCE_REL_PATHS = (
     "experiments/control_matrix/gate_audit_lib.py",
     "experiments/control_matrix/gate_sensitivity_audit.py",
+    "experiments/control_matrix/fit_partition.py",
+    "experiments/tworoom/latent_landmark_spectral.py",
     "lap/partition/gate.py",
     "lap/partition/landmark.py",
+    "lap/partition/spectral.py",
 )
+
+
+@dataclass(frozen=True)
+class ComputationProvenance:
+    """Immutable computation provenance captured before any audit work begins."""
+
+    git_commit: str
+    git_dirty: bool
+    marked_final: bool
+    source_hashes: dict[str, str]
+    combined_source_digest: str
+
+    @classmethod
+    def capture(cls, repo_root: Path) -> ComputationProvenance:
+        git = git_info(repo_root)
+        source_hashes = audit_source_hashes(repo_root)
+        combined = combined_source_digest(source_hashes)
+        dirty = bool(git.get("dirty"))
+        return cls(
+            git_commit=str(git.get("commit", "")),
+            git_dirty=dirty,
+            marked_final=not dirty,
+            source_hashes=source_hashes,
+            combined_source_digest=combined,
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+def combined_source_digest(source_hashes: dict[str, str]) -> str:
+    payload = json.dumps(source_hashes, sort_keys=True).encode("utf-8")
+    return sha256_bytes(payload)
 
 
 def git_info(repo_root: Path) -> dict[str, Any]:
@@ -514,26 +549,21 @@ class VersionedSpectrumCache:
     def _paths(self, digest: str) -> tuple[Path, Path]:
         return self.root / f"{digest}.npz", self.root / f"{digest}.meta.json"
 
-    def _read(self, identity: SpectrumCacheIdentity) -> np.ndarray | None:
+    def _load(self, identity: SpectrumCacheIdentity) -> np.ndarray | None:
         digest = identity.digest()
         npz_path, meta_path = self._paths(digest)
         if not npz_path.is_file() or not meta_path.is_file():
-            self.misses += 1
             return None
         try:
             stored = json.loads(meta_path.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
-            self.misses += 1
             return None
         if stored != identity.to_metadata():
-            self.misses += 1
             return None
         with np.load(npz_path, allow_pickle=False) as data:
             values = np.asarray(data["eigenvalues"], dtype=np.float64)
         if values.shape[0] != identity.eigenvalue_count:
-            self.misses += 1
             return None
-        self.hits += 1
         return values
 
     def _write(self, identity: SpectrumCacheIdentity, eigenvalues: np.ndarray) -> None:
@@ -551,9 +581,11 @@ class VersionedSpectrumCache:
         identity: SpectrumCacheIdentity,
         compute_fn,
     ) -> tuple[np.ndarray, bool]:
-        cached = self._read(identity)
+        cached = self._load(identity)
         if cached is not None:
+            self.hits += 1
             return cached, True
+        self.misses += 1
         values = compute_fn()
         self.eigensolves += 1
         self._write(identity, values)
@@ -631,8 +663,9 @@ def build_spectra_by_m(
     requests: set[tuple[int, int, int]],
     neighbor_cache: NeighborDrawCache,
     max_k: int,
-) -> SpectraByM:
+) -> tuple[SpectraByM, dict[tuple[int, int, int], bool]]:
     spectra_by_m: SpectraByM = {}
+    hit_map: dict[tuple[int, int, int], bool] = {}
     grouped: dict[int, dict[int, set[int]]] = {}
     for m, seed, knn in sorted(requests):
         grouped.setdefault(m, {}).setdefault(seed, set()).add(knn)
@@ -653,7 +686,7 @@ def build_spectra_by_m(
                     eig_tol=baseline_config.eig_tol,
                     eig_maxiter=baseline_config.eig_maxiter,
                     preprocessing_version=PREPROCESSING_VERSION,
-                    source_code_id=SOURCE_CODE_ID,
+                    source_digest=str(identity_base["source_digest"]),
                 )
 
                 def _compute(
@@ -674,9 +707,24 @@ def build_spectra_by_m(
                         max_k=max_k,
                     )
 
-                values, _ = cache.get_or_compute(identity, _compute)
+                values, cache_hit = cache.get_or_compute(identity, _compute)
+                hit_map[(m, seed, knn)] = cache_hit
                 spectra_by_m.setdefault(m, {}).setdefault(seed, {})[knn] = values
-    return spectra_by_m
+    return spectra_by_m, hit_map
+
+
+def scenario_spectrum_cache_hit(
+    scenario: OATScenario,
+    hit_map: dict[tuple[int, int, int], bool],
+) -> bool:
+    if scenario.varied_factor in {"rho", "c_pert", "c_bg", "K"}:
+        return True
+    cfg = scenario.config
+    for seed in cfg.diagnostic_seeds:
+        for knn in cfg.graph_knn_values:
+            if not hit_map.get((cfg.num_landmarks, seed, knn), False):
+                return False
+    return True
 
 
 def evaluate_config(

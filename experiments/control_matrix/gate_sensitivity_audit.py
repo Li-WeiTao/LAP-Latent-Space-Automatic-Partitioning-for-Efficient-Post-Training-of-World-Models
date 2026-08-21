@@ -27,13 +27,12 @@ from experiments.control_matrix.gate_audit_lib import (  # noqa: E402
     AUDIT_SAMPLE_SEED,
     AUDIT_SAMPLE_SIZE,
     CACHE_SCHEMA_VERSION,
-    MAX_EIGENVALUES,
+    ComputationProvenance,
     OATScenario,
     PAIR_SPECS,
     VersionedSpectrumCache,
     atomic_write_json,
     atomic_write_text,
-    audit_source_hashes,
     baseline_draw_bank,
     build_excluded_landmark_indices,
     build_oat_scenarios,
@@ -45,7 +44,6 @@ from experiments.control_matrix.gate_audit_lib import (  # noqa: E402
     decision_agreement_rows,
     draw_pass_rows,
     fit_audit_labels,
-    git_info,
     hungarian_align,
     k_behavior_rows,
     latex_escape,
@@ -54,6 +52,7 @@ from experiments.control_matrix.gate_audit_lib import (  # noqa: E402
     resolve_pair_inputs,
     result_row,
     scenario_spectra_bank,
+    scenario_spectrum_cache_hit,
     sha256_file,
     evaluate_config,
     NeighborDrawCache,
@@ -87,6 +86,12 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Write outputs here first; atomically promote on success.",
     )
+    parser.add_argument(
+        "--cache-dir",
+        type=Path,
+        default=PROJECT_ROOT / "experiments/control_matrix/assets/gate_sensitivity_cache",
+        help="Persistent spectrum cache directory (not promoted with staging output).",
+    )
     parser.add_argument("--pairs", default="lewm_tworoom,lewm_pusht,lewm_reacher,lewm_cube")
     parser.add_argument("--smoke-test", action="store_true")
     parser.add_argument("--gpu-id", type=int, default=-1, help="Use GPU exact kNN when >= 0.")
@@ -95,11 +100,6 @@ def parse_args() -> argparse.Namespace:
         "--promote",
         action="store_true",
         help="Atomically replace --output-dir with --staging-dir after success.",
-    )
-    parser.add_argument(
-        "--refresh-provenance",
-        action="store_true",
-        help="Rewrite manifest/report provenance from existing outputs without rerunning pairs.",
     )
     return parser.parse_args()
 
@@ -145,45 +145,6 @@ OAT_FIELDS = [
 ]
 
 
-def scenario_cache_hit(
-    scenario: OATScenario,
-    *,
-    spectra_by_m,
-    cache: VersionedSpectrumCache,
-    identity_base: dict[str, object],
-    baseline_config: SpectralGateConfig,
-) -> bool:
-    if scenario.varied_factor in {"rho", "c_pert", "c_bg", "K"}:
-        return True
-    cfg = scenario.config
-    seeds = set(cfg.diagnostic_seeds)
-    if cfg.num_landmarks == identity_base["baseline_m"]:
-        if scenario.varied_factor in {"baseline", "B"} or scenario.is_baseline:
-            seeds.update(range(10))
-    from experiments.control_matrix.gate_audit_lib import SpectrumCacheIdentity
-
-    for seed in seeds:
-        for knn in cfg.graph_knn_values:
-            identity = SpectrumCacheIdentity(
-                schema_version=CACHE_SCHEMA_VERSION,
-                latent_cache_sha256=str(identity_base["latent_cache_sha256"]),
-                group_ids_hash=str(identity_base["group_ids_hash"]),
-                model=str(identity_base["model"]),
-                task=str(identity_base["task"]),
-                num_landmarks=cfg.num_landmarks,
-                landmark_seed=seed,
-                knn=knn,
-                eigenvalue_count=MAX_EIGENVALUES,
-                eig_tol=baseline_config.eig_tol,
-                eig_maxiter=baseline_config.eig_maxiter,
-                preprocessing_version="zscore_l2_v1",
-                source_code_id="gate_audit_lib_v2",
-            )
-            if cache._read(identity) is None:
-                return False
-    return True
-
-
 def audit_pair(
     repo_root: Path,
     output_dir: Path,
@@ -191,6 +152,8 @@ def audit_pair(
     spec,
     smoke_test: bool,
     log_handle,
+    cache_dir: Path,
+    computation_provenance: ComputationProvenance,
     gpu_id: int = -1,
     query_chunk: int = 2048,
 ) -> dict[str, object]:
@@ -203,7 +166,7 @@ def audit_pair(
 
     pair_out = output_dir / spec.key
     pair_out.mkdir(parents=True, exist_ok=True)
-    cache = VersionedSpectrumCache(pair_out / "spectrum_cache")
+    cache = VersionedSpectrumCache(cache_dir / spec.key)
     cache_hash = sha256_file(resolved.latent_cache)
 
     latents, sample_ids, cache_stats = load_unique_latents(resolved.latent_cache, frameskip=5)
@@ -234,8 +197,9 @@ def audit_pair(
         "model": spec.model,
         "task": spec.task,
         "baseline_m": baseline.num_landmarks,
+        "source_digest": computation_provenance.combined_source_digest,
     }
-    spectra_by_m = build_spectra_by_m(
+    spectra_by_m, hit_map = build_spectra_by_m(
         cache,
         identity_base=identity_base,
         transformed=transformed,
@@ -295,13 +259,7 @@ def audit_pair(
         scenario_bank = scenario_spectra_bank(spectra_by_m, scenario.config)
         result = evaluate_config(scenario.config, scenario_bank)
         elapsed = time.perf_counter() - t0
-        cache_hit = scenario_cache_hit(
-            scenario,
-            spectra_by_m=spectra_by_m,
-            cache=cache,
-            identity_base=identity_base,
-            baseline_config=baseline,
-        )
+        cache_hit = scenario_spectrum_cache_hit(scenario, hit_map)
         oat_rows.append(
             result_row(
                 model=spec.model,
@@ -391,7 +349,8 @@ def render_report(summary: dict[str, object]) -> str:
         "",
         f"Provenance: commit `{provenance.get('git_commit', 'unknown')}`, "
         f"dirty={provenance.get('git_dirty')}, "
-        f"final={provenance.get('marked_final', False)}.",
+        f"final={provenance.get('marked_final', False)}, "
+        f"source_digest=`{provenance.get('combined_source_digest', 'unknown')}`.",
         "",
         "## Baseline margins",
         "",
@@ -509,51 +468,17 @@ def promote_staging(staging_dir: Path, final_dir: Path) -> None:
         shutil.rmtree(backup)
 
 
-def refresh_provenance(repo_root: Path, output_dir: Path) -> None:
-    output_dir = output_dir.resolve()
-    summary_path = output_dir / "gate_sensitivity_summary.json"
-    summary = json.loads(summary_path.read_text(encoding="utf-8"))
-    git = git_info(repo_root)
-    source_hashes = audit_source_hashes(repo_root)
-    marked_final = not git.get("dirty", True)
-    summary["provenance"] = {
-        "git_commit": git.get("commit"),
-        "git_dirty": git.get("dirty"),
-        "marked_final": marked_final,
-        "source_hashes": source_hashes,
-    }
-    atomic_write_json(summary_path, summary)
-    atomic_write_text(output_dir / "REPORT.md", render_report(summary))
-    manifest_path = output_dir / "run_manifest.json"
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    manifest["git"] = git
-    manifest["marked_final"] = marked_final
-    manifest["source_hashes"] = source_hashes
-    manifest["output_hashes"] = hash_output_files(output_dir)
-    atomic_write_json(manifest_path, manifest)
-    print(
-        json.dumps(
-            {
-                "output_dir": str(output_dir),
-                "marked_final": marked_final,
-                "git": git,
-            },
-            indent=2,
-        )
-    )
-
-
 def main() -> None:
     args = parse_args()
     repo_root = args.repo_root.resolve()
+    computation_provenance = ComputationProvenance.capture(repo_root)
     final_dir = args.output_dir
     if not final_dir.is_absolute():
         final_dir = repo_root / final_dir
-    if args.refresh_provenance:
-        refresh_provenance(repo_root, final_dir)
-        return
-
-    git = git_info(repo_root)
+    cache_dir = args.cache_dir
+    if not cache_dir.is_absolute():
+        cache_dir = repo_root / cache_dir
+    cache_dir.mkdir(parents=True, exist_ok=True)
     output_dir = args.staging_dir or final_dir
     if not output_dir.is_absolute():
         output_dir = repo_root / output_dir
@@ -567,8 +492,6 @@ def main() -> None:
     else:
         wanted = {part.strip() for part in args.pairs.split(",") if part.strip()}
         specs = tuple(s for s in PAIR_SPECS if s.key in wanted or s.task in wanted)
-
-    source_hashes = audit_source_hashes(repo_root)
 
     preflight_rows: list[dict] = []
     for spec in PAIR_SPECS:
@@ -611,6 +534,8 @@ def main() -> None:
                 spec=spec,
                 smoke_test=args.smoke_test,
                 log_handle=log_handle,
+                cache_dir=cache_dir,
+                computation_provenance=computation_provenance,
                 gpu_id=args.gpu_id,
                 query_chunk=args.query_chunk,
             )
@@ -703,7 +628,7 @@ def main() -> None:
         ["model", "task", "varied_factor", "comparison_count", "mean_ari", "min_ari"],
     )
 
-    marked_final = not git.get("dirty", True)
+    provenance = computation_provenance.to_dict()
     summary = {
         "pairs_requested": [s.key for s in specs],
         "pair_status": pair_status,
@@ -721,12 +646,7 @@ def main() -> None:
             "misses": total_cache_misses,
             "eigensolves": total_eigensolves,
         },
-        "provenance": {
-            "git_commit": git.get("commit"),
-            "git_dirty": git.get("dirty"),
-            "marked_final": marked_final,
-            "source_hashes": source_hashes,
-        },
+        "provenance": provenance,
     }
     atomic_write_json(output_dir / "gate_sensitivity_summary.json", summary)
     atomic_write_text(output_dir / "REPORT.md", render_report(summary))
@@ -736,31 +656,32 @@ def main() -> None:
         for row in pair_status
         if row.get("cache_hash")
     }
+    if args.promote and args.staging_dir is not None:
+        promote_staging(output_dir, final_dir)
+    manifest_dir = final_dir
     atomic_write_json(
-        output_dir / "run_manifest.json",
+        manifest_dir / "run_manifest.json",
         {
             "command": " ".join(sys.argv),
-            "git": git,
-            "marked_final": marked_final,
+            "computation_provenance": provenance,
+            "marked_final": computation_provenance.marked_final,
             "smoke_test": args.smoke_test,
-            "output_dir": str(output_dir),
+            "output_dir": str(manifest_dir),
+            "cache_dir": str(cache_dir),
             "spectrum_cache_schema_version": CACHE_SCHEMA_VERSION,
-            "source_hashes": source_hashes,
             "input_cache_hashes": input_cache_hashes,
-            "output_hashes": hash_output_files(output_dir),
+            "output_hashes": hash_output_files(manifest_dir),
             "cache_stats": summary["cache_stats"],
         },
     )
-    if args.promote and args.staging_dir is not None:
-        promote_staging(output_dir, final_dir)
-        output_dir = final_dir
 
     print(
         json.dumps(
             {
-                "output_dir": str(output_dir),
+                "output_dir": str(manifest_dir),
+                "cache_dir": str(cache_dir),
                 "pairs_ok": len(all_baseline),
-                "marked_final": marked_final,
+                "marked_final": computation_provenance.marked_final,
                 "eigensolves": total_eigensolves,
                 "cache_hits": total_cache_hits,
                 "cache_misses": total_cache_misses,
