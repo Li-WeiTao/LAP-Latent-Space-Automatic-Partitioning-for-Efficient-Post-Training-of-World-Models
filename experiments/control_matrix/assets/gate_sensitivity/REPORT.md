@@ -4,6 +4,8 @@ This audit reuses frozen latent caches and recomputes kNN landmark graphs,
 spectra, and gate arithmetic only. **No predictors were trained** and **no
 planning / MPC evaluation** was run. Thresholds were not adjusted post hoc.
 
+Provenance: commit `2a46fb284eb415a4b2a6d7bfb5002382009a0b03`, dirty=True, final=False.
+
 ## Baseline margins
 
 | Model | Task | Decision | Safety margin | Prominence margin |
@@ -16,69 +18,81 @@ planning / MPC evaluation** was run. Thresholds were not adjusted post hoc.
 ## Non-K OAT decision agreement
 
 Overall agreement (excludes K sweep): **48/48**
+- lewm/tworoom B: 2/2 (100.0%)
+- lewm/tworoom M: 2/2 (100.0%)
+- lewm/tworoom c_bg: 2/2 (100.0%)
+- lewm/tworoom c_pert: 2/2 (100.0%)
+- lewm/tworoom kNN: 2/2 (100.0%)
+- lewm/tworoom rho: 2/2 (100.0%)
+- lewm/pusht B: 2/2 (100.0%)
+- lewm/pusht M: 2/2 (100.0%)
+- lewm/pusht c_bg: 2/2 (100.0%)
+- lewm/pusht c_pert: 2/2 (100.0%)
+- lewm/pusht kNN: 2/2 (100.0%)
+- lewm/pusht rho: 2/2 (100.0%)
+- lewm/reacher B: 2/2 (100.0%)
+- lewm/reacher M: 2/2 (100.0%)
+- lewm/reacher c_bg: 2/2 (100.0%)
+- lewm/reacher c_pert: 2/2 (100.0%)
+- lewm/reacher kNN: 2/2 (100.0%)
+- lewm/reacher rho: 2/2 (100.0%)
+- lewm/cube B: 2/2 (100.0%)
+- lewm/cube M: 2/2 (100.0%)
+- lewm/cube c_bg: 2/2 (100.0%)
+- lewm/cube c_pert: 2/2 (100.0%)
+- lewm/cube kNN: 2/2 (100.0%)
+- lewm/cube rho: 2/2 (100.0%)
 
-- lewm/tworoom B: 2/2 (100.0%) vs baseline=spectral
-- lewm/tworoom K: 1/3 (33.3%) vs baseline=spectral
-- lewm/tworoom M: 2/2 (100.0%) vs baseline=spectral
-- lewm/tworoom c_bg: 2/2 (100.0%) vs baseline=spectral
-- lewm/tworoom c_pert: 2/2 (100.0%) vs baseline=spectral
-- lewm/tworoom kNN: 2/2 (100.0%) vs baseline=spectral
-- lewm/tworoom rho: 2/2 (100.0%) vs baseline=spectral
-- lewm/pusht B: 2/2 (100.0%) vs baseline=global
-- lewm/pusht K: 3/3 (100.0%) vs baseline=global
-- lewm/pusht M: 2/2 (100.0%) vs baseline=global
-- lewm/pusht c_bg: 2/2 (100.0%) vs baseline=global
-- lewm/pusht c_pert: 2/2 (100.0%) vs baseline=global
-- lewm/pusht kNN: 2/2 (100.0%) vs baseline=global
-- lewm/pusht rho: 2/2 (100.0%) vs baseline=global
-- lewm/reacher B: 2/2 (100.0%) vs baseline=global
-- lewm/reacher K: 2/3 (66.7%) vs baseline=global
-- lewm/reacher M: 2/2 (100.0%) vs baseline=global
-- lewm/reacher c_bg: 2/2 (100.0%) vs baseline=global
-- lewm/reacher c_pert: 2/2 (100.0%) vs baseline=global
-- lewm/reacher kNN: 2/2 (100.0%) vs baseline=global
-- lewm/reacher rho: 2/2 (100.0%) vs baseline=global
-- lewm/cube B: 2/2 (100.0%) vs baseline=global
-- lewm/cube K: 2/3 (66.7%) vs baseline=global
-- lewm/cube M: 2/2 (100.0%) vs baseline=global
-- lewm/cube c_bg: 2/2 (100.0%) vs baseline=global
-- lewm/cube c_pert: 2/2 (100.0%) vs baseline=global
-- lewm/cube kNN: 2/2 (100.0%) vs baseline=global
-- lewm/cube rho: 2/2 (100.0%) vs baseline=global
+## Behavior across candidate region counts (K sweep)
 
-## Draw-subset pass frequency (seeds 0–9)
+- lewm/tworoom K=2: decision=spectral, prominence_margin=0.3890161855299098
+- lewm/tworoom K=3: decision=spectral, prominence_margin=0.2348524249947765
+- lewm/tworoom K=4: decision=global, prominence_margin=-0.29494338546051607
+- lewm/tworoom K=5: decision=global, prominence_margin=-0.21269040595783711
+- lewm/pusht K=2: decision=global, prominence_margin=-0.21848558199655557
+- lewm/pusht K=3: decision=global, prominence_margin=-0.2222541731913508
+- lewm/pusht K=4: decision=global, prominence_margin=-0.12204145567880442
+- lewm/pusht K=5: decision=global, prominence_margin=-0.09907507465107217
+- lewm/reacher K=2: decision=spectral, prominence_margin=0.35700407847296933
+- lewm/reacher K=3: decision=global, prominence_margin=-0.3687553283358967
+- lewm/reacher K=4: decision=global, prominence_margin=-0.32476966474404584
+- lewm/reacher K=5: decision=global, prominence_margin=-0.060401419673151546
+- lewm/cube K=2: decision=spectral, prominence_margin=0.16481186479402177
+- lewm/cube K=3: decision=global, prominence_margin=-0.12182654412824168
+- lewm/cube K=4: decision=global, prominence_margin=-0.28939572727100327
+- lewm/cube K=5: decision=global, prominence_margin=-0.04108877977813244
 
-- lewm/tworoom B=3: pass=1.000, min safety margin=0.4945036115956747, min prominence margin=0.22743937107276047
-- lewm/tworoom B=5: pass=1.000, min safety margin=0.4945036115956747, min prominence margin=0.2272044528835373
-- lewm/tworoom B=10: pass=1.000, min safety margin=0.4945036115956747, min prominence margin=0.2272044528835373
-- lewm/pusht B=3: pass=0.000, min safety margin=-3.329227960455585, min prominence margin=-0.5094056127110256
-- lewm/pusht B=5: pass=0.000, min safety margin=-3.329227960455585, min prominence margin=-0.5273058334516084
-- lewm/pusht B=10: pass=0.000, min safety margin=-3.329227960455585, min prominence margin=-0.5273058334516084
-- lewm/reacher B=3: pass=0.000, min safety margin=0.08269044708614726, min prominence margin=-0.3855006534231061
-- lewm/reacher B=5: pass=0.000, min safety margin=0.08269044708614726, min prominence margin=-0.38600958922699063
-- lewm/reacher B=10: pass=0.000, min safety margin=0.08269044708614726, min prominence margin=-0.38600958922699063
-- lewm/cube B=3: pass=0.000, min safety margin=0.4848286662952329, min prominence margin=-0.1632090848882175
-- lewm/cube B=5: pass=0.000, min safety margin=0.4848286662952329, min prominence margin=-0.16519267039529284
-- lewm/cube B=10: pass=0.000, min safety margin=0.4848286662952329, min prominence margin=-0.16519267039529284
+## Draw-subset pass frequency (baseline M, seeds 0–9)
 
-## Partition stability (graph/landmark-changing OAT only)
+- lewm/tworoom B=3: pass=1.000, min prominence=0.2274392965413377
+- lewm/tworoom B=5: pass=1.000, min prominence=0.2272044528858635
+- lewm/tworoom B=10: pass=1.000, min prominence=0.2272044528858635
+- lewm/pusht B=3: pass=0.000, min prominence=-0.509405612711347
+- lewm/pusht B=5: pass=0.000, min prominence=-0.527305833451318
+- lewm/pusht B=10: pass=0.000, min prominence=-0.527305833451318
+- lewm/reacher B=3: pass=0.000, min prominence=-0.38550065342143747
+- lewm/reacher B=5: pass=0.000, min prominence=-0.3860095892240503
+- lewm/reacher B=10: pass=0.000, min prominence=-0.3860095892240503
+- lewm/cube B=3: pass=0.000, min prominence=-0.1632090848880849
+- lewm/cube B=5: pass=0.000, min prominence=-0.16519267039331004
+- lewm/cube B=10: pass=0.000, min prominence=-0.16519267039331004
 
-Mean ARI=0.9108, min ARI=0.7239 (16 comparisons)
+## Partition stability by pair/factor
 
-## Boundary / abstention flips
+- lewm/tworoom M: mean ARI=0.9590, min ARI=0.9542, n=2
+- lewm/tworoom kNN: mean ARI=0.9776, min ARI=0.9757, n=2
+- lewm/pusht M: mean ARI=0.7591, min ARI=0.7239, n=2
+- lewm/pusht kNN: mean ARI=0.8749, min ARI=0.8615, n=2
+- lewm/reacher M: mean ARI=0.8833, min ARI=0.8815, n=2
+- lewm/reacher kNN: mean ARI=0.9432, min ARI=0.9284, n=2
+- lewm/cube M: mean ARI=0.9354, min ARI=0.9154, n=2
+- lewm/cube kNN: mean ARI=0.9439, min ARI=0.9403, n=2
 
-- lewm/tworoom K=4 flipped to global (safety_margin=0.3206968639988833, prominence_margin=-0.294942405009621)
-- lewm/tworoom K=5 flipped to global (safety_margin=0.484379344562608, prominence_margin=-0.21269030095076408)
-- lewm/reacher K=2 flipped to spectral (safety_margin=0.4974938569666636, prominence_margin=0.3570040784725116)
-- lewm/cube K=2 flipped to spectral (safety_margin=0.4980330337132345, prominence_margin=0.16481186479378118)
+## Non-K boundary / abstention flips
 
-## Why no predictor training?
-
-The spectral gate consumes only frozen state latents. All sweeps re-evaluate
-cached spectra or rebuild kNN graphs; partition labels are diagnosis-only.
+_No non-K OAT flips observed._
 
 ## What this audit cannot prove
 
 - Planning performance under alternate K or flipped gate decisions.
-- Sub-JEPA pairs without latent caches (preflight lists exact missing paths).
 - Draw-subset diagnostics do not modify the predeclared gate definition.

@@ -1,11 +1,11 @@
 % Gate sensitivity audit (gate-only; no predictor training).
-\begin{tabular}{llrrrr}
+\begin{tabular}{llrrll}
 \toprule
 Model & Task & Safety margin & Prominence margin & Decision & Reason \\
 \midrule
-lewm & tworoom & 0.495 & 0.235 & spectral & spectrally_nondegenerate \\
-lewm & pusht & -0.488 & -0.222 & global & safety_and_background_checks_failed \\
-lewm & reacher & 0.273 & -0.369 & global & residual_gap_not_above_background \\
-lewm & cube & 0.487 & -0.122 & global & residual_gap_not_above_background \\
+lewm & tworoom & 0.495 & 0.235 & spectral & spectrally\_nondegenerate \\
+lewm & pusht & -0.488 & -0.222 & global & safety\_and\_background\_checks\_failed \\
+lewm & reacher & 0.273 & -0.369 & global & residual\_gap\_not\_above\_background \\
+lewm & cube & 0.487 & -0.122 & global & residual\_gap\_not\_above\_background \\
 \bottomrule
 \end{tabular}

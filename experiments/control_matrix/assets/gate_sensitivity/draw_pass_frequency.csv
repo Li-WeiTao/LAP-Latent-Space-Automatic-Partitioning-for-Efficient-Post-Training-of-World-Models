@@ -1,13 +1,13 @@
 model,task,B,n_subsets,pass_frequency,min_safety_margin,median_safety_margin,min_prominence_margin,median_prominence_margin,note
-lewm,tworoom,3,36,1.0,0.4945036115956747,0.4949256982281923,0.22743937107276047,0.23038923382399157,draw-subset sensitivity diagnostic; gate definition unchanged
-lewm,tworoom,5,126,1.0,0.4945036115956747,0.4949185737638344,0.2272044528835373,0.2284534484918076,draw-subset sensitivity diagnostic; gate definition unchanged
-lewm,tworoom,10,1,1.0,0.4945036115956747,0.4945036115956747,0.2272044528835373,0.2272044528835373,draw-subset sensitivity diagnostic; gate definition unchanged
-lewm,pusht,3,36,0.0,-3.329227960455585,-0.4940819526405898,-0.5094056127110256,-0.2160880281395808,draw-subset sensitivity diagnostic; gate definition unchanged
-lewm,pusht,5,126,0.0,-3.329227960455585,-0.8267087443388244,-0.5273058334516084,-0.25725766203491296,draw-subset sensitivity diagnostic; gate definition unchanged
-lewm,pusht,10,1,0.0,-3.329227960455585,-3.329227960455585,-0.5273058334516084,-0.5273058334516084,draw-subset sensitivity diagnostic; gate definition unchanged
-lewm,reacher,3,36,0.0,0.08269044708614726,0.20300281190906766,-0.3855006534231061,-0.36930180118135825,draw-subset sensitivity diagnostic; gate definition unchanged
-lewm,reacher,5,126,0.0,0.08269044708614726,0.12904119045804374,-0.38600958922699063,-0.3746079506852825,draw-subset sensitivity diagnostic; gate definition unchanged
-lewm,reacher,10,1,0.0,0.08269044708614726,0.08269044708614726,-0.38600958922699063,-0.38600958922699063,draw-subset sensitivity diagnostic; gate definition unchanged
-lewm,cube,3,36,0.0,0.4848286662952329,0.48730575480430816,-0.1632090848882175,-0.11597781963890103,draw-subset sensitivity diagnostic; gate definition unchanged
-lewm,cube,5,126,0.0,0.4848286662952329,0.4856732900561592,-0.16519267039529284,-0.12451372431756341,draw-subset sensitivity diagnostic; gate definition unchanged
-lewm,cube,10,1,0.0,0.4848286662952329,0.4848286662952329,-0.16519267039529284,-0.16519267039529284,draw-subset sensitivity diagnostic; gate definition unchanged
+lewm,tworoom,3,36,1.0,0.49450361160176726,0.4949255667615994,0.2274392965413377,0.23038927989464048,draw-subset sensitivity diagnostic; baseline-M bank only
+lewm,tworoom,5,126,1.0,0.49450361160176726,0.49491844211266245,0.2272044528858635,0.22845342002946273,draw-subset sensitivity diagnostic; baseline-M bank only
+lewm,tworoom,10,1,1.0,0.49450361160176726,0.49450361160176726,0.2272044528858635,0.2272044528858635,draw-subset sensitivity diagnostic; baseline-M bank only
+lewm,pusht,3,36,0.0,-3.329227960459615,-0.4940819526430074,-0.509405612711347,-0.2160880281395578,draw-subset sensitivity diagnostic; baseline-M bank only
+lewm,pusht,5,126,0.0,-3.329227960459615,-0.8267087443280818,-0.527305833451318,-0.25725766203606076,draw-subset sensitivity diagnostic; baseline-M bank only
+lewm,pusht,10,1,0.0,-3.329227960459615,-3.329227960459615,-0.527305833451318,-0.527305833451318,draw-subset sensitivity diagnostic; baseline-M bank only
+lewm,reacher,3,36,0.0,0.0826904473931136,0.20300281192951042,-0.38550065342143747,-0.36930180117588596,draw-subset sensitivity diagnostic; baseline-M bank only
+lewm,reacher,5,126,0.0,0.0826904473931136,0.1290411906477199,-0.3860095892240503,-0.37460795068094144,draw-subset sensitivity diagnostic; baseline-M bank only
+lewm,reacher,10,1,0.0,0.0826904473931136,0.0826904473931136,-0.3860095892240503,-0.3860095892240503,draw-subset sensitivity diagnostic; baseline-M bank only
+lewm,cube,3,36,0.0,0.48482866630069943,0.48730575480826654,-0.1632090848880849,-0.11597781963706269,draw-subset sensitivity diagnostic; baseline-M bank only
+lewm,cube,5,126,0.0,0.48482866630069943,0.4856732900603785,-0.16519267039331004,-0.12451372431632685,draw-subset sensitivity diagnostic; baseline-M bank only
+lewm,cube,10,1,0.0,0.48482866630069943,0.48482866630069943,-0.16519267039331004,-0.16519267039331004,draw-subset sensitivity diagnostic; baseline-M bank only

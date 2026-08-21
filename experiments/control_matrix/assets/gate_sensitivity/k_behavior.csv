@@ -1,0 +1,17 @@
+model,task,K,decision,reason,safety_margin,prominence_margin,agreement_with_baseline_K
+lewm,tworoom,2,spectral,spectrally_nondegenerate,0.4972936682184367,0.3890161855299098,True
+lewm,tworoom,3,spectral,spectrally_nondegenerate,0.4949841231868807,0.2348524249947765,True
+lewm,tworoom,4,global,residual_gap_not_above_background,0.320680036971452,-0.29494338546051607,False
+lewm,tworoom,5,global,residual_gap_not_above_background,0.48437931924870314,-0.21269040595783711,False
+lewm,pusht,2,global,safety_and_background_checks_failed,-0.11569485694173343,-0.21848558199655557,True
+lewm,pusht,3,global,safety_and_background_checks_failed,-0.4879851490207895,-0.2222541731913508,True
+lewm,pusht,4,global,safety_and_background_checks_failed,-0.03317236700736814,-0.12204145567880442,True
+lewm,pusht,5,global,residual_gap_not_above_background,0.012644152843807821,-0.09907507465107217,True
+lewm,reacher,2,spectral,spectrally_nondegenerate,0.4974938569678803,0.35700407847296933,False
+lewm,reacher,3,global,residual_gap_not_above_background,0.27294421728104057,-0.3687553283358967,True
+lewm,reacher,4,global,residual_gap_not_above_background,0.4023812438851371,-0.32476966474404584,True
+lewm,reacher,5,global,residual_gap_not_above_background,0.46151560024472593,-0.060401419673151546,True
+lewm,cube,2,spectral,spectrally_nondegenerate,0.49803303371248786,0.16481186479402177,False
+lewm,cube,3,global,residual_gap_not_above_background,0.4874072481704169,-0.12182654412824168,True
+lewm,cube,4,global,residual_gap_not_above_background,0.45993950350950585,-0.28939572727100327,True
+lewm,cube,5,global,residual_gap_not_above_background,0.47196519043197227,-0.04108877977813244,True

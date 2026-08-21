@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "latent_cache_sha256": "94aa8b4371a0251cb7e3ad3519be041de2458d72671ece821edac51d640534e7",
+  "group_ids_hash": "727800bc665c3c75e5bc0013235144f63dfc0673b5bdff1f38a38ec982a84683",
+  "model": "lewm",
+  "task": "cube",
+  "num_landmarks": 20000,
+  "landmark_seed": 6,
+  "knn": 30,
+  "eigenvalue_count": 16,
+  "eig_tol": 0.0001,
+  "eig_maxiter": 20000,
+  "preprocessing_version": "zscore_l2_v1",
+  "source_code_id": "gate_audit_lib_v2"
+}
