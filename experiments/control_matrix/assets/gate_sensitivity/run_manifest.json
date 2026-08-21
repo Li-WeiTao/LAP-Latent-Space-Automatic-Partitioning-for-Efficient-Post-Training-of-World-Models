@@ -1,16 +1,16 @@
 {
   "command": "experiments/control_matrix/gate_sensitivity_audit.py --repo-root /data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models --staging-dir /data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/gate_sensitivity_next --output-dir /data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/gate_sensitivity --promote --gpu-id 0 --pairs lewm_tworoom,lewm_pusht,lewm_reacher,lewm_cube",
   "git": {
-    "commit": "2a46fb284eb415a4b2a6d7bfb5002382009a0b03",
-    "dirty": true
+    "commit": "4f6ecb87110fe8098f20cd4205227c1be35b42c5",
+    "dirty": false
   },
-  "marked_final": false,
+  "marked_final": true,
   "smoke_test": false,
   "output_dir": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/gate_sensitivity_next",
   "spectrum_cache_schema_version": 2,
   "source_hashes": {
-    "experiments/control_matrix/gate_audit_lib.py": "b879ef525b048318217526df3a5e54a7025ef541a248133652c2961407bd54e8",
-    "experiments/control_matrix/gate_sensitivity_audit.py": "bfadf808a89286bc8f5bfaff973607e9202927d3c00c0e380066b730aecae0da",
+    "experiments/control_matrix/gate_audit_lib.py": "88f42be9f54db70ad61fc7880bc5eedc1cb67dede1ff8a2884a985b644fd745b",
+    "experiments/control_matrix/gate_sensitivity_audit.py": "799ca4c039bddaf1c162e1127e76651fae9113577ef6561b4f1659cf16039132",
     "lap/partition/gate.py": "223fce969341d1d7cde325eb87a48b470a8130458d441f19f507473a7fd8d29e",
     "lap/partition/landmark.py": "c28e3455c1a655a421707aabaacf7949a90775e92f6de2f958b8c3910ab2e647"
   },
@@ -22,14 +22,14 @@
   },
   "output_hashes": {
     "baseline_margins.csv": "341d81678d6e19cdf44aa0ecc49b7a2685aec7c2cc5cf077b003d64e93e338bd",
-    "oat_results.csv": "93b96fd1e18e840c13959d0b48b887858712ccca903af944ef532ae2c484cf30",
+    "oat_results.csv": "5e272d4d4ffab066647e7f3f8d7bbdecb32ad285312601c76bb6620735da6e70",
     "decision_agreement.csv": "d447615ef8bed8231da8976ad4db7453c3db622709f155d788a45cd2afdb9275",
     "draw_pass_frequency.csv": "ea539c902f193a2366ff8d69d26a122a807b8d768ff40be7f433fcf5a6e55981",
-    "partition_stability.csv": "d8fe528093c97ced1ce5211003866da73a843be6e7931471564d19de4de1c873",
+    "partition_stability.csv": "374a14dd6424f292737e71ec49bfc5fe1d26f89f5e148cee7c8b66f13232370d",
     "k_behavior.csv": "e28f040d62f394fb3bb7e31768bc4c2588b4ccd206fdeabd2c23d3319fcac4f5",
-    "partition_stability_summary.csv": "79d2bba5edf8c809e43970da2e994ae5a7db46ad2b5ed19b5c3cfdea649134b0",
-    "gate_sensitivity_summary.json": "dbc0b00ba33ae68616c9ae8d642973c81d99444998b57a9ccac2f75b9990cd7e",
-    "REPORT.md": "c6d5a2133864a74e1a21717f2841ab545fe208cb0e20740dbb8c7f3134fc7b2c",
+    "partition_stability_summary.csv": "14a8a1548fce964c34139217e29c4b58fe17b43eee9fa29f7fcb1d22322db2e6",
+    "gate_sensitivity_summary.json": "9ef3baf305a8c952f4f85189d9659cad26aaaa8655062e53c0dd8c0726688eea",
+    "REPORT.md": "e1ba7e0a914456e46700e7e2710572f246e75ccca324a06bc9a5625e53ad6db8",
     "paper_table.tex": "8b0861ddb3b6035d28dc77df9bfcf47f8ddba951875a1b2fce6afe55a3c56fec"
   },
   "cache_stats": {

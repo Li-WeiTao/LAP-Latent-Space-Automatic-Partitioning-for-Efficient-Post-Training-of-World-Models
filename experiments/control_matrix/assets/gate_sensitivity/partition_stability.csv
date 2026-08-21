@@ -11,7 +11,7 @@ lewm,reacher,M,10000,3,10000,30,0.881523438650217,False,diagnosis-only candidate
 lewm,reacher,M,15000,3,15000,30,0.8851193905289216,False,diagnosis-only candidate partition; not deployed or trained
 lewm,reacher,kNN,"center=27,perturb=(24, 30)",3,20000,27,0.9579773025455309,False,diagnosis-only candidate partition; not deployed or trained
 lewm,reacher,kNN,"center=33,perturb=(30, 36)",3,20000,33,0.9284390730535295,False,diagnosis-only candidate partition; not deployed or trained
-lewm,cube,M,10000,3,10000,30,0.9154360178847386,False,diagnosis-only candidate partition; not deployed or trained
-lewm,cube,M,15000,3,15000,30,0.9553985297115323,False,diagnosis-only candidate partition; not deployed or trained
-lewm,cube,kNN,"center=27,perturb=(24, 30)",3,20000,27,0.9402809242783633,False,diagnosis-only candidate partition; not deployed or trained
-lewm,cube,kNN,"center=33,perturb=(30, 36)",3,20000,33,0.947485683703964,False,diagnosis-only candidate partition; not deployed or trained
+lewm,cube,M,10000,3,10000,30,0.9210403607981166,False,diagnosis-only candidate partition; not deployed or trained
+lewm,cube,M,15000,3,15000,30,0.9472172257413769,False,diagnosis-only candidate partition; not deployed or trained
+lewm,cube,kNN,"center=27,perturb=(24, 30)",3,20000,27,0.9606954986844991,False,diagnosis-only candidate partition; not deployed or trained
+lewm,cube,kNN,"center=33,perturb=(30, 36)",3,20000,33,0.9491165205224894,False,diagnosis-only candidate partition; not deployed or trained

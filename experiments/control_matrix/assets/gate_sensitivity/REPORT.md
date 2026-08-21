@@ -4,7 +4,7 @@ This audit reuses frozen latent caches and recomputes kNN landmark graphs,
 spectra, and gate arithmetic only. **No predictors were trained** and **no
 planning / MPC evaluation** was run. Thresholds were not adjusted post hoc.
 
-Provenance: commit `2a46fb284eb415a4b2a6d7bfb5002382009a0b03`, dirty=True, final=False.
+Provenance: commit `4f6ecb87110fe8098f20cd4205227c1be35b42c5`, dirty=False, final=True.
 
 ## Baseline margins
 
@@ -85,8 +85,8 @@ Overall agreement (excludes K sweep): **48/48**
 - lewm/pusht kNN: mean ARI=0.8749, min ARI=0.8615, n=2
 - lewm/reacher M: mean ARI=0.8833, min ARI=0.8815, n=2
 - lewm/reacher kNN: mean ARI=0.9432, min ARI=0.9284, n=2
-- lewm/cube M: mean ARI=0.9354, min ARI=0.9154, n=2
-- lewm/cube kNN: mean ARI=0.9439, min ARI=0.9403, n=2
+- lewm/cube M: mean ARI=0.9341, min ARI=0.9210, n=2
+- lewm/cube kNN: mean ARI=0.9549, min ARI=0.9491, n=2
 
 ## Non-K boundary / abstention flips
 
