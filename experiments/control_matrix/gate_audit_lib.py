@@ -142,9 +142,10 @@ def git_info(repo_root: Path) -> dict[str, Any]:
         except (subprocess.CalledProcessError, FileNotFoundError):
             return ""
 
+    # marked_final cares about pinned tracked source, not untracked run artifacts.
     return {
         "commit": _run(["git", "rev-parse", "HEAD"]),
-        "dirty": bool(_run(["git", "status", "--porcelain"])),
+        "dirty": bool(_run(["git", "status", "--porcelain", "--untracked-files=no"])),
     }
 
 

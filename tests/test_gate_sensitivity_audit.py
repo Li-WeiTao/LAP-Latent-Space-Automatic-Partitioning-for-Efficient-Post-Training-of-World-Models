@@ -34,6 +34,7 @@ from experiments.control_matrix.gate_audit_lib import (  # noqa: E402
     decision_agreement_rows,
     enumerate_seed_subsets,
     evaluate_config,
+    git_info,
     k_behavior_rows,
     knn_center_sweep,
     landmark_sweep_values,
@@ -213,6 +214,31 @@ class GateSensitivityAuditTests(unittest.TestCase):
                     text=True,
                 )
                 self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
+
+    def test_git_info_dirty_ignores_untracked_files(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            subprocess.run(["git", "init"], cwd=root, check=True, capture_output=True)
+            subprocess.run(
+                ["git", "config", "user.email", "audit@test.local"],
+                cwd=root,
+                check=True,
+                capture_output=True,
+            )
+            subprocess.run(
+                ["git", "config", "user.name", "audit-test"],
+                cwd=root,
+                check=True,
+                capture_output=True,
+            )
+            tracked = root / "tracked.txt"
+            tracked.write_text("a", encoding="utf-8")
+            subprocess.run(["git", "add", "tracked.txt"], cwd=root, check=True, capture_output=True)
+            subprocess.run(["git", "commit", "-m", "init"], cwd=root, check=True, capture_output=True)
+            (root / "run.log").write_text("noise", encoding="utf-8")
+            self.assertFalse(git_info(root)["dirty"])
+            tracked.write_text("b", encoding="utf-8")
+            self.assertTrue(git_info(root)["dirty"])
 
     def test_shell_script_has_no_private_paths(self) -> None:
         text = (REPO / "experiments/control_matrix/scripts/run_gate_sensitivity_audit.sh").read_text(

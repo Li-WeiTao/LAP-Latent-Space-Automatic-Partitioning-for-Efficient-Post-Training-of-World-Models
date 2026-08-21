@@ -507,6 +507,7 @@ def promote_staging(staging_dir: Path, final_dir: Path) -> None:
 def main() -> None:
     args = parse_args()
     repo_root = args.repo_root.resolve()
+    git = git_info(repo_root)
     final_dir = args.output_dir
     if not final_dir.is_absolute():
         final_dir = repo_root / final_dir
@@ -524,7 +525,6 @@ def main() -> None:
         wanted = {part.strip() for part in args.pairs.split(",") if part.strip()}
         specs = tuple(s for s in PAIR_SPECS if s.key in wanted or s.task in wanted)
 
-    git = git_info(repo_root)
     source_hashes = audit_source_hashes(repo_root)
 
     preflight_rows: list[dict] = []
