@@ -189,7 +189,6 @@ def audit_pair(
         scenarios = [s for s in scenarios if s.varied_factor in {"baseline", "rho", "K", "M"}][:10]
 
     requests = collect_minimal_spectrum_requests(scenarios, baseline)
-    all_knns = {knn for _, _, knn in requests}
     neighbor_cache = build_neighbor_cache(gpu_id, query_chunk)
     identity_base = {
         "latent_cache_sha256": cache_hash,
@@ -207,7 +206,6 @@ def audit_pair(
         baseline_config=baseline,
         requests=requests,
         neighbor_cache=neighbor_cache,
-        max_k=max(all_knns),
     )
 
     baseline_bank = scenario_spectra_bank(spectra_by_m, baseline)

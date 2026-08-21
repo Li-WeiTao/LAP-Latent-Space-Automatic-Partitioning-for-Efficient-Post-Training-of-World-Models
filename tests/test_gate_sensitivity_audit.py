@@ -27,6 +27,7 @@ from experiments.control_matrix.gate_audit_lib import (  # noqa: E402
     OATScenario,
     PREPROCESSING_VERSION,
     SpectrumCacheIdentity,
+    SpectrumRequest,
     VersionedSpectrumCache,
     audit_source_hashes,
     baseline_draw_bank,
@@ -51,7 +52,6 @@ from experiments.control_matrix.gate_audit_lib import (  # noqa: E402
     resolve_pair_inputs,
     result_row,
     scenario_spectra_bank,
-    NeighborDrawCache,
 )
 from experiments.control_matrix.gate_sensitivity_audit import (  # noqa: E402
     promote_staging,
@@ -61,37 +61,37 @@ from lap.partition import SpectralGateConfig, evaluate_spectral_gate_spectra  # 
 from tests.test_spectral_gate import spectrum_for_candidate  # noqa: E402
 
 
-def synthetic_bank(gap: float, *, m: int) -> dict[int, dict[int, dict[int, np.ndarray]]]:
+def nest_spectrum(
+    spectrum: np.ndarray,
+    *,
+    seeds: tuple[int, ...],
+    knns: tuple[int, ...],
+    eig_count: int,
+) -> dict[int, dict[int, dict[int, np.ndarray]]]:
+    return {
+        seed: {knn: {eig_count: spectrum.copy()} for knn in knns}
+        for seed in seeds
+    }
+
+
+def synthetic_bank(gap: float, *, m: int) -> dict[int, dict[int, dict[int, dict[int, np.ndarray]]]]:
     cfg = SpectralGateConfig(num_landmarks=100)
     spectrum = spectrum_for_candidate(gap)
-    values = {
-        seed: {knn: spectrum.copy() for knn in cfg.graph_knn_values}
-        for seed in (0, 1, 2)
-    }
-    return {m: values}
+    return {m: nest_spectrum(spectrum, seeds=(0, 1, 2), knns=cfg.graph_knn_values, eig_count=cfg.required_eigenvalues)}
 
 
 class GateSensitivityAuditTests(unittest.TestCase):
     def test_different_m_use_different_banks(self) -> None:
         baseline = SpectralGateConfig(num_landmarks=100)
+        eig_count = baseline.required_eigenvalues
+        knns = baseline.graph_knn_values
         scenarios = build_oat_scenarios(baseline)
         m10 = replace(baseline, num_landmarks=50)
         m20 = replace(baseline, num_landmarks=100)
         bank = {
-            50: {
-                0: {30: spectrum_for_candidate(0.05)},
-                1: {30: spectrum_for_candidate(0.05)},
-                2: {30: spectrum_for_candidate(0.05)},
-            },
-            100: {
-                0: {30: spectrum_for_candidate(0.8)},
-                1: {30: spectrum_for_candidate(0.8)},
-                2: {30: spectrum_for_candidate(0.8)},
-            },
+            50: nest_spectrum(spectrum_for_candidate(0.05), seeds=(0, 1, 2), knns=knns, eig_count=eig_count),
+            100: nest_spectrum(spectrum_for_candidate(0.8), seeds=(0, 1, 2), knns=knns, eig_count=eig_count),
         }
-        for knn in (27, 33):
-            bank[50][0][knn] = bank[50][1][knn] = bank[50][2][knn] = spectrum_for_candidate(0.05)
-            bank[100][0][knn] = bank[100][1][knn] = bank[100][2][knn] = spectrum_for_candidate(0.8)
         r10 = evaluate_config(m10, scenario_spectra_bank(bank, m10))
         r20 = evaluate_config(m20, scenario_spectra_bank(bank, m20))
         self.assertNotAlmostEqual(r10.candidate_gap_min, r20.candidate_gap_min)
@@ -102,11 +102,14 @@ class GateSensitivityAuditTests(unittest.TestCase):
 
     def test_draw_subsets_use_baseline_m_bank_only(self) -> None:
         baseline = SpectralGateConfig(num_landmarks=100)
+        eig_count = baseline.required_eigenvalues
         bank = synthetic_bank(0.6, m=100)
-        bank[50] = {
-            seed: {knn: spectrum_for_candidate(0.01) for knn in baseline.graph_knn_values}
-            for seed in range(10)
-        }
+        bank[50] = nest_spectrum(
+            spectrum_for_candidate(0.01),
+            seeds=tuple(range(10)),
+            knns=baseline.graph_knn_values,
+            eig_count=eig_count,
+        )
         draw_bank = baseline_draw_bank(bank, baseline)
         self.assertIn(0, draw_bank)
         self.assertAlmostEqual(
@@ -147,7 +150,13 @@ class GateSensitivityAuditTests(unittest.TestCase):
         group_ids = np.repeat(np.arange(4), 100)
         baseline = SpectralGateConfig(num_landmarks=80, diagnostic_seeds=(0, 1, 2))
         requests = {
-            (80, seed, knn)
+            SpectrumRequest(
+                num_landmarks=80,
+                seed=seed,
+                knn=knn,
+                eigenvalue_count=baseline.required_eigenvalues,
+                max_k=max(baseline.graph_knn_values),
+            )
             for seed in baseline.diagnostic_seeds
             for knn in baseline.graph_knn_values
         }
@@ -172,7 +181,6 @@ class GateSensitivityAuditTests(unittest.TestCase):
                 baseline_config=baseline,
                 requests=requests,
                 neighbor_cache=neighbor_cache,
-                max_k=max(baseline.graph_knn_values),
             )
             self.assertEqual(cold_cache.hits, 0)
             self.assertEqual(cold_cache.misses, len(requests))
@@ -188,7 +196,6 @@ class GateSensitivityAuditTests(unittest.TestCase):
                 baseline_config=baseline,
                 requests=requests,
                 neighbor_cache=NeighborDrawCache(),
-                max_k=max(baseline.graph_knn_values),
             )
             self.assertEqual(warm_cache.hits, len(requests))
             self.assertEqual(warm_cache.misses, 0)
@@ -257,7 +264,7 @@ class GateSensitivityAuditTests(unittest.TestCase):
                 model="lewm",
                 task="tworoom",
                 scenario=OATScenario("baseline", "baseline", baseline, True, False, False),
-                result=evaluate_config(baseline, synthetic_bank(0.6, m=100)[100]),
+                result=evaluate_config(baseline, scenario_spectra_bank(synthetic_bank(0.6, m=100), baseline)),
                 baseline_decision="spectral",
                 elapsed_sec=0.0,
                 cache_hit=True,
@@ -376,11 +383,47 @@ class GateSensitivityAuditTests(unittest.TestCase):
         baseline = SpectralGateConfig(num_landmarks=100)
         scenarios = build_oat_scenarios(baseline)
         requests = collect_minimal_spectrum_requests(scenarios, baseline)
-        self.assertIn((100, 0, 30), requests)
-        self.assertIn((100, 9, 30), requests)  # baseline-M draw-subset seeds
+        baseline_count = baseline.required_eigenvalues
+        baseline_max_k = max(baseline.graph_knn_values)
+        self.assertIn(
+            SpectrumRequest(100, 0, 30, baseline_count, baseline_max_k),
+            requests,
+        )
+        self.assertIn(
+            SpectrumRequest(100, 9, 30, baseline_count, baseline_max_k),
+            requests,
+        )
         m_alt = next(s.config.num_landmarks for s in scenarios if s.varied_factor == "M" and not s.is_baseline)
-        self.assertIn((m_alt, 0, 30), requests)
-        self.assertNotIn((m_alt, 9, 30), requests)
+        self.assertIn(
+            SpectrumRequest(m_alt, 0, 30, baseline_count, baseline_max_k),
+            requests,
+        )
+        self.assertNotIn(
+            SpectrumRequest(m_alt, 9, 30, baseline_count, baseline_max_k),
+            requests,
+        )
+        k5_count = replace(baseline, num_regions=5).required_eigenvalues
+        self.assertIn(SpectrumRequest(100, 0, 30, k5_count, baseline_max_k), requests)
+        self.assertNotIn(SpectrumRequest(100, 9, 30, k5_count, baseline_max_k), requests)
+
+    def test_baseline_requests_match_formal_gate_eigenvalue_count_and_max_k(self) -> None:
+        baseline = SpectralGateConfig(num_landmarks=20_000)
+        requests = collect_minimal_spectrum_requests(build_oat_scenarios(baseline), baseline)
+        formal_count = baseline.required_eigenvalues
+        formal_max_k = max(baseline.graph_knn_values)
+        self.assertEqual(formal_count, 14)
+        self.assertEqual(formal_max_k, 33)
+        for seed in baseline.diagnostic_seeds:
+            self.assertIn(
+                SpectrumRequest(20_000, seed, 30, formal_count, formal_max_k),
+                requests,
+            )
+        k_counts = {
+            req.eigenvalue_count
+            for req in requests
+            if req.num_landmarks == 20_000 and req.seed == 0 and req.knn == 30
+        }
+        self.assertEqual(k_counts, {13, 14, 15, 16})
 
     def test_audit_source_has_no_predictor_training(self) -> None:
         source = (REPO / "experiments/control_matrix/gate_sensitivity_audit.py").read_text(encoding="utf-8")

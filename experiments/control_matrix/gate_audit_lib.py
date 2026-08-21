@@ -78,6 +78,17 @@ class OATScenario:
 
 
 @dataclass(frozen=True)
+class SpectrumRequest:
+    """One ARPACK solve, matching SpectralDegeneracyGate for this K and kNN family."""
+
+    num_landmarks: int
+    seed: int
+    knn: int
+    eigenvalue_count: int
+    max_k: int
+
+
+@dataclass(frozen=True)
 class ResolvedPairInputs:
     spec: PairSpec
     manifest_path: Path
@@ -112,7 +123,8 @@ class SpectrumCacheIdentity:
         return asdict(self)
 
 
-SpectraByM = dict[int, dict[int, dict[int, np.ndarray]]]
+# M -> seed -> knn -> eigenvalue_count -> spectrum
+SpectraByM = dict[int, dict[int, dict[int, dict[int, np.ndarray]]]]
 
 
 def sha256_file(path: Path) -> str:
@@ -436,7 +448,16 @@ def build_oat_scenarios(baseline: SpectralGateConfig) -> list[OATScenario]:
 
     for k in (2, 3, 4, 5):
         cfg = replace(baseline, num_regions=k)
-        scenarios.append(OATScenario("K", str(k), cfg, k == baseline.num_regions, False, False))
+        scenarios.append(
+            OATScenario(
+                "K",
+                str(k),
+                cfg,
+                k == baseline.num_regions,
+                k != baseline.num_regions,
+                False,
+            )
+        )
 
     for rho in (0.4, 0.5, 0.6):
         cfg = replace(baseline, retention_threshold=rho)
@@ -495,15 +516,22 @@ def build_oat_scenarios(baseline: SpectralGateConfig) -> list[OATScenario]:
 def collect_minimal_spectrum_requests(
     scenarios: Iterable[OATScenario],
     baseline: SpectralGateConfig,
-) -> set[tuple[int, int, int]]:
-    """Return unique (M, seed, knn) triples, avoiding unnecessary eigensolves."""
+) -> set[SpectrumRequest]:
+    """Return unique ARPACK solves. Threshold-only factors reuse baseline spectra.
+
+    K is not threshold-only: each K must request ``K + background_gap_count + 1``
+    eigenvalues, matching ``SpectralDegeneracyGate``. Reusing a larger k (for
+    example 16 for K=5) and slicing to K=3 does not reproduce the formal gate.
+    """
 
     baseline_m = baseline.num_landmarks
-    requests: set[tuple[int, int, int]] = set()
+    requests: set[SpectrumRequest] = set()
     for scenario in scenarios:
-        if scenario.varied_factor in {"rho", "c_pert", "c_bg", "K"}:
+        if scenario.varied_factor in {"rho", "c_pert", "c_bg"}:
             continue
         cfg = scenario.config
+        eig_count = cfg.required_eigenvalues
+        max_k = max(cfg.graph_knn_values)
         seeds = set(cfg.diagnostic_seeds)
         if cfg.num_landmarks == baseline_m:
             seeds.add(baseline.deployment_seed)
@@ -511,17 +539,26 @@ def collect_minimal_spectrum_requests(
                 seeds.update(range(10))
         for seed in seeds:
             for knn in cfg.graph_knn_values:
-                requests.add((cfg.num_landmarks, seed, knn))
+                requests.add(
+                    SpectrumRequest(
+                        num_landmarks=cfg.num_landmarks,
+                        seed=int(seed),
+                        knn=int(knn),
+                        eigenvalue_count=int(eig_count),
+                        max_k=int(max_k),
+                    )
+                )
     return requests
 
 
 def scenario_spectra_bank(spectra_by_m: SpectraByM, config: SpectralGateConfig) -> dict[int, dict[int, np.ndarray]]:
     m = config.num_landmarks
+    count = config.required_eigenvalues
     if m not in spectra_by_m:
         raise KeyError(f"missing spectra bank for M={m}")
     bank = spectra_by_m[m]
     return {
-        seed: {knn: bank[seed][knn] for knn in config.graph_knn_values}
+        seed: {knn: bank[seed][knn][count] for knn in config.graph_knn_values}
         for seed in config.diagnostic_seeds
     }
 
@@ -530,9 +567,10 @@ def baseline_draw_bank(
     spectra_by_m: SpectraByM, baseline: SpectralGateConfig
 ) -> dict[int, dict[int, np.ndarray]]:
     m = baseline.num_landmarks
+    count = baseline.required_eigenvalues
     bank = spectra_by_m[m]
     return {
-        seed: {knn: bank[seed][knn] for knn in baseline.graph_knn_values}
+        seed: {knn: bank[seed][knn][count] for knn in baseline.graph_knn_values}
         for seed in range(10)
         if seed in bank
     }
@@ -606,7 +644,7 @@ class NeighborDrawCache:
         seed: int,
         max_k: int,
     ) -> tuple[np.ndarray, np.ndarray]:
-        key = (num_landmarks, seed)
+        key = (num_landmarks, seed, int(max_k))
         if key not in self._draws:
             landmark_indices = _sample_landmarks(len(transformed), num_landmarks, seed, group_ids)
             landmarks = np.ascontiguousarray(transformed[landmark_indices], dtype=np.float32)
@@ -660,69 +698,81 @@ def build_spectra_by_m(
     transformed: np.ndarray,
     group_ids: np.ndarray | None,
     baseline_config: SpectralGateConfig,
-    requests: set[tuple[int, int, int]],
+    requests: set[SpectrumRequest],
     neighbor_cache: NeighborDrawCache,
-    max_k: int,
-) -> tuple[SpectraByM, dict[tuple[int, int, int], bool]]:
+    max_k: int | None = None,
+) -> tuple[SpectraByM, dict[tuple[int, int, int, int], bool]]:
+    del max_k  # per-request max_k matches the formal gate kNN family
     spectra_by_m: SpectraByM = {}
-    hit_map: dict[tuple[int, int, int], bool] = {}
-    grouped: dict[int, dict[int, set[int]]] = {}
-    for m, seed, knn in sorted(requests):
-        grouped.setdefault(m, {}).setdefault(seed, set()).add(knn)
+    hit_map: dict[tuple[int, int, int, int], bool] = {}
 
-    for m, seed_map in grouped.items():
-        for seed, knns in sorted(seed_map.items()):
-            for knn in sorted(knns):
-                identity = SpectrumCacheIdentity(
-                    schema_version=CACHE_SCHEMA_VERSION,
-                    latent_cache_sha256=identity_base["latent_cache_sha256"],
-                    group_ids_hash=identity_base["group_ids_hash"],
-                    model=identity_base["model"],
-                    task=identity_base["task"],
-                    num_landmarks=m,
-                    landmark_seed=seed,
-                    knn=knn,
-                    eigenvalue_count=MAX_EIGENVALUES,
-                    eig_tol=baseline_config.eig_tol,
-                    eig_maxiter=baseline_config.eig_maxiter,
-                    preprocessing_version=PREPROCESSING_VERSION,
-                    source_digest=str(identity_base["source_digest"]),
-                )
+    for request in sorted(
+        requests,
+        key=lambda item: (
+            item.num_landmarks,
+            item.seed,
+            item.knn,
+            item.eigenvalue_count,
+            item.max_k,
+        ),
+    ):
+        identity = SpectrumCacheIdentity(
+            schema_version=CACHE_SCHEMA_VERSION,
+            latent_cache_sha256=identity_base["latent_cache_sha256"],
+            group_ids_hash=identity_base["group_ids_hash"],
+            model=identity_base["model"],
+            task=identity_base["task"],
+            num_landmarks=request.num_landmarks,
+            landmark_seed=request.seed,
+            knn=request.knn,
+            eigenvalue_count=request.eigenvalue_count,
+            eig_tol=baseline_config.eig_tol,
+            eig_maxiter=baseline_config.eig_maxiter,
+            preprocessing_version=PREPROCESSING_VERSION,
+            source_digest=str(identity_base["source_digest"]),
+        )
 
-                def _compute(
-                    m=m,
-                    seed=seed,
-                    knn=knn,
-                ) -> np.ndarray:
-                    return compute_landmark_spectrum(
-                        transformed,
-                        group_ids=group_ids,
-                        num_landmarks=m,
-                        seed=seed,
-                        knn=knn,
-                        count=MAX_EIGENVALUES,
-                        eig_seed=seed * 1000 + knn,
-                        config=baseline_config,
-                        neighbor_cache=neighbor_cache,
-                        max_k=max_k,
-                    )
+        def _compute(request: SpectrumRequest = request) -> np.ndarray:
+            return compute_landmark_spectrum(
+                transformed,
+                group_ids=group_ids,
+                num_landmarks=request.num_landmarks,
+                seed=request.seed,
+                knn=request.knn,
+                count=request.eigenvalue_count,
+                eig_seed=request.seed * 1000 + request.knn,
+                config=baseline_config,
+                neighbor_cache=neighbor_cache,
+                max_k=request.max_k,
+            )
 
-                values, cache_hit = cache.get_or_compute(identity, _compute)
-                hit_map[(m, seed, knn)] = cache_hit
-                spectra_by_m.setdefault(m, {}).setdefault(seed, {})[knn] = values
+        values, cache_hit = cache.get_or_compute(identity, _compute)
+        hit_key = (
+            request.num_landmarks,
+            request.seed,
+            request.knn,
+            request.eigenvalue_count,
+        )
+        hit_map[hit_key] = cache_hit
+        (
+            spectra_by_m.setdefault(request.num_landmarks, {})
+            .setdefault(request.seed, {})
+            .setdefault(request.knn, {})[request.eigenvalue_count]
+        ) = values
     return spectra_by_m, hit_map
 
 
 def scenario_spectrum_cache_hit(
     scenario: OATScenario,
-    hit_map: dict[tuple[int, int, int], bool],
+    hit_map: dict[tuple[int, int, int, int], bool],
 ) -> bool:
-    if scenario.varied_factor in {"rho", "c_pert", "c_bg", "K"}:
+    if scenario.varied_factor in {"rho", "c_pert", "c_bg"}:
         return True
     cfg = scenario.config
+    count = cfg.required_eigenvalues
     for seed in cfg.diagnostic_seeds:
         for knn in cfg.graph_knn_values:
-            if not hit_map.get((cfg.num_landmarks, seed, knn), False):
+            if not hit_map.get((cfg.num_landmarks, seed, knn, count), False):
                 return False
     return True
 
