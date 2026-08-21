@@ -135,6 +135,14 @@ def hash_group_ids(group_ids: np.ndarray | None) -> str:
     return sha256_bytes(arr.tobytes())
 
 
+AUDIT_SOURCE_REL_PATHS = (
+    "experiments/control_matrix/gate_audit_lib.py",
+    "experiments/control_matrix/gate_sensitivity_audit.py",
+    "lap/partition/gate.py",
+    "lap/partition/landmark.py",
+)
+
+
 def git_info(repo_root: Path) -> dict[str, Any]:
     def _run(args: list[str]) -> str:
         try:
@@ -142,24 +150,29 @@ def git_info(repo_root: Path) -> dict[str, Any]:
         except (subprocess.CalledProcessError, FileNotFoundError):
             return ""
 
-    # marked_final cares about pinned tracked source, not untracked run artifacts.
+    # marked_final pins audit source at HEAD; ignore tracked result artifacts.
     return {
         "commit": _run(["git", "rev-parse", "HEAD"]),
-        "dirty": bool(_run(["git", "status", "--porcelain", "--untracked-files=no"])),
+        "dirty": bool(
+            _run(
+                [
+                    "git",
+                    "status",
+                    "--porcelain",
+                    "--untracked-files=no",
+                    "--",
+                    *AUDIT_SOURCE_REL_PATHS,
+                ]
+            )
+        ),
     }
 
 
 def audit_source_hashes(repo_root: Path) -> dict[str, str]:
-    paths = [
-        repo_root / "experiments/control_matrix/gate_audit_lib.py",
-        repo_root / "experiments/control_matrix/gate_sensitivity_audit.py",
-        repo_root / "lap/partition/gate.py",
-        repo_root / "lap/partition/landmark.py",
-    ]
     return {
-        str(path.relative_to(repo_root)): sha256_file(path)
-        for path in paths
-        if path.is_file()
+        rel_path: sha256_file(repo_root / rel_path)
+        for rel_path in AUDIT_SOURCE_REL_PATHS
+        if (repo_root / rel_path).is_file()
     }
 
 

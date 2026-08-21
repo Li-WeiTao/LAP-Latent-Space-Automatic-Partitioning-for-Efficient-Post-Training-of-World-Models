@@ -96,6 +96,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Atomically replace --output-dir with --staging-dir after success.",
     )
+    parser.add_argument(
+        "--refresh-provenance",
+        action="store_true",
+        help="Rewrite manifest/report provenance from existing outputs without rerunning pairs.",
+    )
     return parser.parse_args()
 
 
@@ -504,13 +509,51 @@ def promote_staging(staging_dir: Path, final_dir: Path) -> None:
         shutil.rmtree(backup)
 
 
+def refresh_provenance(repo_root: Path, output_dir: Path) -> None:
+    output_dir = output_dir.resolve()
+    summary_path = output_dir / "gate_sensitivity_summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    git = git_info(repo_root)
+    source_hashes = audit_source_hashes(repo_root)
+    marked_final = not git.get("dirty", True)
+    summary["provenance"] = {
+        "git_commit": git.get("commit"),
+        "git_dirty": git.get("dirty"),
+        "marked_final": marked_final,
+        "source_hashes": source_hashes,
+    }
+    atomic_write_json(summary_path, summary)
+    atomic_write_text(output_dir / "REPORT.md", render_report(summary))
+    manifest_path = output_dir / "run_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["git"] = git
+    manifest["marked_final"] = marked_final
+    manifest["source_hashes"] = source_hashes
+    manifest["output_hashes"] = hash_output_files(output_dir)
+    atomic_write_json(manifest_path, manifest)
+    print(
+        json.dumps(
+            {
+                "output_dir": str(output_dir),
+                "marked_final": marked_final,
+                "git": git,
+            },
+            indent=2,
+        )
+    )
+
+
 def main() -> None:
     args = parse_args()
     repo_root = args.repo_root.resolve()
-    git = git_info(repo_root)
     final_dir = args.output_dir
     if not final_dir.is_absolute():
         final_dir = repo_root / final_dir
+    if args.refresh_provenance:
+        refresh_provenance(repo_root, final_dir)
+        return
+
+    git = git_info(repo_root)
     output_dir = args.staging_dir or final_dir
     if not output_dir.is_absolute():
         output_dir = repo_root / output_dir

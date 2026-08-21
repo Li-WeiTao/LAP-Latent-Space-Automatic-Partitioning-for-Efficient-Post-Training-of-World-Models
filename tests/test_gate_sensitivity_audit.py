@@ -231,13 +231,18 @@ class GateSensitivityAuditTests(unittest.TestCase):
                 check=True,
                 capture_output=True,
             )
-            tracked = root / "tracked.txt"
-            tracked.write_text("a", encoding="utf-8")
-            subprocess.run(["git", "add", "tracked.txt"], cwd=root, check=True, capture_output=True)
+            source_dir = root / "experiments/control_matrix"
+            source_dir.mkdir(parents=True)
+            source_file = source_dir / "gate_audit_lib.py"
+            source_file.write_text("a", encoding="utf-8")
+            other = root / "results.csv"
+            other.write_text("a", encoding="utf-8")
+            subprocess.run(["git", "add", "."], cwd=root, check=True, capture_output=True)
             subprocess.run(["git", "commit", "-m", "init"], cwd=root, check=True, capture_output=True)
             (root / "run.log").write_text("noise", encoding="utf-8")
+            other.write_text("b", encoding="utf-8")
             self.assertFalse(git_info(root)["dirty"])
-            tracked.write_text("b", encoding="utf-8")
+            source_file.write_text("b", encoding="utf-8")
             self.assertTrue(git_info(root)["dirty"])
 
     def test_shell_script_has_no_private_paths(self) -> None:
