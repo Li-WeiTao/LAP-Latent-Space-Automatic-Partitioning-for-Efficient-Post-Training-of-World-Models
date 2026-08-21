@@ -1,0 +1,17 @@
+model,task,varied_factor,varied_value,K,num_landmarks,nominal_knn,adjusted_rand_index,gate_would_select_partition,note
+subjepa,tworoom,M,10000,3,10000,30,0.962313009166392,False,diagnosis-only candidate partition; not deployed or trained
+subjepa,tworoom,M,15000,3,15000,30,0.9745729478911767,True,diagnosis-only candidate partition; not deployed or trained
+subjepa,tworoom,kNN,"center=27,perturb=(24, 30)",3,20000,27,0.9763925569511248,True,diagnosis-only candidate partition; not deployed or trained
+subjepa,tworoom,kNN,"center=33,perturb=(30, 36)",3,20000,33,0.9795412044511089,True,diagnosis-only candidate partition; not deployed or trained
+subjepa,pusht,M,10000,3,10000,30,0.3974886085339566,False,diagnosis-only candidate partition; not deployed or trained
+subjepa,pusht,M,15000,3,15000,30,0.44472767090417337,False,diagnosis-only candidate partition; not deployed or trained
+subjepa,pusht,kNN,"center=27,perturb=(24, 30)",3,20000,27,0.8272116017346949,False,diagnosis-only candidate partition; not deployed or trained
+subjepa,pusht,kNN,"center=33,perturb=(30, 36)",3,20000,33,0.445417356065863,False,diagnosis-only candidate partition; not deployed or trained
+subjepa,reacher,M,10000,3,10000,30,0.28473590591460535,False,diagnosis-only candidate partition; not deployed or trained
+subjepa,reacher,M,15000,3,15000,30,0.2832730229328641,False,diagnosis-only candidate partition; not deployed or trained
+subjepa,reacher,kNN,"center=27,perturb=(24, 30)",3,20000,27,0.9404299928072181,False,diagnosis-only candidate partition; not deployed or trained
+subjepa,reacher,kNN,"center=33,perturb=(30, 36)",3,20000,33,0.4012827350432303,False,diagnosis-only candidate partition; not deployed or trained
+subjepa,cube,M,10000,3,10000,30,0.913183674072905,False,diagnosis-only candidate partition; not deployed or trained
+subjepa,cube,M,15000,3,15000,30,0.9110122458659597,False,diagnosis-only candidate partition; not deployed or trained
+subjepa,cube,kNN,"center=27,perturb=(24, 30)",3,20000,27,0.9216841893764498,False,diagnosis-only candidate partition; not deployed or trained
+subjepa,cube,kNN,"center=33,perturb=(30, 36)",3,20000,33,0.9219653829957499,False,diagnosis-only candidate partition; not deployed or trained

@@ -1,0 +1,32 @@
+{
+  "pair": "subjepa_reacher",
+  "issues": [],
+  "baseline_reproduction_issues": [],
+  "status": "ok",
+  "cache_hash": "91a8fe88e13e47b5b636ea362eaec03b5376b55b3d639b14adea9764f31c3949",
+  "group_ids_hash": "727800bc665c3c75e5bc0013235144f63dfc0673b5bdff1f38a38ec982a84683",
+  "baseline_margin_row": {
+    "model": "subjepa",
+    "task": "reacher",
+    "decision": "global",
+    "reason": "residual_gap_not_above_background",
+    "S": 0.653680961314664,
+    "rho": 0.5,
+    "R_K": 0.01243806065732227,
+    "T_bg": 0.3167419315603566,
+    "safety_margin": 0.15368096131466402,
+    "prominence_margin": -0.30430387090303435,
+    "safety_pass": true,
+    "background_pass": false,
+    "candidate_gap_min": 0.01902772360435159,
+    "perturbation_threshold_max": 0.006589662947029319
+  },
+  "cache_hits": 12,
+  "cache_misses": 81,
+  "eigensolves": 81,
+  "spectrum_requests": 93,
+  "overall_agreement": {
+    "non_k_overall_agreement_rate": 1.0,
+    "non_k_overall_agreement": "12/12"
+  }
+}

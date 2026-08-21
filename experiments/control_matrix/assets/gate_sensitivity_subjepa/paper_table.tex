@@ -1,0 +1,11 @@
+% Gate sensitivity audit (gate-only; no predictor training).
+\begin{tabular}{llrrll}
+\toprule
+Model & Task & Safety margin & Prominence margin & Decision & Reason \\
+\midrule
+subjepa & tworoom & 0.489 & 0.008 & spectral & spectrally\_nondegenerate \\
+subjepa & pusht & -0.294 & -0.129 & global & safety\_and\_background\_checks\_failed \\
+subjepa & reacher & 0.154 & -0.304 & global & residual\_gap\_not\_above\_background \\
+subjepa & cube & 0.480 & -0.036 & global & residual\_gap\_not\_above\_background \\
+\bottomrule
+\end{tabular}

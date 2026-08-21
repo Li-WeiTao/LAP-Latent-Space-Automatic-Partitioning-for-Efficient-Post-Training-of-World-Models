@@ -1,0 +1,13 @@
+model,task,B,n_subsets,pass_frequency,min_safety_margin,median_safety_margin,min_prominence_margin,median_prominence_margin,note
+subjepa,tworoom,3,36,1.0,0.48436490343138383,0.4871208443738445,0.0036862394019559486,0.042015243046397505,draw-subset sensitivity diagnostic; baseline-M bank only
+subjepa,tworoom,5,126,1.0,0.48436490343138383,0.48448373244606435,0.003141657366913353,0.03289978685112105,draw-subset sensitivity diagnostic; baseline-M bank only
+subjepa,tworoom,10,1,1.0,0.48436490343138383,0.48436490343138383,0.003141657366913353,0.003141657366913353,draw-subset sensitivity diagnostic; baseline-M bank only
+subjepa,pusht,3,36,0.0,-1.1264175261839946,-0.5911991866151469,-0.27644760306763233,-0.20344280350656901,draw-subset sensitivity diagnostic; baseline-M bank only
+subjepa,pusht,5,126,0.0,-1.1264175261839946,-0.7144883153521893,-0.31213851186936414,-0.24377470618003794,draw-subset sensitivity diagnostic; baseline-M bank only
+subjepa,pusht,10,1,0.0,-1.1264175261839946,-1.1264175261839946,-0.31213851186936414,-0.31213851186936414,draw-subset sensitivity diagnostic; baseline-M bank only
+subjepa,reacher,3,36,0.0,0.13231739468362447,0.2802230320114516,-0.3923381938155201,-0.3353573790578376,draw-subset sensitivity diagnostic; baseline-M bank only
+subjepa,reacher,5,126,0.0,0.13231739468362447,0.2528808400270448,-0.3927446938565787,-0.3697992074680676,draw-subset sensitivity diagnostic; baseline-M bank only
+subjepa,reacher,10,1,0.0,0.13231739468362447,0.13231739468362447,-0.3927446938565787,-0.3927446938565787,draw-subset sensitivity diagnostic; baseline-M bank only
+subjepa,cube,3,36,0.0,0.4748386454372565,0.4824501600723996,-0.10311871024689512,-0.05071920025194776,draw-subset sensitivity diagnostic; baseline-M bank only
+subjepa,cube,5,126,0.0,0.4748386454372565,0.48002509761582624,-0.10311871024689512,-0.05896356197925129,draw-subset sensitivity diagnostic; baseline-M bank only
+subjepa,cube,10,1,0.0,0.4748386454372565,0.4748386454372565,-0.10311871024689512,-0.10311871024689512,draw-subset sensitivity diagnostic; baseline-M bank only

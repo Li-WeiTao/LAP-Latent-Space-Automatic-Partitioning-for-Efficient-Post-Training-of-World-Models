@@ -1,0 +1,74 @@
+{
+  "pairs": [
+    {
+      "model": "lewm",
+      "task": "tworoom",
+      "ready": false,
+      "issues": [
+        "missing latent cache: /data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/results/auto_gate_complete_k3/tworoom_lewm_train_latent_cache.npz"
+      ],
+      "manifest": "experiments/tworoom/results/auto_gate_complete_k3/auto/partition/manifest.json",
+      "run_command": "bash experiments/control_matrix/scripts/run_gate_sensitivity_audit.sh --pairs lewm_tworoom"
+    },
+    {
+      "model": "lewm",
+      "task": "pusht",
+      "ready": false,
+      "issues": [
+        "missing latent cache: /data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix/pusht_lewm_train_latent_cache.npz"
+      ],
+      "manifest": "experiments/pusht/results/auto_gate_complete_k3/auto/partition/manifest.json",
+      "run_command": "bash experiments/control_matrix/scripts/run_gate_sensitivity_audit.sh --pairs lewm_pusht"
+    },
+    {
+      "model": "lewm",
+      "task": "reacher",
+      "ready": false,
+      "issues": [
+        "missing latent cache: /data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/reacher/results/auto_gate_complete_k3/preparation/embedding_cache.npz",
+        "missing data file: /data/sicong/weitao/datasets/lewm/reacher.h5"
+      ],
+      "manifest": "experiments/reacher/results/auto_gate_complete_k3/auto/partition/manifest.json",
+      "run_command": "bash experiments/control_matrix/scripts/run_gate_sensitivity_audit.sh --pairs lewm_reacher"
+    },
+    {
+      "model": "lewm",
+      "task": "cube",
+      "ready": false,
+      "issues": [
+        "missing latent cache: /data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/cube/matrix/preparation/embedding_cache.npz",
+        "missing data file: /data/sicong/weitao/datasets/lewm/cube_single_expert.h5"
+      ],
+      "manifest": "experiments/cube/results/auto_gate_complete_k3/auto/partition/manifest.json",
+      "run_command": "bash experiments/control_matrix/scripts/run_gate_sensitivity_audit.sh --pairs lewm_cube"
+    },
+    {
+      "model": "subjepa",
+      "task": "tworoom",
+      "ready": true,
+      "issues": [],
+      "manifest": "experiments/tworoom/subjepa/formal/gate/partition/manifest.json"
+    },
+    {
+      "model": "subjepa",
+      "task": "pusht",
+      "ready": true,
+      "issues": [],
+      "manifest": "experiments/pusht/subjepa/formal/gate/partition/manifest.json"
+    },
+    {
+      "model": "subjepa",
+      "task": "reacher",
+      "ready": true,
+      "issues": [],
+      "manifest": "experiments/reacher/subjepa/formal/gate/partition/manifest.json"
+    },
+    {
+      "model": "subjepa",
+      "task": "cube",
+      "ready": true,
+      "issues": [],
+      "manifest": "experiments/cube/subjepa/formal/gate/partition/manifest.json"
+    }
+  ]
+}

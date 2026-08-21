@@ -1,0 +1,47 @@
+{
+  "command": "experiments/control_matrix/gate_sensitivity_audit.py --repo-root /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models --staging-dir /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/assets/gate_sensitivity_subjepa_next --output-dir /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/assets/gate_sensitivity_subjepa --cache-dir /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/assets/gate_sensitivity_cache --promote --gpu-id 4 --pairs subjepa_tworoom,subjepa_pusht,subjepa_reacher,subjepa_cube",
+  "computation_provenance": {
+    "git_commit": "a7c5cfa7dabc3d77c6ce6178f4fe378e4123d17e",
+    "git_dirty": false,
+    "marked_final": true,
+    "source_hashes": {
+      "experiments/control_matrix/gate_audit_lib.py": "56a942f08c520c4a5f97f3020f0da2e6b8e2b7bc703678cff03a4e38300fac26",
+      "experiments/control_matrix/gate_sensitivity_audit.py": "dcd0d5b31022631e6c629cd4549ae7b2b257b89e6ac0d8ebf82fb90d448bda93",
+      "experiments/control_matrix/fit_partition.py": "47841d2be1d3fd7e86fc87b644f5390777de17a260a03d393decde38b4b5a0e9",
+      "experiments/tworoom/latent_landmark_spectral.py": "58fc4417f0a6f669c3833a1764470c734062e44e5ade9b3d98963f335fc21552",
+      "lap/partition/gate.py": "223fce969341d1d7cde325eb87a48b470a8130458d441f19f507473a7fd8d29e",
+      "lap/partition/landmark.py": "c28e3455c1a655a421707aabaacf7949a90775e92f6de2f958b8c3910ab2e647",
+      "lap/partition/spectral.py": "fc0fb5ef4bae0aacb967617c577d60dc32c24f1fdb3f79079ae823742b0ad4e7"
+    },
+    "combined_source_digest": "0b5c3aaf01686c233229dc6cf0b76df269333e2165b2bb4fc96943faef0fe93d"
+  },
+  "marked_final": true,
+  "smoke_test": false,
+  "output_dir": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/assets/gate_sensitivity_subjepa",
+  "cache_dir": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/assets/gate_sensitivity_cache",
+  "spectrum_cache_schema_version": 3,
+  "input_cache_hashes": {
+    "subjepa_tworoom": "b2fab2bfc3127e7cefcad0d1dca409b9e39d156f55d518945bc9ab4ee417a900",
+    "subjepa_pusht": "a706adcef9f5d1d8a5044c2adb4cf868f48ff098b2aebf3f511d4565d8027ccd",
+    "subjepa_reacher": "91a8fe88e13e47b5b636ea362eaec03b5376b55b3d639b14adea9764f31c3949",
+    "subjepa_cube": "243f071bebfb1b82bf5e9dc8384164ebb77e9f3bc9ce8dfd59acb9a639552d26"
+  },
+  "output_hashes": {
+    "baseline_margins.csv": "da2daa59e9a87340aba2dacaee287d2dda373c5e3b53d566745fea002a2293a7",
+    "oat_results.csv": "fa055aec33503d9a69ca32c6bbce45f2d9f712fd461903e92a8b7692bb78d667",
+    "decision_agreement.csv": "3a5e0e21b0a69760b2dee6fa5856c12d074ecdb26b28d2347d79eb6b13a53905",
+    "draw_pass_frequency.csv": "f6bb91f57c2644c8e90367e78c12b51692636ffda3922fa92b46dd8a9af1e2e6",
+    "partition_stability.csv": "a3a7e874904cff2c31d9297f6ba381dbae5c12a45c6871d8639da04a85c8a849",
+    "k_behavior.csv": "3e9e98c388f3fa60dba86899ef28d1c236119af763377a29fbd1d08eb0be3d7a",
+    "partition_stability_summary.csv": "1ffa96697a1b1fb2532126b25b240a49af645f106e84f9cc470d830806b1062e",
+    "gate_sensitivity_summary.json": "d166b17fc46425d5b652d43e1937d84c60eceea6d83117c13299faacb3fbf16b",
+    "REPORT.md": "c9b8fb69d7bfa3941318032789f665e9a0f58918d8ab9d98e12533413ee1ab1a",
+    "paper_table.tex": "f82831555ce3d547a03ef590197214b8edc87cc4c2c0d9d1edba004ea226ceb3"
+  },
+  "cache_stats": {
+    "schema_version": 3,
+    "hits": 48,
+    "misses": 324,
+    "eigensolves": 324
+  }
+}
