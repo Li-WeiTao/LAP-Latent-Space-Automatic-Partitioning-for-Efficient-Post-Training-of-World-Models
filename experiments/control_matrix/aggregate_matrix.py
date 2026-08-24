@@ -245,11 +245,19 @@ def main() -> None:
 
     args.root.mkdir(parents=True, exist_ok=True)
     with (args.root / "matrix_summary.csv").open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=list(rows[0]),
+            lineterminator="\n",
+        )
         writer.writeheader()
         writer.writerows(rows)
     with (args.root / "matrix_raw.csv").open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(raw_rows[0]))
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=list(raw_rows[0]),
+            lineterminator="\n",
+        )
         writer.writeheader()
         writer.writerows(raw_rows)
     (args.root / "matrix_summary.json").write_text(

@@ -5,7 +5,7 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
-.venv/
+.venv
 venv/
 build/
 dist/
@@ -75,6 +75,7 @@ experiments/control_matrix/assets/region_risk/**/*latent_cache*.npz
 experiments/control_matrix/assets/region_risk/**/*.starts.npy
 experiments/control_matrix/assets/formal_region_risk/
 experiments/control_matrix/assets/gate_sensitivity_cache/
+experiments/control_matrix/assets/lewm_k*_logs/
 
 # Generated qualitative rollouts
 *.mp4

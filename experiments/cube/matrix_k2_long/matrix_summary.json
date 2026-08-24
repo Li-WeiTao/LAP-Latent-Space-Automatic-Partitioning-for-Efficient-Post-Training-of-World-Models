@@ -1,0 +1,50 @@
+{
+  "dataset": "cube",
+  "train_seeds": [
+    0,
+    42,
+    625
+  ],
+  "partition_seeds": [
+    0,
+    1,
+    2
+  ],
+  "eval_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "primary_error_bar": "sample SD across fine-tuning seeds after averaging partition and evaluation seeds",
+  "rows": [
+    {
+      "method": "Official baseline",
+      "mean_percent": 50.4,
+      "sd_across_finetuning_seeds_percent": null,
+      "num_finetuning_seeds": 0,
+      "num_partition_seeds": 0,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 8.294576541331088
+    },
+    {
+      "method": "Global-FT50",
+      "mean_percent": 48.13333333333333,
+      "sd_across_finetuning_seeds_percent": 0.9237604307034021,
+      "num_finetuning_seeds": 3,
+      "num_partition_seeds": 0,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 8.86297810853558
+    },
+    {
+      "method": "Spectral",
+      "mean_percent": 49.24444444444445,
+      "sd_across_finetuning_seeds_percent": 0.7343427396381478,
+      "num_finetuning_seeds": 3,
+      "num_partition_seeds": 3,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 8.293358667017722
+    }
+  ]
+}

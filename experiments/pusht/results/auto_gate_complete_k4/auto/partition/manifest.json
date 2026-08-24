@@ -1,0 +1,264 @@
+{
+  "schema_version": 1,
+  "dataset": "pusht",
+  "method": "auto",
+  "selected_method": "global",
+  "partition_seed": 0,
+  "num_clusters": 1,
+  "cluster_counts": [
+    2315671
+  ],
+  "cluster_fractions": [
+    1.0
+  ],
+  "cache_stats": {
+    "cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix/pusht_lewm_train_latent_cache.npz",
+    "num_transitions": 1850815,
+    "num_expanded_latents": 7403260,
+    "num_unique_timesteps": 2315671,
+    "discarded_repeated_window_slots": 5087589,
+    "duplicate_policy": "stable_first_occurrence_per_timestep",
+    "latent_dim": 192,
+    "frameskip": 5
+  },
+  "latent_cache_sha256": "e9a90dee8d9b01561f1f64a8abd55861689eed6d6202b525eae6468b9f5fe407",
+  "data_file": "/data/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+  "method_metadata": {
+    "algorithm": "automatic_spectral_degeneracy_gate",
+    "selected_method": "global",
+    "selected_post_training": "global_predictor",
+    "deployment_seed": 0,
+    "automatic_gate": {
+      "use_partition": false,
+      "selected_method": "global",
+      "reason": "safety_and_background_checks_failed",
+      "deployment_seed": 0,
+      "candidate_gap_min": 0.1288300101908709,
+      "perturbation_threshold_max": 0.0686886014750899,
+      "retained_safety_fraction": 0.4668276329923221,
+      "robust_residual_gap": 0.060141408715781,
+      "background_threshold": 0.1821744032690572,
+      "draw_results": [
+        {
+          "seed": 0,
+          "candidate_relative_gap_by_knn": {
+            "27": 0.09448570945332595,
+            "30": 0.1288300101908709,
+            "33": 0.12962690374727479
+          },
+          "nominal_candidate_relative_gap": 0.1288300101908709,
+          "max_candidate_gap_perturbation": 0.03434430073754495,
+          "background_by_knn": {
+            "27": {
+              "relative_gaps": [
+                0.10901093514031879,
+                0.024267287283792,
+                0.06264675273934155,
+                0.041231357000652294,
+                0.0864974435155629,
+                0.010700003206647789,
+                0.09858097020923752,
+                0.08036925694251475,
+                0.03360563093275661,
+                0.028807189600087577
+              ],
+              "median": 0.05193905486999692,
+              "scaled_mad": 0.041588390108011165,
+              "threshold": 0.17670422519403042
+            },
+            "30": {
+              "relative_gaps": [
+                0.11079379243393327,
+                0.04528987733701528,
+                0.04108921876453323,
+                0.061866521091235145,
+                0.0344809831853431,
+                0.03139754831230674,
+                0.11413083552082498,
+                0.06667423708733802,
+                0.030529891544349468,
+                0.07223857393686633
+              ],
+              "median": 0.05357819921412521,
+              "scaled_mad": 0.027989702024104172,
+              "threshold": 0.13754730528643772
+            },
+            "33": {
+              "relative_gaps": [
+                0.11153707259907757,
+                0.0741795717151664,
+                0.01955974594274706,
+                0.07271464194256834,
+                0.02149141792774122,
+                0.040137464703766106,
+                0.11426479474654999,
+                0.05238468050473366,
+                0.04669599376501669,
+                0.060606102524337006
+              ],
+              "median": 0.05649539151453534,
+              "scaled_mad": 0.025235413927551034,
+              "threshold": 0.13220163329718843
+            }
+          }
+        },
+        {
+          "seed": 1,
+          "candidate_relative_gap_by_knn": {
+            "27": 0.15693704525181554,
+            "30": 0.14446242917906896,
+            "33": 0.1407695620068982
+          },
+          "nominal_candidate_relative_gap": 0.14446242917906896,
+          "max_candidate_gap_perturbation": 0.01247461607274658,
+          "background_by_knn": {
+            "27": {
+              "relative_gaps": [
+                0.13400358764755715,
+                0.06612967710219364,
+                0.060662053819288374,
+                0.038115704751701104,
+                0.01691333002789658,
+                0.08152259295508443,
+                0.029868794343469517,
+                0.04529042402093167,
+                0.03583697548318335,
+                0.038283010890386444
+              ],
+              "median": 0.04178671745565905,
+              "scaled_mad": 0.022827043249424517,
+              "threshold": 0.11026784720393261
+            },
+            "30": {
+              "relative_gaps": [
+                0.14248411804901942,
+                0.06410256703140486,
+                0.09736487447497663,
+                0.0074401937308184,
+                0.014063893577987869,
+                0.08174487378715818,
+                0.037126328619470385,
+                0.056570381043825654,
+                0.023791824919891243,
+                0.050014854742458904
+              ],
+              "median": 0.05329261789314228,
+              "scaled_mad": 0.04296059512530498,
+              "threshold": 0.1821744032690572
+            },
+            "33": {
+              "relative_gaps": [
+                0.14946425443985917,
+                0.06532790334980229,
+                0.09537995203765674,
+                0.023463287728323262,
+                0.030052450892745147,
+                0.0487899566468358,
+                0.0519561015066299,
+                0.060841154082267396,
+                0.014894425961784266,
+                0.07081659404023344
+              ],
+              "median": 0.05639862779444865,
+              "scaled_mad": 0.030218459315233065,
+              "threshold": 0.14705400574014785
+            }
+          }
+        },
+        {
+          "seed": 2,
+          "candidate_relative_gap_by_knn": {
+            "27": 0.1943949823070891,
+            "30": 0.18499534427107073,
+            "33": 0.17358466998190958
+          },
+          "nominal_candidate_relative_gap": 0.18499534427107073,
+          "max_candidate_gap_perturbation": 0.011410674289161149,
+          "background_by_knn": {
+            "27": {
+              "relative_gaps": [
+                0.1646035637300817,
+                0.07925270103633053,
+                0.07489524022733975,
+                0.005208714375491604,
+                0.07072434594396171,
+                0.013475828408527714,
+                0.030067342403818424,
+                0.06121898362145404,
+                0.05873901665888771,
+                0.044635358692886595
+              ],
+              "median": 0.05997900014017088,
+              "scaled_mad": 0.02566183587919499,
+              "threshold": 0.13696450777775585
+            },
+            "30": {
+              "relative_gaps": [
+                0.19078859025833633,
+                0.07167075772805631,
+                0.08121031093681484,
+                0.01742788828246487,
+                0.06327360012251855,
+                0.014646905729969758,
+                0.03730187277215237,
+                0.05668589888204731,
+                0.056070453295573044,
+                0.04245448785895964
+              ],
+              "median": 0.05637817608881018,
+              "scaled_mad": 0.02547765441781159,
+              "threshold": 0.13281113934224495
+            },
+            "33": {
+              "relative_gaps": [
+                0.2177865915441776,
+                0.07390158847233147,
+                0.07998705149929766,
+                0.05672973542602903,
+                0.01990148805940638,
+                0.019488958976760555,
+                0.05449329717808658,
+                0.06374217559565318,
+                0.028037032351920354,
+                0.03698623887303337
+              ],
+              "median": 0.05561151630205781,
+              "scaled_mad": 0.03187650239984972,
+              "threshold": 0.15124102350160695
+            }
+          }
+        }
+      ],
+      "configuration": {
+        "num_regions": 4,
+        "num_landmarks": 20000,
+        "nominal_knn": 30,
+        "perturb_knn": [
+          27,
+          33
+        ],
+        "diagnostic_seeds": [
+          0,
+          1,
+          2
+        ],
+        "deployment_seed": 0,
+        "perturbation_multiplier": 2.0,
+        "retention_threshold": 0.5,
+        "background_gap_count": 10,
+        "background_mad_multiplier": 3.0,
+        "epsilon": 1e-08,
+        "eig_tol": 0.0001,
+        "eig_maxiter": 20000,
+        "cpu_threads": 4
+      },
+      "elapsed_sec": 81.75414731603814
+    },
+    "deployed_partition": {
+      "algorithm": "global_single_region",
+      "num_clusters": 1,
+      "routing": "constant_region_0"
+    }
+  },
+  "elapsed_sec": 122.0314663379686
+}

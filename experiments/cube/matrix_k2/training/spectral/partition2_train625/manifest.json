@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "method": "LAP",
+  "pretrained_model": "/data/sicong/weitao/.stable_worldmodel/cube/lewm_object.ckpt",
+  "num_transitions": 1674000,
+  "num_regions": 2,
+  "partition_metadata": {
+    "mode": "indexed_assignment_replay"
+  },
+  "cache_metadata": {
+    "source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/cube/matrix/preparation/embedding_cache.npz",
+    "encoding": "lossless_precomputed",
+    "route_index": 0
+  },
+  "regions": {
+    "cluster0": {
+      "num_samples": 787262,
+      "checkpoint": "experiments/cube/matrix_k2/training/spectral/partition2_train625/P_train_cluster0_object.ckpt",
+      "metrics": "experiments/cube/matrix_k2/training/spectral/partition2_train625/P_train_cluster0_metrics.json"
+    },
+    "cluster1": {
+      "num_samples": 886738,
+      "checkpoint": "experiments/cube/matrix_k2/training/spectral/partition2_train625/P_train_cluster1_object.ckpt",
+      "metrics": "experiments/cube/matrix_k2/training/spectral/partition2_train625/P_train_cluster1_metrics.json"
+    }
+  },
+  "implementation_backend": "jepa_object",
+  "model_family": "lewm",
+  "dataset": "cube",
+  "training_role": "standard",
+  "partition_source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/cube/matrix_k2/partitions/spectral/seed2",
+  "partition_source_manifest_sha256": "3d50cb2cc0c9f797b64b6bb4d0f81c9789eb8e65e05dfd16d5b376577089d71f",
+  "latent_cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/cube/matrix/preparation/embedding_cache.npz",
+  "latent_cache_sha256": "94aa8b4371a0251cb7e3ad3519be041de2458d72671ece821edac51d640534e7",
+  "pretrained_model_sha256": "2c00552d586b9cbc03ec43c216d84f2e0f38d47b6b5dda6d81ec35163731f581",
+  "train_seed": 625,
+  "split_manifest": null,
+  "split_manifest_sha256": null,
+  "training_config": {
+    "epochs": 50,
+    "batch_size": 128,
+    "learning_rate": 5e-05,
+    "weight_decay": 0.001,
+    "history_size": 3,
+    "num_preds": 1,
+    "cpu_threads": 4,
+    "precision": "fp32",
+    "checkpoint_selection": "minimum loss on same-region training cache"
+  },
+  "predictor_checkpoint_sha256": {
+    "cluster0": "4006c0ed6716f010b5ca3defb1e000cd931e269a74ac8706dd367c9cb9b40e7f",
+    "cluster1": "c6d878f8c8a38eda66978c2d3b5733d96793cbd7174f527f220226dc3e7d20d4"
+  }
+}

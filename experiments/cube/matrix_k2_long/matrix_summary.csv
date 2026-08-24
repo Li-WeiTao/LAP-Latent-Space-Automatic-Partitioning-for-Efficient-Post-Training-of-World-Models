@@ -1,0 +1,4 @@
+method,mean_percent,sd_across_finetuning_seeds_percent,num_finetuning_seeds,num_partition_seeds,num_eval_seeds,eval_seed_sd_percent
+Official baseline,50.4,,0,0,5,8.294576541331088
+Global-FT50,48.13333333333333,0.9237604307034021,3,0,5,8.86297810853558
+Spectral,49.24444444444445,0.7343427396381478,3,3,5,8.293358667017722

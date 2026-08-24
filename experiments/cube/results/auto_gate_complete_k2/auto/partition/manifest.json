@@ -1,0 +1,313 @@
+{
+  "schema_version": 1,
+  "dataset": "cube",
+  "method": "auto",
+  "selected_method": "spectral",
+  "partition_seed": 0,
+  "num_clusters": 2,
+  "cluster_counts": [
+    1046368,
+    952314
+  ],
+  "cluster_fractions": [
+    0.5235290056147001,
+    0.47647099438529994
+  ],
+  "cache_stats": {
+    "cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/cube/matrix/preparation/embedding_cache.npz",
+    "num_transitions": 1674000,
+    "num_expanded_latents": 6696000,
+    "num_unique_timesteps": 1998682,
+    "discarded_repeated_window_slots": 4697318,
+    "duplicate_policy": "stable_first_occurrence_per_timestep",
+    "latent_dim": 192,
+    "frameskip": 5
+  },
+  "latent_cache_sha256": "94aa8b4371a0251cb7e3ad3519be041de2458d72671ece821edac51d640534e7",
+  "data_file": "/data/sicong/weitao/datasets/lewm/cube_single_expert.h5",
+  "method_metadata": {
+    "algorithm": "automatic_spectral_degeneracy_gate",
+    "selected_method": "spectral",
+    "selected_post_training": "regional_predictors",
+    "deployment_seed": 0,
+    "automatic_gate": {
+      "use_partition": true,
+      "selected_method": "spectral",
+      "reason": "spectrally_nondegenerate",
+      "deployment_seed": 0,
+      "candidate_gap_min": 0.7349421084856681,
+      "perturbation_threshold_max": 0.0014456063468146763,
+      "retained_safety_fraction": 0.998033033717726,
+      "robust_residual_gap": 0.7334965021388534,
+      "background_threshold": 0.5686845837268562,
+      "draw_results": [
+        {
+          "seed": 0,
+          "candidate_relative_gap_by_knn": {
+            "27": 0.7342193053122608,
+            "30": 0.7349421084856681,
+            "33": 0.7346560658354754
+          },
+          "nominal_candidate_relative_gap": 0.7349421084856681,
+          "max_candidate_gap_perturbation": 0.0007228031734073381,
+          "background_by_knn": {
+            "27": {
+              "relative_gaps": [
+                0.295514772328364,
+                0.1271748133790995,
+                0.2071274540124758,
+                0.16052024545052215,
+                0.2625903032578435,
+                0.08770851351762174,
+                0.21961491548515022,
+                0.04810404610754979,
+                0.036469698757935806,
+                0.061966782536910195
+              ],
+              "median": 0.14384752941481083,
+              "scaled_mad": 0.11686456095453034,
+              "threshold": 0.4944412122784018
+            },
+            "30": {
+              "relative_gaps": [
+                0.2944891990054045,
+                0.12893391119289752,
+                0.20712953431799372,
+                0.16058068750871293,
+                0.2627442963730767,
+                0.08711154927899843,
+                0.21848857172660852,
+                0.050334669417981544,
+                0.040380716084981234,
+                0.057545415122183405
+              ],
+              "median": 0.14475729935080522,
+              "scaled_mad": 0.11930716199086032,
+              "threshold": 0.5026787853233862
+            },
+            "33": {
+              "relative_gaps": [
+                0.29333202089730015,
+                0.1314239725567399,
+                0.20696619542995412,
+                0.1601775756194516,
+                0.26318260697249124,
+                0.08671618320764736,
+                0.21796085815759647,
+                0.05081573689817645,
+                0.042741386768884476,
+                0.05661347814676182
+              ],
+              "median": 0.14580077408809575,
+              "scaled_mad": 0.11960681280203173,
+              "threshold": 0.5046212124941909
+            }
+          }
+        },
+        {
+          "seed": 1,
+          "candidate_relative_gap_by_knn": {
+            "27": 0.738637834021576,
+            "30": 0.7385456773956021,
+            "33": 0.739012904821734
+          },
+          "nominal_candidate_relative_gap": 0.7385456773956021,
+          "max_candidate_gap_perturbation": 0.00046722742613192203,
+          "background_by_knn": {
+            "27": {
+              "relative_gaps": [
+                0.2990228620195316,
+                0.12307286145062947,
+                0.20299267840229998,
+                0.1669093576256606,
+                0.2660667182904666,
+                0.07047419012864721,
+                0.22462498330138517,
+                0.04230677796894716,
+                0.027439949509761166,
+                0.049871921922894115
+              ],
+              "median": 0.14499110953814504,
+              "scaled_mad": 0.12954444439987542,
+              "threshold": 0.5336244427377712
+            },
+            "30": {
+              "relative_gaps": [
+                0.29716864731935166,
+                0.12431505259550633,
+                0.20459667944752702,
+                0.16715731006346893,
+                0.2646459687061738,
+                0.07276003546420438,
+                0.22223840822545113,
+                0.04212114190904261,
+                0.02906324031220264,
+                0.049628698955657365
+              ],
+              "median": 0.14573618132948762,
+              "scaled_mad": 0.1279555774816981,
+              "threshold": 0.5296029137745819
+            },
+            "33": {
+              "relative_gaps": [
+                0.2964176953692279,
+                0.12656459130328648,
+                0.2032066227947632,
+                0.16891679115239241,
+                0.2626981365922804,
+                0.07665844858406214,
+                0.21893148556050065,
+                0.04459282796193903,
+                0.029074269011583453,
+                0.04824951387972516
+              ],
+              "median": 0.14774069122783945,
+              "scaled_mad": 0.12652654560695886,
+              "threshold": 0.527320328048716
+            }
+          }
+        },
+        {
+          "seed": 2,
+          "candidate_relative_gap_by_knn": {
+            "27": 0.7365150517031237,
+            "30": 0.7362690787959164,
+            "33": 0.7360420972997255
+          },
+          "nominal_candidate_relative_gap": 0.7362690787959164,
+          "max_candidate_gap_perturbation": 0.0002459729072072925,
+          "background_by_knn": {
+            "27": {
+              "relative_gaps": [
+                0.30121687694828964,
+                0.12589981165930114,
+                0.19515259293407564,
+                0.17652069206736606,
+                0.2635246921317229,
+                0.068137453393249,
+                0.21655114539046727,
+                0.05090248362077114,
+                0.04986135813112668,
+                0.04965332372302758
+              ],
+              "median": 0.1512102518633336,
+              "scaled_mad": 0.13594001410408524,
+              "threshold": 0.5590302941755894
+            },
+            "30": {
+              "relative_gaps": [
+                0.3024679093460829,
+                0.12777050812661012,
+                0.1924548750478489,
+                0.178527266670955,
+                0.2618666671137851,
+                0.06825558319706364,
+                0.21646292765342742,
+                0.05207645623759328,
+                0.05265079130173167,
+                0.04671117544545098
+              ],
+              "median": 0.15314888739878257,
+              "scaled_mad": 0.13743064504147806,
+              "threshold": 0.5654408225232168
+            },
+            "33": {
+              "relative_gaps": [
+                0.302794443463888,
+                0.12956776715956123,
+                0.19183698067944052,
+                0.17835950635006595,
+                0.26237088950306414,
+                0.06671667090449276,
+                0.21681847180195857,
+                0.052893178288605916,
+                0.05472697160911727,
+                0.04379779549695343
+              ],
+              "median": 0.1539636367548136,
+              "scaled_mad": 0.1382403156573475,
+              "threshold": 0.5686845837268562
+            }
+          }
+        }
+      ],
+      "configuration": {
+        "num_regions": 2,
+        "num_landmarks": 20000,
+        "nominal_knn": 30,
+        "perturb_knn": [
+          27,
+          33
+        ],
+        "diagnostic_seeds": [
+          0,
+          1,
+          2
+        ],
+        "deployment_seed": 0,
+        "perturbation_multiplier": 2.0,
+        "retention_threshold": 0.5,
+        "background_gap_count": 10,
+        "background_mad_multiplier": 3.0,
+        "epsilon": 1e-08,
+        "eig_tol": 0.0001,
+        "eig_maxiter": 20000,
+        "cpu_threads": 4
+      },
+      "elapsed_sec": 51.02109369501704
+    },
+    "deployed_partition": {
+      "algorithm": "landmark_spectral_voronoi",
+      "num_clusters": 2,
+      "seed": 0,
+      "num_landmarks": 20000,
+      "knn": 30,
+      "neighbor_search": {
+        "backend": "torch_cuda_exact_cosine",
+        "device": "cuda:0",
+        "query_chunk": 2048,
+        "sec": 0.08463083795504645,
+        "peak_cuda_allocated_mb": 335.9921875
+      },
+      "graph": {
+        "effective_knn": 30,
+        "num_undirected_nonzeros": 684196,
+        "num_connected_components": 1,
+        "component_fractions": [
+          1.0
+        ],
+        "sigma_floor": 0.04699417054653168,
+        "degree_min": 9.3473781645298,
+        "degree_mean": 17.326644730353355,
+        "degree_max": 28.117001608014107
+      },
+      "spectral": {
+        "eigensolver_sec": 0.2892432080116123,
+        "spectral_kmeans_sec": 0.16012795001734048,
+        "normalized_adjacency_eigenvalues_desc": [
+          1.000000000000001,
+          0.9986300906384526,
+          0.9948316319415625,
+          0.992674280988634
+        ],
+        "laplacian_eigenvalues_asc": [
+          -1.1102230246251565e-15,
+          0.00136990936154735,
+          0.005168368058437456,
+          0.0073257190113660275
+        ],
+        "eigengap_after_k": 0.0037984586968901057,
+        "spectral_kmeans_inertia": 1479.3187255859375,
+        "spectral_kmeans_n_iter": 2
+      },
+      "laplacian_eigenvalues": [
+        -1.1102230246251565e-15,
+        0.00136990936154735,
+        0.005168368058437456,
+        0.0073257190113660275
+      ],
+      "routing": "zscore_l2_spherical_voronoi"
+    }
+  },
+  "elapsed_sec": 103.79808966204291
+}

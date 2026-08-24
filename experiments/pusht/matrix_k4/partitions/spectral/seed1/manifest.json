@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "dataset": "pusht",
+  "method": "spectral",
+  "selected_method": "spectral",
+  "partition_seed": 1,
+  "num_clusters": 4,
+  "cluster_counts": [
+    478416,
+    722348,
+    729681,
+    385226
+  ],
+  "cluster_fractions": [
+    0.20659929670492916,
+    0.3119389585135367,
+    0.3151056432455215,
+    0.16635610153601268
+  ],
+  "cache_stats": {
+    "cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix/pusht_lewm_train_latent_cache.npz",
+    "num_transitions": 1850815,
+    "num_expanded_latents": 7403260,
+    "num_unique_timesteps": 2315671,
+    "discarded_repeated_window_slots": 5087589,
+    "duplicate_policy": "stable_first_occurrence_per_timestep",
+    "latent_dim": 192,
+    "frameskip": 5
+  },
+  "latent_cache_sha256": "e9a90dee8d9b01561f1f64a8abd55861689eed6d6202b525eae6468b9f5fe407",
+  "data_file": "/data/sicong/weitao/datasets/lewm/pusht_expert_train.h5",
+  "method_metadata": {
+    "algorithm": "landmark_spectral_voronoi",
+    "num_clusters": 4,
+    "seed": 1,
+    "num_landmarks": 20000,
+    "knn": 30,
+    "neighbor_search": {
+      "backend": "torch_cuda_exact_cosine",
+      "device": "cuda:0",
+      "query_chunk": 2048,
+      "sec": 0.13607511000009254,
+      "peak_cuda_allocated_mb": 335.9921875
+    },
+    "graph": {
+      "effective_knn": 30,
+      "num_undirected_nonzeros": 725202,
+      "num_connected_components": 1,
+      "component_fractions": [
+        1.0
+      ],
+      "sigma_floor": 0.040888977050781254,
+      "degree_min": 7.179942548274994,
+      "degree_mean": 18.847428767862915,
+      "degree_max": 31.118498727679253
+    },
+    "spectral": {
+      "eigensolver_sec": 0.1993907939759083,
+      "spectral_kmeans_sec": 0.15923958702478558,
+      "normalized_adjacency_eigenvalues_desc": [
+        0.9999999999999974,
+        0.9939781935054084,
+        0.9912390112499957,
+        0.9897864074736709,
+        0.9880617383979066,
+        0.9860774959897672
+      ],
+      "laplacian_eigenvalues_asc": [
+        2.55351295663786e-15,
+        0.006021806494591608,
+        0.008760988750004306,
+        0.01021359252632914,
+        0.011938261602093436,
+        0.013922504010232761
+      ],
+      "eigengap_after_k": 0.0017246690757642957,
+      "spectral_kmeans_inertia": 4163.6787109375,
+      "spectral_kmeans_n_iter": 11
+    },
+    "laplacian_eigenvalues": [
+      2.55351295663786e-15,
+      0.006021806494591608,
+      0.008760988750004306,
+      0.01021359252632914,
+      0.011938261602093436,
+      0.013922504010232761
+    ],
+    "routing": "zscore_l2_spherical_voronoi"
+  },
+  "elapsed_sec": 65.85403079004027
+}

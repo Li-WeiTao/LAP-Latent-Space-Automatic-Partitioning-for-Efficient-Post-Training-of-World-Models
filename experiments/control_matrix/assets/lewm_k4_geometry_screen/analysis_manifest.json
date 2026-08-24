@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "analysis_name": "LeWM K=4 fixed-resolution geometric indicator screen",
+  "status": "threshold_frozen",
+  "repository_commit": "b3c0f7f3e7991eb83412b843952d314770fba0b4",
+  "num_clusters": 4,
+  "target_policy": "Spectral Regional mean over partition seeds 0,1,2 versus Global-FT",
+  "training_seeds": [
+    0,
+    42,
+    625
+  ],
+  "partition_seeds": [
+    0,
+    1,
+    2
+  ],
+  "evaluation_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "audit_seed": 20260824,
+  "audit_count": 20000,
+  "landmark_disjoint_audit": true,
+  "cross_k_metrics": "rejected_by_scope; retained only as a negative exploration record",
+  "current_candidates": [
+    "jacobian_bures_distance"
+  ],
+  "failed_run": {
+    "metric": "pairwise_action_jacobian_geometry",
+    "reason": "prior SSH interruption",
+    "partial_output": false,
+    "retry_status": "resolved_by_completed_parameterized_run"
+  },
+  "last_completed_stage": "freeze the K=4-developed Check-1 plus Jacobian-Bures policy and validate it unchanged at fixed K=2 and K=3",
+  "response_transition_stride": 1,
+  "response_action_policy": "raw action at current global timestep",
+  "k4_reference_reproduction": {
+    "pair_count": 72,
+    "max_abs_error": 1.738357709862859e-08,
+    "transition_counts": {
+      "tworoom": 891463,
+      "pusht": 2281233,
+      "reacher": 1980152,
+      "cube": 1980152
+    }
+  },
+  "k2_k3_validation": {
+    "K2": "the K=4-developed Jacobian-Bures threshold is applied without refitting and correctly classifies all four practical branch labels after Check 1",
+    "K3": "the K=4-developed Jacobian-Bures threshold is applied without refitting and correctly classifies all four practical branch labels after Check 1"
+  },
+  "additional_k4_primary_metrics_tested": 5,
+  "total_primary_metrics_tested": 20,
+  "strongest_current_candidate": "jacobian_bures_distance developed with its threshold at fixed K=4 and validated without threshold refitting at fixed K=2 and K=3",
+  "frozen_gate_policy": {
+    "metric": "jacobian_bures_distance",
+    "metric_and_threshold_development_k": 4,
+    "frozen_threshold": 0.508947854338762,
+    "threshold_operator": ">",
+    "check1_threshold": 0.5,
+    "decision_rule": "select Regional iff Check 1 passes and mean Jacobian-Bures distance is strictly greater than the frozen threshold; otherwise select Global",
+    "validation_k": [
+      2,
+      3
+    ],
+    "threshold_refit_during_validation": false
+  },
+  "analysis_script": "experiments/control_matrix/analyze_fixed_k_response_geometry.py",
+  "analysis_script_sha256": "f680cf7f338f97dc372b190039b783b221222a74ad460d79c28f7b94d98aa8dd",
+  "result_files": [
+    "fixed_k_response_sufficiency_validation.csv",
+    "fixed_k_response_threshold_audit.csv",
+    "response_geometry_cross_k_pairs.csv",
+    "response_geometry_cross_k_by_seed.csv",
+    "jacobian_fixed_k_pair_metrics.csv",
+    "jacobian_fixed_k_seed_summary.csv",
+    "jacobian_fixed_k_validation.csv",
+    "jacobian_fixed_k_threshold_audit.csv",
+    "k4_jacobian_pair_metrics.csv",
+    "k4_jacobian_seed_summary.csv",
+    "k4_jacobian_metric_summary.csv",
+    "metric_screen_summary.csv",
+    "frozen_bures_gate_policy.json",
+    "frozen_bures_gate_validation.csv"
+  ],
+  "fixed_k_jacobian_validation": {
+    "target_label_policy": "Regional iff averaged Regional minus Global exceeds +0.5 percentage points; inconclusive is non-positive for the sufficiency audit",
+    "partition_policy": "metrics and targets are averaged over partition seeds 0,1,2 within each fixed K; no cross-K retention is used",
+    "jacobian_bures_distance": "seed-robust full separation at fixed K=2, K=3, and K=4, standalone",
+    "jacobian_subspace_chordal_distance": "seed-robust with Check 1 at K=2 and K=4; fails at K=3"
+  }
+}

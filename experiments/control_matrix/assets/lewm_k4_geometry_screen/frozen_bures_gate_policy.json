@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "policy_name": "fixed-K Check-1 plus Jacobian-Bures gate",
+  "status": "frozen",
+  "source_repository_commit": "b3c0f7f3e7991eb83412b843952d314770fba0b4",
+  "metric": "jacobian_bures_distance",
+  "metric_direction": "larger_supports_regional",
+  "metric_and_threshold_development_k": 4,
+  "frozen_bures_threshold": 0.508947854338762,
+  "threshold_operator": ">",
+  "check1_threshold": 0.5,
+  "decision_rule": "select Regional iff Check 1 passes and the mean Jacobian-Bures distance is strictly greater than the frozen threshold; otherwise select Global",
+  "threshold_source": {
+    "policy": "with_check1",
+    "positive_tasks": [
+      "tworoom",
+      "cube"
+    ],
+    "nonpositive_tasks_after_check1": [
+      "reacher"
+    ],
+    "positive_min_mean": 0.6357115942898487,
+    "nonpositive_max_mean": 0.38218411438767524,
+    "mean_separation_margin": 0.25352747990217345,
+    "seed_robust_separation_margin": 0.20501213974313615
+  },
+  "validation_protocol": {
+    "validation_k": [
+      2,
+      3
+    ],
+    "threshold_refit_outside_development_k": false,
+    "regional_metric_policy": "average fixed-K results over partition seeds 0,1,2; no deployment seed selection and no cross-K winner selection",
+    "training_seeds": [
+      0,
+      42,
+      625
+    ],
+    "partition_seeds": [
+      0,
+      1,
+      2
+    ],
+    "evaluation_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "practical_positive_definition": "Regional minus Global > 0.5 percentage points",
+    "inconclusive_policy": "treated as non-positive in sufficiency audit"
+  },
+  "results": {
+    "K2": {
+      "role": "frozen_threshold_validation",
+      "pairs": 4,
+      "correct_practical_class": 4,
+      "correct_point_estimate_sign": 4,
+      "predicted_branch_counts": {
+        "regional": 2,
+        "global": 2
+      }
+    },
+    "K3": {
+      "role": "frozen_threshold_validation",
+      "pairs": 4,
+      "correct_practical_class": 4,
+      "correct_point_estimate_sign": 4,
+      "predicted_branch_counts": {
+        "regional": 2,
+        "global": 2
+      }
+    },
+    "K4": {
+      "role": "metric_and_threshold_development",
+      "pairs": 4,
+      "correct_practical_class": 4,
+      "correct_point_estimate_sign": 3,
+      "predicted_branch_counts": {
+        "regional": 2,
+        "global": 2
+      }
+    }
+  },
+  "input_files": {
+    "experiments/control_matrix/assets/lewm_k4_geometry_screen/jacobian_fixed_k_validation.csv": "91aae230c77a13b96f182d97026eb51b3e3686fb2c3fd24650b1197baee8ccf9",
+    "experiments/control_matrix/assets/lewm_k4_geometry_screen/jacobian_fixed_k_threshold_audit.csv": "bb7ff997aeafa11303d37a67b68c2db39343899707450e47c02da156f1e3118c"
+  },
+  "output_files": {
+    "frozen_bures_gate_validation.csv": "7c1fc6cdee9e1e494467d27e8ed1e26cc514c21c96db2be6a71a09693c58e16d"
+  }
+}

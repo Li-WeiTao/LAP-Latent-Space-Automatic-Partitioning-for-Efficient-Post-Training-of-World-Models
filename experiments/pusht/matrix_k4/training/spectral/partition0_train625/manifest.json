@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "method": "LAP",
+  "pretrained_model": "/data/sicong/weitao/.stable_worldmodel/pusht/lewm_object.ckpt",
+  "num_transitions": 1850815,
+  "num_regions": 4,
+  "partition_metadata": {
+    "mode": "indexed_assignment_replay"
+  },
+  "cache_metadata": {
+    "source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix/pusht_lewm_train_latent_cache.npz",
+    "encoding": "lossless_precomputed",
+    "route_index": 0
+  },
+  "regions": {
+    "cluster0": {
+      "num_samples": 425374,
+      "checkpoint": "experiments/pusht/matrix_k4/training/spectral/partition0_train625/P_train_cluster0_object.ckpt",
+      "metrics": "experiments/pusht/matrix_k4/training/spectral/partition0_train625/P_train_cluster0_metrics.json"
+    },
+    "cluster1": {
+      "num_samples": 633642,
+      "checkpoint": "experiments/pusht/matrix_k4/training/spectral/partition0_train625/P_train_cluster1_object.ckpt",
+      "metrics": "experiments/pusht/matrix_k4/training/spectral/partition0_train625/P_train_cluster1_metrics.json"
+    },
+    "cluster2": {
+      "num_samples": 453986,
+      "checkpoint": "experiments/pusht/matrix_k4/training/spectral/partition0_train625/P_train_cluster2_object.ckpt",
+      "metrics": "experiments/pusht/matrix_k4/training/spectral/partition0_train625/P_train_cluster2_metrics.json"
+    },
+    "cluster3": {
+      "num_samples": 337813,
+      "checkpoint": "experiments/pusht/matrix_k4/training/spectral/partition0_train625/P_train_cluster3_object.ckpt",
+      "metrics": "experiments/pusht/matrix_k4/training/spectral/partition0_train625/P_train_cluster3_metrics.json"
+    }
+  },
+  "implementation_backend": "jepa_object",
+  "model_family": "lewm",
+  "dataset": "pusht",
+  "training_role": "standard",
+  "partition_source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix_k4/partitions/spectral/seed0",
+  "partition_source_manifest_sha256": "9c552c0653d92363ddeae813ebe95a5dd1deaa739f80c909ea179d1135974adc",
+  "latent_cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix/pusht_lewm_train_latent_cache.npz",
+  "latent_cache_sha256": "e9a90dee8d9b01561f1f64a8abd55861689eed6d6202b525eae6468b9f5fe407",
+  "pretrained_model_sha256": "e727d64a8b3535c3152dc72688bb7565c536c1b1317c56d04072cf7cc1183cc2",
+  "train_seed": 625,
+  "split_manifest": null,
+  "split_manifest_sha256": null,
+  "training_config": {
+    "epochs": 50,
+    "batch_size": 128,
+    "learning_rate": 5e-05,
+    "weight_decay": 0.001,
+    "history_size": 3,
+    "num_preds": 1,
+    "cpu_threads": 4,
+    "precision": "fp32",
+    "checkpoint_selection": "minimum loss on same-region training cache"
+  },
+  "predictor_checkpoint_sha256": {
+    "cluster0": "6f22185ed7b3e3550d28726e0d73963c5d8cd91327ce6a731a53a7a3a8e28173",
+    "cluster1": "fa03644147896d66df5fd6521bd8844998fbdf7e2ffac04997ffb74df4907fc1",
+    "cluster2": "d3464506675f84d19e8d3904c12484597fcdff0ca4ceb568b839700f133794ea",
+    "cluster3": "f31d1472678d740fdd86d7313510a7c7bda2430e838941fa0fa35acc7f7a8f72"
+  }
+}

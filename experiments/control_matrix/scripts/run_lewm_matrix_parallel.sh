@@ -15,6 +15,10 @@ TRAIN_SEEDS=${TRAIN_SEEDS:-0,42,625}
 PARTITION_SEEDS=${PARTITION_SEEDS:-0,1,2}
 EVAL_SEEDS=${EVAL_SEEDS:-0,1,2,3,4}
 METHODS=${METHODS:-random_voronoi,kmeanspp,spectral}
+NUM_CLUSTERS=${NUM_CLUSTERS:-3}
+SKIP_JOINT=${SKIP_JOINT:-0}
+SKIP_GLOBAL=${SKIP_GLOBAL:-0}
+SKIP_OFFICIAL=${SKIP_OFFICIAL:-0}
 GPU_IDS=${GPU_IDS:-0,1,2,3,4,5,6,7}
 CPU_THREADS=${CPU_THREADS:-4}
 GOAL_OFFSET=${GOAL_OFFSET:-}
@@ -51,7 +55,10 @@ common_env=(
   GOAL_OFFSET="$GOAL_OFFSET"
   EVAL_BUDGET="$EVAL_BUDGET"
   PYTHON="$PYTHON"
-  SKIP_JOINT=0
+  NUM_CLUSTERS="$NUM_CLUSTERS"
+  SKIP_JOINT="$SKIP_JOINT"
+  SKIP_GLOBAL="$SKIP_GLOBAL"
+  SKIP_OFFICIAL="$SKIP_OFFICIAL"
   SKIP_REGIONS=0
   MUJOCO_GL=egl
   PYOPENGL_PLATFORM=egl
@@ -148,6 +155,10 @@ run_stage() {
   echo "partition_seeds=$PARTITION_SEEDS"
   echo "eval_seeds=$EVAL_SEEDS"
   echo "methods=$METHODS"
+  echo "num_clusters=$NUM_CLUSTERS"
+  echo "skip_joint=$SKIP_JOINT"
+  echo "skip_global=$SKIP_GLOBAL"
+  echo "skip_official=$SKIP_OFFICIAL"
   echo "goal_offset=${GOAL_OFFSET:-config_default}"
   echo "eval_budget=${EVAL_BUDGET:-config_default}"
   echo "start_stage=$START_STAGE"
@@ -178,7 +189,9 @@ fi
 
 if stage_enabled partition; then
   clear_tasks
-  add_task global partition_global "" "" "" ""
+  if [[ "$SKIP_GLOBAL" != "1" ]]; then
+    add_task global partition_global "" "" "" ""
+  fi
   for method in "${methods[@]}"; do
     for pseed in "${partition_seeds[@]}"; do
       add_task "${method}_p${pseed}" partition_regions "" "$pseed" "$method" ""
@@ -190,8 +203,12 @@ fi
 if stage_enabled training; then
   clear_tasks
   for tseed in "${train_seeds[@]}"; do
-    add_task "joint_t${tseed}" train_joint "$tseed" "" "" ""
-    add_task "global_t${tseed}" train_global "$tseed" "" "" ""
+    if [[ "$SKIP_JOINT" != "1" ]]; then
+      add_task "joint_t${tseed}" train_joint "$tseed" "" "" ""
+    fi
+    if [[ "$SKIP_GLOBAL" != "1" ]]; then
+      add_task "global_t${tseed}" train_global "$tseed" "" "" ""
+    fi
     for method in "${methods[@]}"; do
       for pseed in "${partition_seeds[@]}"; do
         add_task "${method}_p${pseed}_t${tseed}" train_regions \
@@ -204,17 +221,23 @@ fi
 
 if stage_enabled official_eval; then
   clear_tasks
-  for eseed in "${eval_seeds[@]}"; do
-    add_task "official_e${eseed}" eval_official "" "" "" "$eseed"
-  done
+  if [[ "$SKIP_OFFICIAL" != "1" ]]; then
+    for eseed in "${eval_seeds[@]}"; do
+      add_task "official_e${eseed}" eval_official "" "" "" "$eseed"
+    done
+  fi
   run_stage official_eval
 fi
 
 if stage_enabled model_eval; then
   clear_tasks
   for tseed in "${train_seeds[@]}"; do
-    add_task "joint_t${tseed}" eval_joint "$tseed" "" "" "$EVAL_SEEDS"
-    add_task "global_t${tseed}" eval_global "$tseed" "" "" "$EVAL_SEEDS"
+    if [[ "$SKIP_JOINT" != "1" ]]; then
+      add_task "joint_t${tseed}" eval_joint "$tseed" "" "" "$EVAL_SEEDS"
+    fi
+    if [[ "$SKIP_GLOBAL" != "1" ]]; then
+      add_task "global_t${tseed}" eval_global "$tseed" "" "" "$EVAL_SEEDS"
+    fi
     for method in "${methods[@]}"; do
       for pseed in "${partition_seeds[@]}"; do
         add_task "${method}_p${pseed}_t${tseed}" eval_regions \

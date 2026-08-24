@@ -1,0 +1,5 @@
+task,num_clusters,regional_policy,global_mean_percent,regional_mean_percent,delta_regional_minus_global_pp,point_estimate_winner,practical_class_0p5pp_band,check1_retained_safety_fraction,check1_pass,training_seeds,partition_seeds,evaluation_seeds
+tworoom,4,mean_over_partition_seeds_0_1_2,58.13333333333333,59.55555555555555,1.4222222222222218,regional,regional,0.8206800371099119,True,"0,42,625","0,1,2","0,1,2,3,4"
+pusht,4,mean_over_partition_seeds_0_1_2,40.4,40.75555555555555,0.3555555555555567,regional,inconclusive,0.4668276329923221,False,"0,42,625","0,1,2","0,1,2,3,4"
+reacher,4,mean_over_partition_seeds_0_1_2,78.66666666666667,77.60000000000001,-1.0666666666666582,global,global,0.9023812438919899,True,"0,42,625","0,1,2","0,1,2,3,4"
+cube,4,mean_over_partition_seeds_0_1_2,48.13333333333333,50.48888888888889,2.355555555555552,regional,regional,0.9599395035076935,True,"0,42,625","0,1,2","0,1,2,3,4"

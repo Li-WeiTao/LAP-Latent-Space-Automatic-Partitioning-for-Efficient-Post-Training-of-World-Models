@@ -1,0 +1,50 @@
+{
+  "dataset": "tworoom",
+  "train_seeds": [
+    0,
+    42,
+    625
+  ],
+  "partition_seeds": [
+    0,
+    1,
+    2
+  ],
+  "eval_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "primary_error_bar": "sample SD across fine-tuning seeds after averaging partition and evaluation seeds",
+  "rows": [
+    {
+      "method": "Official baseline",
+      "mean_percent": 49.2,
+      "sd_across_finetuning_seeds_percent": null,
+      "num_finetuning_seeds": 0,
+      "num_partition_seeds": 0,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 5.019960159204456
+    },
+    {
+      "method": "Global-FT50",
+      "mean_percent": 58.13333333333333,
+      "sd_across_finetuning_seeds_percent": 1.22202018532156,
+      "num_finetuning_seeds": 3,
+      "num_partition_seeds": 0,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 4.172472146045292
+    },
+    {
+      "method": "Spectral",
+      "mean_percent": 59.55555555555555,
+      "sd_across_finetuning_seeds_percent": 0.88777708246392,
+      "num_finetuning_seeds": 3,
+      "num_partition_seeds": 3,
+      "num_eval_seeds": 5,
+      "eval_seed_sd_percent": 4.726884210918895
+    }
+  ]
+}

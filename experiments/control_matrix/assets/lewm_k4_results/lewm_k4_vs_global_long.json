@@ -1,0 +1,102 @@
+{
+  "git_commit": "b3c0f7f3e7991eb83412b843952d314770fba0b4",
+  "comparison": "LeWM Spectral K=4 versus reused LeWM K=3 Global-FT50 long-horizon control",
+  "aggregation": "For each training seed, average Spectral over 3 partition seeds x 5 evaluation seeds and Global over 5 evaluation seeds; report mean and sample SD across 3 paired training seeds.",
+  "protocol": {
+    "training_seeds": [
+      0,
+      42,
+      625
+    ],
+    "partition_seeds": [
+      0,
+      1,
+      2
+    ],
+    "evaluation_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "goal_offset_steps": 50,
+    "eval_budget": 50,
+    "paired_starts_verified": true,
+    "global_model_provenance_verified": true
+  },
+  "rows": [
+    {
+      "task": "tworoom",
+      "global_mean_percent": 58.13333333333333,
+      "global_sd_across_train_seeds_percent": 1.22202018532156,
+      "spectral_k4_mean_percent": 59.55555555555555,
+      "spectral_k4_sd_across_train_seeds_percent": 0.88777708246392,
+      "delta_spectral_minus_global_pp": 1.4222222222222218,
+      "delta_sd_across_train_seeds_pp": 0.4286067004885783,
+      "point_estimate_winner": "Spectral K4",
+      "train_seeds": "0,42,625",
+      "partition_seeds": "0,1,2",
+      "evaluation_seeds": "0,1,2,3,4",
+      "paired_starts_verified": true,
+      "goal_offset_steps": 50,
+      "eval_budget": 50,
+      "global_source": "LeWM Global-FT50 legacy results under experiments/tworoom/results, exposed through per-seed relative symlinks",
+      "spectral_source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/matrix_k4_long/eval/spectral"
+    },
+    {
+      "task": "pusht",
+      "global_mean_percent": 40.4,
+      "global_sd_across_train_seeds_percent": 0.3999999999999986,
+      "spectral_k4_mean_percent": 40.75555555555555,
+      "spectral_k4_sd_across_train_seeds_percent": 0.6710963942462902,
+      "delta_spectral_minus_global_pp": 0.3555555555555567,
+      "delta_sd_across_train_seeds_pp": 0.9075812380738724,
+      "point_estimate_winner": "Spectral K4",
+      "train_seeds": "0,42,625",
+      "partition_seeds": "0,1,2",
+      "evaluation_seeds": "0,1,2,3,4",
+      "paired_starts_verified": true,
+      "goal_offset_steps": 50,
+      "eval_budget": 50,
+      "global_source": "experiments/pusht/matrix_long/eval/global",
+      "spectral_source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix_k4_long/eval/spectral"
+    },
+    {
+      "task": "reacher",
+      "global_mean_percent": 78.66666666666667,
+      "global_sd_across_train_seeds_percent": 1.0066445913694335,
+      "spectral_k4_mean_percent": 77.60000000000001,
+      "spectral_k4_sd_across_train_seeds_percent": 2.219108930279101,
+      "delta_spectral_minus_global_pp": -1.0666666666666582,
+      "delta_sd_across_train_seeds_pp": 3.202776573190487,
+      "point_estimate_winner": "Global-FT",
+      "train_seeds": "0,42,625",
+      "partition_seeds": "0,1,2",
+      "evaluation_seeds": "0,1,2,3,4",
+      "paired_starts_verified": true,
+      "goal_offset_steps": 50,
+      "eval_budget": 50,
+      "global_source": "experiments/reacher/matrix_long/eval/global",
+      "spectral_source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/reacher/matrix_k4_long/eval/spectral"
+    },
+    {
+      "task": "cube",
+      "global_mean_percent": 48.13333333333333,
+      "global_sd_across_train_seeds_percent": 0.9237604307034021,
+      "spectral_k4_mean_percent": 50.48888888888889,
+      "spectral_k4_sd_across_train_seeds_percent": 0.15396007178389967,
+      "delta_spectral_minus_global_pp": 2.355555555555552,
+      "delta_sd_across_train_seeds_pp": 1.0095837059200492,
+      "point_estimate_winner": "Spectral K4",
+      "train_seeds": "0,42,625",
+      "partition_seeds": "0,1,2",
+      "evaluation_seeds": "0,1,2,3,4",
+      "paired_starts_verified": true,
+      "goal_offset_steps": 50,
+      "eval_budget": 50,
+      "global_source": "experiments/cube/matrix_long/eval/global",
+      "spectral_source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/cube/matrix_k4_long/eval/spectral"
+    }
+  ]
+}

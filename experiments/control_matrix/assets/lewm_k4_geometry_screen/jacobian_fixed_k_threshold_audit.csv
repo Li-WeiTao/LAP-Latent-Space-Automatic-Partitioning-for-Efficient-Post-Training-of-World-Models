@@ -1,0 +1,13 @@
+num_clusters,metric,policy,positive_tasks,nonpositive_tasks,positive_min_mean,nonpositive_max_mean,mean_separation_margin,seed_robust_separation_margin,threshold_midpoint_for_audit,empirical_full_separation,seed_robust_full_separation,threshold_is_deployable_candidate
+2,jacobian_subspace_chordal_distance,standalone,"tworoom,cube","pusht,reacher",0.8084399599122788,0.8438667419767923,-0.03542678206451355,-0.03808355370442873,0.8261533509445356,False,False,False
+2,jacobian_subspace_chordal_distance,with_check1,"tworoom,cube",reacher,0.8084399599122788,0.6973072726908779,0.1111326872214009,0.10867601255007386,0.7528736163015783,True,True,True
+2,jacobian_bures_distance,standalone,"tworoom,cube","pusht,reacher",0.5513940288276046,0.49897005445118675,0.052423974376417826,0.045949993122208266,0.5251820416393956,True,True,True
+2,jacobian_bures_distance,with_check1,"tworoom,cube",reacher,0.5513940288276046,0.16977932701102616,0.3816147018165784,0.3787628332221032,0.36058667791931537,True,True,True
+3,jacobian_subspace_chordal_distance,standalone,"tworoom,cube","pusht,reacher",0.8486781851046867,0.8623182036327371,-0.013640018528050413,-0.019122153574024026,0.8554981943687119,False,False,False
+3,jacobian_subspace_chordal_distance,with_check1,"tworoom,cube",reacher,0.8486781851046867,0.8623182036327371,-0.013640018528050413,-0.019122153574024026,0.8554981943687119,False,False,False
+3,jacobian_bures_distance,standalone,"tworoom,cube","pusht,reacher",0.5711789558032582,0.4918275732429413,0.07935138256031687,0.06006489932404502,0.5315032645230997,True,True,True
+3,jacobian_bures_distance,with_check1,"tworoom,cube",reacher,0.5711789558032582,0.42834008256919676,0.14283887323406141,0.13122088966856194,0.49975951918622746,True,True,True
+4,jacobian_subspace_chordal_distance,standalone,"tworoom,cube","pusht,reacher",0.8826637869232261,0.8694187569114828,0.013245030011743264,-0.024663839676739796,0.8760412719173545,True,False,False
+4,jacobian_subspace_chordal_distance,with_check1,"tworoom,cube",reacher,0.8826637869232261,0.8525273475357764,0.0301364393874497,0.0062425921739832635,0.8675955672295013,True,True,True
+4,jacobian_bures_distance,standalone,"tworoom,cube","pusht,reacher",0.6357115942898487,0.5342447373342419,0.10146685695560675,0.04084107073239884,0.5849781658120453,True,True,True
+4,jacobian_bures_distance,with_check1,"tworoom,cube",reacher,0.6357115942898487,0.38218411438767524,0.25352747990217345,0.20501213974313615,0.508947854338762,True,True,True

@@ -1,0 +1,7 @@
+num_clusters,metric,check1_required,threshold,separation_mode,all_positive_tasks_covered,seed_robust_margin,positive_task_count,nonpositive_task_count
+2,minimum_pairwise_response,True,0.0305986064088095,conservative_subset_only,False,-0.0095582662937744,2,1
+2,pairwise_uniformity,True,1.0,no_nonvacuous_separation,False,0.0,2,1
+3,minimum_pairwise_response,True,0.0109485617866031,full_positive_coverage,True,0.00022633560620229955,2,1
+3,pairwise_uniformity,True,0.7704082994219015,full_positive_coverage,True,0.09965113657332159,2,1
+4,minimum_pairwise_response,True,0.01332538172368905,full_positive_coverage,True,0.0032880698924551994,2,1
+4,pairwise_uniformity,True,0.799148726122624,full_positive_coverage,True,0.07522114440398009,2,1

@@ -1,0 +1,264 @@
+{
+  "schema_version": 1,
+  "dataset": "reacher",
+  "method": "auto",
+  "selected_method": "global",
+  "partition_seed": 0,
+  "num_clusters": 1,
+  "cluster_counts": [
+    1998682
+  ],
+  "cluster_fractions": [
+    1.0
+  ],
+  "cache_stats": {
+    "cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/reacher/results/auto_gate_complete_k3/preparation/embedding_cache.npz",
+    "num_transitions": 1674000,
+    "num_expanded_latents": 6696000,
+    "num_unique_timesteps": 1998682,
+    "discarded_repeated_window_slots": 4697318,
+    "duplicate_policy": "stable_first_occurrence_per_timestep",
+    "latent_dim": 192,
+    "frameskip": 5
+  },
+  "latent_cache_sha256": "1c50d4b82b1a333fd54a731e7ffb4b2ec2c5bb9e5136b3a60036a498a8c9b2df",
+  "data_file": "/data/sicong/weitao/datasets/lewm/reacher.h5",
+  "method_metadata": {
+    "algorithm": "automatic_spectral_degeneracy_gate",
+    "selected_method": "global",
+    "selected_post_training": "global_predictor",
+    "deployment_seed": 0,
+    "automatic_gate": {
+      "use_partition": false,
+      "selected_method": "global",
+      "reason": "residual_gap_not_above_background",
+      "deployment_seed": 0,
+      "candidate_gap_min": 0.055539911331961754,
+      "perturbation_threshold_max": 0.005421737058575279,
+      "retained_safety_fraction": 0.9023812438919899,
+      "robust_residual_gap": 0.050118174273386475,
+      "background_threshold": 0.3748950176970285,
+      "draw_results": [
+        {
+          "seed": 0,
+          "candidate_relative_gap_by_knn": {
+            "27": 0.05770684968290758,
+            "30": 0.05604859733278195,
+            "33": 0.056059364189849026
+          },
+          "nominal_candidate_relative_gap": 0.05604859733278195,
+          "max_candidate_gap_perturbation": 0.0016582523501256288,
+          "background_by_knn": {
+            "27": {
+              "relative_gaps": [
+                0.13946540367660779,
+                0.04098309053236464,
+                0.3740912023753094,
+                0.017645585562150953,
+                0.10906013772453549,
+                0.29191803817821643,
+                0.014128424061304544,
+                0.14032354493152124,
+                0.012269030268704,
+                0.03522843257299717
+              ],
+              "median": 0.07502161412845007,
+              "scaled_mad": 0.09165861221200473,
+              "threshold": 0.3499974507644643
+            },
+            "30": {
+              "relative_gaps": [
+                0.1397938943477941,
+                0.043655472277129785,
+                0.37257928820561925,
+                0.019299910720116237,
+                0.10798737671717941,
+                0.2923093440931282,
+                0.0136934852893829,
+                0.13956613010878086,
+                0.01240593348673644,
+                0.03517250360844701
+              ],
+              "median": 0.0758214244971546,
+              "scaled_mad": 0.09306534482074415,
+              "threshold": 0.3550174589593871
+            },
+            "33": {
+              "relative_gaps": [
+                0.1404733187352176,
+                0.043995409913861194,
+                0.3719961457393567,
+                0.01980024265613109,
+                0.1069262009436766,
+                0.29311279290338044,
+                0.013082518420821898,
+                0.13882611576282466,
+                0.013255455218553652,
+                0.033624584302138154
+              ],
+              "median": 0.0754608054287689,
+              "scaled_mad": 0.09235385026982366,
+              "threshold": 0.3525223562382399
+            }
+          }
+        },
+        {
+          "seed": 1,
+          "candidate_relative_gap_by_knn": {
+            "27": 0.06244376359080462,
+            "30": 0.05973289506151698,
+            "33": 0.05778381746017235
+          },
+          "nominal_candidate_relative_gap": 0.05973289506151698,
+          "max_candidate_gap_perturbation": 0.0027108685292876397,
+          "background_by_knn": {
+            "27": {
+              "relative_gaps": [
+                0.14748008012085373,
+                0.036269183068039154,
+                0.36573609403722956,
+                0.030868718029248295,
+                0.10638207799638918,
+                0.2923785052366397,
+                0.0056534177552449,
+                0.14403678578487217,
+                0.010079615460645432,
+                0.04759325522957205
+              ],
+              "median": 0.07698766661298062,
+              "scaled_mad": 0.09930245036134928,
+              "threshold": 0.3748950176970285
+            },
+            "30": {
+              "relative_gaps": [
+                0.150142084642214,
+                0.03709662053806245,
+                0.3638906422617818,
+                0.03304223858891579,
+                0.10336567833253782,
+                0.29259633968164456,
+                0.007186374465186722,
+                0.1447458214185604,
+                0.009848765242800385,
+                0.04507740182977907
+              ],
+              "median": 0.07422154008115844,
+              "scaled_mad": 0.09741270625879467,
+              "threshold": 0.36645965885754245
+            },
+            "33": {
+              "relative_gaps": [
+                0.15217689587929661,
+                0.037286650778525894,
+                0.36247826380437576,
+                0.0350822867601758,
+                0.1011593581125178,
+                0.2931861820213586,
+                0.00792633220467708,
+                0.14471560722913696,
+                0.009294753988800454,
+                0.043705006110750275
+              ],
+              "median": 0.07243218211163405,
+              "scaled_mad": 0.09462196200348376,
+              "threshold": 0.3562980681220853
+            }
+          }
+        },
+        {
+          "seed": 2,
+          "candidate_relative_gap_by_knn": {
+            "27": 0.05824022101393289,
+            "30": 0.055539911331961754,
+            "33": 0.05511322974711624
+          },
+          "nominal_candidate_relative_gap": 0.055539911331961754,
+          "max_candidate_gap_perturbation": 0.0027003096819711372,
+          "background_by_knn": {
+            "27": {
+              "relative_gaps": [
+                0.13615734775584387,
+                0.0414631415029671,
+                0.3641764305371324,
+                0.044304746662786214,
+                0.1050375427327263,
+                0.28650902613774304,
+                0.02270793855593485,
+                0.12811031464465658,
+                0.019772531104060548,
+                0.02244456469378969
+              ],
+              "median": 0.07467114469775625,
+              "scaled_mad": 0.07833002043857762,
+              "threshold": 0.3096612060134891
+            },
+            "30": {
+              "relative_gaps": [
+                0.13834200555964765,
+                0.043416418495510326,
+                0.3624535899063246,
+                0.0453451394378287,
+                0.10223237894208478,
+                0.28591857890015654,
+                0.027395285801359987,
+                0.12732565402535734,
+                0.019347189620063196,
+                0.021630276778782653
+              ],
+              "median": 0.07378875918995674,
+              "scaled_mad": 0.07835198315288582,
+              "threshold": 0.3088447086486142
+            },
+            "33": {
+              "relative_gaps": [
+                0.13973629174377286,
+                0.04282956605883669,
+                0.36345817057032503,
+                0.04328267104661096,
+                0.10124400188264625,
+                0.28592777425766236,
+                0.02869661026551247,
+                0.12821054794140782,
+                0.017571447784049243,
+                0.02272594095592135
+              ],
+              "median": 0.0722633364646286,
+              "scaled_mad": 0.07726516836951815,
+              "threshold": 0.3040588415731831
+            }
+          }
+        }
+      ],
+      "configuration": {
+        "num_regions": 4,
+        "num_landmarks": 20000,
+        "nominal_knn": 30,
+        "perturb_knn": [
+          27,
+          33
+        ],
+        "diagnostic_seeds": [
+          0,
+          1,
+          2
+        ],
+        "deployment_seed": 0,
+        "perturbation_multiplier": 2.0,
+        "retention_threshold": 0.5,
+        "background_gap_count": 10,
+        "background_mad_multiplier": 3.0,
+        "epsilon": 1e-08,
+        "eig_tol": 0.0001,
+        "eig_maxiter": 20000,
+        "cpu_threads": 4
+      },
+      "elapsed_sec": 52.00548385397997
+    },
+    "deployed_partition": {
+      "algorithm": "global_single_region",
+      "num_clusters": 1,
+      "routing": "constant_region_0"
+    }
+  },
+  "elapsed_sec": 87.62646108900663
+}

@@ -54,6 +54,8 @@ PREPARE_OVERWRITE=${PREPARE_OVERWRITE:-}
 
 SKIP_JOINT=${SKIP_JOINT:-0}
 SKIP_REGIONS=${SKIP_REGIONS:-0}
+SKIP_GLOBAL=${SKIP_GLOBAL:-0}
+SKIP_OFFICIAL=${SKIP_OFFICIAL:-0}
 
 prepare() {
   mkdir -p "$PREP"
@@ -103,14 +105,14 @@ partition_regions() {
       "$PYTHON" experiments/control_matrix/fit_partition.py \
         --method "$method" --dataset-name "$DATASET_NAME" \
         --data-file "$DATA_FILE" --latent-cache "$LATENT_CACHE" \
-        --frameskip 5 --num-clusters 3 --seed "$pseed" \
+        --frameskip 5 --num-clusters "$NUM_CLUSTERS" --seed "$pseed" \
         --gpu-id 0 --cpu-threads "$CPU_THREADS" --out-dir "$out"
     done
   done
 }
 
 partition() {
-  partition_global
+  [[ "$SKIP_GLOBAL" == "1" ]] || partition_global
   partition_regions
 }
 
@@ -195,7 +197,7 @@ train_regions() {
 
 train() {
   [[ "$SKIP_JOINT" != "1" ]] && train_joint
-  train_global
+  [[ "$SKIP_GLOBAL" == "1" ]] || train_global
   train_regions
 }
 
@@ -285,9 +287,9 @@ evaluate_regions() {
 }
 
 evaluate() {
-  evaluate_official
+  [[ "$SKIP_OFFICIAL" == "1" ]] || evaluate_official
   [[ "$SKIP_JOINT" != "1" ]] && evaluate_joint
-  evaluate_global
+  [[ "$SKIP_GLOBAL" == "1" ]] || evaluate_global
   evaluate_regions
 }
 

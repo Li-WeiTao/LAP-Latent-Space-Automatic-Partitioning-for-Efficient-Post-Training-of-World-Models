@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "method": "LAP",
+  "pretrained_model": "/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt",
+  "num_transitions": 693728,
+  "num_regions": 4,
+  "partition_metadata": {
+    "mode": "indexed_assignment_replay"
+  },
+  "cache_metadata": {
+    "source": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_latent_spectral_spectral_M20000_k30_P16_seed0_trainseed0/P_train_global_merged_embeddings.npz",
+    "encoding": "lossless_precomputed",
+    "route_index": 0
+  },
+  "regions": {
+    "cluster0": {
+      "num_samples": 158904,
+      "checkpoint": "experiments/tworoom/matrix_k4/training/spectral/partition2_train0/P_train_cluster0_object.ckpt",
+      "metrics": "experiments/tworoom/matrix_k4/training/spectral/partition2_train0/P_train_cluster0_metrics.json"
+    },
+    "cluster1": {
+      "num_samples": 191227,
+      "checkpoint": "experiments/tworoom/matrix_k4/training/spectral/partition2_train0/P_train_cluster1_object.ckpt",
+      "metrics": "experiments/tworoom/matrix_k4/training/spectral/partition2_train0/P_train_cluster1_metrics.json"
+    },
+    "cluster2": {
+      "num_samples": 194730,
+      "checkpoint": "experiments/tworoom/matrix_k4/training/spectral/partition2_train0/P_train_cluster2_object.ckpt",
+      "metrics": "experiments/tworoom/matrix_k4/training/spectral/partition2_train0/P_train_cluster2_metrics.json"
+    },
+    "cluster3": {
+      "num_samples": 148867,
+      "checkpoint": "experiments/tworoom/matrix_k4/training/spectral/partition2_train0/P_train_cluster3_object.ckpt",
+      "metrics": "experiments/tworoom/matrix_k4/training/spectral/partition2_train0/P_train_cluster3_metrics.json"
+    }
+  },
+  "implementation_backend": "jepa_object",
+  "model_family": "lewm",
+  "dataset": "tworoom",
+  "training_role": "standard",
+  "partition_source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/matrix_k4/partitions/spectral/seed2",
+  "partition_source_manifest_sha256": "7f7e8790a37ec4e3bb89a7575b594a6d42a035fd70118e25bee0df09c2cfb744",
+  "latent_cache": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_latent_spectral_spectral_M20000_k30_P16_seed0_trainseed0/P_train_global_merged_embeddings.npz",
+  "latent_cache_sha256": "2d9f3c42fe28a01c07b5b8058cb5054c20ec4e2bc207e42ef3c7f0afb54cefcf",
+  "pretrained_model_sha256": "18b5764492c74de5487efdadb66adab11876cb230952765b17c0815fa87b13ff",
+  "train_seed": 0,
+  "split_manifest": null,
+  "split_manifest_sha256": null,
+  "training_config": {
+    "epochs": 50,
+    "batch_size": 128,
+    "learning_rate": 5e-05,
+    "weight_decay": 0.001,
+    "history_size": 3,
+    "num_preds": 1,
+    "cpu_threads": 4,
+    "precision": "fp32",
+    "checkpoint_selection": "minimum loss on same-region training cache"
+  },
+  "predictor_checkpoint_sha256": {
+    "cluster0": "cca5a2583083d553055a38e373ac86155b1aafb5718ff203a9d7bf09fe03213d",
+    "cluster1": "c49a5dd7da05c77a0b5842f81be5554b98545529bd4b5384aa6069397f0f2ccd",
+    "cluster2": "0c37ef81c51f52498a5423d86b4deaed303cdeadf11327589bdfaa8ec65fd911",
+    "cluster3": "57764ff20598bea49e5fdcc7abf8ab2d65ccdcba4d9aa54a118d40176e747e94"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "method": "LAP",
+  "pretrained_model": "/data/sicong/weitao/.stable_worldmodel/tworoom/lewm_object.ckpt",
+  "num_transitions": 693728,
+  "num_regions": 2,
+  "partition_metadata": {
+    "mode": "indexed_assignment_replay"
+  },
+  "cache_metadata": {
+    "source": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_latent_spectral_spectral_M20000_k30_P16_seed0_trainseed0/P_train_global_merged_embeddings.npz",
+    "encoding": "lossless_precomputed",
+    "route_index": 0
+  },
+  "regions": {
+    "cluster0": {
+      "num_samples": 349848,
+      "checkpoint": "experiments/tworoom/matrix_k2/training/spectral/partition1_train625/P_train_cluster0_object.ckpt",
+      "metrics": "experiments/tworoom/matrix_k2/training/spectral/partition1_train625/P_train_cluster0_metrics.json"
+    },
+    "cluster1": {
+      "num_samples": 343880,
+      "checkpoint": "experiments/tworoom/matrix_k2/training/spectral/partition1_train625/P_train_cluster1_object.ckpt",
+      "metrics": "experiments/tworoom/matrix_k2/training/spectral/partition1_train625/P_train_cluster1_metrics.json"
+    }
+  },
+  "implementation_backend": "jepa_object",
+  "model_family": "lewm",
+  "dataset": "tworoom",
+  "training_role": "standard",
+  "partition_source": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/matrix_k2/partitions/spectral/seed1",
+  "partition_source_manifest_sha256": "fa5f1bcc002aad24b850959e4556aa39d7c427cbbf8504444db7d1b6d14cbbcb",
+  "latent_cache": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_latent_spectral_spectral_M20000_k30_P16_seed0_trainseed0/P_train_global_merged_embeddings.npz",
+  "latent_cache_sha256": "2d9f3c42fe28a01c07b5b8058cb5054c20ec4e2bc207e42ef3c7f0afb54cefcf",
+  "pretrained_model_sha256": "18b5764492c74de5487efdadb66adab11876cb230952765b17c0815fa87b13ff",
+  "train_seed": 625,
+  "split_manifest": null,
+  "split_manifest_sha256": null,
+  "training_config": {
+    "epochs": 50,
+    "batch_size": 128,
+    "learning_rate": 5e-05,
+    "weight_decay": 0.001,
+    "history_size": 3,
+    "num_preds": 1,
+    "cpu_threads": 4,
+    "precision": "fp32",
+    "checkpoint_selection": "minimum loss on same-region training cache"
+  },
+  "predictor_checkpoint_sha256": {
+    "cluster0": "a48804398315675ae5d1a959cb39d49d043de0eb2a803ae62e96aec51784aa2f",
+    "cluster1": "32948e475b2f2885f755ea08ff03072ce4dd467859234a9ce5a663b6fa8c520c"
+  }
+}
