@@ -129,6 +129,33 @@ complete per-pair audit, and underlying fixed-`K` measurements are recorded in
 and
 [`jacobian_fixed_k_validation.csv`](experiments/control_matrix/assets/lewm_k4_geometry_screen/jacobian_fixed_k_validation.csv).
 
+### Jacobian-Bures ridge sensitivity at K=4
+
+The regional action-response regressions use a ridge coefficient only for
+numerical stabilization. We therefore repeated the complete LeWM `K=4`
+Jacobian-Bures calculation with `ridge` in `{1e-10, 1e-8, 1e-6, 1e-4}` while
+holding the latent caches, spectral labels, transition stride, action
+standardization, partition seeds, and weakest-pair aggregation fixed. The
+existing `1e-8` result is the reference; no predictor training or planning
+evaluation enters this check.
+
+| Task | Bures at ridge = 1e-8 | Seed range | Maximum absolute mean change | Frozen-threshold margin |
+|---|---:|---:|---:|---:|
+| TwoRoom | 0.698369 | [0.693987, 0.704459] | 3.25e-13 | +0.189421 |
+| PushT | 0.534245 | [0.517787, 0.559465] | 3.86e-13 | +0.025297 |
+| Reacher | 0.382184 | [0.369421, 0.395294] | 1.61e-13 | -0.126764 |
+| Cube | 0.635712 | [0.600306, 0.654861] | 4.40e-12 | +0.126764 |
+
+Across all task-by-partition-seed cells, the largest absolute Bures change was
+`6.55e-12`. Every weakest region pair, task ranking, and side of the frozen
+cutoff remained unchanged over the six-order-of-magnitude ridge range. The
+machine-readable task summary, per-seed results, and reproducibility metadata
+are available in
+[`ridge_sensitivity_summary.csv`](experiments/control_matrix/assets/lewm_k4_geometry_screen/ridge_sensitivity/ridge_sensitivity_summary.csv),
+[`ridge_sensitivity_by_seed.csv`](experiments/control_matrix/assets/lewm_k4_geometry_screen/ridge_sensitivity/ridge_sensitivity_by_seed.csv),
+and
+[`ridge_sensitivity_manifest.json`](experiments/control_matrix/assets/lewm_k4_geometry_screen/ridge_sensitivity/ridge_sensitivity_manifest.json).
+
 ## Interface boundary
 
 LAP exposes two composable interfaces. Humans and coding agents can use this

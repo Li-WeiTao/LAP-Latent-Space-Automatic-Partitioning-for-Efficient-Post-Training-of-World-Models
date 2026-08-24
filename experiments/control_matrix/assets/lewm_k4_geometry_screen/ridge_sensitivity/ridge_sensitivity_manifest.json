@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "analysis_name": "LeWM K=4 Jacobian-Bures ridge sensitivity",
+  "repository_commit": "1ec3a653e2ffc34735d9eaf8ac77cbdebe6c5e4c",
+  "tasks": [
+    "tworoom",
+    "pusht",
+    "reacher",
+    "cube"
+  ],
+  "num_clusters": 4,
+  "partition_seeds": [
+    0,
+    1,
+    2
+  ],
+  "ridge_values": [
+    1e-10,
+    1e-08,
+    1e-06,
+    0.0001
+  ],
+  "baseline_ridge": 1e-08,
+  "frozen_bures_threshold": 0.508947854338762,
+  "fixed_protocol": {
+    "transition_stride": 1,
+    "frameskip": 5,
+    "aggregation_within_partition_seed": "minimum over all region pairs",
+    "aggregation_across_partition_seeds": "arithmetic mean over seeds 0,1,2",
+    "no_training_or_planning_evaluation": true
+  },
+  "results": {
+    "maximum_absolute_task_mean_change_vs_baseline": 4.402034292638746e-12,
+    "maximum_relative_task_mean_change_vs_baseline": 6.924577642092942e-12,
+    "maximum_absolute_partition_seed_change_vs_baseline": 6.550648912195811e-12,
+    "all_threshold_decisions_unchanged": true,
+    "all_task_rankings_identical": true,
+    "task_rankings_descending": {
+      "1e-10": [
+        "tworoom",
+        "cube",
+        "pusht",
+        "reacher"
+      ],
+      "1e-08": [
+        "tworoom",
+        "cube",
+        "pusht",
+        "reacher"
+      ],
+      "1e-06": [
+        "tworoom",
+        "cube",
+        "pusht",
+        "reacher"
+      ],
+      "1e-04": [
+        "tworoom",
+        "cube",
+        "pusht",
+        "reacher"
+      ]
+    },
+    "branch_counts_by_ridge": {
+      "1e-10": {
+        "global": 1,
+        "regional": 3
+      },
+      "1e-08": {
+        "global": 1,
+        "regional": 3
+      },
+      "1e-06": {
+        "global": 1,
+        "regional": 3
+      },
+      "1e-04": {
+        "global": 1,
+        "regional": 3
+      }
+    },
+    "all_weakest_region_pairs_unchanged": true
+  },
+  "output_sha256": {
+    "experiments/control_matrix/assets/lewm_k4_geometry_screen/ridge_sensitivity/ridge_sensitivity_by_seed.csv": "9c7fa49dfaf38592bf2335666a7181b732d849dcc0c1a1086d5d317254dca73b",
+    "experiments/control_matrix/assets/lewm_k4_geometry_screen/ridge_sensitivity/ridge_sensitivity_summary.csv": "58a21c250686376094c640c1d78e90669d02b4e9801c67b25893a33c28572756"
+  },
+  "analysis_script": "experiments/control_matrix/analyze_fixed_k_response_geometry.py",
+  "analysis_script_sha256": "f680cf7f338f97dc372b190039b783b221222a74ad460d79c28f7b94d98aa8dd"
+}
