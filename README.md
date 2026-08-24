@@ -81,6 +81,54 @@ The source manifests remain under
 `experiments/tworoom/results/auto_gate_complete_k3/auto/partition/` and
 `experiments/pusht/results/auto_gate_complete_k3/auto/partition/`.
 
+### Exploratory fixed-K Jacobian-Bures audit
+
+This audit is a research result, not yet a replacement for the deployed LAP
+gate above. It asks whether latent response geometry can distinguish when the
+partition-seed-averaged Regional branch has a higher long-horizon point
+estimate than Global-FT. For every fixed `K`, Regional averages partition seeds
+`0,1,2`; both branches use training seeds `0,42,625`, evaluation seeds
+`0,1,2,3,4`, the same paired starts, and the same long-horizon protocol. No
+deployment partition seed and no best-`K` selection enter this comparison.
+
+The Jacobian-Bures indicator and its cutoff were developed at `K=4`. The
+cutoff is frozen at `0.508947854338762` and then applied without refitting at
+`K=2` and `K=3`. The table reports the complete LeWM audit; `Bures branch`
+applies this cutoff alone, while `Check 1` uses its existing `0.5` threshold.
+
+| K | Task | Check 1 | Bures | Regional - Global (pp) | Point-estimate winner | Bures branch |
+|---:|---|---:|---:|---:|---|---|
+| 2 | TwoRoom | 0.997294 | 0.898943 | +1.20 | Regional | Regional |
+| 2 | PushT | 0.384305 | 0.498970 | -0.67 | Global | Global |
+| 2 | Reacher | 0.997494 | 0.169779 | -1.42 | Global | Global |
+| 2 | Cube | 0.998033 | 0.551394 | +1.11 | Regional | Regional |
+| 3 | TwoRoom | 0.994984 | 0.826633 | +3.24 | Regional | Regional |
+| 3 | PushT | 0.012015 | 0.491828 | -1.82 | Global | Global |
+| 3 | Reacher | 0.772944 | 0.428340 | -0.76 | Global | Global |
+| 3 | Cube | 0.987407 | 0.571179 | +1.56 | Regional | Regional |
+| 4 | TwoRoom | 0.820680 | 0.698369 | +1.42 | Regional | Regional |
+| 4 | PushT | 0.466828 | 0.534245 | +0.36 | Regional | Regional |
+| 4 | Reacher | 0.902381 | 0.382184 | -1.07 | Global | Global |
+| 4 | Cube | 0.959940 | 0.635712 | +2.36 | Regional | Regional |
+
+With the strict point-estimate label, the frozen Bures cutoff separates all
+12 observed model-task-`K` pairs. Adding Check 1 changes only PushT at `K=4`
+and reduces point-estimate agreement from `12/12` to `11/12`. With the separate
+practical-effect label, where Regional must improve by more than `+0.5 pp` and
+the inconclusive band is treated as non-positive, the conclusions reverse for
+that same pair: Bures alone is `11/12`, whereas Check 1 plus Bures is `12/12`.
+
+This label sensitivity is material. The current evidence supports describing
+the frozen Bures cutoff as an **empirical separator of the observed LeWM
+point-estimate winners**, not as a general necessary-and-sufficient condition.
+`K=2` and `K=3` are threshold-out validations, but they reuse the same tasks and
+model family and therefore are not external validation. The frozen policy,
+complete per-pair audit, and underlying fixed-`K` measurements are recorded in
+[`frozen_bures_gate_policy.json`](experiments/control_matrix/assets/lewm_k4_geometry_screen/frozen_bures_gate_policy.json),
+[`frozen_bures_gate_validation.csv`](experiments/control_matrix/assets/lewm_k4_geometry_screen/frozen_bures_gate_validation.csv),
+and
+[`jacobian_fixed_k_validation.csv`](experiments/control_matrix/assets/lewm_k4_geometry_screen/jacobian_fixed_k_validation.csv).
+
 ## Interface boundary
 
 LAP exposes two composable interfaces. Humans and coding agents can use this
