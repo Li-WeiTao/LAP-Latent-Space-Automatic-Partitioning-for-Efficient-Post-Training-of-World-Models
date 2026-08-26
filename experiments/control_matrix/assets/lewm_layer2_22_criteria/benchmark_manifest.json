@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "analysis_name": "LeWM Layer-2 frozen 22-criterion benchmark",
+  "repository_commit": "4fe3e4ad52b03b0f0b4cea24669b1f594ea9ce9f",
+  "criterion_count": 22,
+  "development_num_clusters": 4,
+  "validation_num_clusters": [
+    2,
+    3
+  ],
+  "partition_seeds": [
+    0,
+    1,
+    2
+  ],
+  "ridge": 1e-08,
+  "target": "point-estimate winner of partition-seed-averaged Regional versus Global",
+  "threshold_leakage_check": "Layer-2 outcomes are never passed to fit",
+  "bures_layer2_correct": 8,
+  "bures_layer2_total": 8,
+  "bures_layer2_accuracy": 1.0,
+  "files": {
+    "layer1_frozen_policies.csv": "ce7e1216389da1b5a53ea47023e72a8cade8142f4dc5ebed1357ab3c21ce092b",
+    "layer2_metric_scores.csv": "96a5f58911d4b615087dcdaa79e7753e1cfb49c048a0668a081b91a48fdc6465",
+    "layer2_metric_scores_by_seed.csv": "8e1dad57fb555ba1308f4fd65755ffa99f0b330dd3a4d92c20c30e127d547c77",
+    "layer2_predictions.csv": "1154bde319f63b213fac1a8daddca8a86e88a1f6fe441ce98838d9a15194defc",
+    "layer2_selection_accuracy.csv": "a7a54c22953c7f57d1e54e7ebaca75e4dd003f21d27416f4f13fe9ec7905e59e"
+  }
+}

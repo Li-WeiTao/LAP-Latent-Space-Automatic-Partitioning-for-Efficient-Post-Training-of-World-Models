@@ -129,6 +129,64 @@ complete per-pair audit, and underlying fixed-`K` measurements are recorded in
 and
 [`jacobian_fixed_k_validation.csv`](experiments/control_matrix/assets/lewm_k4_geometry_screen/jacobian_fixed_k_validation.csv).
 
+### Frozen 22-criterion Layer-2 benchmark
+
+We additionally evaluated all 22 candidate selection criteria under the same
+two-layer protocol. Layer 1 uses only LeWM at `K=4` to fix each criterion's
+orientation and threshold; the existing Jacobian-Bures cutoff
+`0.508947854338762`, Check 1 cutoff `0.5`, and Check 2 prominence ratio cutoff
+`1.0` remain predeclared. Layer 2 then applies every policy unchanged to the
+eight LeWM task-by-`K` settings at `K in {2,3}`. The target is the
+point-estimate winner between partition-seed-averaged Regional and Global,
+with identical training seeds, evaluation seeds, paired starts, and
+long-horizon protocol.
+
+| Criterion | Correct | Covered | Full-grid accuracy |
+|---|---:|---:|---:|
+| **Jacobian Bures** | **8** | **8** | **100.0%** |
+| Curvature tail (`d=8`) | 6 | 8 | 75.0% |
+| Check 1: retained safety fraction | 6 | 8 | 75.0% |
+| Check 2: prominence ratio | 6 | 8 | 75.0% |
+| Pairwise response uniformity | 5 | 8 | 62.5% |
+| Jacobian subspace chordal distance | 5 | 8 | 62.5% |
+| Response-boundary Spearman | 4 | 4 | 50.0% |
+| Eigengap after `K` | 4 | 8 | 50.0% |
+| Prototype distance ratio | 4 | 8 | 50.0% |
+| Margin-radius ratio | 4 | 8 | 50.0% |
+| Tangent contrast (`d=8`) | 4 | 8 | 50.0% |
+| Action-residual velocity eta-squared | 4 | 8 | 50.0% |
+| Affine response contrast | 4 | 8 | 50.0% |
+| Boundary-local Jacobian Bures | 4 | 8 | 50.0% |
+| Jacobian cosine distance | 4 | 8 | 50.0% |
+| k-NN purity | 3 | 8 | 37.5% |
+| Flow persistence (`h=10`) | 3 | 8 | 37.5% |
+| Latent velocity eta-squared | 3 | 8 | 37.5% |
+| Minimum pairwise response | 3 | 8 | 37.5% |
+| Response-centroid Spearman | 2 | 4 | 25.0% |
+| Normalized cluster entropy | 2 | 8 | 25.0% |
+| Jacobian log-scale distance | 2 | 8 | 25.0% |
+
+Jacobian Bures is the unique full-coverage criterion with `8/8` correct
+Layer-2 selections, and therefore achieves **state-of-the-art selection
+accuracy in this frozen 22-criterion benchmark**. The two Spearman criteria
+abstain at `K=2` because a two-region partition contains only one region pair,
+for which a rank correlation is undefined; abstentions count as incorrect in
+the full-grid accuracy column. No Layer-2 outcome is used to fit or select a
+threshold.
+
+The parameterized reproduction entry point is
+[`analyze_layer2_metric_benchmark.py`](experiments/control_matrix/analyze_layer2_metric_benchmark.py).
+Raw per-seed scores, task-level scores, frozen policies, all 176 decisions,
+ranked accuracy, hashes, and provenance are recorded under
+[`lewm_layer2_22_criteria/`](experiments/control_matrix/assets/lewm_layer2_22_criteria/).
+
+```bash
+PYTHONPATH=. python experiments/control_matrix/analyze_layer2_metric_benchmark.py \
+  --repo . --tasks tworoom,pusht,reacher,cube --clusters 2,3 \
+  --partition-seeds 0,1,2 \
+  --output-dir experiments/control_matrix/assets/lewm_layer2_22_criteria
+```
+
 ### Jacobian-Bures ridge sensitivity at K=4
 
 The regional action-response regressions use a ridge coefficient only for
