@@ -1,0 +1,3 @@
+[k2] orchestrator pid=3024625
+[k2] log=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/assets/subjepa_k2_logs/orchestrator_20260821T150100Z.log
+[k2] tail: tail -f /data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/assets/subjepa_k2_logs/orchestrator_20260821T150100Z.log

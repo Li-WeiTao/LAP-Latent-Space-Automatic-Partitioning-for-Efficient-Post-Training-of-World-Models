@@ -1,0 +1,28 @@
+{
+  "policy_name": "fixed-K Jacobian-Bures gate (standalone)",
+  "frozen_bures_threshold": 0.508947854338762,
+  "policy": "standalone",
+  "model": "subjepa",
+  "results": {
+    "K2": {
+      "pairs": 4,
+      "correct_practical_class": 4,
+      "correct_point_estimate_sign": 4
+    },
+    "K3": {
+      "pairs": 4,
+      "correct_practical_class": 3,
+      "correct_point_estimate_sign": 3
+    },
+    "K4": {
+      "pairs": 4,
+      "correct_practical_class": 3,
+      "correct_point_estimate_sign": 3
+    }
+  },
+  "overall": {
+    "correct_practical_class": 10,
+    "correct_point_estimate_sign": 10,
+    "pairs": 12
+  }
+}

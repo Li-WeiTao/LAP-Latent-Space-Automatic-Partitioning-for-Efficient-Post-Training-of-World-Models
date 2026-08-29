@@ -1,0 +1,7 @@
+[k2] repo=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models
+[k2] commit=b3c0f7f3e7991eb83412b843952d314770fba0b4
+[k2] stage=training
+[k2] train_gpu_ids=3,3,3
+[k2] eval_gpu=3
+[k2] tasks=reacher,cube
+[k2] task=reacher train_gpus=3,3,3 eval_gpu=3 log=experiments/reacher/subjepa/matrix_k2/logs/k2_training_20260821T150100Z.log

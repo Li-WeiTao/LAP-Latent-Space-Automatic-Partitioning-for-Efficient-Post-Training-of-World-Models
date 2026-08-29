@@ -1,0 +1,5 @@
+[k2] repo=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models commit=3e19ff0cef90f094c841a997c2b785d8c2c07b3d stage=all gpus=2,3
+[k2] start task=tworoom gpu=2 log=experiments/tworoom/subjepa/matrix_k2/logs/k2_all_20260821T142711Z.log
+[k2] task=tworoom pid=2951220 log=experiments/tworoom/subjepa/matrix_k2/logs/k2_all_20260821T142711Z.log
+[k2] start task=pusht gpu=3 log=experiments/pusht/subjepa/matrix_k2/logs/k2_all_20260821T142711Z.log
+[k2] task=pusht pid=2951223 log=experiments/pusht/subjepa/matrix_k2/logs/k2_all_20260821T142711Z.log

@@ -15,6 +15,13 @@ TASKS = ("tworoom", "pusht", "reacher", "cube")
 def parse_args():
     p = argparse.ArgumentParser()
     p.add_argument("--repo", type=Path, required=True)
+    p.add_argument(
+        "--model",
+        choices=("lewm", "subjepa"),
+        default="lewm",
+        help="Path layout: lewm uses experiments/<task>/matrix(_kK); "
+        "subjepa uses experiments/<task>/subjepa/matrix(_kK).",
+    )
     p.add_argument("--tasks", default=",".join(TASKS))
     p.add_argument("--clusters", default="2,3,4")
     p.add_argument("--partition-seeds", default="0,1,2")
@@ -32,11 +39,47 @@ def csv_ints(value):
     return tuple(int(x) for x in value.split(",") if x)
 
 
-def gate_manifest(repo, task, k):
+def resolve_data_file(path: Path) -> Path:
+    if path.is_file():
+        return path
+    if "weitao" in path.parts:
+        alt = Path("/data/sicong/weitao") / Path(*path.parts[path.parts.index("weitao") + 1 :])
+        if alt.is_file():
+            return alt
+        alt = Path("/home/sicong/weitao") / Path(*path.parts[path.parts.index("weitao") + 1 :])
+        if alt.is_file():
+            return alt
+    raise FileNotFoundError(path)
+
+
+def matrix_root(repo: Path, model: str, task: str, k: int) -> Path:
+    if model == "subjepa":
+        if k == 2:
+            suffix = "matrix_k2"
+        elif k == 4:
+            suffix = "matrix_k4"
+        else:
+            suffix = "matrix"
+        return repo / f"experiments/{task}/subjepa/{suffix}"
+    if k in (2, 4):
+        return repo / f"experiments/{task}/matrix_k{k}"
+    return repo / f"experiments/{task}/matrix"
+
+
+def gate_manifest(repo: Path, model: str, task: str, k: int) -> Path:
+    if model == "subjepa":
+        if k == 3:
+            return repo / f"experiments/{task}/subjepa/formal/gate/partition/manifest.json"
+        return matrix_root(repo, model, task, k) / "partitions/spectral/seed0/manifest.json"
     return repo / f"experiments/{task}/results/auto_gate_complete_k{k}/auto/partition/manifest.json"
 
 
-def label_path(repo, task, k, seed):
+def label_path(repo: Path, model: str, task: str, k: int, seed: int) -> Path:
+    if model == "subjepa":
+        return (
+            matrix_root(repo, model, task, k)
+            / f"partitions/spectral/seed{seed}/cluster_labels.npz"
+        )
     if k in (2, 4):
         return repo / f"experiments/{task}/matrix_k{k}/partitions/spectral/seed{seed}/cluster_labels.npz"
     if task == "tworoom":
@@ -184,20 +227,29 @@ def fit_subset(x, ids, actions_by_id, labels, rows, k, ridge, transition_stride)
     return coefs, sqrt_cov
 
 
-def analyze_task(repo, task, ks, seeds, frameskip, transition_stride, ridge, chunk,
+def analyze_task(repo, model, task, ks, seeds, frameskip, transition_stride, ridge, chunk,
                  audit_dir, cpu_threads):
-    manifest = json.loads(gate_manifest(repo, task, 4).read_text())
-    x, ids = load_unique(Path(manifest["cache_stats"]["cache"]), frameskip)
-    left, right, actions = transition_rows(ids, Path(manifest["data_file"]), transition_stride)
+    manifest = json.loads(gate_manifest(repo, model, task, 4 if 4 in ks else ks[0]).read_text())
+    cache_path = Path(manifest["cache_stats"]["cache"])
+    data_path = resolve_data_file(Path(manifest["data_file"]))
+    x, ids = load_unique(cache_path, frameskip)
+    left, right, actions = transition_rows(ids, data_path, transition_stride)
     action_by_row = np.zeros((len(ids), actions.shape[1]), dtype=np.float64)
     action_by_row[left] = actions
     transition_mask = np.zeros(len(ids), dtype=bool)
     transition_mask[left] = True
     pair_rows, summary_rows, jac_rows = [], [], []
     for k in ks:
-        labels = {seed: load_labels(label_path(repo, task, k, seed), ids) for seed in seeds}
+        labels = {
+            seed: load_labels(label_path(repo, model, task, k, seed), ids)
+            for seed in seeds
+        }
         fitted, residual, sqrt_cov, _, _ = sufficient_stats(x, left, right, actions, labels, k, ridge, chunk)
-        audit = np.load(audit_dir / f"{task}.npz", allow_pickle=False) if k == 4 else None
+        audit = None
+        if k == 4:
+            audit_path = audit_dir / f"{task}.npz"
+            if audit_path.is_file():
+                audit = np.load(audit_path, allow_pickle=False)
         for seed in seeds:
             contrasts = []
             jac_values = []
@@ -229,7 +281,7 @@ def analyze_task(repo, task, ks, seeds, frameskip, transition_stride, ridge, chu
                 minimum_pairwise_response=min(contrasts),
                 mean_pairwise_response=float(np.mean(contrasts)),
                 pairwise_uniformity_min_over_mean=float(min(contrasts) / np.mean(contrasts))))
-            if k == 4:
+            if k == 4 and audit is not None:
                 audit_ids = np.asarray(audit["sample_ids"], dtype=np.int64)
                 audit_x = np.asarray(audit["x"], dtype=np.float32)
                 audit_labels = np.asarray(audit[f"y{seed}"], dtype=np.int64)
@@ -270,7 +322,7 @@ def main():
     all_pair, all_summary, all_jac = [], [], []
     for task in tuple(x for x in args.tasks.split(",") if x):
         pair, summary, jac = analyze_task(
-            repo, task, ks, seeds, args.frameskip, args.transition_stride,
+            repo, args.model, task, ks, seeds, args.frameskip, args.transition_stride,
             args.ridge, args.chunk, args.audit_dir, args.cpu_threads
         )
         all_pair.extend(pair)
@@ -290,18 +342,21 @@ def main():
         "jacobian_cosine_distance", "jacobian_log_scale_distance",
         "jacobian_subspace_chordal_distance", "jacobian_bures_distance",
     ]].min()
-    seed_summary = jac[jac["region_left"].eq(-1)][[
-        "task", "num_clusters", "partition_seed",
-        "jacobian_cosine_distance", "jacobian_log_scale_distance",
-        "jacobian_subspace_chordal_distance", "jacobian_bures_distance",
-        "boundary_min_jacobian_bures_distance", "boundary_transition_count",
-    ]]
     pair.to_csv(out / "jacobian_fixed_k_pair_metrics.csv", index=False)
     fixed_k_seed_summary.to_csv(out / "jacobian_fixed_k_seed_summary.csv", index=False)
-    pair[pair["num_clusters"].eq(4)].to_csv(
-        out / "k4_jacobian_pair_metrics.csv", index=False
-    )
-    seed_summary.to_csv(out / "k4_jacobian_seed_summary.csv", index=False)
+    if 4 in ks:
+        pair[pair["num_clusters"].eq(4)].to_csv(
+            out / "k4_jacobian_pair_metrics.csv", index=False
+        )
+        boundary = jac[jac["region_left"].eq(-1)]
+        if not boundary.empty and "boundary_min_jacobian_bures_distance" in boundary.columns:
+            seed_summary = boundary[[
+                "task", "num_clusters", "partition_seed",
+                "jacobian_cosine_distance", "jacobian_log_scale_distance",
+                "jacobian_subspace_chordal_distance", "jacobian_bures_distance",
+                "boundary_min_jacobian_bures_distance", "boundary_transition_count",
+            ]]
+            seed_summary.to_csv(out / "k4_jacobian_seed_summary.csv", index=False)
 
 
 if __name__ == "__main__":

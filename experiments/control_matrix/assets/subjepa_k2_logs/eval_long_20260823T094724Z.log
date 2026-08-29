@@ -1,0 +1,10 @@
+[k2-eval-long] run_id=20260823T094724Z gpu=5 tasks=tworoom,pusht,reacher,cube
+[k2-eval-long] start task=tworoom gpu=5 run_id=20260823T094724Z_tworoom log=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/matrix_k2/logs/eval_long_20260823T094724Z.log
+[k2-eval-long] done task=tworoom
+[k2-eval-long] start task=pusht gpu=5 run_id=20260823T094724Z_pusht log=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix_k2/logs/eval_long_20260823T094724Z.log
+[k2-eval-long] done task=pusht
+[k2-eval-long] start task=reacher gpu=5 run_id=20260823T094724Z_reacher log=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/reacher/subjepa/matrix_k2/logs/eval_long_20260823T094724Z.log
+[k2-eval-long] done task=reacher
+[k2-eval-long] start task=cube gpu=5 run_id=20260823T094724Z_cube log=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/cube/subjepa/matrix_k2/logs/eval_long_20260823T094724Z.log
+[k2-eval-long] done task=cube
+[k2-eval-long] complete run_id=20260823T094724Z

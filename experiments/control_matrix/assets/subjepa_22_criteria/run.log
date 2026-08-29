@@ -1,0 +1,11 @@
+completed tworoom K=2
+Traceback (most recent call last):
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/analyze_cross_model_metric_benchmark.py", line 195, in <module>
+    if __name__=="__main__": main()
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/analyze_cross_model_metric_benchmark.py", line 190, in main
+    for t in filter(None,a.tasks.split(",")): rows+=task_rows(repo,a.model,t,ints(a.clusters),ints(a.partition_seeds),a)
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/analyze_cross_model_metric_benchmark.py", line 134, in task_rows
+    fractions,eig=meta(root(repo,model,t,k,0)); pp,op=protos(root(repo,model,t,k,0)); p=np.load(pp); own=np.load(op); p/=np.maximum(np.linalg.norm(p,axis=1,keepdims=True),1e-12)
+  File "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/control_matrix/analyze_cross_model_metric_benchmark.py", line 50, in meta
+    p=r/"partition/cluster_meta.json" if (r/"partition/cluster_meta.json").exists() else r/"cluster_meta.json"; d=json.loads(p.read_text()); return np.asarray(d["full_cluster_fractions"]),float(d["spectral"]["eigengap_after_k"])
+KeyError: 'full_cluster_fractions'

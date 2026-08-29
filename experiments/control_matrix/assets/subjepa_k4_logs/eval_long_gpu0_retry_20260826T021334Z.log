@@ -1,0 +1,7 @@
+[k4-gpu0-retry] repo=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models eval_run_id=20260826T021334Z gpu=0
+[k4-gpu0-retry] tasks=tworoom pusht (serial)
+[k4-gpu0-retry] start task=tworoom gpu=0 run_id=20260826T021334Z_tworoom log=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/matrix_k4/logs/eval_long_20260826T021334Z.log
+[k4-gpu0-retry] done task=tworoom gpu=0
+[k4-gpu0-retry] start task=pusht gpu=0 run_id=20260826T021334Z_pusht log=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix_k4/logs/eval_long_20260826T021334Z.log
+[k4-gpu0-retry] done task=pusht gpu=0
+[k4-gpu0-retry] complete eval_run_id=20260826T021334Z

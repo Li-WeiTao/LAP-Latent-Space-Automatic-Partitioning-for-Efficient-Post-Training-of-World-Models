@@ -1,0 +1,132 @@
+==== CONFIG ====
+cache_dir: /data/sicong/weitao/.stableworldmodel/subjepa/reacher
+solver:
+  _target_: stable_worldmodel.solver.CEMSolver
+  model: ???
+  batch_size: 1
+  num_samples: 300
+  var_scale: 1.0
+  n_steps: 30
+  topk: 30
+  device: cuda
+  seed: ${seed}
+world:
+  env_name: swm/ReacherDMControl-v0
+  num_envs: ${eval.num_eval}
+  max_episode_steps: 100
+  task: qpos_match
+dataset:
+  stats: ${eval.dataset_name}
+  keys_to_cache:
+  - action
+  - qpos
+  - qvel
+seed: 4
+policy: random
+plan_config:
+  horizon: 5
+  receding_horizon: 5
+  action_block: 5
+eval:
+  num_eval: 50
+  goal_offset_steps: 50
+  eval_budget: 50
+  img_size: 224
+  dataset_name: reacher
+  callables:
+  - method: set_state
+    args:
+      qpos:
+        value: qpos
+      qvel:
+        value: qvel
+  - method: set_target_qpos
+    args:
+      target_qpos:
+        value: goal_qpos
+output:
+  filename: reacher_results.txt
+
+==== MODEL ====
+{
+  "mode": "lap",
+  "base_encoder_checkpoint": "/data/sicong/weitao/.stable_worldmodel/reacher/subjepa_object.ckpt",
+  "lap_run_dir": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/reacher/subjepa/matrix_k4/training/spectral/partition0_train42",
+  "lap_manifest": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/reacher/subjepa/matrix_k4/training/spectral/partition0_train42/manifest.json",
+  "cluster_predictors": {
+    "cluster0": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/reacher/subjepa/matrix_k4/training/spectral/partition0_train42/P_train_cluster0_object.ckpt",
+    "cluster1": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/reacher/subjepa/matrix_k4/training/spectral/partition0_train42/P_train_cluster1_object.ckpt",
+    "cluster2": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/reacher/subjepa/matrix_k4/training/spectral/partition0_train42/P_train_cluster2_object.ckpt",
+    "cluster3": "/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/reacher/subjepa/matrix_k4/training/spectral/partition0_train42/P_train_cluster3_object.ckpt"
+  },
+  "num_clusters": 4,
+  "num_routing_prototypes": 64,
+  "partition_metadata": {
+    "algorithm": "landmark_spectral_voronoi",
+    "num_clusters": 4,
+    "seed": 0,
+    "num_landmarks": 20000,
+    "knn": 30,
+    "neighbor_search": {
+      "backend": "torch_cuda_exact_cosine",
+      "device": "cuda:0",
+      "query_chunk": 2048,
+      "sec": 0.1474782419973053,
+      "peak_cuda_allocated_mb": 335.9921875
+    },
+    "graph": {
+      "effective_knn": 30,
+      "num_undirected_nonzeros": 651014,
+      "num_connected_components": 1,
+      "component_fractions": [
+        1.0
+      ],
+      "sigma_floor": 0.02398243248462677,
+      "degree_min": 13.44335076212883,
+      "degree_mean": 19.473146943065522,
+      "degree_max": 25.360079616308212
+    },
+    "spectral": {
+      "eigensolver_sec": 0.37509921099990606,
+      "spectral_kmeans_sec": 0.2227587310189847,
+      "normalized_adjacency_eigenvalues_desc": [
+        1.0000000000000007,
+        0.9993808400314795,
+        0.998379620789159,
+        0.9983254336438214,
+        0.9977522093322669,
+        0.9974600606504459
+      ],
+      "laplacian_eigenvalues_asc": [
+        -6.661338147750939e-16,
+        0.0006191599685204663,
+        0.0016203792108410164,
+        0.001674566356178575,
+        0.002247790667733063,
+        0.002539939349554099
+      ],
+      "eigengap_after_k": 0.0005732243115544877,
+      "spectral_kmeans_inertia": 6085.818359375,
+      "spectral_kmeans_n_iter": 37
+    },
+    "laplacian_eigenvalues": [
+      -6.661338147750939e-16,
+      0.0006191599685204663,
+      0.0016203792108410164,
+      0.001674566356178575,
+      0.002247790667733063,
+      0.002539939349554099
+    ],
+    "routing": "zscore_l2_spherical_voronoi"
+  },
+  "switch_timing": "once per MPC replan from the observed latent",
+  "latent_routing": "mpc"
+}
+==== RESULTS ====
+metrics: {'success_rate': 80.0, 'episode_successes': array([ True,  True,  True,  True,  True, False, False,  True,  True,
+        True,  True,  True,  True,  True, False,  True, False,  True,
+       False, False,  True,  True, False,  True,  True,  True,  True,
+        True,  True, False,  True,  True,  True, False,  True,  True,
+        True, False,  True,  True,  True,  True,  True,  True,  True,
+        True,  True,  True,  True,  True]), 'seeds': None}
+evaluation_time: 124.99387264251709 seconds

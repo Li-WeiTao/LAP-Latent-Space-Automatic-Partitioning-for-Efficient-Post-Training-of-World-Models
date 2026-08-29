@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "analysis_name": "subjepa frozen 22-criterion benchmark",
+  "repository_commit": "1ec3a653e2ffc34735d9eaf8ac77cbdebe6c5e4c",
+  "model": "subjepa",
+  "criterion_count": 22,
+  "development_model": "lewm",
+  "development_num_clusters": 4,
+  "validation_num_clusters": [
+    2,
+    3,
+    4
+  ],
+  "partition_seeds": [
+    0,
+    1,
+    2
+  ],
+  "ridge": 1e-08,
+  "target": "point-estimate winner of partition-seed-averaged Regional versus Global",
+  "threshold_leakage_check": "Sub-JEPA outcomes are never passed to fit",
+  "bures_layer2_correct": 10,
+  "bures_layer2_total": 12,
+  "bures_layer2_accuracy": 0.8333333333333334,
+  "files": {
+    "layer1_frozen_policies.csv": "c9c8333062f59562239e46f3d090b47b1e8fba07be600a35bb4e449400539ecc",
+    "layer2_metric_scores.csv": "29d26897dffd5981430da132404c3a89828b4c1c8b183109760a855667a689bc",
+    "layer2_metric_scores_by_seed.csv": "7354aeffd2222640d699a9c210064781e253c3bc96b0eda8a9327826d0cc7b76",
+    "layer2_predictions.csv": "b6fae796831690c14469c675f8c8c7b2622cb4e974b0221ce5a996152cb0356b",
+    "layer2_selection_accuracy.csv": "e44a828e0c8464e48883e9b36bdfa2201d66c684b5adefc863fa9101d5763e83"
+  }
+}

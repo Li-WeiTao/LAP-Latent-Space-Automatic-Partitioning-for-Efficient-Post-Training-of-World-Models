@@ -28,6 +28,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--metric", default=DEFAULT_METRIC)
     parser.add_argument("--check1-threshold", type=float, default=0.5)
     parser.add_argument("--practical-band-pp", type=float, default=0.5)
+    parser.add_argument(
+        "--policy",
+        choices=("with_check1", "standalone"),
+        default="with_check1",
+        help="with_check1: Check-1 plus frozen Bures; standalone: frozen Bures only.",
+    )
     return parser.parse_args()
 
 
@@ -90,11 +96,14 @@ def main() -> None:
         delta = float(row["delta_regional_minus_global_pp"])
         check1_pass = as_bool(row["check1_pass"])
         metric_value = float(row[metric_column])
-        predicted = (
-            "regional"
-            if check1_pass and metric_value > threshold
-            else "global"
-        )
+        if args.policy == "with_check1":
+            predicted = (
+                "regional"
+                if check1_pass and metric_value > threshold
+                else "global"
+            )
+        else:
+            predicted = "regional" if metric_value > threshold else "global"
         practical = "regional" if delta > args.practical_band_pp else "global"
         point_estimate = row["point_estimate_winner"]
         role = (
@@ -164,7 +173,11 @@ def main() -> None:
 
     policy = {
         "schema_version": 1,
-        "policy_name": "fixed-K Check-1 plus Jacobian-Bures gate",
+        "policy_name": (
+            "fixed-K Check-1 plus Jacobian-Bures gate"
+            if args.policy == "with_check1"
+            else "fixed-K Jacobian-Bures gate (standalone)"
+        ),
         "status": "frozen",
         "source_repository_commit": repository_commit(),
         "metric": args.metric,

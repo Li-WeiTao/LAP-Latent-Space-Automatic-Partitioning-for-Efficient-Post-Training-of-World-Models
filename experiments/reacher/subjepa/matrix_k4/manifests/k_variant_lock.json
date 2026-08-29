@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "num_clusters": 4,
+  "methods": "spectral",
+  "k3_matrix": "experiments/reacher/subjepa/matrix",
+  "work_root": "experiments/reacher/subjepa/matrix_k4",
+  "git_commit": "1ec3a653e2ffc34735d9eaf8ac77cbdebe6c5e4c",
+  "git_dirty": true,
+  "reused": {
+    "global_partition": true,
+    "global_training": true,
+    "global_eval": true,
+    "paired_starts": true,
+    "latent_cache": true
+  },
+  "skipped": [
+    "official",
+    "kmeanspp",
+    "auto_lap",
+    "gate"
+  ]
+}

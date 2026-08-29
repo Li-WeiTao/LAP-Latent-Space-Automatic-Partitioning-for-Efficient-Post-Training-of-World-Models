@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "num_clusters": 2,
+  "methods": "spectral",
+  "k3_matrix": "experiments/cube/subjepa/matrix",
+  "work_root": "experiments/cube/subjepa/matrix_k2",
+  "git_commit": "b3c0f7f3e7991eb83412b843952d314770fba0b4",
+  "git_dirty": true,
+  "reused": {
+    "global_partition": true,
+    "global_training": true,
+    "global_eval": true,
+    "paired_starts": true,
+    "latent_cache": true
+  },
+  "skipped": [
+    "official",
+    "kmeanspp",
+    "auto_lap",
+    "gate"
+  ]
+}

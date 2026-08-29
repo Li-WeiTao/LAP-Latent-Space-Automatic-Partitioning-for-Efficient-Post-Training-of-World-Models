@@ -1,0 +1,5 @@
+[k2-train] task=tworoom pid=14554 train_gpus=0,0,1 part_gpu=0 log=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/matrix_k2/logs/detached_20260822T033838Z.log
+[k2-train] task=pusht pid=14560 train_gpus=1,2,2 part_gpu=2 log=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix_k2/logs/detached_20260822T033838Z.log
+[k2-train] task=reacher pid=14572 train_gpus=3,3,5 part_gpu=5 log=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/reacher/subjepa/matrix_k2/logs/detached_20260822T033838Z.log
+[k2-train] task=cube pid=14586 train_gpus=5,6,6 part_gpu=6 log=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/cube/subjepa/matrix_k2/logs/detached_20260822T033838Z.log
+run_id=20260822T033838Z

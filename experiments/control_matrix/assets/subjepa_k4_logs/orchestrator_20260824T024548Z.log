@@ -1,0 +1,11 @@
+[k4-train] run_id=20260824T024548Z protocol=k-variant(k=4,spectral,reuse-k3-global)
+[k4-train] layout: tworoom+pusht@gpu0(2x2), reacher+cube@gpu5(2x2)
+[k4-train] task=tworoom gpu=0 workers=2 train_gpus=0,0 log=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/matrix_k4/logs/detached_20260824T024548Z.log
+[k4-train] task=pusht gpu=0 workers=2 train_gpus=0,0 log=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix_k4/logs/detached_20260824T024548Z.log
+[k4-train] task=reacher gpu=5 workers=2 train_gpus=5,5 log=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/reacher/subjepa/matrix_k4/logs/detached_20260824T024548Z.log
+[k4-train] task=cube gpu=5 workers=2 train_gpus=5,5 log=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/cube/subjepa/matrix_k4/logs/detached_20260824T024548Z.log
+pids: tworoom=[k4-train] task=tworoom gpu=0 workers=2 train_gpus=0,0 log=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/tworoom/subjepa/matrix_k4/logs/detached_20260824T024548Z.log
+83043 pusht=[k4-train] task=pusht gpu=0 workers=2 train_gpus=0,0 log=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/pusht/subjepa/matrix_k4/logs/detached_20260824T024548Z.log
+83051 reacher=[k4-train] task=reacher gpu=5 workers=2 train_gpus=5,5 log=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/reacher/subjepa/matrix_k4/logs/detached_20260824T024548Z.log
+83062 cube=[k4-train] task=cube gpu=5 workers=2 train_gpus=5,5 log=/data/sicong/weitao/LAP-Latent-Space-Automatic-Partitioning-for-Efficient-Post-Training-of-World-Models/experiments/cube/subjepa/matrix_k4/logs/detached_20260824T024548Z.log
+83075
