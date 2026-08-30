@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/analyze_layer2_metric_benchmark.py", line 9, in <module>
+    from experiments.control_matrix import analyze_fixed_k_response_geometry as rg
+ModuleNotFoundError: No module named 'experiments'
