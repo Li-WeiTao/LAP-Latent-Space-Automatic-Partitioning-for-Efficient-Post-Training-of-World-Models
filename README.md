@@ -133,9 +133,12 @@ and
 
 We additionally evaluated all 22 candidate selection criteria under the same
 two-layer protocol. Layer 1 uses only LeWM at `K=4` to fix each criterion's
-orientation and threshold; the existing Jacobian-Bures cutoff
-`0.508947854338762`, Check 1 cutoff `0.5`, and Check 2 prominence ratio cutoff
-`1.0` remain predeclared. Layer 2 then applies every policy unchanged to the
+orientation and threshold. PushT is excluded from Layer-1 calibration for every
+criterion except the predeclared Jacobian-Bures cutoff, matching the frozen
+Bures development set (`tworoom`, `reacher`, `cube` only). The existing
+Jacobian-Bures cutoff `0.508947854338762` remains predeclared; Check 1 and
+Check 2 thresholds are refit on the same three-task calibration set. Layer 2
+then applies every policy unchanged to the
 eight LeWM task-by-`K` settings at `K in {2,3}`. The target is the
 point-estimate winner between partition-seed-averaged Regional and Global,
 with identical training seeds, evaluation seeds, paired starts, and
@@ -145,10 +148,11 @@ long-horizon protocol.
 |---|---:|---:|---:|
 | **Jacobian Bures** | **8** | **8** | **100.0%** |
 | Curvature tail (`d=8`) | 6 | 8 | 75.0% |
-| Check 1: retained safety fraction | 6 | 8 | 75.0% |
+| Jacobian subspace chordal distance | 6 | 8 | 75.0% |
 | Check 2: prominence ratio | 6 | 8 | 75.0% |
+| Flow persistence (`h=10`) | 5 | 8 | 62.5% |
 | Pairwise response uniformity | 5 | 8 | 62.5% |
-| Jacobian subspace chordal distance | 5 | 8 | 62.5% |
+| Jacobian log-scale distance | 5 | 8 | 62.5% |
 | Response-boundary Spearman | 4 | 4 | 50.0% |
 | Eigengap after `K` | 4 | 8 | 50.0% |
 | Prototype distance ratio | 4 | 8 | 50.0% |
@@ -159,12 +163,11 @@ long-horizon protocol.
 | Boundary-local Jacobian Bures | 4 | 8 | 50.0% |
 | Jacobian cosine distance | 4 | 8 | 50.0% |
 | k-NN purity | 3 | 8 | 37.5% |
-| Flow persistence (`h=10`) | 3 | 8 | 37.5% |
 | Latent velocity eta-squared | 3 | 8 | 37.5% |
 | Minimum pairwise response | 3 | 8 | 37.5% |
 | Response-centroid Spearman | 2 | 4 | 25.0% |
 | Normalized cluster entropy | 2 | 8 | 25.0% |
-| Jacobian log-scale distance | 2 | 8 | 25.0% |
+| Check 1: retained safety fraction | 1 | 8 | 12.5% |
 
 Jacobian Bures is the unique full-coverage criterion with `8/8` correct
 Layer-2 selections, and therefore achieves **state-of-the-art selection

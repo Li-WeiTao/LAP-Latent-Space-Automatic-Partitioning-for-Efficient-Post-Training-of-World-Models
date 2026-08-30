@@ -1,9 +1,17 @@
 {
   "schema_version": 1,
   "analysis_name": "LeWM Layer-2 frozen 22-criterion benchmark",
-  "repository_commit": "4fe3e4ad52b03b0f0b4cea24669b1f594ea9ce9f",
+  "repository_commit": "094c9a57f19ee8530b94ba840ed26ea91fc30a6e",
   "criterion_count": 22,
   "development_num_clusters": 4,
+  "layer1_calibration_tasks": [
+    "tworoom",
+    "reacher",
+    "cube"
+  ],
+  "layer1_excluded_tasks": [
+    "pusht"
+  ],
   "validation_num_clusters": [
     2,
     3
@@ -20,10 +28,10 @@
   "bures_layer2_total": 8,
   "bures_layer2_accuracy": 1.0,
   "files": {
-    "layer1_frozen_policies.csv": "ce7e1216389da1b5a53ea47023e72a8cade8142f4dc5ebed1357ab3c21ce092b",
-    "layer2_metric_scores.csv": "96a5f58911d4b615087dcdaa79e7753e1cfb49c048a0668a081b91a48fdc6465",
+    "layer1_frozen_policies.csv": "103ee6fa1ba63ead3916b8e03ecbdc8552f04d4b25ed451024bccb6d0c90fed6",
+    "layer2_metric_scores.csv": "ed063ff12271c21ef86b3c660adcf936160301f00a4f1bf5dd4d92165425c94e",
     "layer2_metric_scores_by_seed.csv": "8e1dad57fb555ba1308f4fd65755ffa99f0b330dd3a4d92c20c30e127d547c77",
-    "layer2_predictions.csv": "1154bde319f63b213fac1a8daddca8a86e88a1f6fe441ce98838d9a15194defc",
-    "layer2_selection_accuracy.csv": "a7a54c22953c7f57d1e54e7ebaca75e4dd003f21d27416f4f13fe9ec7905e59e"
+    "layer2_predictions.csv": "d27611190aa92f007ba316aa5bdd5254808880f87ea3a133bb7e099e34ad0093",
+    "layer2_selection_accuracy.csv": "91e6abdb1765a65a5d8cf2f2d3fda7b3ba9b5386c1519de12eecee79191ad586"
   }
 }

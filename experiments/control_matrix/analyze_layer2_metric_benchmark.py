@@ -8,7 +8,10 @@ import faiss, h5py, numpy as np, pandas as pd
 from scipy.stats import spearmanr
 from experiments.control_matrix import analyze_fixed_k_response_geometry as rg
 
-TASKS=("tworoom","pusht","reacher","cube"); SEEDS=(0,1,2)
+TASKS=("tworoom","pusht","reacher","cube")
+LAYER1_CALIBRATION_TASKS=("tworoom","reacher","cube")  # exclude PushT, matching frozen Bures development
+SEEDS=(0,1,2)
+LAYER1_THRESHOLD_SOURCE="K4_excluding_pusht_balanced_accuracy"
 METRICS=("normalized_cluster_entropy","eigengap_after_k","prototype_distance_ratio",
 "knn_purity","margin_radius_ratio_mean","tangent_contrast_mean_d8","curvature_tail_mean_d8",
 "flow_persistence_h10","latent_velocity_eta2","action_residual_velocity_eta2",
@@ -23,7 +26,9 @@ def args():
  p.add_argument("--partition-seeds",default="0,1,2"); p.add_argument("--frameskip",type=int,default=5)
  p.add_argument("--ridge",type=float,default=1e-8); p.add_argument("--chunk",type=int,default=100000)
  p.add_argument("--cpu-threads",type=int,default=8); p.add_argument("--audit-dir",type=Path,default=Path("/tmp/lap_k4_geometry_audit"))
- p.add_argument("--output-dir",type=Path,required=True); return p.parse_args()
+ p.add_argument("--output-dir",type=Path,required=True)
+ p.add_argument("--raw-scores-csv",type=Path,default=None,help="Reuse existing per-seed scores; skip metric recomputation.")
+ return p.parse_args()
 def ints(s): return tuple(map(int,filter(None,s.split(","))))
 def gate(repo,t,k): return repo/f"experiments/{t}/results/auto_gate_complete_k{k}/auto/partition/manifest.json"
 def root(repo,t,k,s):
@@ -142,21 +147,23 @@ def fit(v,y):
    if best is None or key>best[0]: best=(key,d,float(th))
  return best[1],best[2]
 
+def layer1_metric_values(repo,screen,metric):
+ if metric.startswith("check"):
+  vals=[]
+  for t in LAYER1_CALIBRATION_TASKS:
+   g=json.loads(gate(repo,t,4).read_text())["method_metadata"]["automatic_gate"]; vals.append(float(g["retained_safety_fraction"] if metric.startswith("check1") else g["robust_residual_gap"]/g["background_threshold"]))
+  return vals
+ return [float(screen.loc[metric,t]) for t in LAYER1_CALIBRATION_TASKS]
+
 def benchmark(repo,raw,out):
  screen=pd.read_csv(repo/"experiments/control_matrix/assets/lewm_k4_geometry_screen/metric_screen_summary.csv").set_index("metric"); targets=pd.read_csv(repo/"experiments/control_matrix/assets/lewm_k4_geometry_screen/frozen_bures_gate_validation.csv"); l1=targets[targets.num_clusters.eq(4)].set_index("task"); l2=targets[targets.num_clusters.isin((2,3))][["task","num_clusters","global_mean_percent","regional_mean_percent","delta_regional_minus_global_pp","point_estimate_winner"]]
  scores=raw.groupby(["task","num_clusters"],as_index=False)[list(METRICS)].mean(numeric_only=True); details=l2.merge(scores,on=["task","num_clusters"],validate="one_to_one"); policies=[]; bth=float(targets.frozen_bures_threshold.dropna().unique()[0])
+ labels=[l1.loc[t,"point_estimate_winner"] for t in LAYER1_CALIBRATION_TASKS]
  for metric in METRICS:
-  if metric.startswith("check"):
-   vals=[]
-   for t in TASKS:
-    g=json.loads(gate(repo,t,4).read_text())["method_metadata"]["automatic_gate"]; vals.append(float(g["retained_safety_fraction"] if metric.startswith("check1") else g["robust_residual_gap"]/g["background_threshold"]))
-  else: vals=[float(screen.loc[metric,t]) for t in TASKS]
-  labels=[l1.loc[t,"point_estimate_winner"] for t in TASKS]
+  vals=layer1_metric_values(repo,screen,metric)
   if metric=="jacobian_bures_distance": d,th,src="higher",bth,"predeclared_existing"
-  elif metric=="check1_retained_safety_fraction": d,th,src="higher",.5,"predeclared_existing"
-  elif metric=="check2_prominence_ratio": d,th,src="higher",1.,"predeclared_existing"
-  else: d,th=fit(vals,labels); src="K4_only_balanced_accuracy"
-  pred=np.asarray(vals)>th if d=="higher" else np.asarray(vals)<th; policies.append(dict(metric=metric,direction=d,threshold=th,threshold_source=src,layer1_correct=int(np.sum(pred==(np.asarray(labels)=="regional"))),layer1_total=4,layer1_accuracy=float(np.mean(pred==(np.asarray(labels)=="regional")))))
+  else: d,th=fit(vals,labels); src=LAYER1_THRESHOLD_SOURCE
+  pred=np.asarray(vals)>th if d=="higher" else np.asarray(vals)<th; policies.append(dict(metric=metric,direction=d,threshold=th,threshold_source=src,layer1_correct=int(np.sum(pred==(np.asarray(labels)=="regional"))),layer1_total=len(LAYER1_CALIBRATION_TASKS),layer1_accuracy=float(np.mean(pred==(np.asarray(labels)=="regional")))))
  policies=pd.DataFrame(policies); preds=[]; summary=[]
  for p in policies.itertuples(index=False):
   av=details[p.metric].notna(); reg=details[p.metric]>p.threshold if p.direction=="higher" else details[p.metric]<p.threshold; hit=reg.map({True:"regional",False:"global"}).eq(details.point_estimate_winner)&av
@@ -165,10 +172,15 @@ def benchmark(repo,raw,out):
  summary=pd.DataFrame(summary).sort_values(["full_grid_accuracy","layer2_accuracy","layer2_covered"],ascending=False); preds=pd.DataFrame(preds); policies.to_csv(out/"layer1_frozen_policies.csv",index=False); details.to_csv(out/"layer2_metric_scores.csv",index=False); preds.to_csv(out/"layer2_predictions.csv",index=False); summary.to_csv(out/"layer2_selection_accuracy.csv",index=False); return summary
 
 def main():
- a=args(); repo=a.repo.resolve(); out=a.output_dir.resolve(); out.mkdir(parents=True,exist_ok=True); faiss.omp_set_num_threads(a.cpu_threads); rows=[]
- for t in filter(None,a.tasks.split(",")): rows+=task_rows(repo,t,ints(a.clusters),ints(a.partition_seeds),a)
- raw=pd.DataFrame(rows); raw.to_csv(out/"layer2_metric_scores_by_seed.csv",index=False); summary=benchmark(repo,raw,out); b=summary[summary.metric.eq("jacobian_bures_distance")].iloc[0]
- manifest=dict(schema_version=1,analysis_name="LeWM Layer-2 frozen 22-criterion benchmark",repository_commit=subprocess.check_output(["git","-C",str(repo),"rev-parse","HEAD"],text=True).strip(),criterion_count=len(METRICS),development_num_clusters=4,validation_num_clusters=list(ints(a.clusters)),partition_seeds=list(ints(a.partition_seeds)),ridge=a.ridge,target="point-estimate winner of partition-seed-averaged Regional versus Global",threshold_leakage_check="Layer-2 outcomes are never passed to fit",bures_layer2_correct=int(b.layer2_correct),bures_layer2_total=8,bures_layer2_accuracy=float(b.full_grid_accuracy),files={})
+ a=args(); repo=a.repo.resolve(); out=a.output_dir.resolve(); out.mkdir(parents=True,exist_ok=True)
+ if a.raw_scores_csv is not None:
+  raw=pd.read_csv(a.raw_scores_csv.resolve())
+ else:
+  faiss.omp_set_num_threads(a.cpu_threads); rows=[]
+  for t in filter(None,a.tasks.split(",")): rows+=task_rows(repo,t,ints(a.clusters),ints(a.partition_seeds),a)
+  raw=pd.DataFrame(rows); raw.to_csv(out/"layer2_metric_scores_by_seed.csv",index=False)
+ summary=benchmark(repo,raw,out); b=summary[summary.metric.eq("jacobian_bures_distance")].iloc[0]
+ manifest=dict(schema_version=1,analysis_name="LeWM Layer-2 frozen 22-criterion benchmark",repository_commit=subprocess.check_output(["git","-C",str(repo),"rev-parse","HEAD"],text=True).strip(),criterion_count=len(METRICS),development_num_clusters=4,layer1_calibration_tasks=list(LAYER1_CALIBRATION_TASKS),layer1_excluded_tasks=[t for t in TASKS if t not in LAYER1_CALIBRATION_TASKS],validation_num_clusters=list(ints(a.clusters)),partition_seeds=list(ints(a.partition_seeds)),ridge=a.ridge,target="point-estimate winner of partition-seed-averaged Regional versus Global",threshold_leakage_check="Layer-2 outcomes are never passed to fit",bures_layer2_correct=int(b.layer2_correct),bures_layer2_total=8,bures_layer2_accuracy=float(b.full_grid_accuracy),files={})
  for p in sorted(out.glob("*.csv")): manifest["files"][p.name]=hashlib.sha256(p.read_bytes()).hexdigest()
  (out/"benchmark_manifest.json").write_text(json.dumps(manifest,indent=2)+"\n"); assert len(METRICS)==len(summary)==22; assert (int(b.layer2_correct),int(b.layer2_covered))==(8,8); print(summary.to_string(index=False)); print(json.dumps(manifest,indent=2))
 if __name__=="__main__": main()
