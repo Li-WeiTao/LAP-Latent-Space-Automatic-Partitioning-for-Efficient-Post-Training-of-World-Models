@@ -1,11 +1,20 @@
 {
   "schema_version": 1,
-  "analysis_name": "subjepa frozen 22-criterion benchmark",
-  "repository_commit": "1ec3a653e2ffc34735d9eaf8ac77cbdebe6c5e4c",
+  "analysis_name": "subjepa Layer-3 frozen 22-criterion benchmark",
+  "repository_commit": "ed9ba03ced4421f3a339dee7152c84aaa3b9b23e",
   "model": "subjepa",
   "criterion_count": 22,
   "development_model": "lewm",
   "development_num_clusters": 4,
+  "layer1_calibration_tasks": [
+    "tworoom",
+    "reacher",
+    "cube"
+  ],
+  "layer1_excluded_tasks": [
+    "pusht"
+  ],
+  "layer1_policies_csv": "experiments/control_matrix/assets/lewm_layer2_22_criteria/layer1_frozen_policies.csv",
   "validation_num_clusters": [
     2,
     3,
@@ -19,14 +28,14 @@
   "ridge": 1e-08,
   "target": "point-estimate winner of partition-seed-averaged Regional versus Global",
   "threshold_leakage_check": "Sub-JEPA outcomes are never passed to fit",
-  "bures_layer2_correct": 10,
-  "bures_layer2_total": 12,
-  "bures_layer2_accuracy": 0.8333333333333334,
+  "bures_layer3_correct": 10,
+  "bures_layer3_total": 12,
+  "bures_layer3_accuracy": 0.8333333333333334,
   "files": {
-    "layer1_frozen_policies.csv": "c9c8333062f59562239e46f3d090b47b1e8fba07be600a35bb4e449400539ecc",
-    "layer2_metric_scores.csv": "29d26897dffd5981430da132404c3a89828b4c1c8b183109760a855667a689bc",
-    "layer2_metric_scores_by_seed.csv": "7354aeffd2222640d699a9c210064781e253c3bc96b0eda8a9327826d0cc7b76",
-    "layer2_predictions.csv": "b6fae796831690c14469c675f8c8c7b2622cb4e974b0221ce5a996152cb0356b",
-    "layer2_selection_accuracy.csv": "e44a828e0c8464e48883e9b36bdfa2201d66c684b5adefc863fa9101d5763e83"
+    "layer1_frozen_policies.csv": "2b2c998563d5da24c3adf1746d9d9f7cae1ee747f7824a35b1b68a23df303554",
+    "layer2_metric_scores.csv": "5234bb7fdcc45301e4fcea947c374a1ff4230114a13b9cc5a2ac12a8f428d5b8",
+    "layer2_metric_scores_by_seed.csv": "236534042124a3a719158361d15bb2704bd35eaf938315b7774497cf762e46b7",
+    "layer2_predictions.csv": "0d4fb7442b006fc9c9ac8f3c1cf2f50752ab7ad4f24c9177878f051e07cbdc85",
+    "layer2_selection_accuracy.csv": "83042378fa8ecca91fc97e83c7dff80cc01e8cffb94f5dbee1986dca218eb615"
   }
 }

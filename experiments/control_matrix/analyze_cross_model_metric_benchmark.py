@@ -10,6 +10,8 @@ from experiments.control_matrix import analyze_fixed_k_response_geometry as rg
 from lap.partition.landmark import _sample_landmarks
 
 TASKS=("tworoom","pusht","reacher","cube"); SEEDS=(0,1,2)
+LAYER1_CALIBRATION_TASKS=("tworoom","reacher","cube")
+DEFAULT_LAYER1_POLICIES="experiments/control_matrix/assets/lewm_layer2_22_criteria/layer1_frozen_policies.csv"
 METRICS=("normalized_cluster_entropy","eigengap_after_k","prototype_distance_ratio",
 "knn_purity","margin_radius_ratio_mean","tangent_contrast_mean_d8","curvature_tail_mean_d8",
 "flow_persistence_h10","latent_velocity_eta2","action_residual_velocity_eta2",
@@ -25,6 +27,7 @@ def args():
  p.add_argument("--partition-seeds",default="0,1,2"); p.add_argument("--frameskip",type=int,default=5)
  p.add_argument("--ridge",type=float,default=1e-8); p.add_argument("--chunk",type=int,default=100000)
  p.add_argument("--cpu-threads",type=int,default=8); p.add_argument("--audit-dir",type=Path,default=Path("/tmp/lap_k4_geometry_audit"))
+ p.add_argument("--layer1-policies-csv",type=Path,default=None,help="Frozen Layer-1 policies from LeWM K=4 calibration (PushT excluded except Bures).")
  p.add_argument("--output-dir",type=Path,required=True); return p.parse_args()
 def ints(s): return tuple(map(int,filter(None,s.split(","))))
 def gate(repo,model,t,k):
@@ -34,7 +37,9 @@ def gate(repo,model,t,k):
  return repo/f"experiments/{t}/results/auto_gate_complete_k{k}/auto/partition/manifest.json"
 def root(repo,model,t,k,s):
  if model=="subjepa":
-  suffix="matrix" if k==3 else f"matrix_k{k}"
+  if k==2: suffix="matrix_k2"
+  elif k==4: suffix="matrix_k4"
+  else: suffix="matrix"
   return repo/f"experiments/{t}/subjepa/{suffix}/partitions/spectral/seed{s}"
  if k in (2,4): return repo/f"experiments/{t}/matrix_k{k}/partitions/spectral/seed{s}"
  if t=="tworoom": return repo/f"experiments/tworoom/results/latent_landmark_spectral_k3/spectral_M20000_k30_P16_seed{s}"
@@ -163,23 +168,14 @@ def fit(v,y):
    if best is None or key>best[0]: best=(key,d,float(th))
  return best[1],best[2]
 
-def benchmark(repo,raw,out,model):
- screen=pd.read_csv(repo/"experiments/control_matrix/assets/lewm_k4_geometry_screen/metric_screen_summary.csv").set_index("metric"); lewm=pd.read_csv(repo/"experiments/control_matrix/assets/lewm_k4_geometry_screen/frozen_bures_gate_validation.csv"); l1=lewm[lewm.num_clusters.eq(4)].set_index("task")
- targets=(pd.read_csv(repo/"experiments/control_matrix/assets/subjepa_k_geometry_screen/jacobian_fixed_k_validation.csv") if model=="subjepa" else lewm); l2=targets[targets.num_clusters.isin(sorted(raw.num_clusters.unique()))][["task","num_clusters","global_mean_percent","regional_mean_percent","delta_regional_minus_global_pp","point_estimate_winner"]]
- scores=raw.groupby(["task","num_clusters"],as_index=False)[list(METRICS)].mean(numeric_only=True); details=l2.merge(scores,on=["task","num_clusters"],validate="one_to_one"); policies=[]; bth=float(lewm.frozen_bures_threshold.dropna().unique()[0])
- for metric in METRICS:
-  if metric.startswith("check"):
-   vals=[]
-   for t in TASKS:
-    g=json.loads(gate(repo,"lewm",t,4).read_text())["method_metadata"]["automatic_gate"]; vals.append(float(g["retained_safety_fraction"] if metric.startswith("check1") else g["robust_residual_gap"]/g["background_threshold"]-1.))
-  else: vals=[float(screen.loc[metric,t]) for t in TASKS]
-  labels=[l1.loc[t,"point_estimate_winner"] for t in TASKS]
-  if metric=="jacobian_bures_distance": d,th,src="higher",bth,"predeclared_existing"
-  elif metric=="check1_retained_safety_fraction": d,th,src="higher",.5,"predeclared_existing"
-  elif metric=="check2_prominence_ratio": d,th,src="higher",0.,"predeclared_R_minus_Tbg"
-  else: d,th=fit(vals,labels); src="K4_only_balanced_accuracy"
-  pred=np.asarray(vals)>th if d=="higher" else np.asarray(vals)<th; policies.append(dict(metric=metric,direction=d,threshold=th,threshold_source=src,layer1_correct=int(np.sum(pred==(np.asarray(labels)=="regional"))),layer1_total=4,layer1_accuracy=float(np.mean(pred==(np.asarray(labels)=="regional")))))
- policies=pd.DataFrame(policies); preds=[]; summary=[]
+def benchmark(repo,raw,out,model,layer1_path):
+ targets=(pd.read_csv(repo/"experiments/control_matrix/assets/subjepa_k_geometry_screen/jacobian_fixed_k_validation.csv") if model=="subjepa" else pd.read_csv(repo/"experiments/control_matrix/assets/lewm_k4_geometry_screen/frozen_bures_gate_validation.csv"))
+ l2=targets[targets.num_clusters.isin(sorted(raw.num_clusters.unique()))][["task","num_clusters","global_mean_percent","regional_mean_percent","delta_regional_minus_global_pp","point_estimate_winner"]]
+ scores=raw.groupby(["task","num_clusters"],as_index=False)[list(METRICS)].mean(numeric_only=True); details=l2.merge(scores,on=["task","num_clusters"],validate="one_to_one")
+ policies=pd.read_csv(layer1_path)
+ missing=set(METRICS)-set(policies.metric)
+ if missing: raise SystemExit(f"missing Layer-1 policies for metrics: {sorted(missing)}")
+ policies=policies.set_index("metric").loc[list(METRICS)].reset_index(); preds=[]; summary=[]
  for p in policies.itertuples(index=False):
   av=details[p.metric].notna(); reg=details[p.metric]>p.threshold if p.direction=="higher" else details[p.metric]<p.threshold; hit=reg.map({True:"regional",False:"global"}).eq(details.point_estimate_winner)&av
   for i,r in details.iterrows(): preds.append(dict(metric=p.metric,task=r.task,num_clusters=r.num_clusters,score=r[p.metric],direction=p.direction,threshold=p.threshold,predicted_branch=("regional" if reg[i] else "global") if av[i] else "abstain",point_estimate_winner=r.point_estimate_winner,correct=bool(hit[i]) if av[i] else False,delta_regional_minus_global_pp=r.delta_regional_minus_global_pp))
@@ -187,10 +183,13 @@ def benchmark(repo,raw,out,model):
  summary=pd.DataFrame(summary).sort_values(["full_grid_accuracy","layer2_accuracy","layer2_covered"],ascending=False); preds=pd.DataFrame(preds); policies.to_csv(out/"layer1_frozen_policies.csv",index=False); details.to_csv(out/"layer2_metric_scores.csv",index=False); preds.to_csv(out/"layer2_predictions.csv",index=False); summary.to_csv(out/"layer2_selection_accuracy.csv",index=False); return summary
 
 def main():
- a=args(); repo=a.repo.resolve(); out=a.output_dir.resolve(); out.mkdir(parents=True,exist_ok=True); faiss.omp_set_num_threads(a.cpu_threads); rows=[]
+ a=args(); repo=a.repo.resolve(); out=a.output_dir.resolve(); out.mkdir(parents=True,exist_ok=True)
+ layer1=(a.layer1_policies_csv or repo/DEFAULT_LAYER1_POLICIES).resolve()
+ if not layer1.is_file(): raise SystemExit(f"missing Layer-1 policies: {layer1}")
+ faiss.omp_set_num_threads(a.cpu_threads); rows=[]
  for t in filter(None,a.tasks.split(",")): rows+=task_rows(repo,a.model,t,ints(a.clusters),ints(a.partition_seeds),a)
- raw=pd.DataFrame(rows); raw.to_csv(out/"layer2_metric_scores_by_seed.csv",index=False); summary=benchmark(repo,raw,out,a.model); b=summary[summary.metric.eq("jacobian_bures_distance")].iloc[0]
- manifest=dict(schema_version=1,analysis_name=f"{a.model} frozen 22-criterion benchmark",repository_commit=subprocess.check_output(["git","-C",str(repo),"rev-parse","HEAD"],text=True).strip(),model=a.model,criterion_count=len(METRICS),development_model="lewm",development_num_clusters=4,validation_num_clusters=list(ints(a.clusters)),partition_seeds=list(ints(a.partition_seeds)),ridge=a.ridge,target="point-estimate winner of partition-seed-averaged Regional versus Global",threshold_leakage_check="Sub-JEPA outcomes are never passed to fit",bures_layer2_correct=int(b.layer2_correct),bures_layer2_total=int(b.layer2_total),bures_layer2_accuracy=float(b.full_grid_accuracy),files={})
+ raw=pd.DataFrame(rows); raw.to_csv(out/"layer2_metric_scores_by_seed.csv",index=False); summary=benchmark(repo,raw,out,a.model,layer1); b=summary[summary.metric.eq("jacobian_bures_distance")].iloc[0]
+ manifest=dict(schema_version=1,analysis_name=f"{a.model} Layer-3 frozen 22-criterion benchmark",repository_commit=subprocess.check_output(["git","-C",str(repo),"rev-parse","HEAD"],text=True).strip(),model=a.model,criterion_count=len(METRICS),development_model="lewm",development_num_clusters=4,layer1_calibration_tasks=list(LAYER1_CALIBRATION_TASKS),layer1_excluded_tasks=[t for t in TASKS if t not in LAYER1_CALIBRATION_TASKS],layer1_policies_csv=str(layer1.relative_to(repo)),validation_num_clusters=list(ints(a.clusters)),partition_seeds=list(ints(a.partition_seeds)),ridge=a.ridge,target="point-estimate winner of partition-seed-averaged Regional versus Global",threshold_leakage_check="Sub-JEPA outcomes are never passed to fit",bures_layer3_correct=int(b.layer2_correct),bures_layer3_total=int(b.layer2_total),bures_layer3_accuracy=float(b.full_grid_accuracy),files={})
  for p in sorted(out.glob("*.csv")): manifest["files"][p.name]=hashlib.sha256(p.read_bytes()).hexdigest()
  (out/"benchmark_manifest.json").write_text(json.dumps(manifest,indent=2)+"\n"); assert len(METRICS)==len(summary)==22; print(summary.to_string(index=False)); print(json.dumps(manifest,indent=2))
 if __name__=="__main__": main()
