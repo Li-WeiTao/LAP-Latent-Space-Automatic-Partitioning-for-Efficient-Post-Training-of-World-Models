@@ -1,120 +1,50 @@
 {
-  "schema_version": 1,
-  "repository_commit": "4fe3e4ad52b03b0f0b4cea24669b1f594ea9ce9f",
-  "model": "Le-WM",
-  "tasks": [
+  "schema_version": 2,
+  "repository_commit": "17d2025d7c5ba614a64cb0e16378c62f5bf95e09",
+  "calibration_tasks": [
     "tworoom",
-    "pusht",
     "reacher",
     "cube"
   ],
-  "configurations": [
-    {
-      "partition_method": "spectral",
-      "num_clusters": 2
-    },
-    {
-      "partition_method": "spectral",
-      "num_clusters": 3
-    },
-    {
-      "partition_method": "spectral",
-      "num_clusters": 4
-    },
-    {
-      "partition_method": "kmeanspp",
-      "num_clusters": 3
-    },
-    {
-      "partition_method": "random_voronoi",
-      "num_clusters": 3
-    }
-  ],
-  "partition_seeds": [
-    0,
-    1,
-    2
-  ],
-  "training_seeds": [
-    0,
-    42,
-    625
-  ],
-  "evaluation_seeds": [
-    0,
-    1,
-    2,
-    3,
-    4
-  ],
-  "definitions": {
-    "weakest_pair": "mean over partition seeds of the minimum normalized pairwise Jacobian-Bures distance",
-    "aggregate": "mean over partition seeds of sum(pi_i*pi_j*d_B^2)/sum(pi_i*pi_j*(e_i+e_j))"
+  "development": {
+    "partition_method": "spectral",
+    "num_clusters": 4,
+    "pusht_excluded_from_calibration": true
   },
   "thresholds": {
-    "frozen_weakest_pair_threshold_transferred_without_refitting": 0.508947854338762,
-    "canonical_reference": 0.5,
-    "operator": ">"
+    "weakest_pair": {
+      "threshold": 0.508947854338762,
+      "direction": "higher",
+      "source": "frozen_bures_gate_policy.json"
+    },
+    "aggregate": {
+      "threshold": 0.6680901843189289,
+      "direction": "higher",
+      "source": "K4_excluding_pusht_balanced_accuracy"
+    }
   },
   "accuracy": {
-    "alternative_partitions_k3": {
-      "weakest_frozen": {
-        "point_correct": 6,
-        "point_total": 8,
-        "decisive_correct": 4,
-        "decisive_total": 6,
-        "inconclusive": 2
-      },
-      "weakest_canonical": {
-        "point_correct": 6,
-        "point_total": 8,
-        "decisive_correct": 4,
-        "decisive_total": 6,
-        "inconclusive": 2
-      },
-      "aggregate_frozen": {
-        "point_correct": 5,
-        "point_total": 8,
-        "decisive_correct": 4,
-        "decisive_total": 6,
-        "inconclusive": 2
-      },
-      "aggregate_canonical": {
-        "point_correct": 5,
-        "point_total": 8,
-        "decisive_correct": 4,
-        "decisive_total": 6,
-        "inconclusive": 2
-      }
-    },
     "spectral_k4_development": {
       "weakest_frozen": {
-        "point_correct": 4,
-        "point_total": 4,
+        "point_correct": 3,
+        "point_total": 3,
         "decisive_correct": 3,
         "decisive_total": 3,
-        "inconclusive": 1
+        "inconclusive": 0
       },
-      "weakest_canonical": {
-        "point_correct": 4,
-        "point_total": 4,
+      "aggregate_calibrated": {
+        "point_correct": 3,
+        "point_total": 3,
         "decisive_correct": 3,
         "decisive_total": 3,
-        "inconclusive": 1
+        "inconclusive": 0
       },
-      "aggregate_frozen": {
-        "point_correct": 3,
-        "point_total": 4,
+      "aggregate_transferred_weakest": {
+        "point_correct": 2,
+        "point_total": 3,
         "decisive_correct": 2,
         "decisive_total": 3,
-        "inconclusive": 1
-      },
-      "aggregate_canonical": {
-        "point_correct": 3,
-        "point_total": 4,
-        "decisive_correct": 2,
-        "decisive_total": 3,
-        "inconclusive": 1
+        "inconclusive": 0
       }
     },
     "spectral_k2_k3_validation": {
@@ -125,21 +55,14 @@
         "decisive_total": 8,
         "inconclusive": 0
       },
-      "weakest_canonical": {
-        "point_correct": 8,
-        "point_total": 8,
-        "decisive_correct": 8,
-        "decisive_total": 8,
-        "inconclusive": 0
-      },
-      "aggregate_frozen": {
+      "aggregate_calibrated": {
         "point_correct": 6,
         "point_total": 8,
         "decisive_correct": 6,
         "decisive_total": 8,
         "inconclusive": 0
       },
-      "aggregate_canonical": {
+      "aggregate_transferred_weakest": {
         "point_correct": 6,
         "point_total": 8,
         "decisive_correct": 6,
@@ -155,21 +78,14 @@
         "decisive_total": 11,
         "inconclusive": 1
       },
-      "weakest_canonical": {
-        "point_correct": 12,
-        "point_total": 12,
-        "decisive_correct": 11,
-        "decisive_total": 11,
-        "inconclusive": 1
-      },
-      "aggregate_frozen": {
+      "aggregate_calibrated": {
         "point_correct": 9,
         "point_total": 12,
-        "decisive_correct": 8,
+        "decisive_correct": 9,
         "decisive_total": 11,
         "inconclusive": 1
       },
-      "aggregate_canonical": {
+      "aggregate_transferred_weakest": {
         "point_correct": 9,
         "point_total": 12,
         "decisive_correct": 8,
@@ -185,21 +101,14 @@
         "decisive_total": 17,
         "inconclusive": 3
       },
-      "weakest_canonical": {
-        "point_correct": 18,
+      "aggregate_calibrated": {
+        "point_correct": 15,
         "point_total": 20,
-        "decisive_correct": 15,
+        "decisive_correct": 13,
         "decisive_total": 17,
         "inconclusive": 3
       },
-      "aggregate_frozen": {
-        "point_correct": 14,
-        "point_total": 20,
-        "decisive_correct": 12,
-        "decisive_total": 17,
-        "inconclusive": 3
-      },
-      "aggregate_canonical": {
+      "aggregate_transferred_weakest": {
         "point_correct": 14,
         "point_total": 20,
         "decisive_correct": 12,
@@ -208,9 +117,9 @@
       }
     }
   },
-  "output_sha256": {
+  "files": {
+    "aggregate_bures_by_seed.csv": "c13f647a81f07dca8c13c8710225bd72c98f013a7d4b743691b680e01b89dff7",
     "aggregate_bures_pairs.csv": "1438612cc6d0c1fdddf96c1dbd6fda9cc061377aa6bb1edd89e5e94b67a5039c",
-    "aggregate_bures_by_seed.csv": "0fdcd850bd22815fe6878db70d900f93cea4a9a35ade7a3dc6ba3fca9d066c3d",
-    "aggregate_bures_validation.csv": "6232899cb209141fb1955ab8ce3db55061a990d6a81a0a9d4ae04b3e56f38251"
+    "aggregate_bures_validation.csv": "79e6ad8d7ffa2873b3bf26d8d7169dcbc8c44203d37ee43ccad9e1c6cb6ed022"
   }
 }

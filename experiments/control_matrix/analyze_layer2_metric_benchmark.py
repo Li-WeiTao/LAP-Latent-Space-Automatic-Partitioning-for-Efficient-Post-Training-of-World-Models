@@ -26,8 +26,9 @@ def args():
  p.add_argument("--partition-seeds",default="0,1,2"); p.add_argument("--frameskip",type=int,default=5)
  p.add_argument("--ridge",type=float,default=1e-8); p.add_argument("--chunk",type=int,default=100000)
  p.add_argument("--cpu-threads",type=int,default=8); p.add_argument("--audit-dir",type=Path,default=Path("/tmp/lap_k4_geometry_audit"))
- p.add_argument("--output-dir",type=Path,required=True)
+ p.add_argument("--output-dir",type=Path,default=None)
  p.add_argument("--raw-scores-csv",type=Path,default=None,help="Reuse existing per-seed scores; skip metric recomputation.")
+ p.add_argument("--refresh-bures-aggregate-calibration",action="store_true",help="Recalibrate all-pairs Bures threshold on existing aggregate validation CSVs.")
  return p.parse_args()
 def ints(s): return tuple(map(int,filter(None,s.split(","))))
 def gate(repo,t,k): return repo/f"experiments/{t}/results/auto_gate_complete_k{k}/auto/partition/manifest.json"
@@ -171,8 +172,38 @@ def benchmark(repo,raw,out):
   cov=int(av.sum()); h=int(hit.sum()); summary.append(dict(metric=p.metric,layer2_correct=h,layer2_covered=cov,layer2_total=8,layer2_accuracy=h/cov if cov else np.nan,full_grid_accuracy=h/8,direction=p.direction,threshold=p.threshold,layer1_accuracy=p.layer1_accuracy,threshold_source=p.threshold_source))
  summary=pd.DataFrame(summary).sort_values(["full_grid_accuracy","layer2_accuracy","layer2_covered"],ascending=False); preds=pd.DataFrame(preds); policies.to_csv(out/"layer1_frozen_policies.csv",index=False); details.to_csv(out/"layer2_metric_scores.csv",index=False); preds.to_csv(out/"layer2_predictions.csv",index=False); summary.to_csv(out/"layer2_selection_accuracy.csv",index=False); return summary
 
+def _branch(score,direction,threshold):
+ return "regional" if (score>threshold if direction=="higher" else score<threshold) else "global"
+
+def _acc(frame,pred_col):
+ correct=int(frame[pred_col].eq(frame["point_estimate_winner"]).sum()); inconclusive=int(frame["practical_status_0p5pp_band"].eq("inconclusive").sum())
+ decisive=frame.loc[~frame["practical_status_0p5pp_band"].eq("inconclusive")]
+ return dict(point_correct=correct,point_total=int(len(frame)),decisive_correct=int(decisive[pred_col].eq(decisive["point_estimate_winner"]).sum()),decisive_total=int(len(decisive)),inconclusive=inconclusive)
+
+def refresh_bures_aggregate_calibration(repo,out):
+ assets=repo/"experiments/control_matrix/assets/lewm_bures_aggregate_validation"; out.mkdir(parents=True,exist_ok=True)
+ validation=pd.read_csv(assets/"aggregate_bures_validation.csv"); by_seed=pd.read_csv(assets/"aggregate_bures_by_seed.csv")
+ weakest_th=float(json.loads((repo/"experiments/control_matrix/assets/lewm_k4_geometry_screen/frozen_bures_gate_policy.json").read_text())["frozen_bures_threshold"])
+ dev_mask=validation["partition_method"].eq("spectral")&validation["num_clusters"].eq(4)&validation["task"].isin(LAYER1_CALIBRATION_TASKS)
+ dev=validation.loc[dev_mask]
+ if len(dev)!=len(LAYER1_CALIBRATION_TASKS): raise SystemExit(f"expected {len(LAYER1_CALIBRATION_TASKS)} development rows, found {len(dev)}")
+ weakest_dir,_=fit(dev["weakest_pair_bures_mean"].tolist(),dev["point_estimate_winner"].tolist()); agg_dir,agg_th=fit(dev["aggregate_bures_mean"].tolist(),dev["point_estimate_winner"].tolist())
+ for col,score_col,d,th in (("weakest_prediction_frozen","weakest_pair_bures_mean",weakest_dir,weakest_th),("aggregate_prediction_transferred_weakest","aggregate_bures_mean",weakest_dir,weakest_th),("aggregate_prediction_calibrated","aggregate_bures_mean",agg_dir,agg_th)):
+  validation[col]=[_branch(float(s),d,th) for s in validation[score_col]]; validation[col.replace("prediction","correct_point_sign")]=validation[col].eq(validation["point_estimate_winner"])
+ validation=validation.drop(columns=[c for c in ("aggregate_prediction_frozen","aggregate_correct_point_sign_frozen") if c in validation.columns])
+ by_seed["aggregate_above_calibrated_threshold"]=by_seed["energy_weighted_aggregate_bures"]>agg_th
+ validation.to_csv(out/"aggregate_bures_validation.csv",index=False); by_seed.to_csv(out/"aggregate_bures_by_seed.csv",index=False)
+ spectral=validation[validation["partition_method"].eq("spectral")]; dev=validation.loc[dev_mask]
+ manifest=dict(schema_version=2,repository_commit=subprocess.check_output(["git","-C",str(repo),"rev-parse","HEAD"],text=True).strip(),calibration_tasks=list(LAYER1_CALIBRATION_TASKS),development=dict(partition_method="spectral",num_clusters=4,pusht_excluded_from_calibration=True),thresholds=dict(weakest_pair=dict(threshold=weakest_th,direction=weakest_dir,source="frozen_bures_gate_policy.json"),aggregate=dict(threshold=agg_th,direction=agg_dir,source=LAYER1_THRESHOLD_SOURCE)),accuracy=dict(spectral_k4_development=dict(weakest_frozen=_acc(dev,"weakest_prediction_frozen"),aggregate_calibrated=_acc(dev,"aggregate_prediction_calibrated"),aggregate_transferred_weakest=_acc(dev,"aggregate_prediction_transferred_weakest")),spectral_k2_k3_validation=dict(weakest_frozen=_acc(spectral[spectral.num_clusters.isin((2,3))],"weakest_prediction_frozen"),aggregate_calibrated=_acc(spectral[spectral.num_clusters.isin((2,3))],"aggregate_prediction_calibrated"),aggregate_transferred_weakest=_acc(spectral[spectral.num_clusters.isin((2,3))],"aggregate_prediction_transferred_weakest")),spectral_all_k=dict(weakest_frozen=_acc(spectral,"weakest_prediction_frozen"),aggregate_calibrated=_acc(spectral,"aggregate_prediction_calibrated"),aggregate_transferred_weakest=_acc(spectral,"aggregate_prediction_transferred_weakest")),all_cells=dict(weakest_frozen=_acc(validation,"weakest_prediction_frozen"),aggregate_calibrated=_acc(validation,"aggregate_prediction_calibrated"),aggregate_transferred_weakest=_acc(validation,"aggregate_prediction_transferred_weakest"))),files={})
+ for p in sorted(out.glob("*.csv")): manifest["files"][p.name]=hashlib.sha256(p.read_bytes()).hexdigest()
+ (out/"validation_manifest.json").write_text(json.dumps(manifest,indent=2)+"\n"); print(f"weakest threshold: {weakest_th:.17g} ({weakest_dir})"); print(f"aggregate threshold: {agg_th:.17g} ({agg_dir})"); print(json.dumps(manifest["accuracy"]["spectral_all_k"],indent=2))
+
 def main():
- a=args(); repo=a.repo.resolve(); out=a.output_dir.resolve(); out.mkdir(parents=True,exist_ok=True)
+ a=args(); repo=a.repo.resolve()
+ if a.refresh_bures_aggregate_calibration:
+  refresh_bures_aggregate_calibration(repo,(a.output_dir or repo/"experiments/control_matrix/assets/lewm_bures_aggregate_validation").resolve()); return
+ if a.output_dir is None: raise SystemExit("--output-dir is required unless using --refresh-bures-aggregate-calibration")
+ out=a.output_dir.resolve(); out.mkdir(parents=True,exist_ok=True)
  if a.raw_scores_csv is not None:
   raw=pd.read_csv(a.raw_scores_csv.resolve())
  else:
