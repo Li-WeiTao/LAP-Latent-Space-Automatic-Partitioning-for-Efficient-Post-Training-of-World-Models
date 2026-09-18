@@ -217,6 +217,27 @@ are available in
 and
 [`ridge_sensitivity_manifest.json`](experiments/control_matrix/assets/lewm_k4_geometry_screen/ridge_sensitivity/ridge_sensitivity_manifest.json).
 
+### Region-pair response aggregation (paper methods 11 and 12)
+
+For a fixed spectral partition at `K=4`, each region pair `(i,j)` has the same
+normalized response contrast `R_{ij}` recorded as `pairwise_response_contrast` in
+[`response_geometry_cross_k_pairs.csv`](experiments/control_matrix/assets/lewm_k4_geometry_screen/response_geometry_cross_k_pairs.csv).
+**Method 11** aggregates these pair scores by taking the **arithmetic mean** over
+all region pairs within each partition seed, then averaging over partition seeds
+`0,1,2`. **Method 12** takes the **minimum** over pairs within each seed, then
+the same seed average. Because min ≤ mean on the same finite set,
+method 12 ≤ method 11 always holds.
+
+The authoritative task-level values are in
+[`response_pair_aggregation_k4.csv`](experiments/control_matrix/assets/lewm_k4_geometry_screen/response_pair_aggregation_k4.csv).
+For TwoRoom at `K=4`, method 11 is **`0.017064`** (not `0.006468`) and method 12
+remains **`0.015265`**. The earlier `0.006468` entry came from
+`affine_response_contrast_ratio`, a **different** global partition statistic in
+[`affine_response_contrast.csv`](experiments/control_matrix/assets/lewm_k4_geometry_screen/affine_response_contrast.csv);
+it must not be used as mean(`R_{ij}`). This correction does not affect the frozen
+Jacobian-Bures gate, which uses weakest-pair Bures rather than response-contrast
+aggregation.
+
 ## Interface boundary
 
 LAP exposes two composable interfaces. Humans and coding agents can use this

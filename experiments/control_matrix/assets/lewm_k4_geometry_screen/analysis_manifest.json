@@ -84,12 +84,21 @@
     "k4_jacobian_metric_summary.csv",
     "metric_screen_summary.csv",
     "frozen_bures_gate_policy.json",
-    "frozen_bures_gate_validation.csv"
+    "frozen_bures_gate_validation.csv",
+    "response_pair_aggregation_k4.csv"
   ],
   "fixed_k_jacobian_validation": {
     "target_label_policy": "Regional iff averaged Regional minus Global exceeds +0.5 percentage points; inconclusive is non-positive for the sufficiency audit",
     "partition_policy": "metrics and targets are averaged over partition seeds 0,1,2 within each fixed K; no cross-K retention is used",
     "jacobian_bures_distance": "seed-robust full separation at fixed K=2, K=3, and K=4, standalone",
     "jacobian_subspace_chordal_distance": "seed-robust with Check 1 at K=2 and K=4; fails at K=3"
+  },
+  "response_pair_aggregation": {
+    "R_ij": "pairwise_response_contrast",
+    "method_11": "mean over region pairs within each partition seed, then mean over seeds",
+    "method_12": "min over region pairs within each partition seed, then mean over seeds",
+    "tworoom_k4_method_11": 0.017064373699314,
+    "tworoom_k4_method_12": 0.015265167488974133,
+    "note": "affine_response_contrast_ratio is a different global statistic and must not be used as mean(R_ij)."
   }
 }
