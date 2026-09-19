@@ -148,7 +148,7 @@ def fit(v,y):
  return best[1],best[2]
 
 def layer1_metric_values(repo,screen,metric):
- if metric in ("mean_pairwise_response","minimum_pairwise_response"):
+ if metric=="mean_pairwise_response":
   by_seed=pd.read_csv(repo/"experiments/control_matrix/assets/lewm_k4_geometry_screen/response_geometry_cross_k_by_seed.csv",float_precision="round_trip")
   k4=by_seed[by_seed.num_clusters.eq(4)].groupby("task")[metric].mean()
   return [float(k4.loc[t]) for t in LAYER1_CALIBRATION_TASKS]
