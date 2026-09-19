@@ -1,0 +1,3 @@
+metric,paper_method,direction,threshold,threshold_source,layer1_correct,layer1_total,layer1_accuracy
+mean_pairwise_response,11,higher,0.016278600076199752,K4_excluding_pusht_balanced_accuracy,3,3,1.0
+minimum_pairwise_response,12,higher,0.01332538172368905,K4_excluding_pusht_balanced_accuracy,3,3,1.0

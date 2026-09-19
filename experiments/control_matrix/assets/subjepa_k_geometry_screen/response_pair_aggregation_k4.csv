@@ -1,0 +1,5 @@
+task,num_clusters,mean_pairwise_response,minimum_pairwise_response,R_ij,per_seed_aggregation,method_11_mean_Rij,method_12_min_Rij
+cube,4,0.23795068951443776,0.1176203999714685,pairwise_response_contrast,"arithmetic mean over partition seeds 0,1,2",0.23795068951443776,0.1176203999714685
+pusht,4,0.059818689024042936,0.05137632126149507,pairwise_response_contrast,"arithmetic mean over partition seeds 0,1,2",0.059818689024042936,0.05137632126149507
+reacher,4,0.017390642860021968,0.011117826245970333,pairwise_response_contrast,"arithmetic mean over partition seeds 0,1,2",0.017390642860021968,0.011117826245970333
+tworoom,4,0.26827024177257325,0.10462733042415401,pairwise_response_contrast,"arithmetic mean over partition seeds 0,1,2",0.26827024177257325,0.10462733042415401

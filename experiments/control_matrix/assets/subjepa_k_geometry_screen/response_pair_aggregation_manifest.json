@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "analysis_name": "subjepa paper methods 11/12 from the same R_ij",
+  "repository_commit": "4affab4eecd927c021c947741cbe2918b9a98940",
+  "model": "subjepa",
+  "R_ij": "pairwise_response_contrast",
+  "method_11": "mean over region pairs within each partition seed, then mean over seeds",
+  "method_12": "min over region pairs within each partition seed, then mean over seeds",
+  "layer1_calibration_tasks": [
+    "tworoom",
+    "reacher",
+    "cube"
+  ],
+  "layer1_excluded_tasks": [
+    "pusht"
+  ],
+  "tworoom_k4_method_11": 0.26827024177257325,
+  "tworoom_k4_method_12": 0.10462733042415401,
+  "note": "affine_response_contrast_ratio is a different global statistic and must not be used as mean(R_ij).",
+  "files": {
+    "pairwise_response_summary.csv": "4f9b113e3d73b4b05b9146637ac83d882a230d5578127ea072ba422e8f76348e",
+    "response_pair_aggregation.csv": "fd2bb5a75b8d3f8b7f1b6bcb35afb9362422264e5570af10b6f426aaf8da9b27",
+    "response_pair_aggregation_k4.csv": "92862c79b4ba9c1120846e0a2d752cf71a489d99f76c581cf28e9cf777b318da",
+    "layer1_response_pair_policies.csv": "a3337dfe80e9bc8578ebc5475a25411babef06ea262cb9087fceab2bf8c2e59b",
+    "layer3_response_pair_predictions.csv": "96c1c53853365dccc6f2e26dc2fb0285bf0b873b8113260e241a4e0d11acfb30",
+    "layer3_response_pair_accuracy.csv": "0e26f298aceeb64626b381cc91d95d38086abe23dc3d3f8355e94b5f85ba7042"
+  }
+}
