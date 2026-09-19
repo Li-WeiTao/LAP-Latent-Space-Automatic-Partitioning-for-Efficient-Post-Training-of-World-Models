@@ -12,9 +12,9 @@ prototype_distance_ratio,4,8,8,0.5,0.5,lower,1.0793239933536816,0.66666666666666
 margin_radius_ratio_mean,4,8,8,0.5,0.5,lower,6.271207054456075,0.6666666666666666,K4_excluding_pusht_balanced_accuracy
 tangent_contrast_mean_d8,4,8,8,0.5,0.5,lower,0.46942558369420295,1.0,K4_excluding_pusht_balanced_accuracy
 action_residual_velocity_eta2,4,8,8,0.5,0.5,higher,0.00013423426922695023,1.0,K4_excluding_pusht_balanced_accuracy
-affine_response_contrast_ratio,4,8,8,0.5,0.5,higher,0.0061370813999440995,1.0,K4_excluding_pusht_balanced_accuracy
 boundary_min_jacobian_bures_distance,4,8,8,0.5,0.5,lower,0.6010348681247366,1.0,K4_excluding_pusht_balanced_accuracy
 jacobian_cosine_distance,4,8,8,0.5,0.5,lower,0.8265036167428612,0.6666666666666666,K4_excluding_pusht_balanced_accuracy
+mean_pairwise_response,3,8,8,0.375,0.375,higher,0.01627860007619981,1.0,K4_excluding_pusht_balanced_accuracy
 knn_purity,3,8,8,0.375,0.375,lower,0.9621138888888889,0.6666666666666666,K4_excluding_pusht_balanced_accuracy
 latent_velocity_eta2,3,8,8,0.375,0.375,higher,0.0001317046974314977,1.0,K4_excluding_pusht_balanced_accuracy
 minimum_pairwise_response,3,8,8,0.375,0.375,higher,0.013325377152480201,1.0,K4_excluding_pusht_balanced_accuracy

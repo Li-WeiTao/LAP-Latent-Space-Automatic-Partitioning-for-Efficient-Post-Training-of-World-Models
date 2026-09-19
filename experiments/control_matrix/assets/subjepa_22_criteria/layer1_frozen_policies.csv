@@ -9,7 +9,7 @@ curvature_tail_mean_d8,higher,0.0003490456629873,K4_excluding_pusht_balanced_acc
 flow_persistence_h10,lower,0.8095587071076287,K4_excluding_pusht_balanced_accuracy,2,3,0.6666666666666666
 latent_velocity_eta2,higher,0.0001317046974314,K4_excluding_pusht_balanced_accuracy,3,3,1.0
 action_residual_velocity_eta2,higher,0.0001342342692269,K4_excluding_pusht_balanced_accuracy,3,3,1.0
-affine_response_contrast_ratio,higher,0.006137081399944,K4_excluding_pusht_balanced_accuracy,3,3,1.0
+mean_pairwise_response,higher,0.01627860007619981,K4_excluding_pusht_balanced_accuracy,3,3,1.0
 minimum_pairwise_response,higher,0.0133253771524802,K4_excluding_pusht_balanced_accuracy,3,3,1.0
 pairwise_uniformity_min_over_mean,higher,0.799148726123863,K4_excluding_pusht_balanced_accuracy,3,3,1.0
 response_centroid_spearman,higher,0.1428571428571428,K4_excluding_pusht_balanced_accuracy,2,3,0.6666666666666666

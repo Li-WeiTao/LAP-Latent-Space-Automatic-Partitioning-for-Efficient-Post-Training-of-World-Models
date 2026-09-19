@@ -16,8 +16,8 @@ eigengap_after_k,4,12,12,0.3333333333333333,0.3333333333333333,higher,0.00060081
 latent_velocity_eta2,4,12,12,0.3333333333333333,0.3333333333333333,higher,0.0001317046974314,1.0,K4_excluding_pusht_balanced_accuracy
 response_centroid_spearman,3,8,12,0.375,0.25,higher,0.1428571428571428,0.6666666666666666,K4_excluding_pusht_balanced_accuracy
 action_residual_velocity_eta2,3,12,12,0.25,0.25,higher,0.0001342342692269,1.0,K4_excluding_pusht_balanced_accuracy
-affine_response_contrast_ratio,2,12,12,0.16666666666666666,0.16666666666666666,higher,0.006137081399944,1.0,K4_excluding_pusht_balanced_accuracy
 minimum_pairwise_response,2,12,12,0.16666666666666666,0.16666666666666666,higher,0.0133253771524802,1.0,K4_excluding_pusht_balanced_accuracy
 jacobian_cosine_distance,2,12,12,0.16666666666666666,0.16666666666666666,lower,0.8265036167428612,0.6666666666666666,K4_excluding_pusht_balanced_accuracy
+mean_pairwise_response,1,12,12,0.08333333333333333,0.08333333333333333,higher,0.01627860007619981,1.0,K4_excluding_pusht_balanced_accuracy
 boundary_min_jacobian_bures_distance,1,12,12,0.08333333333333333,0.08333333333333333,lower,0.6010348681247366,1.0,K4_excluding_pusht_balanced_accuracy
 curvature_tail_mean_d8,0,12,12,0.0,0.0,higher,0.0003490456629873,1.0,K4_excluding_pusht_balanced_accuracy

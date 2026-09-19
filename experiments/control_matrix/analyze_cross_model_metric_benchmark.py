@@ -15,7 +15,7 @@ DEFAULT_LAYER1_POLICIES="experiments/control_matrix/assets/lewm_layer2_22_criter
 METRICS=("normalized_cluster_entropy","eigengap_after_k","prototype_distance_ratio",
 "knn_purity","margin_radius_ratio_mean","tangent_contrast_mean_d8","curvature_tail_mean_d8",
 "flow_persistence_h10","latent_velocity_eta2","action_residual_velocity_eta2",
-"affine_response_contrast_ratio","minimum_pairwise_response","pairwise_uniformity_min_over_mean",
+"mean_pairwise_response","minimum_pairwise_response","pairwise_uniformity_min_over_mean",
 "response_centroid_spearman","response_boundary_spearman","boundary_min_jacobian_bures_distance",
 "jacobian_bures_distance","jacobian_cosine_distance","jacobian_log_scale_distance",
 "jacobian_subspace_chordal_distance","check1_retained_safety_fraction","check2_prominence_ratio")
@@ -28,6 +28,7 @@ def args():
  p.add_argument("--ridge",type=float,default=1e-8); p.add_argument("--chunk",type=int,default=100000)
  p.add_argument("--cpu-threads",type=int,default=8); p.add_argument("--audit-dir",type=Path,default=Path("/tmp/lap_k4_geometry_audit"))
  p.add_argument("--layer1-policies-csv",type=Path,default=None,help="Frozen Layer-1 policies from LeWM K=4 calibration (PushT excluded except Bures).")
+ p.add_argument("--raw-scores-csv",type=Path,default=None,help="Reuse existing per-seed scores; skip metric recomputation.")
  p.add_argument("--output-dir",type=Path,required=True); return p.parse_args()
 def ints(s): return tuple(map(int,filter(None,s.split(","))))
 def gate(repo,model,t,k):
@@ -134,7 +135,7 @@ def task_rows(repo,model,t,ks,seeds,a):
   labels={s:rg.load_labels(root(repo,model,t,k,s)/"cluster_labels.npz",ids) for s in seeds}; ays={s:labels[s][apos] for s in seeds}
   am=audit_metrics(ax,ays,k); fitted,residual,sqrt_cov,amean,ascale=rg.sufficient_stats(x,left,right,actions,labels,k,a.ridge,a.chunk)
   penalty=np.eye(actions.shape[1]+1)*a.ridge; penalty[0,0]=0; aa=(actions-amean)/ascale
-  design_all=np.c_[np.ones(len(aa)),aa]; xtx=design_all.T@design_all; xty=design_all.T@(x[right].astype(np.float64)-x[left].astype(np.float64)); gcoef=np.linalg.solve(xtx+penalty,xty); reference_moment=xtx/len(left)
+  design_all=np.c_[np.ones(len(aa)),aa]; xtx=design_all.T@design_all; xty=design_all.T@(x[right].astype(np.float64)-x[left].astype(np.float64)); gcoef=np.linalg.solve(xtx+penalty,xty)
   reta=residual_eta(x,left,right,actions,labels,gcoef,amean,ascale,k,a.chunk); veta=velocity_eta(x,left,right,labels,k,a.chunk)
   fractions,eig=meta(root(repo,model,t,k,0)); fractions=(np.bincount(labels[0],minlength=k)/len(labels[0]) if fractions is None else fractions); pp,op=protos(root(repo,model,t,k,0)); p=np.load(pp); own=np.load(op); p/=np.maximum(np.linalg.norm(p,axis=1,keepdims=True),1e-12)
   dist=1-p@p.T; np.fill_diagonal(dist,np.inf); same=own[:,None]==own[None,:]; pr=float(np.where(~same,dist,np.inf).min(1).mean()/np.where(same,dist,np.inf).min(1).mean())
@@ -146,7 +147,6 @@ def task_rows(repo,model,t,ks,seeds,a):
     ci,cj=fitted[s][i][0],fitted[s][j][0]; di=ci[0]-cj[0]; ds=sqrt_cov@(ci[1:]-cj[1:]); pairs.append(float((np.sum(di*di)+np.sum(ds*ds))/residual)); jacs.append(rg.jacobian_metrics(ci,cj,sqrt_cov))
     cents.append(float(np.linalg.norm(ax[rr[i]].mean(0)-ax[rr[j]].mean(0)))); sij,_=inds[j].search(np.ascontiguousarray(ax[rr[i]]),1); sji,_=inds[i].search(np.ascontiguousarray(ax[rr[j]]),1); bounds.append(.5*(np.mean(1-sij[:,0])+np.mean(1-sji[:,0])))
    pairs=np.asarray(pairs); jacs=np.asarray(jacs)
-   affine=sum((fitted[s][r][1]/len(left))*float(np.trace((fitted[s][r][0]-gcoef).T@reference_moment@(fitted[s][r][0]-gcoef))) for r in range(k))/residual
    z=(ax-ax.mean(0))/(ax.std(0)+1e-8); z/=np.maximum(np.linalg.norm(z,axis=1,keepdims=True),1e-12); nn=faiss.IndexFlatIP(z.shape[1]); nn.add(np.ascontiguousarray(z)); _,nb=nn.search(np.ascontiguousarray(z),31); mixed=np.any(ay[nb[:,1:]]!=ay[:,None],axis=1)
    br=apos[mixed]; nxt=np.searchsorted(ids,ids[br]+1); ok=(nxt<len(ids))&(ids[nxt]==ids[br]+1); br=br[ok]
    bcoef,bcov=rg.fit_subset(x,ids,action_by,labels[s],br,k,a.ridge,1); bb=min(rg.jacobian_metrics(bcoef[i],bcoef[j],bcov)[3] for i,j in combinations(range(k),2))
@@ -156,7 +156,7 @@ def task_rows(repo,model,t,ks,seeds,a):
     ga=json.loads(gate(repo,model,t,k).read_text())["method_metadata"]["automatic_gate"]; check1=float(ga["retained_safety_fraction"]); check2=float(ga["robust_residual_gap"]/ga["background_threshold"]-1.)
    rows.append(dict(task=t,num_clusters=k,partition_seed=s,normalized_cluster_entropy=float(-(fractions*np.log(fractions)).sum()/np.log(k)),eigengap_after_k=eig,prototype_distance_ratio=pr,
     knn_purity=am[s][0],margin_radius_ratio_mean=am[s][1],tangent_contrast_mean_d8=am[s][2],curvature_tail_mean_d8=am[s][3],flow_persistence_h10=flow,latent_velocity_eta2=veta[s],action_residual_velocity_eta2=reta[s],
-    affine_response_contrast_ratio=float(affine),minimum_pairwise_response=float(pairs.min()),pairwise_uniformity_min_over_mean=float(pairs.min()/pairs.mean()),response_centroid_spearman=float(spearmanr(pairs,cents).statistic) if len(pairs)>1 else np.nan,response_boundary_spearman=float(spearmanr(pairs,bounds).statistic) if len(pairs)>1 else np.nan,boundary_min_jacobian_bures_distance=bb,jacobian_bures_distance=float(jacs[:,3].min()),jacobian_cosine_distance=float(jacs[:,0].min()),jacobian_log_scale_distance=float(jacs[:,1].min()),jacobian_subspace_chordal_distance=float(jacs[:,2].min()),check1_retained_safety_fraction=check1,check2_prominence_ratio=check2))
+    mean_pairwise_response=float(pairs.mean()),minimum_pairwise_response=float(pairs.min()),pairwise_uniformity_min_over_mean=float(pairs.min()/pairs.mean()),response_centroid_spearman=float(spearmanr(pairs,cents).statistic) if len(pairs)>1 else np.nan,response_boundary_spearman=float(spearmanr(pairs,bounds).statistic) if len(pairs)>1 else np.nan,boundary_min_jacobian_bures_distance=bb,jacobian_bures_distance=float(jacs[:,3].min()),jacobian_cosine_distance=float(jacs[:,0].min()),jacobian_log_scale_distance=float(jacs[:,1].min()),jacobian_subspace_chordal_distance=float(jacs[:,2].min()),check1_retained_safety_fraction=check1,check2_prominence_ratio=check2))
   print(f"completed {t} K={k}",flush=True)
  return rows
 
@@ -169,10 +169,10 @@ def fit(v,y):
  return best[1],best[2]
 
 def benchmark(repo,raw,out,model,layer1_path):
- targets=(pd.read_csv(repo/"experiments/control_matrix/assets/subjepa_k_geometry_screen/jacobian_fixed_k_validation.csv") if model=="subjepa" else pd.read_csv(repo/"experiments/control_matrix/assets/lewm_k4_geometry_screen/frozen_bures_gate_validation.csv"))
+ targets=(pd.read_csv(repo/"experiments/control_matrix/assets/subjepa_k_geometry_screen/jacobian_fixed_k_validation.csv",float_precision="round_trip") if model=="subjepa" else pd.read_csv(repo/"experiments/control_matrix/assets/lewm_k4_geometry_screen/frozen_bures_gate_validation.csv",float_precision="round_trip"))
  l2=targets[targets.num_clusters.isin(sorted(raw.num_clusters.unique()))][["task","num_clusters","global_mean_percent","regional_mean_percent","delta_regional_minus_global_pp","point_estimate_winner"]]
  scores=raw.groupby(["task","num_clusters"],as_index=False)[list(METRICS)].mean(numeric_only=True); details=l2.merge(scores,on=["task","num_clusters"],validate="one_to_one")
- policies=pd.read_csv(layer1_path)
+ policies=pd.read_csv(layer1_path,float_precision="round_trip")
  missing=set(METRICS)-set(policies.metric)
  if missing: raise SystemExit(f"missing Layer-1 policies for metrics: {sorted(missing)}")
  policies=policies.set_index("metric").loc[list(METRICS)].reset_index(); preds=[]; summary=[]
@@ -186,9 +186,14 @@ def main():
  a=args(); repo=a.repo.resolve(); out=a.output_dir.resolve(); out.mkdir(parents=True,exist_ok=True)
  layer1=(a.layer1_policies_csv or repo/DEFAULT_LAYER1_POLICIES).resolve()
  if not layer1.is_file(): raise SystemExit(f"missing Layer-1 policies: {layer1}")
- faiss.omp_set_num_threads(a.cpu_threads); rows=[]
- for t in filter(None,a.tasks.split(",")): rows+=task_rows(repo,a.model,t,ints(a.clusters),ints(a.partition_seeds),a)
- raw=pd.DataFrame(rows); raw.to_csv(out/"layer2_metric_scores_by_seed.csv",index=False); summary=benchmark(repo,raw,out,a.model,layer1); b=summary[summary.metric.eq("jacobian_bures_distance")].iloc[0]
+ if a.raw_scores_csv is not None:
+  raw=pd.read_csv(a.raw_scores_csv.resolve(),float_precision="round_trip")
+ else:
+  faiss.omp_set_num_threads(a.cpu_threads); rows=[]
+  for t in filter(None,a.tasks.split(",")): rows+=task_rows(repo,a.model,t,ints(a.clusters),ints(a.partition_seeds),a)
+  raw=pd.DataFrame(rows)
+ raw.to_csv(out/"layer2_metric_scores_by_seed.csv",index=False)
+ summary=benchmark(repo,raw,out,a.model,layer1); b=summary[summary.metric.eq("jacobian_bures_distance")].iloc[0]
  manifest=dict(schema_version=1,analysis_name=f"{a.model} Layer-3 frozen 22-criterion benchmark",repository_commit=subprocess.check_output(["git","-C",str(repo),"rev-parse","HEAD"],text=True).strip(),model=a.model,criterion_count=len(METRICS),development_model="lewm",development_num_clusters=4,layer1_calibration_tasks=list(LAYER1_CALIBRATION_TASKS),layer1_excluded_tasks=[t for t in TASKS if t not in LAYER1_CALIBRATION_TASKS],layer1_policies_csv=str(layer1.relative_to(repo)),validation_num_clusters=list(ints(a.clusters)),partition_seeds=list(ints(a.partition_seeds)),ridge=a.ridge,target="point-estimate winner of partition-seed-averaged Regional versus Global",threshold_leakage_check="Sub-JEPA outcomes are never passed to fit",bures_layer3_correct=int(b.layer2_correct),bures_layer3_total=int(b.layer2_total),bures_layer3_accuracy=float(b.full_grid_accuracy),files={})
  for p in sorted(out.glob("*.csv")): manifest["files"][p.name]=hashlib.sha256(p.read_bytes()).hexdigest()
  (out/"benchmark_manifest.json").write_text(json.dumps(manifest,indent=2)+"\n"); assert len(METRICS)==len(summary)==22; print(summary.to_string(index=False)); print(json.dumps(manifest,indent=2))

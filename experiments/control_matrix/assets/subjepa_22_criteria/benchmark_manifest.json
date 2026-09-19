@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "analysis_name": "subjepa Layer-3 frozen 22-criterion benchmark",
-  "repository_commit": "ed9ba03ced4421f3a339dee7152c84aaa3b9b23e",
+  "repository_commit": "01866c1efa7bb37c463069e81437dc3930bd3178",
   "model": "subjepa",
   "criterion_count": 22,
   "development_model": "lewm",
@@ -32,10 +32,21 @@
   "bures_layer3_total": 12,
   "bures_layer3_accuracy": 0.8333333333333334,
   "files": {
-    "layer1_frozen_policies.csv": "2b2c998563d5da24c3adf1746d9d9f7cae1ee747f7824a35b1b68a23df303554",
-    "layer2_metric_scores.csv": "5234bb7fdcc45301e4fcea947c374a1ff4230114a13b9cc5a2ac12a8f428d5b8",
-    "layer2_metric_scores_by_seed.csv": "236534042124a3a719158361d15bb2704bd35eaf938315b7774497cf762e46b7",
-    "layer2_predictions.csv": "0d4fb7442b006fc9c9ac8f3c1cf2f50752ab7ad4f24c9177878f051e07cbdc85",
-    "layer2_selection_accuracy.csv": "83042378fa8ecca91fc97e83c7dff80cc01e8cffb94f5dbee1986dca218eb615"
+    "layer1_frozen_policies.csv": "db7c55e63e3c4f06df954531b240e951783ad44ca548fdd84f4a8938d576aab7",
+    "layer2_metric_scores.csv": "5d311a725749dcdbec219517ceb33adb292d60af9c9b1d301b02fcfcfefff3cc",
+    "layer2_metric_scores_by_seed.csv": "a945e761736fe7bbf24ab96343ffb1672de3c8c892f3a9dd0d96a35a1750911d",
+    "layer2_predictions.csv": "d70250782def03e0e39918ebe70c743254c0fdc6edbe6a84fe638b3d7e03744c",
+    "layer2_selection_accuracy.csv": "641a223d0bf69b02eba805640ebae965d1ec0a3e95d8cfc40b8fdeb5c6a34748"
+  },
+  "method_11": {
+    "metric": "mean_pairwise_response",
+    "R_ij": "pairwise_response_contrast",
+    "aggregation": "mean over region pairs within each partition seed, then mean over seeds",
+    "layer1_threshold": 0.01627860007619981,
+    "layer1_direction": "higher",
+    "correct": 1,
+    "total": 12,
+    "full_grid_accuracy": 0.08333333333333333,
+    "replaced_column": "affine_response_contrast_ratio"
   }
 }
