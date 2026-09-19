@@ -159,7 +159,7 @@ long-horizon protocol.
 | Margin-radius ratio | 4 | 8 | 50.0% |
 | Tangent contrast (`d=8`) | 4 | 8 | 50.0% |
 | Action-residual velocity eta-squared | 4 | 8 | 50.0% |
-| Affine response contrast | 4 | 8 | 50.0% |
+| Mean pairwise response (method 11) | 3 | 8 | 37.5% |
 | Boundary-local Jacobian Bures | 4 | 8 | 50.0% |
 | Jacobian cosine distance | 4 | 8 | 50.0% |
 | k-NN purity | 3 | 8 | 37.5% |

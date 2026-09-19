@@ -15,7 +15,7 @@ LAYER1_THRESHOLD_SOURCE="K4_excluding_pusht_balanced_accuracy"
 METRICS=("normalized_cluster_entropy","eigengap_after_k","prototype_distance_ratio",
 "knn_purity","margin_radius_ratio_mean","tangent_contrast_mean_d8","curvature_tail_mean_d8",
 "flow_persistence_h10","latent_velocity_eta2","action_residual_velocity_eta2",
-"affine_response_contrast_ratio","minimum_pairwise_response","pairwise_uniformity_min_over_mean",
+"mean_pairwise_response","minimum_pairwise_response","pairwise_uniformity_min_over_mean",
 "response_centroid_spearman","response_boundary_spearman","boundary_min_jacobian_bures_distance",
 "jacobian_bures_distance","jacobian_cosine_distance","jacobian_log_scale_distance",
 "jacobian_subspace_chordal_distance","check1_retained_safety_fraction","check2_prominence_ratio")
@@ -31,6 +31,11 @@ def args():
  p.add_argument("--refresh-bures-aggregate-calibration",action="store_true",help="Recalibrate all-pairs Bures threshold on existing aggregate validation CSVs.")
  return p.parse_args()
 def ints(s): return tuple(map(int,filter(None,s.split(","))))
+def read_csv(path,**kw): return pd.read_csv(path,float_precision="round_trip",**kw)
+def normalize_raw_scores(raw):
+ if "affine_response_contrast_ratio" in raw.columns and "mean_pairwise_response" not in raw.columns:
+  raw=raw.rename(columns={"affine_response_contrast_ratio":"mean_pairwise_response"})
+ return raw
 def gate(repo,t,k): return repo/f"experiments/{t}/results/auto_gate_complete_k{k}/auto/partition/manifest.json"
 def root(repo,t,k,s):
  if k in (2,4): return repo/f"experiments/{t}/matrix_k{k}/partitions/spectral/seed{s}"
@@ -136,7 +141,7 @@ def task_rows(repo,t,ks,seeds,a):
    ga=json.loads(gate(repo,t,k).read_text())["method_metadata"]["automatic_gate"]
    rows.append(dict(task=t,num_clusters=k,partition_seed=s,normalized_cluster_entropy=float(-(fractions*np.log(fractions)).sum()/np.log(k)),eigengap_after_k=eig,prototype_distance_ratio=pr,
     knn_purity=am[s][0],margin_radius_ratio_mean=am[s][1],tangent_contrast_mean_d8=am[s][2],curvature_tail_mean_d8=am[s][3],flow_persistence_h10=flow,latent_velocity_eta2=veta[s],action_residual_velocity_eta2=reta[s],
-    affine_response_contrast_ratio=float(pairs.mean()),minimum_pairwise_response=float(pairs.min()),pairwise_uniformity_min_over_mean=float(pairs.min()/pairs.mean()),response_centroid_spearman=float(spearmanr(pairs,cents).statistic) if len(pairs)>1 else np.nan,response_boundary_spearman=float(spearmanr(pairs,bounds).statistic) if len(pairs)>1 else np.nan,boundary_min_jacobian_bures_distance=bb,jacobian_bures_distance=float(jacs[:,3].min()),jacobian_cosine_distance=float(jacs[:,0].min()),jacobian_log_scale_distance=float(jacs[:,1].min()),jacobian_subspace_chordal_distance=float(jacs[:,2].min()),check1_retained_safety_fraction=float(ga["retained_safety_fraction"]),check2_prominence_ratio=float(ga["robust_residual_gap"]/ga["background_threshold"])))
+    mean_pairwise_response=float(pairs.mean()),minimum_pairwise_response=float(pairs.min()),pairwise_uniformity_min_over_mean=float(pairs.min()/pairs.mean()),response_centroid_spearman=float(spearmanr(pairs,cents).statistic) if len(pairs)>1 else np.nan,response_boundary_spearman=float(spearmanr(pairs,bounds).statistic) if len(pairs)>1 else np.nan,boundary_min_jacobian_bures_distance=bb,jacobian_bures_distance=float(jacs[:,3].min()),jacobian_cosine_distance=float(jacs[:,0].min()),jacobian_log_scale_distance=float(jacs[:,1].min()),jacobian_subspace_chordal_distance=float(jacs[:,2].min()),check1_retained_safety_fraction=float(ga["retained_safety_fraction"]),check2_prominence_ratio=float(ga["robust_residual_gap"]/ga["background_threshold"])))
   print(f"completed {t} K={k}",flush=True)
  return rows
 
@@ -157,7 +162,7 @@ def layer1_metric_values(repo,screen,metric):
  return [float(screen.loc[metric,t]) for t in LAYER1_CALIBRATION_TASKS]
 
 def benchmark(repo,raw,out):
- screen=pd.read_csv(repo/"experiments/control_matrix/assets/lewm_k4_geometry_screen/metric_screen_summary.csv").set_index("metric"); targets=pd.read_csv(repo/"experiments/control_matrix/assets/lewm_k4_geometry_screen/frozen_bures_gate_validation.csv"); l1=targets[targets.num_clusters.eq(4)].set_index("task"); l2=targets[targets.num_clusters.isin((2,3))][["task","num_clusters","global_mean_percent","regional_mean_percent","delta_regional_minus_global_pp","point_estimate_winner"]]
+ screen=read_csv(repo/"experiments/control_matrix/assets/lewm_k4_geometry_screen/metric_screen_summary.csv").set_index("metric"); targets=read_csv(repo/"experiments/control_matrix/assets/lewm_k4_geometry_screen/frozen_bures_gate_validation.csv"); l1=targets[targets.num_clusters.eq(4)].set_index("task"); l2=targets[targets.num_clusters.isin((2,3))][["task","num_clusters","global_mean_percent","regional_mean_percent","delta_regional_minus_global_pp","point_estimate_winner"]]
  scores=raw.groupby(["task","num_clusters"],as_index=False)[list(METRICS)].mean(numeric_only=True); details=l2.merge(scores,on=["task","num_clusters"],validate="one_to_one"); policies=[]; bth=float(targets.frozen_bures_threshold.dropna().unique()[0])
  labels=[l1.loc[t,"point_estimate_winner"] for t in LAYER1_CALIBRATION_TASKS]
  for metric in METRICS:
@@ -182,7 +187,7 @@ def _acc(frame,pred_col):
 
 def refresh_bures_aggregate_calibration(repo,out):
  assets=repo/"experiments/control_matrix/assets/lewm_bures_aggregate_validation"; out.mkdir(parents=True,exist_ok=True)
- validation=pd.read_csv(assets/"aggregate_bures_validation.csv"); by_seed=pd.read_csv(assets/"aggregate_bures_by_seed.csv")
+ validation=read_csv(assets/"aggregate_bures_validation.csv"); by_seed=read_csv(assets/"aggregate_bures_by_seed.csv")
  weakest_th=float(json.loads((repo/"experiments/control_matrix/assets/lewm_k4_geometry_screen/frozen_bures_gate_policy.json").read_text())["frozen_bures_threshold"])
  dev_mask=validation["partition_method"].eq("spectral")&validation["num_clusters"].eq(4)&validation["task"].isin(LAYER1_CALIBRATION_TASKS)
  dev=validation.loc[dev_mask]
@@ -205,7 +210,7 @@ def main():
  if a.output_dir is None: raise SystemExit("--output-dir is required unless using --refresh-bures-aggregate-calibration")
  out=a.output_dir.resolve(); out.mkdir(parents=True,exist_ok=True)
  if a.raw_scores_csv is not None:
-  raw=pd.read_csv(a.raw_scores_csv.resolve())
+  raw=normalize_raw_scores(read_csv(a.raw_scores_csv.resolve()))
  else:
   faiss.omp_set_num_threads(a.cpu_threads); rows=[]
   for t in filter(None,a.tasks.split(",")): rows+=task_rows(repo,t,ints(a.clusters),ints(a.partition_seeds),a)
