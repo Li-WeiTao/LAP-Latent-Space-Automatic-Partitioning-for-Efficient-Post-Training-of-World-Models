@@ -1,0 +1,13 @@
+{
+  "algorithm": "random_voronoi",
+  "num_clusters": 4,
+  "seed": 2,
+  "prototype_rows": [
+    691207,
+    1939546,
+    253115,
+    605807
+  ],
+  "optimized": false,
+  "routing": "zscore_l2_spherical_voronoi"
+}

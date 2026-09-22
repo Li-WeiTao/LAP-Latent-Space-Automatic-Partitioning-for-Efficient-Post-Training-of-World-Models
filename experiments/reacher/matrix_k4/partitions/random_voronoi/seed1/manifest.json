@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "dataset": "reacher",
+  "method": "random_voronoi",
+  "selected_method": "random_voronoi",
+  "partition_seed": 1,
+  "num_clusters": 4,
+  "cluster_counts": [
+    453122,
+    494723,
+    568389,
+    482448
+  ],
+  "cluster_fractions": [
+    0.22671040215502017,
+    0.24752461872373893,
+    0.28438190767715926,
+    0.24138307144408164
+  ],
+  "cache_stats": {
+    "cache": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/reacher/results/auto_gate_complete_k3/preparation/embedding_cache.npz",
+    "num_transitions": 1674000,
+    "num_expanded_latents": 6696000,
+    "num_unique_timesteps": 1998682,
+    "discarded_repeated_window_slots": 4697318,
+    "duplicate_policy": "stable_first_occurrence_per_timestep",
+    "latent_dim": 192,
+    "frameskip": 5
+  },
+  "latent_cache_sha256": "1c50d4b82b1a333fd54a731e7ffb4b2ec2c5bb9e5136b3a60036a498a8c9b2df",
+  "data_file": null,
+  "method_metadata": {
+    "algorithm": "random_voronoi",
+    "num_clusters": 4,
+    "seed": 1,
+    "prototype_rows": [
+      1509338,
+      1022967,
+      1899674,
+      945752
+    ],
+    "optimized": false,
+    "routing": "zscore_l2_spherical_voronoi"
+  },
+  "elapsed_sec": 34.97676312783733
+}

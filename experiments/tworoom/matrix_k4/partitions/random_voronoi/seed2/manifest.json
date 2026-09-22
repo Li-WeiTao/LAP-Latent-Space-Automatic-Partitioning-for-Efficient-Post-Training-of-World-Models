@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "dataset": "tworoom",
+  "method": "random_voronoi",
+  "selected_method": "random_voronoi",
+  "partition_seed": 2,
+  "num_clusters": 4,
+  "cluster_counts": [
+    205839,
+    180931,
+    300604,
+    222349
+  ],
+  "cluster_fractions": [
+    0.2262655775439337,
+    0.19888581469304392,
+    0.3304346487886972,
+    0.24441395897432516
+  ],
+  "cache_stats": {
+    "cache": "/data/sicong/weitao/le-wm/experiments/real_gauge_drift/results/tworoom_latent_spectral_spectral_M20000_k30_P16_seed0_trainseed0/P_train_global_merged_embeddings.npz",
+    "num_transitions": 693728,
+    "num_expanded_latents": 2774912,
+    "num_unique_timesteps": 909723,
+    "discarded_repeated_window_slots": 1865189,
+    "duplicate_policy": "stable_first_occurrence_per_timestep",
+    "latent_dim": 192,
+    "frameskip": 5
+  },
+  "latent_cache_sha256": "2d9f3c42fe28a01c07b5b8058cb5054c20ec4e2bc207e42ef3c7f0afb54cefcf",
+  "data_file": null,
+  "method_metadata": {
+    "algorithm": "random_voronoi",
+    "num_clusters": 4,
+    "seed": 2,
+    "prototype_rows": [
+      271544,
+      761959,
+      99437,
+      237994
+    ],
+    "optimized": false,
+    "routing": "zscore_l2_spherical_voronoi"
+  },
+  "elapsed_sec": 14.361316260881722
+}
