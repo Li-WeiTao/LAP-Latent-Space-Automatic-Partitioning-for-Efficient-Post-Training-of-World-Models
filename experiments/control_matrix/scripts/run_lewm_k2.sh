@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# LeWM spectral-only partitioning and post-training for all paper tasks.
+# LeWM partitioning and post-training for all paper tasks.
+# METHODS defaults to spectral; kmeanspp uses the same matched protocol.
 # K=2 remains the default; set NUM_CLUSTERS to reuse the identical protocol
 # for a predeclared resolution sensitivity run such as K=4.
 # Global is unchanged from K=3 and is intentionally not retrained here.
@@ -25,6 +26,8 @@ PARTITION_SEEDS="${PARTITION_SEEDS:-0,1,2}"
 EVAL_SEEDS="${EVAL_SEEDS:-0,1,2,3,4}"
 TASKS="${TASKS:-tworoom,pusht,reacher,cube}"
 RUN_ID="${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ)}"
+METHODS="${METHODS:-spectral}"
+BACKGROUND="${BACKGROUND:-1}"
 [[ "$NUM_CLUSTERS" =~ ^[2-9][0-9]*$ ]] || {
   echo "NUM_CLUSTERS must be an integer of at least 2" >&2
   exit 2
@@ -151,7 +154,7 @@ PY
   {
     echo "task=$task"
     echo "num_clusters=$NUM_CLUSTERS"
-    echo "methods=spectral"
+    echo "methods=$METHODS"
     echo "train_seeds=$TRAIN_SEEDS"
     echo "partition_seeds=$PARTITION_SEEDS"
     echo "source_cache=$source_abs"
@@ -159,7 +162,7 @@ PY
     echo "global_policy=reuse_k3"
     echo "evaluation_policy=not_launched"
     echo "git_commit=$(git rev-parse HEAD)"
-  } >"$WORK_ROOT/manifests/${K_TAG}_training.env"
+  } >"$WORK_ROOT/manifests/${K_TAG}$([[ $METHODS == spectral ]] || printf '_%s' "${METHODS//,/_}")_training.env"
 }
 
 run_task() {
@@ -173,23 +176,30 @@ run_task() {
     CACHE_DIR=/data/sicong/weitao/.stable_worldmodel WORK_ROOT="$WORK_ROOT" \
     PYTHON="$PYTHON" GPU_IDS="$GPU_IDS" CPU_THREADS="$CPU_THREADS" \
     TRAIN_SEEDS="$TRAIN_SEEDS" PARTITION_SEEDS="$PARTITION_SEEDS" \
-    EVAL_SEEDS="$EVAL_SEEDS" METHODS=spectral NUM_CLUSTERS="$NUM_CLUSTERS" \
+    EVAL_SEEDS="$EVAL_SEEDS" METHODS="$METHODS" NUM_CLUSTERS="$NUM_CLUSTERS" \
     SKIP_JOINT=1 SKIP_GLOBAL=1 SKIP_OFFICIAL=1 TASK_RETRIES=1 \
     START_STAGE=partition END_STAGE=training RUN_ID="$task_run_id" \
     bash experiments/control_matrix/scripts/run_lewm_matrix_parallel.sh
   echo "[lewm-k] done K=$NUM_CLUSTERS task=$task"
 }
 
-{
+orchestrate() {
   echo "[lewm-k] repo=$REPO_ROOT"
   echo "[lewm-k] commit=$(git rev-parse HEAD)"
-  echo "[lewm-k] K=$NUM_CLUSTERS gpus=$GPU_IDS tasks=$TASKS"
+  echo "[lewm-k] K=$NUM_CLUSTERS methods=$METHODS gpus=$GPU_IDS tasks=$TASKS"
   IFS=, read -r -a task_list <<<"$TASKS"
   for task in "${task_list[@]}"; do
     run_task "$task"
   done
   echo "[lewm-k] complete K=$NUM_CLUSTERS"
-} >>"$ORCH_LOG" 2>&1 &
+}
+
+if [[ "$BACKGROUND" == 0 ]]; then
+  echo "$$" >"$ORCH_PID"
+  orchestrate >>"$ORCH_LOG" 2>&1
+  exit $?
+fi
+orchestrate >>"$ORCH_LOG" 2>&1 &
 
 pid=$!
 echo "$pid" >"$ORCH_PID"

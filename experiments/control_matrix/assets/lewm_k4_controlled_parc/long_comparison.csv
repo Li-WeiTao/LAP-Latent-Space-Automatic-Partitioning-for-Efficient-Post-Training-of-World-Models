@@ -1,0 +1,5 @@
+task,model,method,num_clusters,bures_mean,frozen_threshold,regional_mean_percent,global_mean_percent,delta_regional_minus_global_pp,regional_sd_across_train_seeds,global_sd_across_train_seeds,predicted_branch,point_estimate_winner,selection_correct,near_zero_0p4pp,paired_starts_verified
+tworoom,LeWM,controlled_parc,4,0.6865519061854847,0.508947854338762,58.977777777777774,58.13333333333333,0.8444444444444414,0.8572134009771525,1.22202018532156,Regional,Regional,True,False,True
+pusht,LeWM,controlled_parc,4,0.36823774254954217,0.508947854338762,38.53333333333333,40.4,-1.8666666666666671,0.3999999999999986,0.3999999999999986,Global,Global,True,False,True
+reacher,LeWM,controlled_parc,4,0.5295819874067301,0.508947854338762,78.08888888888889,78.66666666666667,-0.5777777777777828,0.33554819712314704,1.0066445913694335,Regional,Global,False,False,True
+cube,LeWM,controlled_parc,4,0.42306893374062043,0.508947854338762,50.22222222222222,48.13333333333333,2.0888888888888886,0.5551109331909667,0.9237604307034021,Global,Regional,False,False,True

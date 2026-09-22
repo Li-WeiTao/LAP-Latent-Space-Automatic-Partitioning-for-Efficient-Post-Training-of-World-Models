@@ -35,6 +35,9 @@ class VoronoiRouter:
 
     def route(self, latents: np.ndarray) -> np.ndarray:
         transformed = self.transform(latents)
+        if self.artifact.metadata.get('routing') == 'zscore_l2_gmm_full_posterior':
+            from .gaussian_mixture import route_numpy
+            return route_numpy(transformed, self.artifact.metadata['gmm_parameters'])
         original_shape = transformed.shape[:-1]
         flat = transformed.reshape(-1, transformed.shape[-1])
         nearest = np.argmax(flat @ self.prototypes.T, axis=1)

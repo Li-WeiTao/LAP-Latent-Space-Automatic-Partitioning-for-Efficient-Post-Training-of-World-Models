@@ -1,0 +1,139 @@
+{
+  "repository_commit": "17414055d96f2378cdae09265fc6592a646bfff5",
+  "model": "LeWM",
+  "method": "gmm",
+  "num_clusters": 4,
+  "partition_seeds": [
+    0,
+    1,
+    2
+  ],
+  "training_seeds": [
+    0,
+    42,
+    625
+  ],
+  "evaluation_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "goal_offset_steps": 50,
+  "eval_budget": 50,
+  "num_eval": 50,
+  "threshold": 0.508947854338762,
+  "threshold_policy": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/lewm_k4_geometry_screen/frozen_bures_gate_policy.json",
+  "threshold_policy_sha256": "61121b6953c90c446bc23af473e936b613f530f5ef3f7afaac7ccb319b155599",
+  "threshold_refitted": false,
+  "rule": "Regional iff mean weakest-pair Bures > frozen threshold; no Check 1",
+  "aggregation": "weakest pair within each partition seed, then arithmetic mean across partition seeds",
+  "scope": "partition-method transfer at development K; excluded from original Layers 2+3 totals",
+  "environment": {
+    "host": "lenovo",
+    "python": "3.10.9 (main, Mar  1 2023, 18:23:06) [GCC 11.2.0]",
+    "numpy": "2.2.6"
+  },
+  "implementation_sha256": {
+    "analyze_partition_variant.py": "9d82d5b65ee2224f4c7c66d655cdb1956d823e78da9749f9987865d23c328886",
+    "analyze_fixed_k_response_geometry.py": "f680cf7f338f97dc372b190039b783b221222a74ad460d79c28f7b94d98aa8dd",
+    "fit_partition.py": "5c0f8209c7b776f9904b7de2c522c46ddbdf48eb47c144252d119203ce6728f2",
+    "train_predictors.py": "64e2f722ec4440edec6c4082d7b880fc98512952634c8d2060388bc5c3906608",
+    "scripts/run_lewm_partition_variant.sh": "9f5ca37aacb0f097642240cffc1f46de1fba1aeeb104bebf38091db7fca480d1",
+    "scripts/run_lewm_k2.sh": "17b6c3739089e538519a861502399c5553e96b6ff9ef412ff537394e11358598",
+    "scripts/run_lewm_matrix.sh": "a377ec588e4cb5a226f8fec7d7f5601eee9eeecc86925f5b731b4d40339f6330",
+    "scripts/run_lewm_matrix_parallel.sh": "4dd53b645fe97e5572da62eed795951bc578c818e3f8dcbc48ea43a27f6b9dd8",
+    "scripts/wait_for_free_gpu.sh": "a6dcfac0420a33b97da88d8243cd115f38046c4fa28f5312a633fced1f964b0f"
+  },
+  "routing_implementation_sha256": {
+    "lap/routing/voronoi.py": "a8bfb32b0dc118a4cfbd56d12c2e459d0d4967946d5aed7923b97b1515a3945a",
+    "lap/routing/gaussian_mixture.py": "111bcc6d7eb0596292efc6a8f503cadbfa644db7bf18a8fcdc0d2ecd26c0cd5e",
+    "experiments/tworoom/tworoom_success_rate_eval.py": "961fbcab5c85cb5cdc31586278ce957a179c33b2a3e8fa8aed51ad8575b98d67"
+  },
+  "accuracy": {
+    "correct": 3,
+    "total": 4,
+    "ties": 0
+  },
+  "files_sha256": {
+    "long_comparison.csv": "c998f25ebbe1460bfa47b1041b1059bfea8382b33e1e3d4cdbcfaa379aed21d9",
+    "long_raw.csv": "ac1a408763419809d19d8c6da5bd91994dff167f4d00146323eb78b65f6329ea",
+    "bures_by_seed.csv": "13cbdaa29cfc8468864c01bed848b2b4225aab58de61ab30e51550d6cb1403f5",
+    "bures_pair_metrics.csv": "87f8d0aeb03073d9747f6422ecd2af9147167dd91bf5dcc34d1b434249f8796f"
+  },
+  "rows": [
+    {
+      "task": "tworoom",
+      "model": "LeWM",
+      "method": "gmm",
+      "num_clusters": 4,
+      "bures_mean": 0.7039529692066876,
+      "frozen_threshold": 0.508947854338762,
+      "regional_mean_percent": 57.82222222222222,
+      "global_mean_percent": 58.13333333333333,
+      "delta_regional_minus_global_pp": -0.31111111111111,
+      "regional_sd_across_train_seeds": 0.7698003589195025,
+      "global_sd_across_train_seeds": 1.22202018532156,
+      "predicted_branch": "Regional",
+      "point_estimate_winner": "Global",
+      "selection_correct": false,
+      "near_zero_0p4pp": true,
+      "paired_starts_verified": true
+    },
+    {
+      "task": "pusht",
+      "model": "LeWM",
+      "method": "gmm",
+      "num_clusters": 4,
+      "bures_mean": 0.47074572683254196,
+      "frozen_threshold": 0.508947854338762,
+      "regional_mean_percent": 38.666666666666664,
+      "global_mean_percent": 40.4,
+      "delta_regional_minus_global_pp": -1.7333333333333343,
+      "regional_sd_across_train_seeds": 0.40000000000000213,
+      "global_sd_across_train_seeds": 0.3999999999999986,
+      "predicted_branch": "Global",
+      "point_estimate_winner": "Global",
+      "selection_correct": true,
+      "near_zero_0p4pp": false,
+      "paired_starts_verified": true
+    },
+    {
+      "task": "reacher",
+      "model": "LeWM",
+      "method": "gmm",
+      "num_clusters": 4,
+      "bures_mean": 0.48589617262216217,
+      "frozen_threshold": 0.508947854338762,
+      "regional_mean_percent": 76.93333333333334,
+      "global_mean_percent": 78.66666666666667,
+      "delta_regional_minus_global_pp": -1.7333333333333343,
+      "regional_sd_across_train_seeds": 1.3920408678547391,
+      "global_sd_across_train_seeds": 1.0066445913694335,
+      "predicted_branch": "Global",
+      "point_estimate_winner": "Global",
+      "selection_correct": true,
+      "near_zero_0p4pp": false,
+      "paired_starts_verified": true
+    },
+    {
+      "task": "cube",
+      "model": "LeWM",
+      "method": "gmm",
+      "num_clusters": 4,
+      "bures_mean": 0.6279659684759744,
+      "frozen_threshold": 0.508947854338762,
+      "regional_mean_percent": 51.15555555555556,
+      "global_mean_percent": 48.13333333333333,
+      "delta_regional_minus_global_pp": 3.0222222222222257,
+      "regional_sd_across_train_seeds": 0.6301087501670163,
+      "global_sd_across_train_seeds": 0.9237604307034021,
+      "predicted_branch": "Regional",
+      "point_estimate_winner": "Regional",
+      "selection_correct": true,
+      "near_zero_0p4pp": false,
+      "paired_starts_verified": true
+    }
+  ]
+}

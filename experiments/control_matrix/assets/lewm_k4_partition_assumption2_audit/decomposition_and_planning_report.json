@@ -1,0 +1,26 @@
+{
+  "analysis": "Exact affine-reference decomposition and descriptive prediction-to-planning alignment",
+  "repository_commit": "17414055d96f2378cdae09265fc6592a646bfff5",
+  "overall_n": 12,
+  "overall_pearson": 0.5154498199678992,
+  "overall_spearman": 0.43782904271146644,
+  "by_method": {
+    "spectral": {
+      "n": 4,
+      "pearson": 0.5947264970081632,
+      "spearman": 0.7999999999999999
+    },
+    "gmm": {
+      "n": 4,
+      "pearson": 0.6285820983576428,
+      "spearman": 0.632455532033676
+    },
+    "kmeanspp": {
+      "n": 4,
+      "pearson": 0.8186133450176108,
+      "spearman": 0.7999999999999999
+    }
+  },
+  "interpretation_limit": "Observed-response held-out affine gain is a proxy for one-step prediction structure, not the trained-neural risk difference in Assumption 5. Correlations are descriptive over 12 configurations.",
+  "elapsed_seconds": 151.06856298446655
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "analysis_name": "LeWM frozen 22-criterion partition-method transfer",
+  "repository_commit": "17414055d96f2378cdae09265fc6592a646bfff5",
+  "partition_method": "kmeanspp",
+  "num_clusters": 4,
+  "tasks": [
+    "tworoom",
+    "pusht",
+    "reacher",
+    "cube"
+  ],
+  "partition_seeds": [
+    0,
+    1,
+    2
+  ],
+  "criterion_count": 22,
+  "partition_specific_criterion_count": 19,
+  "task_graph_only_criteria": [
+    "check1_retained_safety_fraction",
+    "check2_prominence_ratio",
+    "eigengap_after_k"
+  ],
+  "threshold_refitted": false,
+  "policies_csv": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/lewm_layer2_22_criteria/layer1_frozen_policies.csv",
+  "policies_sha256": "0253b94efef268837d21c3e72a905b07f51bd00f4010c2161519bc369b632d7c",
+  "outcomes_csv": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/lewm_k4_kmeanspp/long_comparison.csv",
+  "outcomes_sha256": "cb39745dbedc8c07be6aa8a3ae2a17d0f621c277320519111dbd0bcc6082ae63",
+  "audit_dir": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/lewm_k4_geometry_screen/audit_cache",
+  "ridge": 1e-08,
+  "bures_reproduction_max_absolute_error": 0.0,
+  "files": {
+    "bures_reproduction_check.csv": "d9e82f394fbf55d6fedc26fbba4f3f9ee50f0791bb4c94ffd410e312f07f0863",
+    "criterion_predictions.csv": "03e64a100634c1a12b8b2e2e175e8af7a5ecba972d60f2d86881adc948a1927c",
+    "criterion_provenance.csv": "b1b3e9fbe5c929bfa440c926a6d649b646e4f621b42fcc8d784314101b6d042a",
+    "criterion_scores_by_seed.csv": "990cbbd5077272e51f6eec56d0b488fb605b53e83f5c33176ca955eaa9d12d0b",
+    "criterion_scores_by_task.csv": "422eec156d874e2a0040a0f8b6a795cbe14bcd45cddf3ce6b7d4250a2ebfd239",
+    "criterion_selection_accuracy.csv": "a6b7ec1a4f7f0093bd5e4f800a63c8101d68e7feeab90955f2c6086d7230e6ba"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "analysis_name": "LeWM frozen 22-criterion partition-method transfer",
+  "repository_commit": "17414055d96f2378cdae09265fc6592a646bfff5",
+  "partition_method": "controlled_parc",
+  "num_clusters": 4,
+  "tasks": [
+    "tworoom",
+    "pusht",
+    "reacher",
+    "cube"
+  ],
+  "partition_seeds": [
+    0,
+    1,
+    2
+  ],
+  "criterion_count": 22,
+  "partition_specific_criterion_count": 19,
+  "task_graph_only_criteria": [
+    "check1_retained_safety_fraction",
+    "check2_prominence_ratio",
+    "eigengap_after_k"
+  ],
+  "threshold_refitted": false,
+  "policies_csv": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/lewm_layer2_22_criteria/layer1_frozen_policies.csv",
+  "policies_sha256": "0253b94efef268837d21c3e72a905b07f51bd00f4010c2161519bc369b632d7c",
+  "outcomes_csv": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/lewm_k4_controlled_parc/long_comparison.csv",
+  "outcomes_sha256": "f0095f12bc124f1994c73cc8db2108a60d0930c1c769d3c9e1510963c416af7f",
+  "audit_dir": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/control_matrix/assets/lewm_k4_geometry_screen/audit_cache",
+  "ridge": 1e-08,
+  "bures_reproduction_max_absolute_error": 1.1102230246251565e-16,
+  "files": {
+    "bures_reproduction_check.csv": "3b8377585abfb8fc2126f1b2df99d7b0c205085813361c3d5540ebe6f96ef1a2",
+    "criterion_predictions.csv": "7922fa08f4bf44b5f03f06b1fe0ec7812ebbdb10eb8a29fb65603daa38478346",
+    "criterion_provenance.csv": "4d73a2c8c42f4ccd333866424ca2879ed5e20910329706e6b31377fa45e34c24",
+    "criterion_scores_by_seed.csv": "29648a86176b6ab8fd1f51d03576655c69c9a05b5d06c792c6d9ccfee76b4c4e",
+    "criterion_scores_by_task.csv": "e1b5f786a58efe36bd0f25fa0ba44934bc9ce45240d6341ab63a181814d06177",
+    "criterion_selection_accuracy.csv": "5ca8b98d5dd9e3a07d3bfeaf63504005769e125eeb75c40a747158e37cc6e895"
+  }
+}

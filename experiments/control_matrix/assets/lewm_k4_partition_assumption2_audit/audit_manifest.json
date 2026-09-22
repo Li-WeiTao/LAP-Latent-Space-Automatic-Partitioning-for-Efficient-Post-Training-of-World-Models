@@ -1,0 +1,302 @@
+{
+  "schema_version": 1,
+  "analysis": "LeWM K=4 partition-method audit of Assumption 2 regional first-order affine-response approximation",
+  "repository_commit": "17414055d96f2378cdae09265fc6592a646bfff5",
+  "tasks": [
+    "tworoom",
+    "pusht",
+    "reacher",
+    "cube"
+  ],
+  "methods": [
+    "spectral",
+    "gmm",
+    "kmeanspp"
+  ],
+  "num_clusters": 4,
+  "partition_seeds": [
+    0,
+    1,
+    2
+  ],
+  "split": {
+    "unit": "episode",
+    "num_folds": 5,
+    "heldout_fold": 0,
+    "hash": "(episode_id * 2654435761 + 1013904223) mod 5",
+    "fit_fraction": "approximately 0.8",
+    "heldout_fraction": "approximately 0.2"
+  },
+  "response": "next_latent_minus_current_latent",
+  "predictors": "global and regionwise affine functions of standardized action with intercept",
+  "action_standardization": "fit on training episodes only",
+  "ridge": 1e-08,
+  "transition_stride": 1,
+  "frameskip": 5,
+  "raw_transition_noise_caveat": "Held-out observed-response residual includes irreducible conditional variation; it is a comparative diagnostic and not a direct estimator of the population conditional-mean approximation bound delta_k.",
+  "input_partition_files": [
+    {
+      "task": "tworoom",
+      "method": "spectral",
+      "partition_seed": 0,
+      "path": "experiments/tworoom/matrix_k4/partitions/spectral/seed0/cluster_labels.npz",
+      "sha256": "9af17975be7547396c4429c0a6c1cd82d73e00590d75133209b746ee025a62af"
+    },
+    {
+      "task": "tworoom",
+      "method": "spectral",
+      "partition_seed": 1,
+      "path": "experiments/tworoom/matrix_k4/partitions/spectral/seed1/cluster_labels.npz",
+      "sha256": "e6b57fb5e7de702b891e57ebe88e17017cefcd42bdbfb5eed9274a3a05ed2b63"
+    },
+    {
+      "task": "tworoom",
+      "method": "spectral",
+      "partition_seed": 2,
+      "path": "experiments/tworoom/matrix_k4/partitions/spectral/seed2/cluster_labels.npz",
+      "sha256": "eed6577ce5a76597aa5f2959fe0036ccceff4603a4067e4975c442db1d1300a0"
+    },
+    {
+      "task": "tworoom",
+      "method": "gmm",
+      "partition_seed": 0,
+      "path": "experiments/tworoom/matrix_k4/partitions/gmm/seed0/cluster_labels.npz",
+      "sha256": "435172f98cba3275f5f40a0a00c2296789047dcffdafb860b19e0e1361a695d5"
+    },
+    {
+      "task": "tworoom",
+      "method": "gmm",
+      "partition_seed": 1,
+      "path": "experiments/tworoom/matrix_k4/partitions/gmm/seed1/cluster_labels.npz",
+      "sha256": "e3abc4d6ec126fef0f5d61c4990960f2847f4410f8030e506cc486e9c9d4372d"
+    },
+    {
+      "task": "tworoom",
+      "method": "gmm",
+      "partition_seed": 2,
+      "path": "experiments/tworoom/matrix_k4/partitions/gmm/seed2/cluster_labels.npz",
+      "sha256": "bdf7fddedd0771acdbd91aaf995b1ac4183e3714c9222ddfa1a537fbeefe1171"
+    },
+    {
+      "task": "tworoom",
+      "method": "kmeanspp",
+      "partition_seed": 0,
+      "path": "experiments/tworoom/matrix_k4/partitions/kmeanspp/seed0/cluster_labels.npz",
+      "sha256": "882992a8243ccf9da530bf4ad6374bfdfcaf3f6f1f06ecb8fde2cc3897cc99f4"
+    },
+    {
+      "task": "tworoom",
+      "method": "kmeanspp",
+      "partition_seed": 1,
+      "path": "experiments/tworoom/matrix_k4/partitions/kmeanspp/seed1/cluster_labels.npz",
+      "sha256": "bf21fe0796eb39b0b02e441c9548d8665326d6b19771e314d41240b5e4de3f7c"
+    },
+    {
+      "task": "tworoom",
+      "method": "kmeanspp",
+      "partition_seed": 2,
+      "path": "experiments/tworoom/matrix_k4/partitions/kmeanspp/seed2/cluster_labels.npz",
+      "sha256": "d4f415a3228ecf61a2471bc35579330d288ead390552e15ae6f85387dae605c1"
+    },
+    {
+      "task": "pusht",
+      "method": "spectral",
+      "partition_seed": 0,
+      "path": "experiments/pusht/matrix_k4/partitions/spectral/seed0/cluster_labels.npz",
+      "sha256": "f4db4802414e2f09395d37f21b439bc1682932ac35562ccca68a1f4dfe88211c"
+    },
+    {
+      "task": "pusht",
+      "method": "spectral",
+      "partition_seed": 1,
+      "path": "experiments/pusht/matrix_k4/partitions/spectral/seed1/cluster_labels.npz",
+      "sha256": "131413d600093c4e137e15cb4e909c4424f482ff4aa3ffb4505c8776a23e2b3a"
+    },
+    {
+      "task": "pusht",
+      "method": "spectral",
+      "partition_seed": 2,
+      "path": "experiments/pusht/matrix_k4/partitions/spectral/seed2/cluster_labels.npz",
+      "sha256": "c09e40cb97cca9082e802b1410f715bca299b0a4596707f89123cf3bc5875968"
+    },
+    {
+      "task": "pusht",
+      "method": "gmm",
+      "partition_seed": 0,
+      "path": "experiments/pusht/matrix_k4/partitions/gmm/seed0/cluster_labels.npz",
+      "sha256": "f7991ccfaafd9b12c9fe4aab2370fde68fd44e9fa75692a474cb737b46ccc238"
+    },
+    {
+      "task": "pusht",
+      "method": "gmm",
+      "partition_seed": 1,
+      "path": "experiments/pusht/matrix_k4/partitions/gmm/seed1/cluster_labels.npz",
+      "sha256": "59cdb5633401f0327362ef020de74ba72ae57a28c3013d1a7e574338e0255120"
+    },
+    {
+      "task": "pusht",
+      "method": "gmm",
+      "partition_seed": 2,
+      "path": "experiments/pusht/matrix_k4/partitions/gmm/seed2/cluster_labels.npz",
+      "sha256": "e308754f0b3f4a0c49aa4381c86ed81038bab4ff2f6d9a90d6910da1f74dd34c"
+    },
+    {
+      "task": "pusht",
+      "method": "kmeanspp",
+      "partition_seed": 0,
+      "path": "experiments/pusht/matrix_k4/partitions/kmeanspp/seed0/cluster_labels.npz",
+      "sha256": "9daaabae364f6678666e81e22fd12eb11ddf62b32a1e01a5fe4e7fb11b64463c"
+    },
+    {
+      "task": "pusht",
+      "method": "kmeanspp",
+      "partition_seed": 1,
+      "path": "experiments/pusht/matrix_k4/partitions/kmeanspp/seed1/cluster_labels.npz",
+      "sha256": "cf9fe16de5b5f9705caf7e7118cb71ef463f1aca83b3038f3efefd6ffd037475"
+    },
+    {
+      "task": "pusht",
+      "method": "kmeanspp",
+      "partition_seed": 2,
+      "path": "experiments/pusht/matrix_k4/partitions/kmeanspp/seed2/cluster_labels.npz",
+      "sha256": "c0908ad708a19d8bb1dfdb5f328576985c4bbc2f83e261f27f2e96b0239f6f7b"
+    },
+    {
+      "task": "reacher",
+      "method": "spectral",
+      "partition_seed": 0,
+      "path": "experiments/reacher/matrix_k4/partitions/spectral/seed0/cluster_labels.npz",
+      "sha256": "6a50646f27f64398fbbb774f0c5cce3e7e63ba0c6beb083bd9f3a595785009dd"
+    },
+    {
+      "task": "reacher",
+      "method": "spectral",
+      "partition_seed": 1,
+      "path": "experiments/reacher/matrix_k4/partitions/spectral/seed1/cluster_labels.npz",
+      "sha256": "f9f1c0b6b15f661c9cc33c6efc3c2900089b1826c0b213f7bedd6d1b21ff1349"
+    },
+    {
+      "task": "reacher",
+      "method": "spectral",
+      "partition_seed": 2,
+      "path": "experiments/reacher/matrix_k4/partitions/spectral/seed2/cluster_labels.npz",
+      "sha256": "66d71659e3b2b4d0b3c4266ffb163b904f29ddbb5ed1f98eec16d434dedd962b"
+    },
+    {
+      "task": "reacher",
+      "method": "gmm",
+      "partition_seed": 0,
+      "path": "experiments/reacher/matrix_k4/partitions/gmm/seed0/cluster_labels.npz",
+      "sha256": "4876c5f6f2121b53cf6bdfcccaf2f4b2eede10552642b19bf1835364e5306c99"
+    },
+    {
+      "task": "reacher",
+      "method": "gmm",
+      "partition_seed": 1,
+      "path": "experiments/reacher/matrix_k4/partitions/gmm/seed1/cluster_labels.npz",
+      "sha256": "d2d885c8a4241a37318386bb6033ef101973adb091eda61e04f38fbe1a58552a"
+    },
+    {
+      "task": "reacher",
+      "method": "gmm",
+      "partition_seed": 2,
+      "path": "experiments/reacher/matrix_k4/partitions/gmm/seed2/cluster_labels.npz",
+      "sha256": "b4bbcd58fd43673cd7b496a92b9c69332051fd89af25040059fc0015ac13f746"
+    },
+    {
+      "task": "reacher",
+      "method": "kmeanspp",
+      "partition_seed": 0,
+      "path": "experiments/reacher/matrix_k4/partitions/kmeanspp/seed0/cluster_labels.npz",
+      "sha256": "3d7b22c11cdc7a3b9ed251643687eb813b17c9dbcdb28aaa548e982d74260825"
+    },
+    {
+      "task": "reacher",
+      "method": "kmeanspp",
+      "partition_seed": 1,
+      "path": "experiments/reacher/matrix_k4/partitions/kmeanspp/seed1/cluster_labels.npz",
+      "sha256": "edb47ac105e4c94e3f1e519b338703dbd14c79a3c10108ce2238270f3cc97b68"
+    },
+    {
+      "task": "reacher",
+      "method": "kmeanspp",
+      "partition_seed": 2,
+      "path": "experiments/reacher/matrix_k4/partitions/kmeanspp/seed2/cluster_labels.npz",
+      "sha256": "39a5dae8efd445a1f875cc17dbfc542377b94e328a9083376481e601115fd3ec"
+    },
+    {
+      "task": "cube",
+      "method": "spectral",
+      "partition_seed": 0,
+      "path": "experiments/cube/matrix_k4/partitions/spectral/seed0/cluster_labels.npz",
+      "sha256": "15e75c5f51e3fb046a1579398829680d686a37dc9726594b1d2390acaa183123"
+    },
+    {
+      "task": "cube",
+      "method": "spectral",
+      "partition_seed": 1,
+      "path": "experiments/cube/matrix_k4/partitions/spectral/seed1/cluster_labels.npz",
+      "sha256": "47d52eac33bec167900fd935aea7c0df9f862f1c651f16f9b6bbc0f279c6f03a"
+    },
+    {
+      "task": "cube",
+      "method": "spectral",
+      "partition_seed": 2,
+      "path": "experiments/cube/matrix_k4/partitions/spectral/seed2/cluster_labels.npz",
+      "sha256": "624aedea8e4cdf2f4d08d02b6eb5e7b7ac3b3b13c995d5813ad2e5c86c7c7d93"
+    },
+    {
+      "task": "cube",
+      "method": "gmm",
+      "partition_seed": 0,
+      "path": "experiments/cube/matrix_k4/partitions/gmm/seed0/cluster_labels.npz",
+      "sha256": "001acc7f0926aebd8acff519bf7ac6149798dd6469202b5a5ee238dcb7ae0af3"
+    },
+    {
+      "task": "cube",
+      "method": "gmm",
+      "partition_seed": 1,
+      "path": "experiments/cube/matrix_k4/partitions/gmm/seed1/cluster_labels.npz",
+      "sha256": "af59c57a80b4723de85326d5c39438f108d8a0390f147c896373c54a5cda01d2"
+    },
+    {
+      "task": "cube",
+      "method": "gmm",
+      "partition_seed": 2,
+      "path": "experiments/cube/matrix_k4/partitions/gmm/seed2/cluster_labels.npz",
+      "sha256": "a2363502f323a03a3940f831a98300dd0dc1faa53a1a8738fce1451532a79ec2"
+    },
+    {
+      "task": "cube",
+      "method": "kmeanspp",
+      "partition_seed": 0,
+      "path": "experiments/cube/matrix_k4/partitions/kmeanspp/seed0/cluster_labels.npz",
+      "sha256": "4243b51de768ba536623cf529bfec72bd34242bf449f52f2551b1f5482acc886"
+    },
+    {
+      "task": "cube",
+      "method": "kmeanspp",
+      "partition_seed": 1,
+      "path": "experiments/cube/matrix_k4/partitions/kmeanspp/seed1/cluster_labels.npz",
+      "sha256": "7a26b6d3f54abe41f4df96f36938b22443046533acfcc453bf0765cfeca7381a"
+    },
+    {
+      "task": "cube",
+      "method": "kmeanspp",
+      "partition_seed": 2,
+      "path": "experiments/cube/matrix_k4/partitions/kmeanspp/seed2/cluster_labels.npz",
+      "sha256": "d8aa7d1eab7b399010e256f21a9ea1917fbff71e90b160e558497bb4a9c3a6fb"
+    }
+  ],
+  "outputs": [
+    "affine_response_residual_by_region.csv",
+    "affine_response_residual_by_seed.csv",
+    "affine_response_residual_summary.csv"
+  ],
+  "elapsed_seconds": 240.64453768730164,
+  "output_sha256": {
+    "affine_response_residual_by_region.csv": "396863d456c18060b6ebde8494f8b20b85f2639f8ce8571e8de293b52e362f4a",
+    "affine_response_residual_by_seed.csv": "041cb35de04db3022b70d16b62d74b1b10f156e4f5bf1f0bfd8e0b490e0dad4c",
+    "affine_response_residual_summary.csv": "e5c6f2275b36f67c3933506f433eda9a2e0d6d33f5f80390143d016849234b1a"
+  }
+}

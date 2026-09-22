@@ -1,0 +1,13 @@
+partition_method,task,num_clusters,partition_seed,jacobian_bures_distance
+kmeanspp,cube,3,0,0.41591726105609295
+kmeanspp,cube,3,1,0.4096789712980419
+kmeanspp,cube,3,2,0.30860037857328615
+kmeanspp,pusht,3,0,0.33501255578698724
+kmeanspp,pusht,3,1,0.34238087855811444
+kmeanspp,pusht,3,2,0.3472647378500602
+kmeanspp,reacher,3,0,0.5200432171220021
+kmeanspp,reacher,3,1,0.47428312799847183
+kmeanspp,reacher,3,2,0.4524398379280921
+kmeanspp,tworoom,3,0,0.5774642129897486
+kmeanspp,tworoom,3,1,0.7124467362697132
+kmeanspp,tworoom,3,2,0.707960239884189

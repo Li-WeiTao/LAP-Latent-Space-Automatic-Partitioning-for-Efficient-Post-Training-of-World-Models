@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "repository_commit": "4fe3e4ad52b03b0f0b4cea24669b1f594ea9ce9f",
+  "model": "Le-WM",
+  "num_clusters": 3,
+  "partition_methods": [
+    "kmeanspp",
+    "random_voronoi"
+  ],
+  "metric": "mean across partition seeds of the weakest-pair normalized Jacobian-Bures distance",
+  "threshold": 0.508947854338762,
+  "operator": ">",
+  "decision_rule": "Regional iff mean Bures is strictly greater than the frozen threshold; otherwise Global",
+  "accuracy": {
+    "point_estimate": {
+      "correct": 6,
+      "total": 8
+    },
+    "decisive_0p5pp_cells": {
+      "correct": 4,
+      "total": 6,
+      "inconclusive": 2
+    }
+  },
+  "output_sha256": {
+    "jacobian_bures_by_seed.csv": "11c76012d221232a9f65e69c2f4d760f478f911449331b91df4241f96528019b",
+    "frozen_threshold_validation.csv": "4380c2c2e6d454e5c6e61db9b51b2f2bd78f9385b18afc08c55bbc3cf97df0ee"
+  }
+}

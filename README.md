@@ -190,6 +190,30 @@ PYTHONPATH=. python experiments/control_matrix/analyze_layer2_metric_benchmark.p
   --output-dir experiments/control_matrix/assets/lewm_layer2_22_criteria
 ```
 
+### LeWM K=4 partition-seed stability across methods
+
+Using the same frozen latent cache and ordered samples within each task, we
+compare the saved deployment partitions from seeds `0,1,2`. Each task value is
+the mean adjusted Rand index (ARI) over seed pairs `0–1`, `0–2`, and `1–2`;
+the final column averages the four tasks equally. ARI is invariant to region-ID
+permutations. The rows are sorted by the four-task mean, not by planning success.
+The Random Voronoi K=4 partitions were generated for this audit with the
+existing parameterized partition entry point; no predictor training or
+evaluation was run.
+
+| Rank | Partition method | TwoRoom | PushT | Reacher | Cube | Four-task mean ARI |
+| ---: | --- | ---: | ---: | ---: | ---: | ---: |
+| 1 | Spectral | 0.934 | 0.613 | 0.814 | 0.615 | **0.744** |
+| 2 | K-means++ | 0.255 | 0.344 | 0.471 | 0.266 | **0.334** |
+| 3 | GMM | 0.347 | 0.246 | 0.199 | 0.490 | **0.321** |
+| 4 | Controlled PARC | 0.138 | 0.235 | 0.167 | 0.084 | **0.156** |
+| 5 | Random Voronoi | 0.020 | 0.027 | 0.014 | 0.008 | **0.018** |
+
+Random Voronoi is a deliberately unoptimized control. Low seed agreement alone
+does not establish whether any method captures dynamics or improves planning.
+The [full audit](experiments/control_matrix/assets/lewm_k4_controlled_parc/SEED_STABILITY.md)
+links the per-seed labels, pairwise ARIs, cache hashes, and analysis command.
+
 ### Jacobian-Bures ridge sensitivity at K=4
 
 The regional action-response regressions use a ridge coefficient only for

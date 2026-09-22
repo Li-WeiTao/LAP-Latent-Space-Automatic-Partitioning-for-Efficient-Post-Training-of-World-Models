@@ -102,11 +102,25 @@ partition_regions() {
     for pseed in "${partition_seeds[@]}"; do
       local out="$WORK_ROOT/partitions/$method/seed$pseed"
       [[ -f "$out/manifest.json" ]] && continue
+      local extra_args=()
+      if [[ "$method" == gmm ]]; then
+        extra_args=(--gmm-max-iter "${GMM_MAX_ITER:-100}")
+      elif [[ "$method" == controlled_parc || "$method" == controlled_parc_routable ]]; then
+        extra_args=(
+          --parc-fit-samples "${PARC_FIT_SAMPLES:-20000}"
+          --parc-alpha "${PARC_ALPHA:-1e-5}"
+          --parc-sigma "${PARC_SIGMA:-1.0}"
+          --parc-max-iter "${PARC_MAX_ITER:-15}"
+          --parc-cost-tol "${PARC_COST_TOL:-1e-4}"
+          --parc-kmeans-n-init "${PARC_KMEANS_N_INIT:-10}"
+          --parc-min-cluster-size "${PARC_MIN_CLUSTER_SIZE:-256}"
+        )
+      fi
       "$PYTHON" experiments/control_matrix/fit_partition.py \
         --method "$method" --dataset-name "$DATASET_NAME" \
         --data-file "$DATA_FILE" --latent-cache "$LATENT_CACHE" \
         --frameskip 5 --num-clusters "$NUM_CLUSTERS" --seed "$pseed" \
-        --gpu-id 0 --cpu-threads "$CPU_THREADS" --out-dir "$out"
+        --gpu-id 0 --cpu-threads "$CPU_THREADS" --out-dir "$out" "${extra_args[@]}"
     done
   done
 }

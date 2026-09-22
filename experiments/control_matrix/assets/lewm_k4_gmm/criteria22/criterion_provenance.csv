@@ -1,0 +1,23 @@
+metric,criterion_scope,recomputed_from_partition_labels,source
+normalized_cluster_entropy,partition_specific,True,gmm K=4 partition labels
+eigengap_after_k,task_graph_only,False,frozen K=4 task-level spectral graph
+prototype_distance_ratio,partition_specific,True,gmm K=4 partition labels
+knn_purity,partition_specific,True,gmm K=4 partition labels
+margin_radius_ratio_mean,partition_specific,True,gmm K=4 partition labels
+tangent_contrast_mean_d8,partition_specific,True,gmm K=4 partition labels
+curvature_tail_mean_d8,partition_specific,True,gmm K=4 partition labels
+flow_persistence_h10,partition_specific,True,gmm K=4 partition labels
+latent_velocity_eta2,partition_specific,True,gmm K=4 partition labels
+action_residual_velocity_eta2,partition_specific,True,gmm K=4 partition labels
+mean_pairwise_response,partition_specific,True,gmm K=4 partition labels
+minimum_pairwise_response,partition_specific,True,gmm K=4 partition labels
+pairwise_uniformity_min_over_mean,partition_specific,True,gmm K=4 partition labels
+response_centroid_spearman,partition_specific,True,gmm K=4 partition labels
+response_boundary_spearman,partition_specific,True,gmm K=4 partition labels
+boundary_min_jacobian_bures_distance,partition_specific,True,gmm K=4 partition labels
+jacobian_bures_distance,partition_specific,True,gmm K=4 partition labels
+jacobian_cosine_distance,partition_specific,True,gmm K=4 partition labels
+jacobian_log_scale_distance,partition_specific,True,gmm K=4 partition labels
+jacobian_subspace_chordal_distance,partition_specific,True,gmm K=4 partition labels
+check1_retained_safety_fraction,task_graph_only,False,frozen K=4 task-level spectral graph
+check2_prominence_ratio,task_graph_only,False,frozen K=4 task-level spectral graph

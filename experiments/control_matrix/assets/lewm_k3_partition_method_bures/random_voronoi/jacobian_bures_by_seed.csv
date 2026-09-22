@@ -1,0 +1,13 @@
+partition_method,task,num_clusters,partition_seed,jacobian_bures_distance
+random_voronoi,cube,3,0,0.2476905265345987
+random_voronoi,cube,3,1,0.27751440244602527
+random_voronoi,cube,3,2,0.2409957431279187
+random_voronoi,pusht,3,0,0.13603935557918836
+random_voronoi,pusht,3,1,0.16622935006538078
+random_voronoi,pusht,3,2,0.17512809616900854
+random_voronoi,reacher,3,0,0.4315704341859216
+random_voronoi,reacher,3,1,0.44713571420449133
+random_voronoi,reacher,3,2,0.5380163389857514
+random_voronoi,tworoom,3,0,0.8836628175792215
+random_voronoi,tworoom,3,1,0.7928724484523682
+random_voronoi,tworoom,3,2,0.6854741139058687

@@ -56,7 +56,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--method",
         required=True,
-        choices=("global", "random_voronoi", "kmeanspp", "spectral", "auto"),
+        choices=(
+            "global",
+            "random_voronoi",
+            "kmeanspp",
+            "gmm",
+            "controlled_parc",
+            "controlled_parc_routable",
+            "spectral",
+            "auto",
+        ),
     )
     parser.add_argument("--latent-cache", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, required=True)
@@ -77,6 +86,19 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--kmeans-max-iter", type=int, default=1000)
     parser.add_argument("--kmeans-rel-tol", type=float, default=1e-7)
     parser.add_argument("--kmeans-patience", type=int, default=10)
+    parser.add_argument("--gmm-fit-samples", type=int, default=20_000,
+                        help="Predeclared uniform training latent subset; 0 fits all unique latents.")
+    parser.add_argument("--gmm-max-iter", type=int, default=100)
+    parser.add_argument("--gmm-n-init", type=int, default=1)
+    parser.add_argument("--gmm-tol", type=float, default=1e-3)
+    parser.add_argument("--gmm-reg-covar", type=float, default=1e-6)
+    parser.add_argument("--parc-fit-samples", type=int, default=20_000)
+    parser.add_argument("--parc-alpha", type=float, default=1e-5)
+    parser.add_argument("--parc-sigma", type=float, default=1.0)
+    parser.add_argument("--parc-max-iter", type=int, default=15)
+    parser.add_argument("--parc-cost-tol", type=float, default=1e-4)
+    parser.add_argument("--parc-kmeans-n-init", type=int, default=10)
+    parser.add_argument("--parc-min-cluster-size", type=int, default=256)
     parser.add_argument("--num-landmarks", type=int, default=20_000)
     parser.add_argument("--knn", type=int, default=30)
     parser.add_argument("--prototypes-per-cluster", type=int, default=16)
@@ -381,6 +403,143 @@ def build_auto(
     return result.artifact, result.labels, method_metadata
 
 
+def build_gmm(transformed, mean, scale, args):
+    import sklearn
+    from sklearn.mixture import GaussianMixture
+    from threadpoolctl import threadpool_limits
+    if args.gmm_fit_samples < 0:
+        raise ValueError('gmm-fit-samples must be nonnegative')
+    count = min(args.gmm_fit_samples or len(transformed), len(transformed))
+    rows = np.sort(np.random.default_rng(args.seed).choice(len(transformed), count, replace=False))
+    model = GaussianMixture(n_components=args.num_clusters, covariance_type='full',
+                            tol=args.gmm_tol, reg_covar=args.gmm_reg_covar,
+                            max_iter=args.gmm_max_iter, n_init=args.gmm_n_init,
+                            init_params='kmeans', random_state=args.seed, verbose=2, verbose_interval=10)
+    print(f'[gmm] fit_samples={count} full_samples={len(transformed)} K={args.num_clusters} seed={args.seed}', flush=True)
+    with threadpool_limits(limits=args.cpu_threads):
+        model.fit(transformed[rows].astype(np.float64))
+    if not model.converged_:
+        raise RuntimeError('GMM did not converge; no automatic retry or silent parameter change')
+    parameters = dict(means=model.means_.tolist(), weights=model.weights_.tolist(),
+                      precisions_cholesky=model.precisions_cholesky_.tolist())
+    metadata = dict(algorithm='sklearn_gaussian_mixture', seed=args.seed,
+                    num_clusters=args.num_clusters, covariance_type='full',
+                    routing='zscore_l2_gmm_full_posterior', gmm_parameters=parameters,
+                    fit_samples=count, fit_sample_rows_sha256=hashlib.sha256(rows.tobytes()).hexdigest(),
+                    sampling='uniform without replacement from unique training latents',
+                    init_params='kmeans', n_init=args.gmm_n_init, max_iter=args.gmm_max_iter,
+                    tol=args.gmm_tol, reg_covar=args.gmm_reg_covar,
+                    sklearn_version=sklearn.__version__, converged=bool(model.converged_),
+                    n_iter=int(model.n_iter_), lower_bound=float(model.lower_bound_))
+    artifact = PartitionArtifact(prototypes=model.means_.astype(np.float32),
+                                 prototype_region_ids=np.arange(args.num_clusters),
+                                 mean=mean, scale=scale, metadata=metadata)
+    # Route through the serialized deployable parameters, not a nearest-centroid surrogate.
+    with threadpool_limits(limits=args.cpu_threads):
+        from lap.routing.gaussian_mixture import route_numpy
+        labels = route_numpy(transformed, parameters)
+        check = model.predict(transformed[:10000].astype(np.float64))
+    if not np.array_equal(labels[:10000], check):
+        raise RuntimeError('Serialized GMM router differs from sklearn predict')
+    return artifact, labels, metadata
+
+
+def _sample_controlled_windows(cache_path, count, seed, mean, scale):
+    with np.load(cache_path, allow_pickle=False) as cache:
+        total = int(len(cache["region_starts"]))
+    if count <= 0:
+        count = total
+    count = min(count, total)
+    rows = np.sort(
+        np.random.default_rng(seed).choice(total, size=count, replace=False)
+    )
+    # Open the compressed cache separately for the two large arrays so peak
+    # memory never contains full emb and full act_emb simultaneously.
+    with np.load(cache_path, allow_pickle=False) as cache:
+        emb = np.asarray(cache["emb"], dtype=np.float32)
+        state_raw = emb[rows, 0].copy()
+        response = (emb[rows, 1] - emb[rows, 0]).copy()
+    with np.load(cache_path, allow_pickle=False) as cache:
+        act = np.asarray(cache["act_emb"], dtype=np.float32)
+        action = act[rows, 0].copy()
+    state = l2((state_raw - mean) / scale)
+    action_mean = action.mean(axis=0, dtype=np.float64).astype(np.float32)
+    action_scale = action.std(axis=0, dtype=np.float64).astype(np.float32) + EPS
+    response_mean = response.mean(axis=0, dtype=np.float64).astype(np.float32)
+    response_scale = response.std(axis=0, dtype=np.float64).astype(np.float32) + EPS
+    action = (action - action_mean) / action_scale
+    response = (response - response_mean) / response_scale
+    stats = {
+        "fit_samples": count,
+        "total_training_windows": total,
+        "fit_sample_rows_sha256": hashlib.sha256(rows.tobytes()).hexdigest(),
+        "sampling": "uniform_without_replacement_from_training_windows",
+        "state_index": 0,
+        "action_embedding_index": 0,
+        "response_indices": [0, 1],
+        "action_mean_sha256": hashlib.sha256(action_mean.tobytes()).hexdigest(),
+        "action_scale_sha256": hashlib.sha256(action_scale.tobytes()).hexdigest(),
+        "response_mean_sha256": hashlib.sha256(response_mean.tobytes()).hexdigest(),
+        "response_scale_sha256": hashlib.sha256(response_scale.tobytes()).hexdigest(),
+    }
+    return state, action, response, stats
+
+
+def build_controlled_parc(transformed, mean, scale, args):
+    from lap.partition.controlled_parc import ControlledPARCConfig, fit_controlled_parc
+
+    if args.parc_fit_samples < 0:
+        raise ValueError("parc-fit-samples must be nonnegative")
+    state, action, response, sampling = _sample_controlled_windows(
+        args.latent_cache, args.parc_fit_samples, args.seed, mean, scale
+    )
+    prototypes, _, metadata = fit_controlled_parc(
+        state,
+        action,
+        response,
+        ControlledPARCConfig(
+            num_clusters=args.num_clusters,
+            seed=args.seed,
+            alpha=args.parc_alpha,
+            sigma=args.parc_sigma,
+            max_iter=args.parc_max_iter,
+            cost_tol=args.parc_cost_tol,
+            kmeans_n_init=args.parc_kmeans_n_init,
+            min_cluster_size=args.parc_min_cluster_size,
+            cpu_threads=args.cpu_threads,
+            routable_updates=(args.method == "controlled_parc_routable"),
+        ),
+    )
+    if args.method == "controlled_parc_routable" and not metadata["accepted_routable_updates"]:
+        raise RuntimeError(
+            "Routable Controlled PARC accepted no response-driven update; "
+            "refusing to save a renamed K-means partition or launch downstream training"
+        )
+    metadata.update(
+        {
+            **sampling,
+            "method_scope": "dynamics-informed partition; planning outcomes unused",
+            "data_scope": "training latent cache only; evaluation episodes unused",
+            "parc_reference": "Bemporad, IEEE TAC 2023, doi:10.1109/TAC.2022.3186812",
+        }
+    )
+    artifact = PartitionArtifact(
+        prototypes=prototypes,
+        prototype_region_ids=np.asarray(
+            metadata["router_prototype_region_ids"], dtype=np.int64
+        ),
+        mean=mean,
+        scale=scale,
+        metadata=metadata,
+    )
+    # ``transformed`` is already z-score/L2 normalized.  Route it directly;
+    # VoronoiRouter is reserved for raw latents and would transform twice here.
+    labels = artifact.prototype_region_ids[
+        (transformed @ l2(prototypes).T).argmax(axis=1)
+    ].astype(np.int64)
+    return artifact, labels, metadata
+
+
 def main() -> None:
     args = parse_args()
     if args.frameskip < 1 or (
@@ -412,6 +571,12 @@ def main() -> None:
         artifact, labels, method_meta = build_kmeans(
             transformed, mean, scale, args
         )
+    elif args.method == "gmm":
+        artifact, labels, method_meta = build_gmm(transformed, mean, scale, args)
+    elif args.method in ("controlled_parc", "controlled_parc_routable"):
+        artifact, labels, method_meta = build_controlled_parc(
+            transformed, mean, scale, args
+        )
     elif args.method == "spectral":
         if args.data_file is None:
             raise ValueError("--data-file is required for spectral episode sampling")
@@ -434,7 +599,12 @@ def main() -> None:
     counts = np.bincount(labels, minlength=artifact.num_regions)
     if np.any(counts == 0):
         raise RuntimeError(f"partition contains an empty region: {counts.tolist()}")
-    deployed_labels = VoronoiRouter(artifact).route(raw).astype(np.int64)
+    if args.method == 'gmm':
+        from threadpoolctl import threadpool_limits
+        with threadpool_limits(limits=args.cpu_threads):
+            deployed_labels = VoronoiRouter(artifact).route(raw).astype(np.int64)
+    else:
+        deployed_labels = VoronoiRouter(artifact).route(raw).astype(np.int64)
     if not np.array_equal(labels, deployed_labels):
         disagreement = float(np.mean(labels != deployed_labels))
         raise RuntimeError(

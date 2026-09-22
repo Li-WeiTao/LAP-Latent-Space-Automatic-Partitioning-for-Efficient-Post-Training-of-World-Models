@@ -1,0 +1,13 @@
+task,method,num_clusters,partition_seed,weakest_pair_bures,transition_count
+tworoom,controlled_parc,4,0,0.7325353314500928,891463
+tworoom,controlled_parc,4,1,0.7264143504458387,891463
+tworoom,controlled_parc,4,2,0.6007060366605228,891463
+pusht,controlled_parc,4,0,0.3950901409526283,2281233
+pusht,controlled_parc,4,1,0.3994354087251376,2281233
+pusht,controlled_parc,4,2,0.31018767797086055,2281233
+reacher,controlled_parc,4,0,0.6087652568613218,1980152
+reacher,controlled_parc,4,1,0.4231583261108992,1980152
+reacher,controlled_parc,4,2,0.5568223792479692,1980152
+cube,controlled_parc,4,0,0.4526689255376958,1980152
+cube,controlled_parc,4,1,0.321852972289238,1980152
+cube,controlled_parc,4,2,0.49468490339492754,1980152

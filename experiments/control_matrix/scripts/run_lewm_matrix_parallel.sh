@@ -110,7 +110,11 @@ run_stage() {
         attempt=1
         while true; do
           echo "[start] stage=$stage task=$name gpu=$gpu attempt=$attempt log=$log"
-          if env "${common_env[@]}" \
+          prefix=()
+          if [[ "$stage" == training && "${GUARD_LIGHT_TRAINING:-0}" == 1 ]]; then
+            prefix=(bash experiments/control_matrix/scripts/wait_for_gpu_headroom.sh "$gpu" --)
+          fi
+          if "${prefix[@]}" env "${common_env[@]}" \
             CUDA_VISIBLE_DEVICES="$gpu" GPU_ID= \
             PHASE="${task_phases[$index]}" \
             TRAIN_SEEDS="${task_train_seeds[$index]}" \

@@ -1,0 +1,608 @@
+{
+  "source": "saved deployment cluster_labels.npz; no partition fitting or evaluation",
+  "method": "kmeanspp",
+  "num_clusters": 4,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "tasks": {
+    "tworoom": {
+      "num_points": 909723,
+      "latent_cache_sha256": "2d9f3c42fe28a01c07b5b8058cb5054c20ec4e2bc207e42ef3c7f0afb54cefcf",
+      "seed_metadata": {
+        "0": {
+          "path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/matrix_k4/partitions/kmeanspp/seed0",
+          "cluster_counts": [
+            230392,
+            199267,
+            224555,
+            255509
+          ],
+          "fit_to_deploy_disagreement": null
+        },
+        "1": {
+          "path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/matrix_k4/partitions/kmeanspp/seed1",
+          "cluster_counts": [
+            210763,
+            232491,
+            227803,
+            238666
+          ],
+          "fit_to_deploy_disagreement": null
+        },
+        "2": {
+          "path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/tworoom/matrix_k4/partitions/kmeanspp/seed2",
+          "cluster_counts": [
+            210303,
+            226612,
+            240101,
+            232707
+          ],
+          "fit_to_deploy_disagreement": null
+        }
+      },
+      "pairs": {
+        "0-1": {
+          "adjusted_rand_index": 0.37054960773424644,
+          "hungarian_aligned_agreement": 0.6709097164741356,
+          "alignment": {
+            "2": 0,
+            "1": 1,
+            "0": 2,
+            "3": 3
+          },
+          "contingency": [
+            [
+              12694,
+              83170,
+              118166,
+              16362
+            ],
+            [
+              6107,
+              136216,
+              38007,
+              18937
+            ],
+            [
+              181594,
+              2706,
+              11254,
+              29001
+            ],
+            [
+              10368,
+              10399,
+              60376,
+              174366
+            ]
+          ]
+        },
+        "0-2": {
+          "adjusted_rand_index": 0.20170863168932596,
+          "hungarian_aligned_agreement": 0.48751543052115864,
+          "alignment": {
+            "2": 0,
+            "0": 1,
+            "3": 2,
+            "1": 3
+          },
+          "contingency": [
+            [
+              26753,
+              75397,
+              112666,
+              15576
+            ],
+            [
+              137088,
+              37719,
+              6695,
+              17765
+            ],
+            [
+              19324,
+              9160,
+              106657,
+              89414
+            ],
+            [
+              27138,
+              104336,
+              14083,
+              109952
+            ]
+          ]
+        },
+        "1-2": {
+          "adjusted_rand_index": 0.194018552798659,
+          "hungarian_aligned_agreement": 0.5534080154068876,
+          "alignment": {
+            "2": 0,
+            "0": 1,
+            "1": 2,
+            "3": 3
+          },
+          "contingency": [
+            [
+              13323,
+              12993,
+              110151,
+              74296
+            ],
+            [
+              125067,
+              23335,
+              55191,
+              28898
+            ],
+            [
+              29468,
+              144292,
+              48468,
+              5575
+            ],
+            [
+              42445,
+              45992,
+              26291,
+              123938
+            ]
+          ]
+        }
+      },
+      "ari_mean": 0.2554255974074105,
+      "ari_min": 0.194018552798659,
+      "ari_max": 0.37054960773424644
+    },
+    "pusht": {
+      "num_points": 2315671,
+      "latent_cache_sha256": "e9a90dee8d9b01561f1f64a8abd55861689eed6d6202b525eae6468b9f5fe407",
+      "seed_metadata": {
+        "0": {
+          "path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix_k4/partitions/kmeanspp/seed0",
+          "cluster_counts": [
+            549019,
+            673687,
+            497532,
+            595433
+          ],
+          "fit_to_deploy_disagreement": null
+        },
+        "1": {
+          "path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix_k4/partitions/kmeanspp/seed1",
+          "cluster_counts": [
+            502251,
+            703088,
+            571478,
+            538854
+          ],
+          "fit_to_deploy_disagreement": null
+        },
+        "2": {
+          "path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix_k4/partitions/kmeanspp/seed2",
+          "cluster_counts": [
+            512808,
+            633759,
+            490102,
+            679002
+          ],
+          "fit_to_deploy_disagreement": null
+        }
+      },
+      "pairs": {
+        "0-1": {
+          "adjusted_rand_index": 0.2938755158539031,
+          "hungarian_aligned_agreement": 0.6346860154141067,
+          "alignment": {
+            "0": 0,
+            "1": 1,
+            "3": 2,
+            "2": 3
+          },
+          "contingency": [
+            [
+              388206,
+              133270,
+              6248,
+              21295
+            ],
+            [
+              82351,
+              419932,
+              86095,
+              85309
+            ],
+            [
+              10946,
+              126279,
+              88928,
+              271379
+            ],
+            [
+              20748,
+              23607,
+              390207,
+              160871
+            ]
+          ]
+        },
+        "0-2": {
+          "adjusted_rand_index": 0.31003274935050074,
+          "hungarian_aligned_agreement": 0.6454634531416595,
+          "alignment": {
+            "0": 0,
+            "3": 1,
+            "2": 2,
+            "1": 3
+          },
+          "contingency": [
+            [
+              373956,
+              28525,
+              16398,
+              130140
+            ],
+            [
+              51367,
+              166798,
+              25810,
+              429712
+            ],
+            [
+              53866,
+              39375,
+              291952,
+              112339
+            ],
+            [
+              33619,
+              399061,
+              155942,
+              6811
+            ]
+          ]
+        },
+        "1-2": {
+          "adjusted_rand_index": 0.42844472953327695,
+          "hungarian_aligned_agreement": 0.738190787896899,
+          "alignment": {
+            "0": 0,
+            "3": 1,
+            "1": 2,
+            "2": 3
+          },
+          "contingency": [
+            [
+              352867,
+              61753,
+              4430,
+              83201
+            ],
+            [
+              99390,
+              90389,
+              24915,
+              488394
+            ],
+            [
+              57053,
+              448482,
+              41093,
+              24850
+            ],
+            [
+              3498,
+              33135,
+              419664,
+              82557
+            ]
+          ]
+        }
+      },
+      "ari_mean": 0.3441176649125603,
+      "ari_min": 0.2938755158539031,
+      "ari_max": 0.42844472953327695
+    },
+    "reacher": {
+      "num_points": 1998682,
+      "latent_cache_sha256": "1c50d4b82b1a333fd54a731e7ffb4b2ec2c5bb9e5136b3a60036a498a8c9b2df",
+      "seed_metadata": {
+        "0": {
+          "path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/reacher/matrix_k4/partitions/kmeanspp/seed0",
+          "cluster_counts": [
+            486091,
+            506388,
+            514184,
+            492019
+          ],
+          "fit_to_deploy_disagreement": null
+        },
+        "1": {
+          "path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/reacher/matrix_k4/partitions/kmeanspp/seed1",
+          "cluster_counts": [
+            485129,
+            490342,
+            524525,
+            498686
+          ],
+          "fit_to_deploy_disagreement": null
+        },
+        "2": {
+          "path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/reacher/matrix_k4/partitions/kmeanspp/seed2",
+          "cluster_counts": [
+            451123,
+            539181,
+            482442,
+            525936
+          ],
+          "fit_to_deploy_disagreement": null
+        }
+      },
+      "pairs": {
+        "0-1": {
+          "adjusted_rand_index": 0.3963590177887362,
+          "hungarian_aligned_agreement": 0.7089226800461504,
+          "alignment": {
+            "3": 0,
+            "0": 1,
+            "2": 2,
+            "1": 3
+          },
+          "contingency": [
+            [
+              21177,
+              77609,
+              12004,
+              375301
+            ],
+            [
+              317993,
+              503,
+              79394,
+              108498
+            ],
+            [
+              66543,
+              61185,
+              372572,
+              13884
+            ],
+            [
+              79416,
+              351045,
+              60555,
+              1003
+            ]
+          ]
+        },
+        "0-2": {
+          "adjusted_rand_index": 0.4305170454466427,
+          "hungarian_aligned_agreement": 0.7332562158462427,
+          "alignment": {
+            "1": 0,
+            "3": 1,
+            "2": 2,
+            "0": 3
+          },
+          "contingency": [
+            [
+              28015,
+              408312,
+              31037,
+              18727
+            ],
+            [
+              15353,
+              84182,
+              31140,
+              375713
+            ],
+            [
+              91655,
+              682,
+              365421,
+              56426
+            ],
+            [
+              316100,
+              46005,
+              54844,
+              75070
+            ]
+          ]
+        },
+        "1-2": {
+          "adjusted_rand_index": 0.5872050532946347,
+          "hungarian_aligned_agreement": 0.8154929098275764,
+          "alignment": {
+            "3": 0,
+            "0": 1,
+            "2": 2,
+            "1": 3
+          },
+          "contingency": [
+            [
+              42225,
+              2408,
+              9686,
+              430810
+            ],
+            [
+              344238,
+              111736,
+              6016,
+              28352
+            ],
+            [
+              34870,
+              0,
+              429826,
+              59829
+            ],
+            [
+              29790,
+              425037,
+              36914,
+              6945
+            ]
+          ]
+        }
+      },
+      "ari_mean": 0.4713603721766712,
+      "ari_min": 0.3963590177887362,
+      "ari_max": 0.5872050532946347
+    },
+    "cube": {
+      "num_points": 1998682,
+      "latent_cache_sha256": "94aa8b4371a0251cb7e3ad3519be041de2458d72671ece821edac51d640534e7",
+      "seed_metadata": {
+        "0": {
+          "path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/cube/matrix_k4/partitions/kmeanspp/seed0",
+          "cluster_counts": [
+            500249,
+            516280,
+            485998,
+            496155
+          ],
+          "fit_to_deploy_disagreement": null
+        },
+        "1": {
+          "path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/cube/matrix_k4/partitions/kmeanspp/seed1",
+          "cluster_counts": [
+            445223,
+            501297,
+            534937,
+            517225
+          ],
+          "fit_to_deploy_disagreement": null
+        },
+        "2": {
+          "path": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/cube/matrix_k4/partitions/kmeanspp/seed2",
+          "cluster_counts": [
+            509605,
+            499276,
+            459961,
+            529840
+          ],
+          "fit_to_deploy_disagreement": null
+        }
+      },
+      "pairs": {
+        "0-1": {
+          "adjusted_rand_index": 0.30710221749892497,
+          "hungarian_aligned_agreement": 0.6477158447416848,
+          "alignment": {
+            "3": 0,
+            "2": 1,
+            "0": 2,
+            "1": 3
+          },
+          "contingency": [
+            [
+              19197,
+              11779,
+              101273,
+              368000
+            ],
+            [
+              22396,
+              91145,
+              311202,
+              91537
+            ],
+            [
+              333139,
+              116136,
+              34740,
+              1983
+            ],
+            [
+              70491,
+              282237,
+              87722,
+              55705
+            ]
+          ]
+        },
+        "0-2": {
+          "adjusted_rand_index": 0.3041731487603631,
+          "hungarian_aligned_agreement": 0.6103437165091795,
+          "alignment": {
+            "3": 0,
+            "1": 1,
+            "2": 2,
+            "0": 3
+          },
+          "contingency": [
+            [
+              130587,
+              31977,
+              12517,
+              325168
+            ],
+            [
+              110252,
+              233833,
+              23174,
+              149021
+            ],
+            [
+              9649,
+              58830,
+              401765,
+              15754
+            ],
+            [
+              259117,
+              174636,
+              22505,
+              39897
+            ]
+          ]
+        },
+        "1-2": {
+          "adjusted_rand_index": 0.18755053936968372,
+          "hungarian_aligned_agreement": 0.5052039293894677,
+          "alignment": {
+            "2": 0,
+            "0": 1,
+            "1": 2,
+            "3": 3
+          },
+          "contingency": [
+            [
+              38954,
+              67787,
+              320014,
+              18468
+            ],
+            [
+              223198,
+              148491,
+              109118,
+              20490
+            ],
+            [
+              104671,
+              191331,
+              23252,
+              215683
+            ],
+            [
+              142782,
+              91667,
+              7577,
+              275199
+            ]
+          ]
+        }
+      },
+      "ari_mean": 0.2662753018763239,
+      "ari_min": 0.18755053936968372,
+      "ari_max": 0.30710221749892497
+    }
+  }
+}
