@@ -1,0 +1,316 @@
+==== CONFIG ====
+cache_dir: /data/sicong/weitao/.stable_worldmodel
+solver:
+  _target_: stable_worldmodel.solver.CEMSolver
+  model: ???
+  batch_size: 1
+  num_samples: 300
+  var_scale: 1.0
+  n_steps: 30
+  topk: 30
+  device: cuda
+  seed: ${seed}
+world:
+  env_name: swm/OGBCube-v0
+  num_envs: ${eval.num_eval}
+  max_episode_steps: 100
+  env_type: single
+  ob_type: states
+  multiview: false
+  width: 224
+  height: 224
+  visualize_info: false
+  terminate_at_goal: true
+dataset:
+  stats: ${eval.dataset_name}
+  keys_to_cache:
+  - action
+  - observation
+seed: 4
+policy: random
+plan_config:
+  horizon: 5
+  receding_horizon: 5
+  action_block: 5
+eval:
+  num_eval: 50
+  goal_offset_steps: 50
+  eval_budget: 50
+  img_size: 224
+  dataset_name: ogbench/cube_single_expert
+  callables:
+  - method: set_state
+    args:
+      qpos:
+        value: qpos
+      qvel:
+        value: qvel
+  - method: set_target_pos
+    args:
+      cube_id:
+        value: 0
+        in_dataset: false
+      target_pos:
+        value: goal_privileged_block_0_pos
+      target_quat:
+        value: goal_privileged_block_0_quat
+output:
+  filename: ogb_cube_results.txt
+
+==== MODEL ====
+{
+  "mode": "lap",
+  "base_encoder_checkpoint": "/data/sicong/weitao/.stable_worldmodel/cube/lewm_object.ckpt",
+  "lap_run_dir": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/cube/matrix_k4/training/controlled_parc/partition0_train0",
+  "lap_manifest": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/cube/matrix_k4/training/controlled_parc/partition0_train0/manifest.json",
+  "cluster_predictors": {
+    "cluster0": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/cube/matrix_k4/training/controlled_parc/partition0_train0/P_train_cluster0_object.ckpt",
+    "cluster1": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/cube/matrix_k4/training/controlled_parc/partition0_train0/P_train_cluster1_object.ckpt",
+    "cluster2": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/cube/matrix_k4/training/controlled_parc/partition0_train0/P_train_cluster2_object.ckpt",
+    "cluster3": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/cube/matrix_k4/training/controlled_parc/partition0_train0/P_train_cluster3_object.ckpt"
+  },
+  "num_clusters": 4,
+  "num_routing_prototypes": 4,
+  "partition_metadata": {
+    "algorithm": "controlled_parc_voronoi",
+    "implementation": "vectorized_multioutput_parc_updates",
+    "num_clusters": 4,
+    "seed": 0,
+    "alpha": 1e-05,
+    "sigma": 1.0,
+    "effective_sigma": 5e-05,
+    "max_iter": 15,
+    "cost_tol": 0.0001,
+    "kmeans_n_init": 10,
+    "min_cluster_size": 256,
+    "iterations": 15,
+    "converged": false,
+    "history": [
+      {
+        "iteration": 1,
+        "cost": 2341183.604452133,
+        "improvement": Infinity,
+        "changed_assignments": 1954,
+        "cluster_counts": [
+          6397,
+          4822,
+          6280,
+          2501
+        ]
+      },
+      {
+        "iteration": 2,
+        "cost": 2185497.438370943,
+        "improvement": 155686.1660811901,
+        "changed_assignments": 2243,
+        "cluster_counts": [
+          5890,
+          4359,
+          7256,
+          2495
+        ]
+      },
+      {
+        "iteration": 3,
+        "cost": 2022457.04261899,
+        "improvement": 163040.39575195312,
+        "changed_assignments": 1954,
+        "cluster_counts": [
+          5377,
+          3891,
+          8291,
+          2441
+        ]
+      },
+      {
+        "iteration": 4,
+        "cost": 1888147.9184274673,
+        "improvement": 134309.1241915226,
+        "changed_assignments": 1474,
+        "cluster_counts": [
+          5053,
+          3484,
+          9075,
+          2388
+        ]
+      },
+      {
+        "iteration": 5,
+        "cost": 1786228.3003921509,
+        "improvement": 101919.61803531647,
+        "changed_assignments": 1120,
+        "cluster_counts": [
+          4854,
+          3198,
+          9641,
+          2307
+        ]
+      },
+      {
+        "iteration": 6,
+        "cost": 1716387.8653707504,
+        "improvement": 69840.43502140045,
+        "changed_assignments": 843,
+        "cluster_counts": [
+          4725,
+          3044,
+          9992,
+          2239
+        ]
+      },
+      {
+        "iteration": 7,
+        "cost": 1670106.8670654297,
+        "improvement": 46280.99830532074,
+        "changed_assignments": 659,
+        "cluster_counts": [
+          4612,
+          2965,
+          10264,
+          2159
+        ]
+      },
+      {
+        "iteration": 8,
+        "cost": 1638918.6761672497,
+        "improvement": 31188.190898180008,
+        "changed_assignments": 496,
+        "cluster_counts": [
+          4520,
+          2930,
+          10461,
+          2089
+        ]
+      },
+      {
+        "iteration": 9,
+        "cost": 1617879.8495368958,
+        "improvement": 21038.826630353928,
+        "changed_assignments": 373,
+        "cluster_counts": [
+          4438,
+          2896,
+          10607,
+          2059
+        ]
+      },
+      {
+        "iteration": 10,
+        "cost": 1601143.7179949284,
+        "improvement": 16736.131541967392,
+        "changed_assignments": 287,
+        "cluster_counts": [
+          4398,
+          2871,
+          10693,
+          2038
+        ]
+      },
+      {
+        "iteration": 11,
+        "cost": 1591169.6283051968,
+        "improvement": 9974.089689731598,
+        "changed_assignments": 214,
+        "cluster_counts": [
+          4358,
+          2865,
+          10747,
+          2030
+        ]
+      },
+      {
+        "iteration": 12,
+        "cost": 1583782.549088478,
+        "improvement": 7387.079216718674,
+        "changed_assignments": 191,
+        "cluster_counts": [
+          4325,
+          2876,
+          10772,
+          2027
+        ]
+      },
+      {
+        "iteration": 13,
+        "cost": 1576583.9198713303,
+        "improvement": 7198.629217147827,
+        "changed_assignments": 160,
+        "cluster_counts": [
+          4293,
+          2884,
+          10795,
+          2028
+        ]
+      },
+      {
+        "iteration": 14,
+        "cost": 1570645.4572570324,
+        "improvement": 5938.462614297867,
+        "changed_assignments": 132,
+        "cluster_counts": [
+          4260,
+          2896,
+          10815,
+          2029
+        ]
+      },
+      {
+        "iteration": 15,
+        "cost": 1564745.0491857529,
+        "improvement": 5900.408071279526,
+        "changed_assignments": 112,
+        "cluster_counts": [
+          4236,
+          2906,
+          10826,
+          2032
+        ]
+      }
+    ],
+    "latent_assignment_counts": [
+      4236,
+      2906,
+      10826,
+      2032
+    ],
+    "deployed_assignment_counts": [
+      6255,
+      5519,
+      4876,
+      3350
+    ],
+    "latent_to_deployed_disagreement": 0.46955,
+    "regression_features": "[zscore_l2(z_t), zscore(act_emb_t)]",
+    "response_target": "zscore(z_{t+1} - z_t)",
+    "partition_features": "zscore_l2(z_t) only",
+    "separation": "spherical_voronoi",
+    "routing": "zscore_l2_spherical_voronoi",
+    "fit_samples": 20000,
+    "total_training_windows": 1674000,
+    "fit_sample_rows_sha256": "ba0479e7eda485461f073ac98e61435ad460045b4ec19c46c8fd1838db99d2b1",
+    "sampling": "uniform_without_replacement_from_training_windows",
+    "state_index": 0,
+    "action_embedding_index": 0,
+    "response_indices": [
+      0,
+      1
+    ],
+    "action_mean_sha256": "89cb5a46d3868f7f1f2de43f7b1a3af2ca9bd26904b1872c47f8f406fc9a46fc",
+    "action_scale_sha256": "ff23ae8d1127ea404c27f509524d25ce9f6d9ee44db66f4010369b27a595f6bc",
+    "response_mean_sha256": "3b6d0722192c18eee9fa866c3e911e245569874e0d7c8e880b2773ce5b0e5fec",
+    "response_scale_sha256": "032a6c4b0693d4dbd22b3f92cada6ccd11ddf96830fc83ec405a9635e4076f11",
+    "method_scope": "dynamics-informed partition; planning outcomes unused",
+    "data_scope": "training latent cache only; evaluation episodes unused",
+    "parc_reference": "Bemporad, IEEE TAC 2023, doi:10.1109/TAC.2022.3186812"
+  },
+  "switch_timing": "once per MPC replan from the observed latent",
+  "latent_routing": "mpc"
+}
+==== RESULTS ====
+metrics: {'success_rate': 62.0, 'episode_successes': array([ True,  True,  True,  True,  True, False,  True,  True, False,
+       False,  True,  True,  True,  True, False,  True, False,  True,
+        True,  True, False,  True,  True,  True,  True,  True,  True,
+        True, False, False, False, False, False, False,  True,  True,
+       False,  True, False,  True, False,  True, False,  True, False,
+        True,  True, False, False,  True]), 'seeds': None}
+evaluation_time: 100.95825529098511 seconds

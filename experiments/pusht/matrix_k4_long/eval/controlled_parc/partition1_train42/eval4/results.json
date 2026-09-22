@@ -1,0 +1,371 @@
+{
+  "mode": "lap",
+  "seed": 4,
+  "num_eval": 50,
+  "goal_offset_steps": 50,
+  "eval_budget": 50,
+  "base_encoder_checkpoint": "/data/sicong/weitao/.stable_worldmodel/pusht/lewm_object.ckpt",
+  "lap_run_dir": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix_k4/training/controlled_parc/partition1_train42",
+  "lap_manifest": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix_k4/training/controlled_parc/partition1_train42/manifest.json",
+  "cluster_predictors": {
+    "cluster0": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix_k4/training/controlled_parc/partition1_train42/P_train_cluster0_object.ckpt",
+    "cluster1": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix_k4/training/controlled_parc/partition1_train42/P_train_cluster1_object.ckpt",
+    "cluster2": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix_k4/training/controlled_parc/partition1_train42/P_train_cluster2_object.ckpt",
+    "cluster3": "/data/sicong/weitao/LAP-Latent-Space-Auto-Partitioned-Fine-Tuning-for-World-Models/experiments/pusht/matrix_k4/training/controlled_parc/partition1_train42/P_train_cluster3_object.ckpt"
+  },
+  "num_clusters": 4,
+  "num_routing_prototypes": 4,
+  "partition_metadata": {
+    "algorithm": "controlled_parc_voronoi",
+    "implementation": "vectorized_multioutput_parc_updates",
+    "num_clusters": 4,
+    "seed": 1,
+    "alpha": 1e-05,
+    "sigma": 1.0,
+    "effective_sigma": 5e-05,
+    "max_iter": 15,
+    "cost_tol": 0.0001,
+    "kmeans_n_init": 10,
+    "min_cluster_size": 256,
+    "iterations": 15,
+    "converged": false,
+    "history": [
+      {
+        "iteration": 1,
+        "cost": 1861496.637748897,
+        "improvement": Infinity,
+        "changed_assignments": 816,
+        "cluster_counts": [
+          4271,
+          1527,
+          4659,
+          9543
+        ]
+      },
+      {
+        "iteration": 2,
+        "cost": 1810287.4115190506,
+        "improvement": 51209.22622984648,
+        "changed_assignments": 495,
+        "cluster_counts": [
+          4274,
+          1563,
+          4728,
+          9435
+        ]
+      },
+      {
+        "iteration": 3,
+        "cost": 1778329.4902480245,
+        "improvement": 31957.921271026134,
+        "changed_assignments": 391,
+        "cluster_counts": [
+          4269,
+          1595,
+          4778,
+          9358
+        ]
+      },
+      {
+        "iteration": 4,
+        "cost": 1751982.543902874,
+        "improvement": 26346.94634515047,
+        "changed_assignments": 329,
+        "cluster_counts": [
+          4261,
+          1613,
+          4847,
+          9279
+        ]
+      },
+      {
+        "iteration": 5,
+        "cost": 1729081.343800962,
+        "improvement": 22901.20010191202,
+        "changed_assignments": 271,
+        "cluster_counts": [
+          4252,
+          1623,
+          4911,
+          9214
+        ]
+      },
+      {
+        "iteration": 6,
+        "cost": 1711628.6567654014,
+        "improvement": 17452.687035560608,
+        "changed_assignments": 246,
+        "cluster_counts": [
+          4241,
+          1633,
+          4953,
+          9173
+        ]
+      },
+      {
+        "iteration": 7,
+        "cost": 1697257.5455869436,
+        "improvement": 14371.111178457737,
+        "changed_assignments": 230,
+        "cluster_counts": [
+          4217,
+          1642,
+          4994,
+          9147
+        ]
+      },
+      {
+        "iteration": 8,
+        "cost": 1684585.9718856215,
+        "improvement": 12671.573701322079,
+        "changed_assignments": 213,
+        "cluster_counts": [
+          4182,
+          1649,
+          5040,
+          9129
+        ]
+      },
+      {
+        "iteration": 9,
+        "cost": 1670996.3585072756,
+        "improvement": 13589.613378345966,
+        "changed_assignments": 196,
+        "cluster_counts": [
+          4162,
+          1663,
+          5075,
+          9100
+        ]
+      },
+      {
+        "iteration": 10,
+        "cost": 1660798.8143597245,
+        "improvement": 10197.54414755106,
+        "changed_assignments": 172,
+        "cluster_counts": [
+          4146,
+          1672,
+          5112,
+          9070
+        ]
+      },
+      {
+        "iteration": 11,
+        "cost": 1651213.7029013038,
+        "improvement": 9585.111458420753,
+        "changed_assignments": 156,
+        "cluster_counts": [
+          4129,
+          1689,
+          5144,
+          9038
+        ]
+      },
+      {
+        "iteration": 12,
+        "cost": 1643421.952559173,
+        "improvement": 7791.750342130661,
+        "changed_assignments": 129,
+        "cluster_counts": [
+          4112,
+          1697,
+          5179,
+          9012
+        ]
+      },
+      {
+        "iteration": 13,
+        "cost": 1636782.5995464325,
+        "improvement": 6639.353012740612,
+        "changed_assignments": 122,
+        "cluster_counts": [
+          4105,
+          1709,
+          5197,
+          8989
+        ]
+      },
+      {
+        "iteration": 14,
+        "cost": 1630725.2603166103,
+        "improvement": 6057.339229822159,
+        "changed_assignments": 132,
+        "cluster_counts": [
+          4099,
+          1720,
+          5200,
+          8981
+        ]
+      },
+      {
+        "iteration": 15,
+        "cost": 1622384.5081316233,
+        "improvement": 8340.752184987068,
+        "changed_assignments": 126,
+        "cluster_counts": [
+          4098,
+          1730,
+          5200,
+          8972
+        ]
+      }
+    ],
+    "latent_assignment_counts": [
+      4098,
+      1730,
+      5200,
+      8972
+    ],
+    "deployed_assignment_counts": [
+      4877,
+      2282,
+      5328,
+      7513
+    ],
+    "latent_to_deployed_disagreement": 0.2039,
+    "regression_features": "[zscore_l2(z_t), zscore(act_emb_t)]",
+    "response_target": "zscore(z_{t+1} - z_t)",
+    "partition_features": "zscore_l2(z_t) only",
+    "separation": "spherical_voronoi",
+    "routing": "zscore_l2_spherical_voronoi",
+    "fit_samples": 20000,
+    "total_training_windows": 1850815,
+    "fit_sample_rows_sha256": "a8879942aa6552fc334a48c93cca8c1c6fd9ae247ba48692f8a121830a4ac874",
+    "sampling": "uniform_without_replacement_from_training_windows",
+    "state_index": 0,
+    "action_embedding_index": 0,
+    "response_indices": [
+      0,
+      1
+    ],
+    "action_mean_sha256": "48279a7f72cc98cdf02705ce98f622233fb9cd9dc9ddcee0787e128990f8e28e",
+    "action_scale_sha256": "efa19da146572f5612f63d7e618d3d9d578dfe634bfead575bc30c084bc54b2b",
+    "response_mean_sha256": "6f3c05da93abc9082b872e8632860fd2a0378c000394e6403fea7b7e8d3eed9c",
+    "response_scale_sha256": "7c6fd2bca873831c2851f09b07ee21a72b61e572a630776629bd910c1f26a868",
+    "method_scope": "dynamics-informed partition; planning outcomes unused",
+    "data_scope": "training latent cache only; evaluation episodes unused",
+    "parc_reference": "Bemporad, IEEE TAC 2023, doi:10.1109/TAC.2022.3186812"
+  },
+  "switch_timing": "once per MPC replan from the observed latent",
+  "latent_routing": "mpc",
+  "inference_classify_count": 82,
+  "inference_classify_assignments": 82,
+  "inference_classify_timed_calls": 82,
+  "inference_classify_timed_assignments": 82,
+  "inference_classify_time_sample_sec": 0.10282319894433024,
+  "inference_classify_per_call_ms": 1.2539414505406128,
+  "inference_classify_per_assignment_us": 1253.9414505406128,
+  "inference_classify_timing_backend": "cuda_events",
+  "inference_mpc_route_cache_hits": 2378,
+  "inference_mpc_route_cache_misses": 82,
+  "metrics": {
+    "success_rate": 48.0,
+    "episode_successes": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false
+    ],
+    "seeds": null
+  },
+  "eval_start_indices": [
+    143571,
+    191676,
+    212513,
+    328648,
+    341679,
+    414034,
+    421127,
+    487781,
+    513327,
+    656603,
+    710286,
+    788299,
+    867665,
+    885590,
+    959454,
+    1015597,
+    1065936,
+    1093071,
+    1125436,
+    1180002,
+    1212957,
+    1236823,
+    1283158,
+    1349212,
+    1366396,
+    1384754,
+    1420594,
+    1423510,
+    1461954,
+    1552039,
+    1576194,
+    1643377,
+    1688062,
+    1700821,
+    1832898,
+    1861006,
+    2029765,
+    2047392,
+    2087736,
+    2098758,
+    2166875,
+    2168438,
+    2189152,
+    2195756,
+    2196371,
+    2243512,
+    2251995,
+    2254517,
+    2267671,
+    2291238
+  ],
+  "evaluation_time_sec": 72.20130801200867
+}
