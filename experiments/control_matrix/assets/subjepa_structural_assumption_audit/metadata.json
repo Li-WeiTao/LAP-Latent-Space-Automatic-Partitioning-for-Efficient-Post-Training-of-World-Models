@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "status": "plug_in_estimates_not_confidence_bounds",
+  "repo_commit": "4945ed125699089e588451cc91049f9313a4175a",
+  "model": "subjepa",
+  "tasks": [
+    "tworoom",
+    "pusht",
+    "reacher",
+    "cube"
+  ],
+  "clusters": [
+    2,
+    3,
+    4
+  ],
+  "partition_seeds": [
+    0,
+    1,
+    2
+  ],
+  "ridge": 1e-08,
+  "frameskip": 5,
+  "transition_stride": 1,
+  "measured_terms": [
+    "r_b",
+    "r_orient",
+    "r_pair"
+  ],
+  "not_measured": [
+    "r_2",
+    "kappa_c_minus_kappa",
+    "r_extra",
+    "epsilon_plan_H",
+    "delta_H_over_alpha_H",
+    "epsilon_q",
+    "epsilon_cal"
+  ]
+}

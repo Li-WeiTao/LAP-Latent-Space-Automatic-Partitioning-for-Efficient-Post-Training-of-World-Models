@@ -1,0 +1,51 @@
+tworoom K=2 partition_seed=0: q=0.253622, epsilon_q95=0.004556, heldout_norm_upper95=4.428839
+tworoom K=2 partition_seed=1: q=0.252637, epsilon_q95=0.004286, heldout_norm_upper95=4.422665
+tworoom K=2 partition_seed=2: q=0.252456, epsilon_q95=0.004458, heldout_norm_upper95=4.426760
+tworoom K=3 partition_seed=0: q=0.276595, epsilon_q95=0.006226, heldout_norm_upper95=2.666857
+tworoom K=3 partition_seed=1: q=0.277311, epsilon_q95=0.006890, heldout_norm_upper95=2.659533
+tworoom K=3 partition_seed=2: q=0.289151, epsilon_q95=0.006562, heldout_norm_upper95=2.672140
+tworoom K=4 partition_seed=0: q=0.266766, epsilon_q95=0.002915, heldout_norm_upper95=2.150634
+tworoom K=4 partition_seed=1: q=0.269391, epsilon_q95=0.002685, heldout_norm_upper95=2.159512
+tworoom K=4 partition_seed=2: q=0.272844, epsilon_q95=0.003250, heldout_norm_upper95=2.147837
+pusht K=2 partition_seed=0: q=0.234870, epsilon_q95=0.002002, heldout_norm_upper95=5.532897
+pusht K=2 partition_seed=1: q=0.231503, epsilon_q95=0.002060, heldout_norm_upper95=5.533491
+pusht K=2 partition_seed=2: q=0.230475, epsilon_q95=0.001865, heldout_norm_upper95=5.515492
+pusht K=3 partition_seed=0: q=0.266477, epsilon_q95=0.002147, heldout_norm_upper95=4.457303
+pusht K=3 partition_seed=1: q=0.229765, epsilon_q95=0.002194, heldout_norm_upper95=4.472063
+pusht K=3 partition_seed=2: q=0.238126, epsilon_q95=0.002576, heldout_norm_upper95=4.434733
+pusht K=4 partition_seed=0: q=0.273002, epsilon_q95=0.003025, heldout_norm_upper95=3.803323
+pusht K=4 partition_seed=1: q=0.219920, epsilon_q95=0.002667, heldout_norm_upper95=3.891474
+pusht K=4 partition_seed=2: q=0.225162, epsilon_q95=0.003099, heldout_norm_upper95=3.866667
+reacher K=2 partition_seed=0: q=0.125529, epsilon_q95=0.005745, heldout_norm_upper95=14.998182
+reacher K=2 partition_seed=1: q=0.127294, epsilon_q95=0.006199, heldout_norm_upper95=15.105992
+reacher K=2 partition_seed=2: q=0.126253, epsilon_q95=0.006052, heldout_norm_upper95=15.058162
+reacher K=3 partition_seed=0: q=0.194406, epsilon_q95=0.009178, heldout_norm_upper95=10.738049
+reacher K=3 partition_seed=1: q=0.203513, epsilon_q95=0.006556, heldout_norm_upper95=10.788329
+reacher K=3 partition_seed=2: q=0.197397, epsilon_q95=0.008427, heldout_norm_upper95=10.707183
+reacher K=4 partition_seed=0: q=0.232053, epsilon_q95=0.007268, heldout_norm_upper95=9.721368
+reacher K=4 partition_seed=1: q=0.241492, epsilon_q95=0.007608, heldout_norm_upper95=9.713409
+reacher K=4 partition_seed=2: q=0.236231, epsilon_q95=0.009375, heldout_norm_upper95=9.731191
+cube K=2 partition_seed=0: q=0.220773, epsilon_q95=0.005039, heldout_norm_upper95=3.117463
+cube K=2 partition_seed=1: q=0.222997, epsilon_q95=0.005293, heldout_norm_upper95=3.118412
+cube K=2 partition_seed=2: q=0.224429, epsilon_q95=0.005163, heldout_norm_upper95=3.103106
+cube K=3 partition_seed=0: q=0.175526, epsilon_q95=0.002967, heldout_norm_upper95=2.216772
+cube K=3 partition_seed=1: q=0.174680, epsilon_q95=0.003508, heldout_norm_upper95=2.206414
+cube K=3 partition_seed=2: q=0.176792, epsilon_q95=0.003014, heldout_norm_upper95=2.198899
+cube K=4 partition_seed=0: q=0.113962, epsilon_q95=0.004165, heldout_norm_upper95=1.973516
+cube K=4 partition_seed=1: q=0.102452, epsilon_q95=0.003797, heldout_norm_upper95=1.977781
+cube K=4 partition_seed=2: q=0.108816, epsilon_q95=0.003776, heldout_norm_upper95=1.952858
+
+Summary
+  model    task  num_clusters  partition_seed_count   q_mean  epsilon_q95_max  epsilon_score95_max  normalized_affine_l2_mean  normalized_affine_l2_upper95_max  bootstrap_failures
+subjepa    cube             2                     3 0.222733         0.005293             0.010586                   3.107361                          3.118412                   0
+subjepa    cube             3                     3 0.175666         0.003508             0.007016                   2.203611                          2.216772                   0
+subjepa    cube             4                     3 0.108410         0.004165             0.008329                   1.964637                          1.977781                   0
+subjepa   pusht             2                     3 0.232283         0.002060             0.004120                   5.515497                          5.533491                   0
+subjepa   pusht             3                     3 0.244789         0.002576             0.005152                   4.445170                          4.472063                   0
+subjepa   pusht             4                     3 0.239362         0.003099             0.006198                   3.845588                          3.891474                   0
+subjepa reacher             2                     3 0.126359         0.006199             0.012398                  15.040239                         15.105992                   0
+subjepa reacher             3                     3 0.198439         0.009178             0.018356                  10.734490                         10.788329                   0
+subjepa reacher             4                     3 0.236592         0.009375             0.018750                   9.712772                          9.731191                   0
+subjepa tworoom             2                     3 0.252905         0.004556             0.009112                   4.418008                          4.428839                   0
+subjepa tworoom             3                     3 0.281019         0.006890             0.013780                   2.661491                          2.672140                   0
+subjepa tworoom             4                     3 0.269667         0.003250             0.006499                   2.148903                          2.159512                   0

@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "status": "empirical_finite_sample_estimates_not_complete_epsilon_c_certificate",
+  "repo_commit": "4945ed125699089e588451cc91049f9313a4175a",
+  "model": "subjepa",
+  "tasks": [
+    "tworoom",
+    "pusht",
+    "reacher",
+    "cube"
+  ],
+  "clusters": [
+    2,
+    3,
+    4
+  ],
+  "partition_seeds": [
+    0,
+    1,
+    2
+  ],
+  "ridge": 1e-08,
+  "folds": 5,
+  "episode_blocks": 20,
+  "bootstrap_replicates": 500,
+  "split_seed": 20260926,
+  "confidence": 0.95,
+  "split_unit": "episode",
+  "epsilon_q_method": "episode-block nonparametric bootstrap; 95th percentile absolute deviation from full-data q",
+  "affine_method": "episode-disjoint cross-fitting; one-sided cluster-robust 95% upper limit",
+  "interpretation": {
+    "epsilon_q_95": "empirical sampling-error estimate on q scale",
+    "epsilon_score_95": "twice epsilon_q_95, on Bures-score scale",
+    "heldout_affine_l2_upper95": "conservative empirical upper proxy containing approximation error plus conditional noise",
+    "normalized_affine_l2_upper95": "heldout_affine_l2_upper95 divided by sqrt(response_scale)"
+  },
+  "not_claimed": [
+    "deterministic high-probability theorem certificate",
+    "separation of conditional noise from conditional-mean approximation error",
+    "complete epsilon(c)"
+  ],
+  "frozen_bures_threshold": 0.508947854338762
+}
